@@ -4,14 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة الكوتش | El-Coach Platform</title>
+
+    <!-- مكتبات Firebase السحابية -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: rgba(18, 24, 38, 0.95);
+            --bg-color: #080d1a;
+            --card-bg: rgba(15, 23, 42, 0.95);
             --text-color: #f8fafc;
             --text-muted: #94a3b8;
             --primary: #3b82f6;
-            --primary-glow: rgba(59, 130, 246, 0.5);
+            --primary-glow: rgba(59, 130, 246, 0.4);
             --border-color: #1e293b;
             --input-bg: #0f172a;
         }
@@ -22,7 +27,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             min-height: 100vh;
-            padding: 20px;
+            padding: 16px;
             box-sizing: border-box;
             display: flex;
             justify-content: center;
@@ -31,53 +36,31 @@
 
         .main-card {
             width: 100%;
-            max-width: 480px;
+            max-width: 440px;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 24px;
-            padding: 28px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px var(--primary-glow);
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px var(--primary-glow);
             backdrop-filter: blur(12px);
         }
 
-        .logo-container {
-            text-align: center;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
+        .logo-container { text-align: center; margin-bottom: 16px; }
         .logo-img {
-            width: 105px;
-            height: 105px;
+            width: 110px;
+            height: 110px;
             object-fit: cover;
             border-radius: 50%;
             border: 3px solid var(--primary);
-            animation: pulseGlow 2.5s infinite ease-in-out;
-        }
-
-        @keyframes pulseGlow {
-            0% {
-                box-shadow: 0 0 15px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.3);
-                transform: scale(1);
-            }
-            50% {
-                box-shadow: 0 0 30px rgba(59, 130, 246, 1), 0 0 60px rgba(59, 130, 246, 0.6);
-                transform: scale(1.06);
-            }
-            100% {
-                box-shadow: 0 0 15px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.3);
-                transform: scale(1);
-            }
+            box-shadow: 0 0 20px var(--primary-glow);
         }
 
         .app-title {
             text-align: center;
-            font-size: 1.7rem;
+            font-size: 1.8rem;
             font-weight: 800;
-            margin: 10px 0 6px 0;
-            background: linear-gradient(135deg, #ffffff, var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin: 8px 0 6px 0;
+            color: #ffffff;
         }
 
         .app-subtitle {
@@ -88,39 +71,43 @@
             line-height: 1.6;
         }
 
-        .video-section {
-            margin-bottom: 20px;
-            border-radius: 16px;
+        /* حاوية الفيديو المرفوع بدلاً من الصورة */
+        .video-wrapper {
+            width: 100%;
+            border-radius: 20px;
             overflow: hidden;
             border: 1px solid var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+            margin-bottom: 22px;
             background: #000;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
         }
 
-        .video-section video {
+        .video-wrapper video {
             width: 100%;
+            height: auto;
             display: block;
-            border-radius: 16px;
+            border-radius: 20px;
+            object-fit: cover;
         }
 
         .tab-buttons {
             display: flex;
             background: var(--input-bg);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 4px;
             margin-bottom: 20px;
         }
 
         .tab-btn {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             border: none;
             background: transparent;
             color: var(--text-muted);
             font-weight: 700;
-            font-size: 0.88rem;
-            border-radius: 8px;
+            font-size: 0.9rem;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
@@ -131,71 +118,38 @@
             box-shadow: 0 0 12px var(--primary-glow);
         }
 
-        .form-group {
-            margin-bottom: 16px;
-            text-align: right;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
+        .form-group { margin-bottom: 16px; text-align: right; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
         .form-control {
             width: 100%;
             padding: 12px 14px;
-            border-radius: 10px;
+            border-radius: 12px;
             border: 1px solid var(--border-color);
             background: var(--input-bg);
             color: var(--text-color);
             font-size: 0.95rem;
             box-sizing: border-box;
             outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 10px var(--primary-glow);
         }
 
         .submit-btn {
             width: 100%;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 14px;
+            border-radius: 12px;
             border: none;
             background: linear-gradient(135deg, var(--primary), #1d4ed8);
             color: #ffffff;
             font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
             box-shadow: 0 0 15px var(--primary-glow);
+            margin-top: 8px;
         }
 
-        .submit-btn:hover {
-            opacity: 0.95;
-            box-shadow: 0 0 25px var(--primary-glow);
-        }
-
-        .support-title {
-            text-align: center;
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            margin: 22px 0 12px 0;
-            font-weight: 600;
-        }
-
-        .social-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
+        .social-buttons { display: flex; gap: 10px; margin-top: 20px; }
         .social-btn {
             flex: 1;
-            padding: 10px 6px;
+            padding: 10px 4px;
             border-radius: 12px;
             text-decoration: none;
             text-align: center;
@@ -204,48 +158,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
         }
 
-        .social-btn.wa {
-            background: rgba(37, 211, 102, 0.12);
-            color: #25D366;
-            border-color: rgba(37, 211, 102, 0.3);
-        }
-        .social-btn.wa:hover {
-            background: #25D366;
-            color: #fff;
-            box-shadow: 0 0 15px rgba(37, 211, 102, 0.5);
-        }
-
-        .social-btn.tg {
-            background: rgba(0, 136, 204, 0.12);
-            color: #0088cc;
-            border-color: rgba(0, 136, 204, 0.3);
-        }
-        .social-btn.tg:hover {
-            background: #0088cc;
-            color: #fff;
-            box-shadow: 0 0 15px rgba(0, 136, 204, 0.5);
-        }
-
-        .social-btn.fb {
-            background: rgba(24, 119, 242, 0.12);
-            color: #1877F2;
-            border-color: rgba(24, 119, 242, 0.3);
-        }
-        .social-btn.fb:hover {
-            background: #1877F2;
-            color: #fff;
-            box-shadow: 0 0 15px rgba(24, 119, 242, 0.5);
-        }
+        .social-btn.wa { background: rgba(37, 211, 102, 0.15); color: #25D366; }
+        .social-btn.tg { background: rgba(0, 136, 204, 0.15); color: #0088cc; }
+        .social-btn.fb { background: rgba(24, 119, 242, 0.15); color: #1877F2; }
 
         .footer-credits {
             text-align: center;
             margin-top: 22px;
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
             border-top: 1px solid var(--border-color);
             padding-top: 14px;
@@ -255,18 +177,19 @@
 <body>
 
     <div class="main-card">
+        <!-- الصورة الشخصية الدائرية بالأعلى -->
         <div class="logo-container">
-            <img src="1783950091830.jpg" alt="منصة الكوتش" class="logo-img" onerror="this.onerror=null; this.src='1783950091830';">
+            <img src="https://i.ibb.co/Xz95BGP/elcoach-logo.png" alt="الكوتش عبدالناصر" class="logo-img">
         </div>
 
         <h1 class="app-title">منصة الكوتش</h1>
-        <p class="app-subtitle">
-            🥇 <b>الداعم الأول والمساعد الأكاديمي والرياضي</b> لكل كباتن ورجال علوم الرياضة على مستوى الجمهورية.
-        </p>
+        <p class="app-subtitle">🥇 الداعم الأول والمساعد الأكاديمي والرياضي لكل كباتن ورجال علوم الرياضة على مستوى الجمهورية.</p>
 
-        <div class="video-section">
-            <video autoplay muted loop playsinline poster="1783950091830.jpg">
-                <source src="sports-intro.mp4" type="video/mp4">
+        <!-- عنصر الفيديو المرفوع (bebo123) بدلاً من الصورة المحددة -->
+        <div class="video-wrapper">
+            <video autoplay muted loop playsinline id="heroVideo">
+                <source src="bebo123.mp4" type="video/mp4">
+                <source src="bebo123" type="video/mp4">
                 متصفحك لا يدعم تشغيل الفيديو.
             </video>
         </div>
@@ -276,7 +199,7 @@
             <button class="tab-btn" onclick="switchTab('login')">تسجيل الدخول</button>
         </div>
 
-        <!-- نموذج طلب الانضمام -->
+        <!-- نموذج التسجيل -->
         <form id="registerForm" onsubmit="handleRegister(event)">
             <div class="form-group">
                 <label>الاسم الثلاثي / الخماسي</label>
@@ -296,7 +219,7 @@
                 <label>رقم الهاتف (واتساب)</label>
                 <input type="tel" id="regPhone" class="form-control" placeholder="01xxxxxxxxx" required>
             </div>
-            <button type="submit" class="submit-btn">إرسال طلب الانضمام</button>
+            <button type="submit" id="btnReg" class="submit-btn">إرسال طلب الانضمام</button>
         </form>
 
         <!-- نموذج تسجيل الدخول -->
@@ -312,110 +235,76 @@
             <button type="submit" class="submit-btn">تسجيل الدخول</button>
         </form>
 
-        <p class="support-title">أزرار الدعم والتواصل المباشر</p>
-        
+        <!-- أزرار التواصل -->
         <div class="social-buttons">
-            <a href="https://wa.me/201098227150" target="_blank" class="social-btn wa">
-                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
-                واتساب
-            </a>
-            <a href="https://t.me/CapAbdo1" target="_blank" class="social-btn tg">
-                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.121l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.128.832.941z"/></svg>
-                تليجرام
-            </a>
-            <a href="https://www.facebook.com/cap.abdelnaseer.talat" target="_blank" class="social-btn fb">
-                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                فيسبوك
-            </a>
+            <a href="https://wa.me/201098227150" target="_blank" class="social-btn wa">واتساب</a>
+            <a href="https://t.me/CapAbdo1" target="_blank" class="social-btn tg">تليجرام</a>
+            <a href="https://www.facebook.com/cap.abdelnaseer.talat" target="_blank" class="social-btn fb">فيسبوك</a>
         </div>
 
-        <div class="footer-credits">
-            تطوير المهندس عبدالناصر © 2026
-        </div>
+        <div class="footer-credits">تطوير المهندس عبدالناصر © 2026</div>
     </div>
 
     <script>
-        function switchTab(tab) {
-            const regForm = document.getElementById('registerForm');
-            const loginForm = document.getElementById('loginForm');
-            const buttons = document.querySelectorAll('.tab-btn');
+        // إعدادات مشروع Firebase الخاصة بك
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtRET95Dlp58sEPKm3g_nJ_90AQFme_P0",
+            authDomain: "elcoach-a06cd.firebaseapp.com",
+            databaseURL: "https://elcoach-a06cd-default-rtdb.firebaseio.com",
+            projectId: "elcoach-a06cd",
+            storageBucket: "elcoach-a06cd.firebasestorage.app",
+            messagingSenderId: "1005781255562",
+            appId: "1:1005781255562:web:8cfa840d88739de42cf473",
+            measurementId: "G-4EC0Q65RK8"
+        };
 
-            if (tab === 'register') {
-                regForm.style.display = 'block';
-                loginForm.style.display = 'none';
-                buttons[0].classList.add('active');
-                buttons[1].classList.remove('active');
-            } else {
-                regForm.style.display = 'none';
-                loginForm.style.display = 'block';
-                buttons[0].classList.remove('active');
-                buttons[1].classList.add('active');
-            }
+        // تهيئة Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        function switchTab(tab) {
+            document.getElementById('registerForm').style.display = (tab === 'register') ? 'block' : 'none';
+            document.getElementById('loginForm').style.display = (tab === 'login') ? 'block' : 'none';
+            const btns = document.querySelectorAll('.tab-btn');
+            btns[0].classList.toggle('active', tab === 'register');
+            btns[1].classList.toggle('active', tab === 'login');
         }
 
         async function handleRegister(e) {
             e.preventDefault();
-            
+            const btn = document.getElementById('btnReg');
+            btn.disabled = true;
+            btn.innerText = "جاري الحفظ في السيرفر...";
+
             const name = document.getElementById('regName').value.trim();
             const grade = document.getElementById('regGrade').value;
             const phone = document.getElementById('regPhone').value.trim();
 
-            // حفظ البيانات الحقيقية في التخزين فوراً
-            let pendingRequests = JSON.parse(localStorage.getItem('pendingRequests')) || [];
-            pendingRequests.push({ id: Date.now(), name, grade, phone });
-            localStorage.setItem('pendingRequests', JSON.stringify(pendingRequests));
-
-            const BOT_TOKEN = "8944171880:AAFmbtL7TjB72ZtWKl4z_wjqlShSQFXkZpA"; 
-            const CHAT_ID = "5926610601";
-            let formattedPhone = phone.startsWith('0') ? '2' + phone : phone;
-
-            const textMessage = `🔔 <b>طلب تسجيل جديد في منصة الكوتش</b>\n\n👤 <b>الاسم:</b> ${name}\n📚 <b>الفرقة:</b> ${grade}\n📱 <b>الهاتف:</b> ${phone}`;
-
-            const payload = {
-                chat_id: CHAT_ID,
-                text: textMessage,
-                parse_mode: 'HTML',
-                reply_markup: {
-                    inline_keyboard: [
-                        [
-                            { text: "📲 فتح واتساب الطالب مباشرة", url: `https://wa.me/${formattedPhone}` },
-                            { text: "⚙️ فتح لوحة التحكم", url: `https://cap-abdelnaseer-talat.github.io/DrAli1/admin.html` }
-                        ]
-                    ]
-                }
-            };
-
             try {
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                const newReqRef = db.ref('pendingRequests').push();
+                await newReqRef.set({
+                    id: newReqRef.key,
+                    name: name,
+                    grade: grade,
+                    phone: phone,
+                    timestamp: Date.now()
                 });
-                alert("تم إرسال طلبك بنجاح لـ منصة الكوتش!");
-                e.target.reset();
-            } catch (err) {
-                alert("تم تسجيل طلبك بنجاح في المنصة!");
+
+                alert("تم إرسال طلبك بنجاح وسيتواصل معك الكوتش قريبًا!");
+                document.getElementById('registerForm').reset();
+            } catch (error) {
+                alert("حدث خطأ أثناء الحفظ، أعد المحاولة: " + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "إرسال طلب الانضمام";
             }
         }
 
         function handleLogin(e) {
             e.preventDefault();
-            const phone = document.getElementById('loginPhone').value.trim();
-            const pin = document.getElementById('loginPin').value.trim();
-
-            if ((phone === 'admin' || phone === '01000000000') && pin === 'admin2026') {
-                window.location.href = "admin.html";
-            } else {
-                const approvedStudents = JSON.parse(localStorage.getItem('approvedStudents')) || [];
-                const user = approvedStudents.find(s => (s.phone === phone) && String(s.pin) === String(pin));
-
-                if (user) {
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                    window.location.href = "courses.html";
-                } else {
-                    alert("رقم الهاتف أو كود المرور غير صحيح، أو لم يتم تفعيل حسابك بعد.");
-                }
-            }
+            alert("ميزة تسجيل الدخول تحت الصيانة والتحديث.");
         }
     </script>
 </body>
