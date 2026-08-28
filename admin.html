@@ -17,6 +17,7 @@
             --text-sub: #94a3b8;
             --success: #10b981;
             --danger: #ef4444;
+            --warning: #f59e0b;
         }
 
         * {
@@ -60,6 +61,41 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        /* الإحصائيات الفخمة */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(2, 6, 23, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .stat-card .stat-title {
+            font-size: 0.82rem;
+            color: var(--text-sub);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .stat-card.visitors .stat-value { color: var(--accent-cyan); }
+        .stat-card.online .stat-value { color: var(--success); }
+        .stat-card.approved .stat-value { color: var(--primary); }
+        .stat-card.rejected .stat-value { color: var(--danger); }
 
         /* Nav Tabs */
         .admin-nav {
@@ -109,10 +145,18 @@
             margin-bottom: 20px;
         }
 
+        .section-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
         .section-card h2 {
             font-size: 1.2rem;
-            margin-top: 0;
-            margin-bottom: 15px;
+            margin: 0;
             color: var(--accent-cyan);
             display: flex;
             align-items: center;
@@ -180,6 +224,7 @@
         .btn-success { background: var(--success); color: #fff; }
         .btn-danger { background: var(--danger); color: #fff; }
         .btn-primary { background: var(--primary); color: #fff; }
+        .btn-warning { background: var(--warning); color: #000; }
         .btn-sm { padding: 6px 10px; font-size: 0.78rem; }
 
         .pin-badge {
@@ -228,18 +273,41 @@
             <h1>⚙️ لوحة التحكم الإدارية — منصة الكوتش</h1>
         </div>
 
+        <!-- شبكة الإحصائيات اللحظية -->
+        <div class="stats-grid">
+            <div class="stat-card visitors">
+                <div class="stat-title">🌐 إجمالي الزائرين</div>
+                <div class="stat-value" id="statVisitors">0</div>
+            </div>
+            <div class="stat-card online">
+                <div class="stat-title">🟢 المتواجدين حالياً</div>
+                <div class="stat-value" id="statOnline">0</div>
+            </div>
+            <div class="stat-card approved">
+                <div class="stat-title">✅ الطلبات المقبولة</div>
+                <div class="stat-value" id="statApproved">0</div>
+            </div>
+            <div class="stat-card rejected">
+                <div class="stat-title">❌ الطلبات المرفوضة</div>
+                <div class="stat-value" id="statRejected">0</div>
+            </div>
+        </div>
+
         <!-- أزرار التنقل الرئيسية -->
         <div class="admin-nav">
-            <button class="nav-btn active" onclick="switchAdminTab('requests')">📥 طلبات الانضمام</button>
-            <button class="nav-btn" onclick="switchAdminTab('students')">👥 الطلاب المفعلين</button>
-            <button class="nav-btn" onclick="switchAdminTab('upload')">📚 رفع المحتوى</button>
-            <button class="nav-btn" onclick="switchAdminTab('settings')">🎛️ التحكم في الأزرار</button>
+            <button class="nav-btn active" onclick="switchAdminTab('requests', event)">📥 طلبات الانضمام</button>
+            <button class="nav-btn" onclick="switchAdminTab('students', event)">👥 الطلاب المفعلين</button>
+            <button class="nav-btn" onclick="switchAdminTab('upload', event)">📚 رفع المحتوى</button>
+            <button class="nav-btn" onclick="switchAdminTab('settings', event)">🎛️ التحكم في الأزرار</button>
         </div>
 
         <!-- 1. قسم متابعة الطلبات والقبول -->
         <div id="tab-requests" class="tab-content active">
             <div class="section-card">
-                <h2>📥 طلبات الانضمام المعلقة</h2>
+                <div class="section-header-flex">
+                    <h2>📥 طلبات الانضمام المعلقة</h2>
+                    <button class="btn btn-warning" onclick="approveAllStudents()">⚡ قبول كل الطلبات دفعة واحدة</button>
+                </div>
                 <div style="overflow-x:auto;">
                     <table class="data-table">
                         <thead>
@@ -352,26 +420,44 @@
         const FIREBASE_URL = "https://abodaa-default-rtdb.firebaseio.com";
         const BOT_TOKEN = "8944171880:AAFmbtL7TjB72ZtWKl4z_wjqlShSQFXkZpA";
         const CHAT_ID = "5926610601";
+        
+        let globalStudentsData = {};
 
         document.addEventListener("DOMContentLoaded", () => {
             loadStudentsData();
             loadCoursesData();
             loadSettingsData();
+            loadStatsData();
         });
 
-        function switchAdminTab(tab) {
+        function switchAdminTab(tab, evt) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             
             document.getElementById(`tab-${tab}`).classList.add('active');
-            event.target.classList.add('active');
+            if(evt) evt.target.classList.add('active');
+        }
+
+        // تحميل وتحديث بطاقات الإحصائيات
+        async function loadStatsData() {
+            try {
+                // جلب بيانات الإحصائيات والزوار من فايربيس
+                const resStats = await fetch(`${FIREBASE_URL}/stats.json`);
+                const statsData = await resStats.json() || {};
+                
+                document.getElementById('statVisitors').innerText = statsData.visitorsCount || 0;
+                document.getElementById('statOnline').innerText = statsData.onlineNow || 1;
+
+            } catch (err) {
+                console.error("خطأ في جلب الإحصائيات:", err);
+            }
         }
 
         // 1. تحميل وإدارة طلبات الطلاب (المعلقة والمقبولة)
         async function loadStudentsData() {
             try {
                 const res = await fetch(`${FIREBASE_URL}/students.json`);
-                const data = await res.json() || {};
+                globalStudentsData = await res.json() || {};
 
                 const pendingTable = document.getElementById('pendingRequestsTable');
                 const approvedTable = document.getElementById('approvedStudentsTable');
@@ -381,9 +467,11 @@
 
                 let hasPending = false;
                 let hasApproved = false;
+                let countApproved = 0;
+                let countRejected = 0;
 
-                Object.keys(data).forEach(id => {
-                    const student = data[id];
+                Object.keys(globalStudentsData).forEach(id => {
+                    const student = globalStudentsData[id];
 
                     if (student.status === 'pending') {
                         hasPending = true;
@@ -392,7 +480,7 @@
                                 <td><b>${student.name}</b></td>
                                 <td>${student.grade}</td>
                                 <td>${student.phone}</td>
-                                <td>${new Date(student.createdAt).toLocaleDateString('ar-EG')}</td>
+                                <td>${student.createdAt ? new Date(student.createdAt).toLocaleDateString('ar-EG') : 'غير محدد'}</td>
                                 <td>
                                     <button class="btn btn-success btn-sm" onclick="approveStudent('${id}', '${student.name}', '${student.phone}')">✅ قبول وتوليد PIN</button>
                                     <button class="btn btn-danger btn-sm" onclick="rejectStudent('${id}')">❌ رفض</button>
@@ -401,6 +489,7 @@
                         `;
                     } else if (student.status === 'approved') {
                         hasApproved = true;
+                        countApproved++;
                         approvedTable.innerHTML += `
                             <tr>
                                 <td><b>${student.name}</b></td>
@@ -413,8 +502,13 @@
                                 </td>
                             </tr>
                         `;
+                    } else if (student.status === 'rejected') {
+                        countRejected++;
                     }
                 });
+
+                document.getElementById('statApproved').innerText = countApproved;
+                document.getElementById('statRejected').innerText = countRejected;
 
                 if (!hasPending) pendingTable.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-sub);">لا توجد طلبات معلقة حالياً</td></tr>`;
                 if (!hasApproved) approvedTable.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-sub);">لا يوجد طلاب مفعلين حالياً</td></tr>`;
@@ -424,9 +518,9 @@
             }
         }
 
-        // قبول الطالب وتوليد كود PIN
+        // قبول طالب فردي وتوليد PIN
         async function approveStudent(id, name, phone) {
-            const generatedPin = Math.floor(1000 + Math.random() * 9000); // توليد PIN عشوائي من 4 أرقام
+            const generatedPin = Math.floor(1000 + Math.random() * 9000);
 
             try {
                 await fetch(`${FIREBASE_URL}/students/${id}.json`, {
@@ -438,7 +532,6 @@
                     })
                 });
 
-                // إرسال إشعار التليجرام
                 const msg = `🎉 <b>تم قبول الطالب وتوليد الكود!</b>\n\n👤 <b>الاسم:</b> ${name}\n📱 <b>الهاتف:</b> ${phone}\n🔑 <b>PIN الدخول:</b> <code>${generatedPin}</code>`;
                 await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
@@ -453,15 +546,53 @@
             }
         }
 
-        // حذف / رفض الطالب
-        async function rejectStudent(id) {
-            if (!confirm("هل أنت تأكد من إجراء الرفض/الحذف؟")) return;
+        // قبول جميع الطلبات المعلقة دفعة واحدة
+        async function approveAllStudents() {
+            const pendingIds = Object.keys(globalStudentsData).filter(id => globalStudentsData[id].status === 'pending');
+
+            if (pendingIds.length === 0) {
+                alert("لا توجد طلبات معلقة لقبولها حالياً.");
+                return;
+            }
+
+            if (!confirm(`هل أنت تأكد من قبول جميع الطلبات المعلقة وعددها (${pendingIds.length}) طلب؟`)) return;
 
             try {
-                await fetch(`${FIREBASE_URL}/students/${id}.json`, { method: 'DELETE' });
+                for (const id of pendingIds) {
+                    const student = globalStudentsData[id];
+                    const generatedPin = Math.floor(1000 + Math.random() * 9000);
+
+                    await fetch(`${FIREBASE_URL}/students/${id}.json`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            status: 'approved',
+                            pin: generatedPin
+                        })
+                    });
+                }
+
+                alert("تم قبول جميع الطلبات المعلقة بنجاح وتوليد الأكواد الخاصة بهم!");
                 loadStudentsData();
             } catch (err) {
-                alert("حدث خطأ أثناء عملية الحذف.");
+                console.error(err);
+                alert("حدث خطأ أثناء قبول بعض الطلبات.");
+            }
+        }
+
+        // رفض أو إغلاق حساب طالب
+        async function rejectStudent(id) {
+            if (!confirm("هل أنت تأكد من إجراء الرفض/تغيير حالة الطالب؟")) return;
+
+            try {
+                await fetch(`${FIREBASE_URL}/students/${id}.json`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'rejected' })
+                });
+                loadStudentsData();
+            } catch (err) {
+                alert("حدث خطأ أثناء عملية الرفض.");
             }
         }
 
