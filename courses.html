@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة الكابتن التعليمية | المقررات الدراسية</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-color: #0f172a;
+            --text-muted: #475569;
+            --primary: #2563eb;
+            --primary-glow: #3b82f6;
+            --border-color: #cbd5e1;
+            --input-bg: #ffffff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0b0f19;
+                --card-bg: rgba(18, 24, 38, 0.95);
+                --text-color: #f8fafc;
+                --text-muted: #94a3b8;
+                --primary: #3b82f6;
+                --primary-glow: #60a5fa;
+                --border-color: #1e293b;
+                --input-bg: #0f172a;
+            }
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        /* كارت بيانات الطالب Header */
+        .user-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.15);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .avatar {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+            object-fit: cover;
+        }
+
+        .user-info h2 {
+            margin: 0 0 4px 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .user-info p {
+            margin: 0;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 4px 10px;
+            background-color: rgba(37, 99, 235, 0.15);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        /* أزرار الأترام المقررات */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terms-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .term-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px 16px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-color);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .term-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary-glow);
+            transform: translateY(-4px);
+        }
+
+        .term-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .term-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .term-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* أزرار الدعم والتواصل */
+        .support-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.1);
+        }
+
+        .support-title {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .support-links {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .support-btn {
+            flex: 1;
+            padding: 10px 6px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--input-bg);
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .support-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- كارت بيانات المشترك -->
+        <div class="user-card">
+            <img src="logo.png" alt="صورة الطالب" class="avatar">
+            <div class="user-info">
+                <h2 id="studentName">مرحباً بك يا كابتن</h2>
+                <p>مفعل ومسجل بالمنصة</p>
+                <span class="badge" id="studentGrade">الفرقة الدراسية</span>
+            </div>
+        </div>
+
+        <!-- قسم المقررات الأكاديمية -->
+        <div class="section-title">📚 المقررات الدراسية المتاحة</div>
+        <div class="terms-grid">
+            <a href="term1.html" class="term-card">
+                <span class="term-icon">📖</span>
+                <div class="term-title">الترم الأول</div>
+                <div class="term-desc">عرض المحاضرات والمواد</div>
+            </a>
+            <a href="term2.html" class="term-card">
+                <span class="term-icon">📝</span>
+                <div class="term-title">الترم الثاني</div>
+                <div class="term-desc">عرض المحاضرات والمواد</div>
+            </a>
+        </div>
+
+        <!-- أزرار الدعم المباشرة -->
+        <div class="support-card">
+            <div class="support-title">أزرار الدعم والتواصل المباشر</div>
+            <div class="support-links">
+                <a href="https://wa.me/201098227150" target="_blank" class="support-btn">واتساب</a>
+                <a href="https://t.me/CapAbdo1" target="_blank" class="support-btn">تليجرام</a>
+                <a href="https://www.facebook.com/cap.abdelnaseer.talat" target="_blank" class="support-btn">فيسبوك</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // قراءة بيانات المستخدم من الرابط أو التخزين إن وجدت
+        const urlParams = new URLSearchParams(window.location.search);
+        const name = urlParams.get('name');
+        const grade = urlParams.get('grade');
+
+        if (name) {
+            document.getElementById('studentName').innerText = name;
+        }
+        if (grade) {
+            document.getElementById('studentGrade').innerText = grade;
+        }
+    </script>
+</body>
+</html>
+
