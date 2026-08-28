@@ -1,90 +1,304 @@
-here<!DOCTYPE html>
-<html lang="ar" dir="rtl" data-theme="dark">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>منصة الكابتن التعليمية</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة الكابتن التعليمية | تسجيل الدخول</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-color: #0f172a;
+            --text-muted: #475569;
+            --primary: #2563eb;
+            --primary-glow: #3b82f6;
+            --border-color: #cbd5e1;
+            --input-bg: #ffffff;
+            --success-bg: rgba(37, 99, 235, 0.1);
+        }
+
+        /* الوضع الليلي التلقائي حسب نظام الهاتف */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0b0f19;
+                --card-bg: rgba(18, 24, 38, 0.95);
+                --text-color: #f8fafc;
+                --text-muted: #94a3b8;
+                --primary: #3b82f6;
+                --primary-glow: #60a5fa;
+                --border-color: #1e293b;
+                --input-bg: #0f172a;
+                --success-bg: rgba(59, 130, 246, 0.15);
+            }
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* الكارت الرئيسي بتأثير مضيء خفيف */
+        .card {
+            width: 100%;
+            max-width: 440px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 32px 24px;
+            box-shadow: 0 0 25px rgba(37, 99, 235, 0.15);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        /* الإطار المضيء حول الصورة */
+        .logo-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .logo {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow), 0 0 30px var(--primary-glow);
+            animation: pulseGlow 2.5s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+            }
+            100% {
+                box-shadow: 0 0 25px var(--primary-glow), 0 0 45px var(--primary-glow);
+            }
+        }
+
+        .title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin: 0 0 8px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .bio {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            text-align: right;
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-color);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        /* زر التسجيل المضيء */
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary), #1d4ed8);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.8);
+            transform: translateY(-2px);
+        }
+
+        /* أزرار الدعم والتواصل */
+        .support-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 24px;
+            margin-bottom: 10px;
+        }
+
+        .support-links {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .support-btn {
+            flex: 1;
+            padding: 10px 6px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--input-bg);
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .support-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+            color: var(--primary);
+        }
+
+        /* رسالة الترحيب والانتظار */
+        .status-message {
+            display: none;
+            padding: 18px;
+            margin-top: 15px;
+            border-radius: 12px;
+            background-color: var(--success-bg);
+            border: 1px solid var(--primary);
+            color: var(--text-color);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            box-shadow: 0 0 15px var(--primary-glow);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
 
-  <!-- خلفية تفاعلية متوهجة -->
-  <div class="cyber-bg-glow"></div>
+    <div class="card">
+        <!-- الصورة ذات الإطار المضيء -->
+        <div class="logo-wrapper">
+            <img src="logo.png" alt="شعارات المنصة" class="logo">
+        </div>
 
-  <nav class="navbar glass-panel">
-    <div class="brand-title">
-      🎓 <span id="platformNameDisplay">منصة الكابتن</span>
+        <h1 class="title">Captain Platform</h1>
+        <p class="bio">مرحباً بك في منصة الكابتن التعليمية. يرجى إدخال بياناتك كاملة للإنضمام ومتابعة المقررات الدراسية.</p>
+
+        <!-- نموذج تسجيل الدخول والإنضمام -->
+        <form id="authForm" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+                <label>الاسم الثلاثي / الخماسي</label>
+                <input type="text" id="fullName" required placeholder="أدخل اسمك بالكامل">
+            </div>
+
+            <div class="form-group">
+                <label>الفرقة الدراسية</label>
+                <select id="grade" required>
+                    <option value="">اختر الفرقة الدراسية</option>
+                    <option value="الفرقة الأولى">الفرقة الأولى</option>
+                    <option value="الفرقة الثانية">الفرقة الثانية</option>
+                    <option value="الفرقة الثالثة">الفرقة الثالثة</option>
+                    <option value="الفرقة الرابعة">الفرقة الرابعة</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>رقم الهاتف (واتساب)</label>
+                <input type="tel" id="phone" required placeholder="01xxxxxxxxx">
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">تسجيل الدخول / انضمام جديد</button>
+        </form>
+
+        <!-- رسالة الترحيب وقبول الأدمن -->
+        <div id="statusMsg" class="status-message">
+            ✨ <strong>مرحبًا بك في منصة الكابتن عزيزي!</strong> ✨<br><br>
+            تم تسجيل حسابك بنجاح. حسابك حالياً <strong>في انتظار قبول الأدمن</strong>، وسنتواصل معك فور التفعيل.
+        </div>
+
+        <!-- أزرار الدعم المباشرة -->
+        <div class="support-title">أزرار الدعم والتواصل المباشر</div>
+        <div class="support-links">
+            <a href="https://wa.me/201098227150" target="_blank" class="support-btn">واتساب</a>
+            <a href="https://t.me/CapAbdo1" target="_blank" class="support-btn">تليجرام</a>
+            <a href="https://www.facebook.com/cap.abdelnaseer.talat" target="_blank" class="support-btn">فيسبوك</a>
+        </div>
     </div>
-    <div class="nav-actions">
-      <button class="btn-glass" onclick="toggleTheme()">🌙 الوضع</button>
-      <button class="btn-glass" onclick="location.href='login.html'">🔐 تسجيل الدخول</button>
-    </div>
-  </nav>
 
-  <header class="hero glass-panel">
-    <div class="profile-avatar-container" onclick="pulseAvatar(this)">
-      <div class="avatar-glow-ring"></div>
-      <img src="1783950091830.jpg" alt="الكابتن عبدالناصر" class="profile-avatar" id="mainAvatar">
-    </div>
-    <h1>أهلاً بكم في منصة الكابتن</h1>
-    <p>منصة تعليمية متكاملة لمساعدة جميع إخواننا طلاب كلية علوم الرياضة على مستوى الجمهورية وتسهيل التلخيصات والاختبارات العملية.</p>
-    <div class="dedication-badge">
-      إعداد من أخوكم: كابتن عبدالناصر - طالب بالفرقة الثانية كلية علوم الرياضة جامعة أسيوط ❤️
-    </div>
-  </header>
+    <script>
+        const BOT_TOKEN = "8944171880:AAFmbtL7TjB72ZtWKl4z_wjqlShSQFXkZpA";
+        const CHAT_ID = "5926610601";
 
-  <main class="container">
-    <h2 class="section-title">📚 اختر الفرقة الدراسية</h2>
-    <div class="grid-levels">
-      <div class="card-level glass-panel" onclick="openLevelModal(1)">
-        <div class="card-badge">1</div>
-        <h3>الفرقة الأولى</h3>
-        <p>مقررات الترم الأول والترم الثاني</p>
-      </div>
-      <div class="card-level glass-panel" onclick="openLevelModal(2)">
-        <div class="card-badge">2</div>
-        <h3>الفرقة الثانية</h3>
-        <p>مقررات الترم الأول والترم الثاني</p>
-      </div>
-      <div class="card-level glass-panel" onclick="openLevelModal(3)">
-        <div class="card-badge">3</div>
-        <h3>الفرقة الثالثة</h3>
-        <p>مقررات الترم الأول والترم الثاني</p>
-      </div>
-      <div class="card-level glass-panel" onclick="openLevelModal(4)">
-        <div class="card-badge">4</div>
-        <h3>الفرقة الرابعة</h3>
-        <p>مقررات الترم الأول والترم الثاني</p>
-      </div>
-    </div>
-  </main>
+        async function handleSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = "جاري الإرسال...";
+            btn.disabled = true;
 
-  <!-- نافذة تفاصيل الفرقة والمواد -->
-  <div class="modal-overlay" id="levelModal">
-    <div class="modal-content glass-panel">
-      <span class="close-modal" onclick="closeModal('levelModal')">&times;</span>
-      <h2 id="modalLevelTitle" style="margin-bottom: 15px; font-weight: 900;">تفاصيل الفرقة</h2>
-      
-      <div class="modal-tabs">
-        <button class="modal-tab-btn active" id="term1Btn" onclick="switchTerm(1)">الترم الأول</button>
-        <button class="modal-tab-btn" id="term2Btn" onclick="switchTerm(2)">الترم الثاني</button>
-      </div>
+            const name = document.getElementById('fullName').value;
+            const grade = document.getElementById('grade').value;
+            const phone = document.getElementById('phone').value;
 
-      <div class="modal-tabs">
-        <button class="modal-tab-btn active" id="summarySectionBtn" onclick="switchSection('summary')">📖 التلخيصات</button>
-        <button class="modal-tab-btn" id="practicalSectionBtn" onclick="switchSection('practical')">🥊 بطاريات العملي</button>
-      </div>
+            const messageText = `🔔 *طلب تسجيل جديد في المنصة*\n\n👤 *الاسم:* ${name}\n📚 *الفرقة:* ${grade}\n📱 *الهاتف:* ${phone}`;
 
-      <div id="subjectListContainer" style="margin-top: 15px;">
-        <!-- المواد تظهر هنا ديناميكياً -->
-      </div>
-    </div>
-  </div>
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: messageText,
+                        parse_mode: 'Markdown'
+                    })
+                });
 
-  <script src="script.js"></script>
+                if (response.ok) {
+                    document.getElementById('authForm').style.display = 'none';
+                    document.getElementById('statusMsg').style.display = 'block';
+                } else {
+                    alert('حدث خطأ أثناء إرسال البيانات، يرجى إعادة المحاولة.');
+                    btn.innerText = "تسجيل الدخول / انضمام جديد";
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                alert('عذراً، تعذر الاتصال بالسيرفر. تحقق من اتصال الإنترنت.');
+                btn.innerText = "تسجيل الدخول / انضمام جديد";
+                btn.disabled = false;
+            }
+        }
+    </script>
 </body>
 </html>
