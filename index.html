@@ -1,0 +1,90 @@
+here<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة الكابتن التعليمية</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- خلفية تفاعلية متوهجة -->
+  <div class="cyber-bg-glow"></div>
+
+  <nav class="navbar glass-panel">
+    <div class="brand-title">
+      🎓 <span id="platformNameDisplay">منصة الكابتن</span>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-glass" onclick="toggleTheme()">🌙 الوضع</button>
+      <button class="btn-glass" onclick="location.href='login.html'">🔐 تسجيل الدخول</button>
+    </div>
+  </nav>
+
+  <header class="hero glass-panel">
+    <div class="profile-avatar-container" onclick="pulseAvatar(this)">
+      <div class="avatar-glow-ring"></div>
+      <img src="1783950091830.jpg" alt="الكابتن عبدالناصر" class="profile-avatar" id="mainAvatar">
+    </div>
+    <h1>أهلاً بكم في منصة الكابتن</h1>
+    <p>منصة تعليمية متكاملة لمساعدة جميع إخواننا طلاب كلية علوم الرياضة على مستوى الجمهورية وتسهيل التلخيصات والاختبارات العملية.</p>
+    <div class="dedication-badge">
+      إعداد من أخوكم: كابتن عبدالناصر - طالب بالفرقة الثانية كلية علوم الرياضة جامعة أسيوط ❤️
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 class="section-title">📚 اختر الفرقة الدراسية</h2>
+    <div class="grid-levels">
+      <div class="card-level glass-panel" onclick="openLevelModal(1)">
+        <div class="card-badge">1</div>
+        <h3>الفرقة الأولى</h3>
+        <p>مقررات الترم الأول والترم الثاني</p>
+      </div>
+      <div class="card-level glass-panel" onclick="openLevelModal(2)">
+        <div class="card-badge">2</div>
+        <h3>الفرقة الثانية</h3>
+        <p>مقررات الترم الأول والترم الثاني</p>
+      </div>
+      <div class="card-level glass-panel" onclick="openLevelModal(3)">
+        <div class="card-badge">3</div>
+        <h3>الفرقة الثالثة</h3>
+        <p>مقررات الترم الأول والترم الثاني</p>
+      </div>
+      <div class="card-level glass-panel" onclick="openLevelModal(4)">
+        <div class="card-badge">4</div>
+        <h3>الفرقة الرابعة</h3>
+        <p>مقررات الترم الأول والترم الثاني</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- نافذة تفاصيل الفرقة والمواد -->
+  <div class="modal-overlay" id="levelModal">
+    <div class="modal-content glass-panel">
+      <span class="close-modal" onclick="closeModal('levelModal')">&times;</span>
+      <h2 id="modalLevelTitle" style="margin-bottom: 15px; font-weight: 900;">تفاصيل الفرقة</h2>
+      
+      <div class="modal-tabs">
+        <button class="modal-tab-btn active" id="term1Btn" onclick="switchTerm(1)">الترم الأول</button>
+        <button class="modal-tab-btn" id="term2Btn" onclick="switchTerm(2)">الترم الثاني</button>
+      </div>
+
+      <div class="modal-tabs">
+        <button class="modal-tab-btn active" id="summarySectionBtn" onclick="switchSection('summary')">📖 التلخيصات</button>
+        <button class="modal-tab-btn" id="practicalSectionBtn" onclick="switchSection('practical')">🥊 بطاريات العملي</button>
+      </div>
+
+      <div id="subjectListContainer" style="margin-top: 15px;">
+        <!-- المواد تظهر هنا ديناميكياً -->
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
