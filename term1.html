@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مقررات الترم الأول | منصة الكابتن</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-color: #0f172a;
+            --text-muted: #475569;
+            --primary: #2563eb;
+            --primary-glow: #3b82f6;
+            --border-color: #cbd5e1;
+            --input-bg: #ffffff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0b0f19;
+                --card-bg: rgba(18, 24, 38, 0.95);
+                --text-color: #f8fafc;
+                --text-muted: #94a3b8;
+                --primary: #3b82f6;
+                --primary-glow: #60a5fa;
+                --border-color: #1e293b;
+                --input-bg: #0f172a;
+            }
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .back-btn {
+            padding: 8px 16px;
+            border-radius: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .page-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .subject-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .subject-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .subject-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .subject-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .subject-badge {
+            background: rgba(37, 99, 235, 0.15);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .subject-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .btn-view {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary), #1d4ed8);
+            color: #ffffff;
+            text-align: center;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .btn-view:hover {
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .footer-credits {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-nav">
+            <h1 class="page-title">📚 مقررات الترم الأول</h1>
+            <a href="courses.html" class="back-btn">← العودة للرئيسية</a>
+        </div>
+
+        <div class="subjects-grid">
+            <!-- مادة 1 -->
+            <div class="subject-card">
+                <div class="subject-head">
+                    <h3 class="subject-name">المادة الأولى</h3>
+                    <span class="subject-badge">الترم الأول</span>
+                </div>
+                <p class="subject-desc">محاضرات، ملخصات، واختبارات تفاعلية للمادة.</p>
+                <a href="#" class="btn-view">عرض المحتوى الدراسي</a>
+            </div>
+
+            <!-- مادة 2 -->
+            <div class="subject-card">
+                <div class="subject-head">
+                    <h3 class="subject-name">المادة الثانية</h3>
+                    <span class="subject-badge">الترم الأول</span>
+                </div>
+                <p class="subject-desc">محاضرات، ملخصات، واختبارات تفاعلية للمادة.</p>
+                <a href="#" class="btn-view">عرض المحتوى الدراسي</a>
+            </div>
+
+            <!-- مادة 3 -->
+            <div class="subject-card">
+                <div class="subject-head">
+                    <h3 class="subject-name">المادة الثالثة</h3>
+                    <span class="subject-badge">الترم الأول</span>
+                </div>
+                <p class="subject-desc">محاضرات، ملخصات، واختبارات تفاعلية للمادة.</p>
+                <a href="#" class="btn-view">عرض المحتوى الدراسي</a>
+            </div>
+        </div>
+
+        <div class="footer-credits">
+            تطوير المهندس عبدالناصر © 2026
+        </div>
+    </div>
+
+</body>
+</html>
