@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -14,6 +15,7 @@
             --primary-glow: #3b82f6;
             --border-color: #cbd5e1;
             --input-bg: #ffffff;
+            --accent-cyan: #06b6d4;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -26,6 +28,7 @@
                 --primary-glow: #60a5fa;
                 --border-color: #1e293b;
                 --input-bg: #0f172a;
+                --accent-cyan: #06b6d4;
             }
         }
 
@@ -35,7 +38,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             min-height: 100vh;
-            padding: 20px;
+            padding: 20px 10px;
             box-sizing: border-box;
             display: flex;
             justify-content: center;
@@ -71,9 +74,12 @@
         }
 
         .page-title {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 800;
             margin: 0;
+            background: linear-gradient(135deg, var(--text-color) 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .subjects-grid {
@@ -153,6 +159,7 @@
             color: var(--text-muted);
             border-top: 1px solid var(--border-color);
             padding-top: 16px;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -164,35 +171,10 @@
             <a href="courses.html" class="back-btn">← العودة للرئيسية</a>
         </div>
 
-        <div class="subjects-grid">
-            <!-- مادة 1 -->
-            <div class="subject-card">
-                <div class="subject-head">
-                    <h3 class="subject-name">المادة الأولى</h3>
-                    <span class="subject-badge">الترم الثاني</span>
-                </div>
-                <p class="subject-desc">محاضرات، ملخصات، واختبارات تفاعلية للمادة.</p>
-                <a href="#" class="btn-view">عرض المحتوى الدراسي</a>
-            </div>
-
-            <!-- مادة 2 -->
-            <div class="subject-card">
-                <div class="subject-head">
-                    <h3 class="subject-name">المادة الثانية</h3>
-                    <span class="subject-badge">الترم الثاني</span>
-                </div>
-                <p class="subject-desc">محاضرات، ملخصات، واختبارات تفاعلية للمادة.</p>
-                <a href="#" class="btn-view">عرض المحتوى الدراسي</a>
-            </div>
-
-            <!-- مادة 3 -->
-            <div class="subject-card">
-                <div class="subject-head">
-                    <h3 class="subject-name">المادة الثالثة</h3>
-                    <span class="subject-badge">الترم الثاني</span>
-                </div>
-                <p class="subject-desc">محاضرات، ملخصات، واختبارات تفاعلية للمادة.</p>
-                <a href="#" class="btn-view">عرض المحتوى الدراسي</a>
+        <!-- شبكة مواد الترم الثاني الديناميكية -->
+        <div class="subjects-grid" id="term2SubjectsContainer">
+            <div class="subject-card" style="text-align: center;">
+                <p style="color: var(--text-muted); margin: 0;">جاري تحميل مواد الترم الثاني...</p>
             </div>
         </div>
 
@@ -201,5 +183,62 @@
         </div>
     </div>
 
+    <script>
+        const FIREBASE_URL = "https://abodaa-default-rtdb.firebaseio.com";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const studentGrade = localStorage.getItem('studentGrade') || 'الجميع';
+            fetchTerm2Subjects(studentGrade);
+        });
+
+        async function fetchTerm2Subjects(studentGrade) {
+            try {
+                const res = await fetch(`${FIREBASE_URL}/courses.json`);
+                const courses = await res.json() || {};
+                const container = document.getElementById('term2SubjectsContainer');
+                
+                container.innerHTML = '';
+                const keys = Object.keys(courses);
+
+                let foundCount = 0;
+
+                keys.reverse().forEach(id => {
+                    const c = courses[id];
+                    // تصفية المواد الخاصة بالترم الثاني فقط وفئة الطالب
+                    if (c.term === 'الترم الثاني' && (c.grade === 'الجميع' || c.grade === studentGrade)) {
+                        foundCount++;
+                        container.innerHTML += `
+                            <div class="subject-card">
+                                <div class="subject-head">
+                                    <h3 class="subject-name">${c.title}</h3>
+                                    <span class="subject-badge">الترم الثاني</span>
+                                </div>
+                                <p class="subject-desc">${c.desc || 'محاضرات، ملخصات، واختبارات تفاعلية للمادة الدراسية.'}</p>
+                                <a href="subject.html?id=${id}&name=${encodeURIComponent(c.title)}" class="btn-view">عرض المحتوى الدراسي</a>
+                            </div>
+                        `;
+                    }
+                });
+
+                if (foundCount === 0) {
+                    container.innerHTML = `
+                        <div class="subject-card" style="text-align: center;">
+                            <h3 class="subject-name" style="color: var(--text-muted); margin-bottom: 8px;">لا توجد مواد مضافة للترم الثاني حالياً</h3>
+                            <p class="subject-desc">سيتم إرفاق المواد الدراسية قريباً من قبل إدارة المنصة.</p>
+                        </div>
+                    `;
+                }
+
+            } catch (err) {
+                console.error("خطأ في جلب بيانات الترم الثاني:", err);
+                document.getElementById('term2SubjectsContainer').innerHTML = `
+                    <div class="subject-card" style="text-align: center;">
+                        <h3 class="subject-name" style="color: #ef4444;">تعذر تحميل المقررات</h3>
+                        <p class="subject-desc">تحقق من اتصالك بالإنترنت.</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
 </body>
 </html>
