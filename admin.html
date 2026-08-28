@@ -4,107 +4,568 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم | منصة الكوتش</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { background: #0b0f19; color: #fff; font-family: sans-serif; padding: 20px; }
-        h1 { color: #00e5ff; text-align: center; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: rgba(255,255,255,0.05); }
-        th, td { padding: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
-        th { background: rgba(0,229,255,0.2); }
-        .btn-approve { background: #2ed573; color: #000; padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .btn-reject { background: #ff4757; color: #fff; padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer; margin-right: 5px; }
+        :root {
+            --bg-dark: #050811;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.4);
+            --accent-cyan: #06b6d4;
+            --glass-bg: rgba(15, 23, 42, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-input: rgba(2, 6, 23, 0.6);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .admin-container {
+            width: 100%;
+            max-width: 1000px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            backdrop-filter: blur(20px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #fff 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Nav Tabs */
+        .admin-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 130px;
+            padding: 12px 16px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-input);
+            color: var(--text-sub);
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent-cyan));
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Cards & Tables */
+        .section-card {
+            background: rgba(2, 6, 23, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section-card h2 {
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px 10px;
+            text-align: right;
+            border-bottom: 1px solid var(--glass-border);
+            font-size: 0.88rem;
+        }
+
+        .data-table th {
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            color: var(--text-sub);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-input);
+            color: #fff;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+        }
+
+        /* Action Buttons */
+        .btn {
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-sm { padding: 6px 10px; font-size: 0.78rem; }
+
+        .pin-badge {
+            background: rgba(6, 182, 212, 0.2);
+            color: var(--accent-cyan);
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .footer-credits {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            border-top: 1px solid var(--glass-border);
+            padding-top: 18px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .data-table, .data-table tbody, .data-table tr, .data-table td {
+                display: block;
+                width: 100%;
+            }
+            .data-table tr {
+                margin-bottom: 15px;
+                background: rgba(255,255,255,0.02);
+                border-radius: 12px;
+                padding: 10px;
+            }
+            .data-table td {
+                text-align: left;
+                padding-left: 50%;
+                position: relative;
+                border-bottom: none;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <h1>⚙️ لوحة إدارة منصة الكوتش</h1>
+    <div class="admin-container">
+        <div class="header">
+            <h1>⚙️ لوحة التحكم الإدارية — منصة الكوتش</h1>
+        </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>الاسم</th>
-                <th>الفرقة</th>
-                <th>الهاتف</th>
-                <th>الحالة</th>
-                <th>كود المرور (PIN)</th>
-                <th>إجراءات</th>
-            </tr>
-        </thead>
-        <tbody id="studentsTable">
-            <tr><td colspan="6">جاري تحميل البيانات من السحابة...</td></tr>
-        </tbody>
-    </table>
+        <!-- أزرار التنقل الرئيسية -->
+        <div class="admin-nav">
+            <button class="nav-btn active" onclick="switchAdminTab('requests')">📥 طلبات الانضمام</button>
+            <button class="nav-btn" onclick="switchAdminTab('students')">👥 الطلاب المفعلين</button>
+            <button class="nav-btn" onclick="switchAdminTab('upload')">📚 رفع المحتوى</button>
+            <button class="nav-btn" onclick="switchAdminTab('settings')">🎛️ التحكم في الأزرار</button>
+        </div>
 
-<script>
-    const SUPABASE_URL = "https://qvkpeoqbmoqczfjjexfs.supabase.com";
-    const SUPABASE_KEY = "sb_publishable_VpMTCDC7K8W4DcOc1-Y48w_ykbjl94q";
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        <!-- 1. قسم متابعة الطلبات والقبول -->
+        <div id="tab-requests" class="tab-content active">
+            <div class="section-card">
+                <h2>📥 طلبات الانضمام المعلقة</h2>
+                <div style="overflow-x:auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الفرقة</th>
+                                <th>الهاتف</th>
+                                <th>التاريخ</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pendingRequestsTable">
+                            <tr><td colspan="5" style="text-align:center;">جاري تحميل الطلبات...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-    // 1. جلب قائمة الطلاب من قاعدة البيانات السحابية
-    async function loadStudents() {
-        const { data: students, error } = await supabaseClient
-            .from('students')
-            .select('*')
-            .order('id', { ascending: false });
+        <!-- 2. قسم الطلاب المقبولين ومتابعة الـ PIN -->
+        <div id="tab-students" class="tab-content">
+            <div class="section-card">
+                <h2>👥 قائمة الطلاب المفعلين والأكواد (PIN)</h2>
+                <div style="overflow-x:auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الفرقة</th>
+                                <th>الهاتف</th>
+                                <th>كود المرور (PIN)</th>
+                                <th>إلغاء التفعيل</th>
+                            </tr>
+                        </thead>
+                        <tbody id="approvedStudentsTable">
+                            <tr><td colspan="5" style="text-align:center;">جاري تحميل البيانات...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-        const tableBody = document.getElementById('studentsTable');
-        tableBody.innerHTML = '';
+        <!-- 3. قسم رفع المحتوى والبيانات -->
+        <div id="tab-upload" class="tab-content">
+            <div class="section-card">
+                <h2>➕ إضافة درس أو محتوى جديد</h2>
+                <form id="uploadContentForm" onsubmit="handleContentUpload(event)">
+                    <div class="form-group">
+                        <label>عنوان المحتوى / الكورس</label>
+                        <input type="text" id="courseTitle" class="form-control" placeholder="مثال: محاضرة التشريح - الفصل الأول" required>
+                    </div>
+                    <div class="form-group">
+                        <label>الفرقة المستهدفة</label>
+                        <select id="courseGrade" class="form-control" required>
+                            <option value="الجميع">جميع الفرق</option>
+                            <option value="الفرقة الأولى">الفرقة الأولى</option>
+                            <option value="الفرقة الثانية">الفرقة الثانية</option>
+                            <option value="الفرقة الثالثة">الفرقة الثالثة</option>
+                            <option value="الفرقة الرابعة">الفرقة الرابعة</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>رابط الفيديو / الملف (YouTube / Drive / MP4)</label>
+                        <input type="url" id="courseLink" class="form-control" placeholder="https://..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>وصف قصير</label>
+                        <textarea id="courseDesc" class="form-control" rows="3" placeholder="أدخل تفاصيل المحتوى..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; padding:12px;">رفع المحتوى فوراً</button>
+                </form>
+            </div>
 
-        if (error || !students || students.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="6">لا يوجد طلبات تسجيل حالياً.</td></tr>';
-            return;
-        }
+            <div class="section-card">
+                <h2>📂 المحتوى المرفوع حالياً</h2>
+                <div id="uploadedCoursesList">
+                    <p style="text-align:center; color: var(--text-sub);">جاري التحميل...</p>
+                </div>
+            </div>
+        </div>
 
-        students.forEach(student => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${student.name}</td>
-                <td>${student.grade}</td>
-                <td><a href="https://wa.me/2${student.phone}" target="_blank" style="color:#00e5ff">${student.phone}</a></td>
-                <td>${student.status === 'approved' ? '✅ مقبول' : '⏳ قيد الانتظار'}</td>
-                <td><b>${student.pin || '---'}</b></td>
-                <td>
-                    ${student.status !== 'approved' ? `
-                        <button class="btn-approve" onclick="approveStudent('${student.id}')">قبول وتوليد كود</button>
-                    ` : 'مفعل'}
-                    <button class="btn-reject" onclick="deleteStudent('${student.id}')">حذف</button>
-                </td>
-            `;
-            tableBody.appendChild(tr);
+        <!-- 4. قسم التحكم في الأزرار والإعدادات -->
+        <div id="tab-settings" class="tab-content">
+            <div class="section-card">
+                <h2>🎛️ تحديث روابط أزرار التواصل والدعم</h2>
+                <form id="settingsForm" onsubmit="handleSettingsSave(event)">
+                    <div class="form-group">
+                        <label>رقم الواتساب (شامل كود الدولة 20)</label>
+                        <input type="text" id="settingWhatsapp" class="form-control" placeholder="201098227150" required>
+                    </div>
+                    <div class="form-group">
+                        <label>رابط التليجرام</label>
+                        <input type="url" id="settingTelegram" class="form-control" placeholder="https://t.me/CapAbdo1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>رابط الفيسبوك</label>
+                        <input type="url" id="settingFacebook" class="form-control" placeholder="https://www.facebook.com/..." required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; padding:12px;">حفظ التغييرات</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-credits">
+            تطوير المهندس عبدالناصر © 2026
+        </div>
+    </div>
+
+    <script>
+        const FIREBASE_URL = "https://abodaa-default-rtdb.firebaseio.com";
+        const BOT_TOKEN = "8944171880:AAFmbtL7TjB72ZtWKl4z_wjqlShSQFXkZpA";
+        const CHAT_ID = "5926610601";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadStudentsData();
+            loadCoursesData();
+            loadSettingsData();
         });
-    }
 
-    // 2. قبول الطالب وتوليد كود مرور تلقائي له في السحابة
-    async function approveStudent(id) {
-        const generatedPin = Math.floor(1000 + Math.random() * 9000).toString(); // كود عشوائي من 4 أرقام
-
-        const { error } = await supabaseClient
-            .from('students')
-            .update({ status: 'approved', pin: generatedPin })
-            .eq('id', id);
-
-        if (error) {
-            alert("حدث خطأ أثناء قبول الطالب");
-        } else {
-            alert(`تم قبول الطالب بنجاح! كود المرور الخاص به هو: ${generatedPin}`);
-            loadStudents();
+        function switchAdminTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            event.target.classList.add('active');
         }
-    }
 
-    // 3. حذف الطالب من السحابة
-    async function deleteStudent(id) {
-        if (confirm("هل أنت تأكد من حذف هذا الطالب؟")) {
-            const { error } = await supabaseClient
-                .from('students')
-                .delete()
-                .eq('id', id);
+        // 1. تحميل وإدارة طلبات الطلاب (المعلقة والمقبولة)
+        async function loadStudentsData() {
+            try {
+                const res = await fetch(`${FIREBASE_URL}/students.json`);
+                const data = await res.json() || {};
 
-            if (!error) loadStudents();
+                const pendingTable = document.getElementById('pendingRequestsTable');
+                const approvedTable = document.getElementById('approvedStudentsTable');
+
+                pendingTable.innerHTML = '';
+                approvedTable.innerHTML = '';
+
+                let hasPending = false;
+                let hasApproved = false;
+
+                Object.keys(data).forEach(id => {
+                    const student = data[id];
+
+                    if (student.status === 'pending') {
+                        hasPending = true;
+                        pendingTable.innerHTML += `
+                            <tr>
+                                <td><b>${student.name}</b></td>
+                                <td>${student.grade}</td>
+                                <td>${student.phone}</td>
+                                <td>${new Date(student.createdAt).toLocaleDateString('ar-EG')}</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" onclick="approveStudent('${id}', '${student.name}', '${student.phone}')">✅ قبول وتوليد PIN</button>
+                                    <button class="btn btn-danger btn-sm" onclick="rejectStudent('${id}')">❌ رفض</button>
+                                </td>
+                            </tr>
+                        `;
+                    } else if (student.status === 'approved') {
+                        hasApproved = true;
+                        approvedTable.innerHTML += `
+                            <tr>
+                                <td><b>${student.name}</b></td>
+                                <td>${student.grade}</td>
+                                <td>${student.phone}</td>
+                                <td><span class="pin-badge">${student.pin}</span></td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" onclick="rejectStudent('${id}')">إلغاء الحساب</button>
+                                    <a class="btn btn-success btn-sm" href="https://wa.me/${student.phone.startsWith('0') ? '2'+student.phone : student.phone}?text=${encodeURIComponent('أهلاً بك في منصة الكوتش! كود الدخول الخاص بك هو: ' + student.pin)}" target="_blank">📲 إرسال PIN بالواتس</a>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                });
+
+                if (!hasPending) pendingTable.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-sub);">لا توجد طلبات معلقة حالياً</td></tr>`;
+                if (!hasApproved) approvedTable.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-sub);">لا يوجد طلاب مفعلين حالياً</td></tr>`;
+
+            } catch (err) {
+                console.error(err);
+            }
         }
-    }
 
-    // تحميل البيانات عند فتح الصفحة مباشرة
-    loadStudents();
-</script>
+        // قبول الطالب وتوليد كود PIN
+        async function approveStudent(id, name, phone) {
+            const generatedPin = Math.floor(1000 + Math.random() * 9000); // توليد PIN عشوائي من 4 أرقام
+
+            try {
+                await fetch(`${FIREBASE_URL}/students/${id}.json`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        status: 'approved',
+                        pin: generatedPin
+                    })
+                });
+
+                // إرسال إشعار التليجرام
+                const msg = `🎉 <b>تم قبول الطالب وتوليد الكود!</b>\n\n👤 <b>الاسم:</b> ${name}\n📱 <b>الهاتف:</b> ${phone}\n🔑 <b>PIN الدخول:</b> <code>${generatedPin}</code>`;
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'HTML' })
+                });
+
+                alert(`تم قبول الطالب بنجاح! \nالكود الخاص به هو: ${generatedPin}`);
+                loadStudentsData();
+            } catch (err) {
+                alert("حدث خطأ أثناء اعتماد الطالب.");
+            }
+        }
+
+        // حذف / رفض الطالب
+        async function rejectStudent(id) {
+            if (!confirm("هل أنت تأكد من إجراء الرفض/الحذف؟")) return;
+
+            try {
+                await fetch(`${FIREBASE_URL}/students/${id}.json`, { method: 'DELETE' });
+                loadStudentsData();
+            } catch (err) {
+                alert("حدث خطأ أثناء عملية الحذف.");
+            }
+        }
+
+        // 2. رفع وإدارة المحتوى والكورسات
+        async function handleContentUpload(e) {
+            e.preventDefault();
+
+            const courseData = {
+                title: document.getElementById('courseTitle').value.trim(),
+                grade: document.getElementById('courseGrade').value,
+                link: document.getElementById('courseLink').value.trim(),
+                desc: document.getElementById('courseDesc').value.trim(),
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                await fetch(`${FIREBASE_URL}/courses.json`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(courseData)
+                });
+
+                alert("تم رفع المحتوى بنجاح على المنصة!");
+                e.target.reset();
+                loadCoursesData();
+            } catch (err) {
+                alert("حدث خطأ أثناء رفع المحتوى.");
+            }
+        }
+
+        async function loadCoursesData() {
+            try {
+                const res = await fetch(`${FIREBASE_URL}/courses.json`);
+                const data = await res.json() || {};
+                const listContainer = document.getElementById('uploadedCoursesList');
+
+                listContainer.innerHTML = '';
+                const keys = Object.keys(data);
+
+                if (keys.length === 0) {
+                    listContainer.innerHTML = `<p style="text-align:center; color: var(--text-sub);">لم يتم رفع أي محتوى بعد.</p>`;
+                    return;
+                }
+
+                keys.forEach(id => {
+                    const c = data[id];
+                    listContainer.innerHTML += `
+                        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:12px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <h4 style="margin:0 0 5px 0;">${c.title} <small style="color:var(--accent-cyan)">(${c.grade})</small></h4>
+                                <small style="color:var(--text-sub);">${c.desc || 'لا يوجد وصف'}</small>
+                            </div>
+                            <div>
+                                <a href="${c.link}" target="_blank" class="btn btn-primary btn-sm">عرض</a>
+                                <button onclick="deleteCourse('${id}')" class="btn btn-danger btn-sm">حذف</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function deleteCourse(id) {
+            if (!confirm("هل أنت متأكد من حذف هذا المحتوى؟")) return;
+            await fetch(`${FIREBASE_URL}/courses/${id}.json`, { method: 'DELETE' });
+            loadCoursesData();
+        }
+
+        // 3. التحكم في إعدادات الأزرار
+        async function loadSettingsData() {
+            try {
+                const res = await fetch(`${FIREBASE_URL}/settings.json`);
+                const data = await res.json();
+                if (data) {
+                    document.getElementById('settingWhatsapp').value = data.whatsapp || '';
+                    document.getElementById('settingTelegram').value = data.telegram || '';
+                    document.getElementById('settingFacebook').value = data.facebook || '';
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function handleSettingsSave(e) {
+            e.preventDefault();
+            const settingsData = {
+                whatsapp: document.getElementById('settingWhatsapp').value.trim(),
+                telegram: document.getElementById('settingTelegram').value.trim(),
+                facebook: document.getElementById('settingFacebook').value.trim()
+            };
+
+            try {
+                await fetch(`${FIREBASE_URL}/settings.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settingsData)
+                });
+                alert("تم تحديث إعدادات الأزرار بنجاح!");
+            } catch (err) {
+                alert("حدث خطأ أثناء الحفظ.");
+            }
+        }
+    </script>
 </body>
 </html>
