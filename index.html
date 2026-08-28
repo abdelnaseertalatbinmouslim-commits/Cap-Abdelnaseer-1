@@ -9,80 +9,152 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
+    <!-- خط تجوال العربي الفخم -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg-color: #080d1a;
-            --card-bg: rgba(15, 23, 42, 0.95);
-            --text-color: #f8fafc;
+            --bg-dark: #030712;
+            --primary-blue: #3b82f6;
+            --cyan-glow: #06b6d4;
+            --accent-gold: #f59e0b;
+            --glass-bg: rgba(15, 23, 42, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --primary: #3b82f6;
-            --primary-glow: rgba(59, 130, 246, 0.4);
-            --border-color: #1e293b;
-            --input-bg: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             min-height: 100vh;
-            padding: 16px;
-            box-sizing: border-box;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px 12px;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        .main-card {
+        /* خلفية زجاجية متحركة وبتنور (Glowing Ambient Background) */
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: 0;
+            animation: pulseGlow 8s infinite alternate ease-in-out;
+        }
+        body::before {
+            background: rgba(59, 130, 246, 0.35);
+            top: -50px;
+            right: -50px;
+        }
+        body::after {
+            background: rgba(6, 182, 212, 0.25);
+            bottom: -50px;
+            left: -50px;
+            animation-delay: 4s;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.6; }
+            100% { transform: scale(1.3) translate(20px, 30px); opacity: 0.9; }
+        }
+
+        /* الكارت الزجاجي الرئيسي (Glassmorphic Card) */
+        .glass-card {
+            position: relative;
+            z-index: 10;
             width: 100%;
             max-width: 440px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px var(--primary-glow);
-            backdrop-filter: blur(12px);
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 28px 22px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8),
+                        0 0 35px rgba(59, 130, 246, 0.25);
+            transition: all 0.4s ease;
         }
 
-        .logo-container { text-align: center; margin-bottom: 16px; }
-        .logo-img {
-            width: 110px;
-            height: 110px;
+        /* الصورة الشخصية العلوية بإطار نيون مضيء */
+        .profile-wrapper {
+            text-align: center;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .profile-img-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+            border-radius: 50%;
+            padding: 4px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--cyan-glow), var(--accent-gold));
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.6), inset 0 0 15px rgba(6, 182, 212, 0.5);
+            animation: ringRotate 6s linear infinite;
+        }
+
+        @keyframes ringRotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
             border-radius: 50%;
-            border: 3px solid var(--primary);
-            box-shadow: 0 0 20px var(--primary-glow);
+            border: 2px solid var(--bg-dark);
+            display: block;
         }
 
+        /* العناوين والطباعة */
         .app-title {
             text-align: center;
-            font-size: 1.8rem;
-            font-weight: 800;
-            margin: 8px 0 6px 0;
-            color: #ffffff;
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 8px 0 4px 0;
+            background: linear-gradient(135deg, #ffffff 30%, var(--primary-blue), var(--cyan-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
         }
 
         .app-subtitle {
             text-align: center;
             color: var(--text-muted);
             font-size: 0.88rem;
-            margin-bottom: 20px;
+            font-weight: 500;
+            margin-bottom: 22px;
             line-height: 1.6;
+            padding: 0 8px;
         }
 
-        /* حاوية الفيديو المرفوع بدلاً من الصورة */
-        .video-wrapper {
+        /* مشغل الفيديو المزود بهالة ضوئية */
+        .video-container {
             width: 100%;
             border-radius: 20px;
             overflow: hidden;
-            border: 1px solid var(--primary);
-            box-shadow: 0 0 15px var(--primary-glow);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), inset 0 0 10px rgba(0,0,0,0.8);
             margin-bottom: 22px;
             background: #000;
+            position: relative;
         }
 
-        .video-wrapper video {
+        .video-container video {
             width: 100%;
             height: auto;
             display: block;
@@ -90,13 +162,14 @@
             object-fit: cover;
         }
 
-        .tab-buttons {
+        /* أزرار التبديل الزجاجية (Tabs) */
+        .tab-wrapper {
             display: flex;
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 4px;
-            margin-bottom: 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 5px;
+            margin-bottom: 22px;
         }
 
         .tab-btn {
@@ -106,87 +179,179 @@
             background: transparent;
             color: var(--text-muted);
             font-weight: 700;
-            font-size: 0.9rem;
-            border-radius: 10px;
+            font-size: 0.92rem;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .tab-btn.active {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary-blue), #1d4ed8);
             color: #ffffff;
-            box-shadow: 0 0 12px var(--primary-glow);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
         }
 
-        .form-group { margin-bottom: 16px; text-align: right; }
-        .form-group label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
+        /* حقول الإدخال الزجاجية (Glass Inputs) */
+        .form-group {
+            margin-bottom: 18px;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.86rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #e2e8f0;
+        }
+
         .form-control {
             width: 100%;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            background: var(--input-bg);
-            color: var(--text-color);
+            padding: 13px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.7);
+            color: var(--text-main);
             font-size: 0.95rem;
-            box-sizing: border-box;
             outline: none;
+            transition: all 0.3s ease;
         }
 
+        .form-control:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        /* زر الإرسال المتوهج (Glowing Action Button) */
         .submit-btn {
             width: 100%;
             padding: 14px;
-            border-radius: 12px;
+            border-radius: 14px;
             border: none;
-            background: linear-gradient(135deg, var(--primary), #1d4ed8);
+            background: linear-gradient(135deg, var(--primary-blue), var(--cyan-glow));
             color: #ffffff;
-            font-size: 1rem;
-            font-weight: 700;
+            font-size: 1.05rem;
+            font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 0 15px var(--primary-glow);
-            margin-top: 8px;
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+            transition: all 0.3s ease;
+            margin-top: 6px;
         }
 
-        .social-buttons { display: flex; gap: 10px; margin-top: 20px; }
-        .social-btn {
-            flex: 1;
-            padding: 10px 4px;
-            border-radius: 12px;
-            text-decoration: none;
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 35px rgba(6, 182, 212, 0.7);
+        }
+
+        /* قسم الدعم والتواصل الأنيق مع أيقونات الأبلكيشنز */
+        .support-title {
             text-align: center;
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             font-weight: 700;
+            color: var(--text-muted);
+            margin: 24px 0 14px 0;
+            position: relative;
+        }
+
+        .support-title::before, .support-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 25%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .support-title::before { right: 0; }
+        .support-title::after { left: 0; }
+
+        .social-grid {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-card {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 8px;
+            padding: 12px 8px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
 
-        .social-btn.wa { background: rgba(37, 211, 102, 0.15); color: #25D366; }
-        .social-btn.tg { background: rgba(0, 136, 204, 0.15); color: #0088cc; }
-        .social-btn.fb { background: rgba(24, 119, 242, 0.15); color: #1877F2; }
+        /* ألوان النيون الرسمية للتطبيقات */
+        .social-card.wa {
+            color: #25D366;
+            border-color: rgba(37, 211, 102, 0.3);
+        }
+        .social-card.wa:hover {
+            background: rgba(37, 211, 102, 0.15);
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+            transform: translateY(-2px);
+        }
 
+        .social-card.tg {
+            color: #0088cc;
+            border-color: rgba(0, 136, 204, 0.3);
+        }
+        .social-card.tg:hover {
+            background: rgba(0, 136, 204, 0.15);
+            box-shadow: 0 0 20px rgba(0, 136, 204, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .social-card.fb {
+            color: #1877F2;
+            border-color: rgba(24, 119, 242, 0.3);
+        }
+        .social-card.fb:hover {
+            background: rgba(24, 119, 242, 0.15);
+            box-shadow: 0 0 20px rgba(24, 119, 242, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .social-card svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* الحقوق والتوقيع */
         .footer-credits {
             text-align: center;
-            margin-top: 22px;
-            font-size: 0.8rem;
+            margin-top: 24px;
+            font-size: 0.82rem;
             color: var(--text-muted);
-            border-top: 1px solid var(--border-color);
-            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 16px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
     </style>
 </head>
 <body>
 
-    <div class="main-card">
-        <!-- الصورة الشخصية الدائرية بالأعلى -->
-        <div class="logo-container">
-            <img src="https://i.ibb.co/Xz95BGP/elcoach-logo.png" alt="الكوتش عبدالناصر" class="logo-img">
+    <div class="glass-card">
+        <!-- الصورة الشخصية العلوية المضاءة -->
+        <div class="profile-wrapper">
+            <div class="profile-img-container">
+                <img src="profile.jpg" onerror="this.src='https://i.ibb.co/Xz95BGP/elcoach-logo.png'" alt="الكوتش عبدالناصر" class="profile-img">
+            </div>
         </div>
 
         <h1 class="app-title">منصة الكوتش</h1>
         <p class="app-subtitle">🥇 الداعم الأول والمساعد الأكاديمي والرياضي لكل كباتن ورجال علوم الرياضة على مستوى الجمهورية.</p>
 
-        <!-- عنصر الفيديو المرفوع (bebo123) بدلاً من الصورة المحددة -->
-        <div class="video-wrapper">
+        <!-- الفيديو المرفوع (bebo123) -->
+        <div class="video-container">
             <video autoplay muted loop playsinline id="heroVideo">
                 <source src="bebo123.mp4" type="video/mp4">
                 <source src="bebo123" type="video/mp4">
@@ -194,12 +359,13 @@
             </video>
         </div>
 
-        <div class="tab-buttons">
+        <!-- أزرار التبديل -->
+        <div class="tab-wrapper">
             <button class="tab-btn active" onclick="switchTab('register')">طلب انضمام جديد</button>
             <button class="tab-btn" onclick="switchTab('login')">تسجيل الدخول</button>
         </div>
 
-        <!-- نموذج التسجيل -->
+        <!-- نموذج طلب الانضمام -->
         <form id="registerForm" onsubmit="handleRegister(event)">
             <div class="form-group">
                 <label>الاسم الثلاثي / الخماسي</label>
@@ -219,7 +385,7 @@
                 <label>رقم الهاتف (واتساب)</label>
                 <input type="tel" id="regPhone" class="form-control" placeholder="01xxxxxxxxx" required>
             </div>
-            <button type="submit" id="btnReg" class="submit-btn">إرسال طلب الانضمام</button>
+            <button type="submit" id="btnReg" class="submit-btn">إرسال طلب الانضمام 🚀</button>
         </form>
 
         <!-- نموذج تسجيل الدخول -->
@@ -232,21 +398,34 @@
                 <label>كود المرور / PIN</label>
                 <input type="password" id="loginPin" class="form-control" placeholder="أدخل كود المرور" required>
             </div>
-            <button type="submit" class="submit-btn">تسجيل الدخول</button>
+            <button type="submit" class="submit-btn">تسجيل الدخول 🔓</button>
         </form>
 
-        <!-- أزرار التواصل -->
-        <div class="social-buttons">
-            <a href="https://wa.me/201098227150" target="_blank" class="social-btn wa">واتساب</a>
-            <a href="https://t.me/CapAbdo1" target="_blank" class="social-btn tg">تليجرام</a>
-            <a href="https://www.facebook.com/cap.abdelnaseer.talat" target="_blank" class="social-btn fb">فيسبوك</a>
+        <!-- أزرار الدعم مع أشكال التطبيقات المضيئة -->
+        <div class="support-title">الدعم والتواصل المباشر</div>
+        <div class="social-grid">
+            <!-- WhatsApp -->
+            <a href="https://wa.me/201098227150" target="_blank" class="social-card wa">
+                <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                واتساب
+            </a>
+            <!-- Telegram -->
+            <a href="https://t.me/CapAbdo1" target="_blank" class="social-card tg">
+                <svg viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.121l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.458c.538-.196 1.006.128.832.941z"/></svg>
+                تليجرام
+            </a>
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/cap.abdelnaseer.talat" target="_blank" class="social-card fb">
+                <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                فيسبوك
+            </a>
         </div>
 
         <div class="footer-credits">تطوير المهندس عبدالناصر © 2026</div>
     </div>
 
     <script>
-        // إعدادات مشروع Firebase الخاصة بك
+        // بيانات مشروع Firebase الحقيقية الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyAtRET95Dlp58sEPKm3g_nJ_90AQFme_P0",
             authDomain: "elcoach-a06cd.firebaseapp.com",
@@ -298,7 +477,7 @@
                 alert("حدث خطأ أثناء الحفظ، أعد المحاولة: " + error.message);
             } finally {
                 btn.disabled = false;
-                btn.innerText = "إرسال طلب الانضمام";
+                btn.innerText = "إرسال طلب الانضمام 🚀";
             }
         }
 
