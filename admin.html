@@ -1,0 +1,71 @@
+here<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم - الكابتن</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-page-body">
+
+  <div class="cyber-bg-glow"></div>
+
+  <div class="container" style="padding-top: 30px;">
+    <div class="glass-panel" style="padding: 30px; position: relative;">
+      <a href="index.html" class="back-home" style="float: left;">🏠 الرئيسية</a>
+      <h2 style="margin-bottom: 20px; color: var(--accent-cyan);">👤 لوحة تحكم الكابتن عبدالناصر</h2>
+
+      <div style="margin-bottom: 25px; border-bottom: 1px solid var(--glass-border); padding-bottom: 20px;">
+        <h3 style="margin-bottom: 10px; font-size: 1.1rem;">إعدادات المنصة</h3>
+        <div class="form-group">
+          <label>اسم المنصة:</label>
+          <input type="text" class="form-control" id="inputPlatformName" value="منصة الكابتن">
+        </div>
+        <button type="button" class="btn-glass" onclick="savePlatformSettings()">💾 حفظ الاسم</button>
+      </div>
+
+      <h3 style="margin-bottom: 10px; font-size: 1.1rem;">إضافة مادة أو تلخيص جديد</h3>
+      <form onsubmit="handleAddContent(event)">
+        <div class="form-group">
+          <label>الفرقة الدراسية:</label>
+          <select class="form-control" id="addLevel">
+            <option value="1">الفرقة الأولى</option>
+            <option value="2">الفرقة الثانية</option>
+            <option value="3">الفرقة الثالثة</option>
+            <option value="4">الفرقة الرابعة</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>الترم:</label>
+          <select class="form-control" id="addTerm">
+            <option value="1">الترم الأول</option>
+            <option value="2">الترم الثاني</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>القسم:</label>
+          <select class="form-control" id="addSection">
+            <option value="summary">التلخيصات</option>
+            <option value="practical">بطاريات العملي</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>اسم المادة / الاختبار:</label>
+          <input type="text" class="form-control" id="addTitle" required placeholder="مثال: تشريح وصفي">
+        </div>
+        <div class="form-group">
+          <label>رابط الملف (Drive / PDF / Link):</label>
+          <input type="url" class="form-control" id="addLink" required placeholder="https://...">
+        </div>
+        <button type="submit" class="btn-primary">➕ نشر المادة فوراً</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
