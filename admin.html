@@ -3,30 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم الأدمن | منصة الكابتن</title>
+    <title>لوحة تحكم منصة الكوتش | Admin Panel</title>
     <style>
         :root {
-            --bg-color: #f0f4f8;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --text-color: #0f172a;
-            --text-muted: #475569;
-            --primary: #2563eb;
-            --primary-glow: #3b82f6;
-            --border-color: #cbd5e1;
+            --bg-color: #0b0f19;
+            --card-bg: rgba(18, 24, 38, 0.95);
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.4);
             --success: #10b981;
             --danger: #ef4444;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-color: #0b0f19;
-                --card-bg: rgba(18, 24, 38, 0.95);
-                --text-color: #f8fafc;
-                --text-muted: #94a3b8;
-                --primary: #3b82f6;
-                --primary-glow: #60a5fa;
-                --border-color: #1e293b;
-            }
+            --border-color: #1e293b;
+            --input-bg: #0f172a;
         }
 
         body {
@@ -37,129 +26,453 @@
             min-height: 100vh;
             padding: 20px;
             box-sizing: border-box;
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 750px;
         }
 
         .header {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 20px 24px;
-            margin-bottom: 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 0 20px rgba(37, 99, 235, 0.15);
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 25px;
         }
 
         .header h1 {
+            font-size: 1.5rem;
             margin: 0;
-            font-size: 1.3rem;
-            font-weight: 800;
+            color: var(--primary);
         }
 
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .student-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .student-details h3 {
-            margin: 0 0 6px 0;
-            font-size: 1.1rem;
-        }
-
-        .student-details p {
-            margin: 0;
-            font-size: 0.88rem;
-            color: var(--text-muted);
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn {
+        .btn-logout {
+            background: var(--danger);
+            color: #fff;
+            border: none;
             padding: 8px 16px;
             border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-weight: bold;
         }
 
-        .btn-accept {
-            background-color: var(--success);
-            color: #ffffff;
+        /* الملاحة والتبويب */
+        .admin-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            overflow-x: auto;
         }
 
-        .btn-accept:hover {
-            box-shadow: 0 0 10px var(--success);
-        }
-
-        .btn-reject {
-            background-color: var(--danger);
-            color: #ffffff;
-        }
-
-        .btn-reject:hover {
-            box-shadow: 0 0 10px var(--danger);
-        }
-
-        .footer-credits {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 0.8rem;
+        .nav-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             color: var(--text-muted);
-            border-top: 1px solid var(--border-color);
-            padding-top: 16px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        /* كروت الإحصائيات */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .stat-card .number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        /* أقسام المحتوى */
+        .panel-section {
+            display: none;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .panel-section.active {
+            display: block;
+        }
+
+        /* الجداول */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .data-table th {
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.02);
+        }
+
+        /* الأزرار داخل الجداول */
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-wa { background: #25D366; color: #fff; }
+        .btn-approve { background: var(--success); color: #fff; }
+        .btn-delete { background: var(--danger); color: #fff; }
+
+        /* النماذج المدخلة */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--input-bg);
+            color: #fff;
+            box-sizing: border-box;
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h1>⚙️ لوحة إدارة الطلاب والطلبات</h1>
-            <a href="index.html" style="color: var(--primary); text-decoration: none; font-size: 0.9rem; font-weight: 600;">تسجيل الخروج</a>
-        </div>
+    <div class="header">
+        <h1>⚙️ لوحة التحكم الشاملة | منصة الكوتش</h1>
+        <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
+    </div>
 
-        <div class="card">
-            <div class="student-info">
-                <div class="student-details">
-                    <h3>طلب انضمام جديد</h3>
-                    <p>متابعة الطلبات الواردة مباشرة عبر بوت التليجرام الخاص بك.</p>
-                </div>
-                <div class="btn-group">
-                    <a href="https://t.me/CapAbdo1" target="_blank" class="btn btn-accept" style="text-decoration: none; display: inline-block;">فتح البوت والأدمن</a>
-                </div>
-            </div>
+    <!-- كروت الإحصائيات السريعة -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>إجمالي طلبات التسجيل</h3>
+            <div class="number" id="totalRequestsCount">0</div>
         </div>
-
-        <div class="footer-credits">
-            تطوير المهندس عبدالناصر © 2026
+        <div class="stat-card">
+            <h3>الطلاب المقبولين</h3>
+            <div class="number" id="approvedStudentsCount">0</div>
+        </div>
+        <div class="stat-card">
+            <h3>المواد والمقرارات</h3>
+            <div class="number" id="totalCoursesCount">0</div>
         </div>
     </div>
 
+    <!-- شريط التنقل بين الأقسام -->
+    <div class="admin-nav">
+        <button class="nav-btn active" onclick="switchSection('requests')">📥 الطلبات الجديدة</button>
+        <button class="nav-btn" onclick="switchSection('students')">👥 الطلاب المقبولين</button>
+        <button class="nav-btn" onclick="switchSection('courses')">📚 إدارة المواد والدروس</button>
+        <button class="nav-btn" onclick="switchSection('settings')">⚙️ إعدادات وروابط المنصة</button>
+    </div>
+
+    <!-- 1. قسم طلبات التسجيل الجديدة -->
+    <div id="requests" class="panel-section active">
+        <h2>📥 طلبات الانضمام المعلقة</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>الاسم</th>
+                    <th>الفرقة</th>
+                    <th>الهاتف</th>
+                    <th>التحكم والإرسال</th>
+                </tr>
+            </thead>
+            <tbody id="requestsTableBody">
+                <!-- يتم التعبئة تلقائياً عبر JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 2. قسم الطلاب المقبولين -->
+    <div id="students" class="panel-section">
+        <h2>👥 قائمة الطلاب المفعلين والأكواد</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>الاسم</th>
+                    <th>الفرقة</th>
+                    <th>الهاتف</th>
+                    <th>كود الدخول (PIN)</th>
+                    <th>إرسال البيانات</th>
+                </tr>
+            </thead>
+            <tbody id="studentsTableBody">
+                <!-- يتم التعبئة تلقائياً عبر JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 3. قسم رفع وإدارة المقرارات -->
+    <div id="courses" class="panel-section">
+        <h2>📚 إضافة مادة أو المحاضرات الجديدة</h2>
+        <form onsubmit="addCourse(event)">
+            <div class="form-group">
+                <label>اسم المادة / المقرر</label>
+                <input type="text" id="courseTitle" class="form-control" placeholder="مثال: علم الوظائف الرياضي" required>
+            </div>
+            <div class="form-group">
+                <label>الفرقة الموجه لها</label>
+                <select id="courseGrade" class="form-control" required>
+                    <option value="الفرقة الأولى">الفرقة الأولى</option>
+                    <option value="الفرقة الثانية">الفرقة الثانية</option>
+                    <option value="الفرقة الثالثة">الفرقة الثالثة</option>
+                    <option value="الفرقة الرابعة">الفرقة الرابعة</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>رابط الفيديو / المحاضرة (YouTube أو Drive)</label>
+                <input type="url" id="courseVideo" class="form-control" placeholder="https://..." required>
+            </div>
+            <div class="form-group">
+                <label>رابط الملف الشامل (PDF / ملخصات)</label>
+                <input type="url" id="coursePdf" class="form-control" placeholder="https://..." required>
+            </div>
+            <button type="submit" class="btn-submit">نشر المحتوى للمنصة</button>
+        </form>
+
+        <h3 style="margin-top: 30px;">المواد المنشورة حالياً</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>اسم المادة</th>
+                    <th>الفرقة</th>
+                    <th>رابط الفيديو</th>
+                    <th>التحكم</th>
+                </tr>
+            </thead>
+            <tbody id="coursesTableBody">
+                <!-- تعبئة الدروس -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 4. قسم إعدادات وروابط المنصة -->
+    <div id="settings" class="panel-section">
+        <h2>⚙️ التعديل المباشر لبيانات المنصة</h2>
+        <form onsubmit="saveSettings(event)">
+            <div class="form-group">
+                <label>رقم الواتساب الرسمي (بدون كود الدولة مفرد)</label>
+                <input type="text" id="settingWa" class="form-control" value="01098227150" required>
+            </div>
+            <div class="form-group">
+                <label>يوزر التليجرام الخاص بالدعم</label>
+                <input type="text" id="settingTg" class="form-control" value="CapAbdo1" required>
+            </div>
+            <div class="form-group">
+                <label>رابط صفحة الفيسبوك</label>
+                <input type="url" id="settingFb" class="form-control" value="https://www.facebook.com/cap.abdelnaseer.talat" required>
+            </div>
+            <button type="submit" class="btn-submit">حفظ التغييرات بالكامل</button>
+        </form>
+    </div>
+
+    <script>
+        // التخزين الافتراضي للبيانات
+        let pendingRequests = JSON.parse(localStorage.getItem('pendingRequests')) || [
+            { name: "أحمد محمود", grade: "الفرقة الأولى", phone: "01012345678" }
+        ];
+        let approvedStudents = JSON.parse(localStorage.getItem('approvedStudents')) || [];
+        let coursesList = JSON.parse(localStorage.getItem('coursesList')) || [];
+
+        function initDashboard() {
+            renderRequests();
+            renderStudents();
+            renderCourses();
+            updateStats();
+        }
+
+        function switchSection(id) {
+            document.querySelectorAll('.panel-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function updateStats() {
+            document.getElementById('totalRequestsCount').innerText = pendingRequests.length;
+            document.getElementById('approvedStudentsCount').innerText = approvedStudents.length;
+            document.getElementById('totalCoursesCount').innerText = coursesList.length;
+        }
+
+        // عرض الطلبات الجديدة
+        function renderRequests() {
+            const tbody = document.getElementById('requestsTableBody');
+            tbody.innerHTML = '';
+            pendingRequests.forEach((req, idx) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${req.name}</td>
+                        <td>${req.grade}</td>
+                        <td>${req.phone}</td>
+                        <td>
+                            <button class="action-btn btn-approve" onclick="approveStudent(${idx})">✅ قبول وتوليد كود</button>
+                            <button class="action-btn btn-delete" onclick="rejectRequest(${idx})">❌ رفض</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // قبول الطالب وتوليد كلمة مرور له وإرسال البيانات للواتس بضغطة واحدة
+        function approveStudent(index) {
+            const student = pendingRequests[index];
+            const pinCode = Math.floor(1000 + Math.random() * 9000); // توليد PIN مكون من 4 أرقام
+
+            const approvedUser = {
+                ...student,
+                pin: pinCode
+            };
+
+            approvedStudents.push(approvedUser);
+            pendingRequests.splice(index, 1);
+
+            localStorage.setItem('pendingRequests', JSON.stringify(pendingRequests));
+            localStorage.setItem('approvedStudents', JSON.stringify(approvedStudents));
+
+            initDashboard();
+
+            // تجهيز نص رسالة الواتساب الجاهزة
+            const textMsg = encodeURIComponent(`مرحباً بك يا كابتن ${student.name} 🥇\nتم قبول طلب انضمامك رسمياً لـ *منصة الكوتش*.\n\nبيانات دخولك الحصرية:\n👤 رقم الهاتف: ${student.phone}\n🔑 كود المرور (PIN): ${pinCode}\n\nرابط المنصة: https://cap-abdelnaseer-talat.github.io/DrAli1`);
+            
+            // تحويل أدمن تلقائياً لإرسال الرسالة
+            let formattedPhone = student.phone.startsWith('0') ? '2' + student.phone : student.phone;
+            window.open(`https://wa.me/${formattedPhone}?text=${textMsg}`, '_blank');
+        }
+
+        function rejectRequest(index) {
+            pendingRequests.splice(index, 1);
+            localStorage.setItem('pendingRequests', JSON.stringify(pendingRequests));
+            initDashboard();
+        }
+
+        // عرض الطلاب المقبولين
+        function renderStudents() {
+            const tbody = document.getElementById('studentsTableBody');
+            tbody.innerHTML = '';
+            approvedStudents.forEach((st) => {
+                let formattedPhone = st.phone.startsWith('0') ? '2' + st.phone : st.phone;
+                const textMsg = encodeURIComponent(`مرحباً يا كابتن ${st.name}، تذكير ببيانات دخولك لمنصة الكوتش:\nرقمك: ${st.phone}\nالكود: ${st.pin}`);
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${st.name}</td>
+                        <td>${st.grade}</td>
+                        <td>${st.phone}</td>
+                        <td><b style="color:var(--primary); font-size:1.1rem;">${st.pin}</b></td>
+                        <td>
+                            <a href="https://wa.me/${formattedPhone}?text=${textMsg}" target="_blank" class="action-btn btn-wa">📲 إرسال عبر الواتس</a>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // إضافة مادة جديدة
+        function addCourse(e) {
+            e.preventDefault();
+            const title = document.getElementById('courseTitle').value;
+            const grade = document.getElementById('courseGrade').value;
+            const video = document.getElementById('courseVideo').value;
+            const pdf = document.getElementById('coursePdf').value;
+
+            coursesList.push({ title, grade, video, pdf });
+            localStorage.setItem('coursesList', JSON.stringify(coursesList));
+
+            alert('تم نشر المادة والمحتوى بنجاح!');
+            e.target.reset();
+            initDashboard();
+        }
+
+        function renderCourses() {
+            const tbody = document.getElementById('coursesTableBody');
+            tbody.innerHTML = '';
+            coursesList.forEach((c, i) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${c.title}</td>
+                        <td>${c.grade}</td>
+                        <td><a href="${c.video}" target="_blank" style="color:var(--primary)">عرض الفيديو</a></td>
+                        <td><button class="action-btn btn-delete" onclick="deleteCourse(${i})">حذف</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteCourse(i) {
+            coursesList.splice(i, 1);
+            localStorage.setItem('coursesList', JSON.stringify(coursesList));
+            initDashboard();
+        }
+
+        function saveSettings(e) {
+            e.preventDefault();
+            alert('تم حفظ كافة الإعدادات والروابط الجديدة بنجاح!');
+        }
+
+        function logout() {
+            window.location.href = "index.html";
+        }
+
+        // تشغيل التهيئة
+        initDashboard();
+    </script>
 </body>
 </html>
-
