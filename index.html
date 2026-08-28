@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة الكابتن التعليمية | تسجيل الدخول</title>
+    <title>منصة الكوتش | El-Coach Platform</title>
     <style>
         :root {
             --bg-color: #f0f4f8;
@@ -11,13 +11,12 @@
             --text-color: #0f172a;
             --text-muted: #475569;
             --primary: #2563eb;
-            --primary-glow: #3b82f6;
+            --primary-glow: rgba(37, 99, 235, 0.4);
             --border-color: #cbd5e1;
             --input-bg: #ffffff;
-            --success-bg: rgba(37, 99, 235, 0.1);
+            --success: #10b981;
         }
 
-        /* الوضع الليلي التلقائي حسب نظام الهاتف */
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg-color: #0b0f19;
@@ -25,10 +24,9 @@
                 --text-color: #f8fafc;
                 --text-muted: #94a3b8;
                 --primary: #3b82f6;
-                --primary-glow: #60a5fa;
+                --primary-glow: rgba(59, 130, 246, 0.4);
                 --border-color: #1e293b;
                 --input-bg: #0f172a;
-                --success-bg: rgba(59, 130, 246, 0.15);
             }
         }
 
@@ -37,196 +35,237 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
             padding: 20px;
             box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* الكارت الرئيسي بتأثير مضيء خفيف */
-        .card {
+        .main-card {
             width: 100%;
-            max-width: 440px;
+            max-width: 480px;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 32px 24px;
-            box-shadow: 0 0 25px rgba(37, 99, 235, 0.15);
-            text-align: center;
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 0 20px var(--primary-glow);
             backdrop-filter: blur(10px);
-            position: relative;
         }
 
-        /* الإطار المضيء حول الصورة */
-        .logo-wrapper {
-            position: relative;
-            display: inline-block;
+        .logo-container {
+            text-align: center;
             margin-bottom: 16px;
         }
 
-        .logo {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
+        .logo-img {
+            width: 90px;
+            height: 90px;
             object-fit: cover;
-            border: 3px solid var(--primary);
-            box-shadow: 0 0 15px var(--primary-glow), 0 0 30px var(--primary-glow);
-            animation: pulseGlow 2.5s infinite alternate;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 18px var(--primary-glow);
+            transition: transform 0.3s ease;
         }
 
-        @keyframes pulseGlow {
-            0% {
-                box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
-            }
-            100% {
-                box-shadow: 0 0 25px var(--primary-glow), 0 0 45px var(--primary-glow);
-            }
+        .logo-img:hover {
+            transform: scale(1.05);
         }
 
-        .title {
-            font-size: 1.6rem;
+        .app-title {
+            text-align: center;
+            font-size: 1.7rem;
             font-weight: 800;
-            margin: 0 0 8px 0;
-            letter-spacing: 0.5px;
+            margin: 10px 0 6px 0;
+            background: linear-gradient(135deg, var(--text-color), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .bio {
-            font-size: 0.92rem;
+        .app-subtitle {
+            text-align: center;
             color: var(--text-muted);
-            margin-bottom: 24px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
             line-height: 1.6;
+            font-weight: 500;
+        }
+
+        /* قسم الفيديو الإرشادي */
+        .video-section {
+            margin-bottom: 20px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: #000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .video-section video {
+            width: 100%;
+            display: block;
+            border-radius: 16px;
+        }
+
+        /* تبويب تسجيل الدخول والطلب الجديد */
+        .tab-buttons {
+            display: flex;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.88rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 0 10px var(--primary-glow);
         }
 
         .form-group {
-            text-align: right;
             margin-bottom: 16px;
+            text-align: right;
         }
 
-        label {
+        .form-group label {
             display: block;
-            font-size: 0.88rem;
-            font-weight: 600;
+            font-size: 0.85rem;
+            font-weight: 700;
             margin-bottom: 6px;
-            color: var(--text-color);
         }
 
-        input, select {
+        .form-control {
             width: 100%;
             padding: 12px 14px;
             border-radius: 10px;
             border: 1px solid var(--border-color);
-            background-color: var(--input-bg);
+            background: var(--input-bg);
             color: var(--text-color);
             font-size: 0.95rem;
             box-sizing: border-box;
             outline: none;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        input:focus, select:focus {
+        .form-control:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 10px var(--primary-glow);
+            box-shadow: 0 0 8px var(--primary-glow);
         }
 
-        /* زر التسجيل المضيء */
-        .btn-submit {
+        .submit-btn {
             width: 100%;
-            padding: 14px;
-            border: none;
+            padding: 12px;
             border-radius: 10px;
+            border: none;
             background: linear-gradient(135deg, var(--primary), #1d4ed8);
             color: #ffffff;
             font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 10px;
-            box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
             transition: all 0.3s ease;
+            box-shadow: 0 0 12px var(--primary-glow);
         }
 
-        .btn-submit:hover {
-            box-shadow: 0 0 25px rgba(59, 130, 246, 0.8);
-            transform: translateY(-2px);
+        .submit-btn:hover {
+            opacity: 0.95;
+            box-shadow: 0 0 20px var(--primary-glow);
         }
 
-        /* أزرار الدعم والتواصل */
         .support-title {
-            font-size: 0.85rem;
+            text-align: center;
+            font-size: 0.8rem;
             color: var(--text-muted);
-            margin-top: 24px;
-            margin-bottom: 10px;
+            margin: 20px 0 10px 0;
+            font-weight: 600;
         }
 
-        .support-links {
+        .social-buttons {
             display: flex;
-            gap: 8px;
-            justify-content: center;
+            gap: 10px;
         }
 
-        .support-btn {
+        .social-btn {
             flex: 1;
-            padding: 10px 6px;
+            padding: 9px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
             background: var(--input-bg);
-            text-decoration: none;
             color: var(--text-color);
+            text-decoration: none;
+            text-align: center;
             font-size: 0.82rem;
             font-weight: 600;
-            text-align: center;
             transition: all 0.3s ease;
         }
 
-        .support-btn:hover {
+        .social-btn:hover {
             border-color: var(--primary);
-            box-shadow: 0 0 10px var(--primary-glow);
             color: var(--primary);
+            box-shadow: 0 0 8px var(--primary-glow);
         }
 
-        /* رسالة الترحيب والانتظار */
-        .status-message {
-            display: none;
-            padding: 18px;
-            margin-top: 15px;
-            border-radius: 12px;
-            background-color: var(--success-bg);
-            border: 1px solid var(--primary);
-            color: var(--text-color);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            box-shadow: 0 0 15px var(--primary-glow);
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .footer-credits {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <!-- الصورة ذات الإطار المضيء -->
-        <div class="logo-wrapper">
-            <img src="logo.png" alt="شعارات المنصة" class="logo">
+    <div class="main-card">
+        <!-- صورة اللوجو الشخصية -->
+        <div class="logo-container">
+            <img src="1783950091830.jpg" alt="منصة الكوتش" class="logo-img" onerror="this.onerror=null; this.src='1783950091830';">
         </div>
 
-        <h1 class="title">Captain Platform</h1>
-        <p class="bio">مرحباً بك في منصة الكابتن التعليمية. يرجى إدخال بياناتك كاملة للإنضمام ومتابعة المقررات الدراسية.</p>
+        <h1 class="app-title">منصة الكوتش</h1>
+        <p class="app-subtitle">
+            🥇 <b>الداعم الأول والمساعد الأكاديمي والرياضي</b> لكل كباتن ورجال علوم الرياضة على مستوى الجمهورية.<br>
+            خطوتك نحو التميز والتطوير الاحترافي تبدأ من هنا!
+        </p>
 
-        <!-- نموذج تسجيل الدخول والإنضمام -->
-        <form id="authForm" onsubmit="handleSubmit(event)">
+        <!-- قسم الفيديو الإرشادي -->
+        <div class="video-section">
+            <video controls poster="https://via.placeholder.com/480x270?text=%D9%81%D9%8A%D8%AF%D9%8A%D9%88+%D8%A5%D8%B1%D8%B4%D8%A7%D8%AF%D9%8A+%D9%84%D9%84%D9%85%D9%86%D8%B5%D8%A9">
+                <source src="guide.mp4" type="video/mp4">
+                متصفحك لا يدعم تشغيل الفيديو.
+            </video>
+        </div>
+
+        <!-- أزرار التبديل -->
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchTab('register')">طلب انضمام جديد</button>
+            <button class="tab-btn" onclick="switchTab('login')">تسجيل الدخول</button>
+        </div>
+
+        <!-- نموذج الانضمام الجديد -->
+        <form id="registerForm" onsubmit="handleRegister(event)">
             <div class="form-group">
                 <label>الاسم الثلاثي / الخماسي</label>
-                <input type="text" id="fullName" required placeholder="أدخل اسمك بالكامل">
+                <input type="text" id="regName" class="form-control" placeholder="أدخل اسمك بالكامل" required>
             </div>
-
             <div class="form-group">
                 <label>الفرقة الدراسية</label>
-                <select id="grade" required>
+                <select id="regGrade" class="form-control" required>
                     <option value="">اختر الفرقة الدراسية</option>
                     <option value="الفرقة الأولى">الفرقة الأولى</option>
                     <option value="الفرقة الثانية">الفرقة الثانية</option>
@@ -234,69 +273,112 @@
                     <option value="الفرقة الرابعة">الفرقة الرابعة</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label>رقم الهاتف (واتساب)</label>
-                <input type="tel" id="phone" required placeholder="01xxxxxxxxx">
+                <input type="tel" id="regPhone" class="form-control" placeholder="01xxxxxxxxx" required>
             </div>
-
-            <button type="submit" class="btn-submit" id="submitBtn">تسجيل الدخول / انضمام جديد</button>
+            <button type="submit" class="submit-btn">إرسال طلب الانضمام</button>
         </form>
 
-        <!-- رسالة الترحيب وقبول الأدمن -->
-        <div id="statusMsg" class="status-message">
-            ✨ <strong>مرحبًا بك في منصة الكابتن عزيزي!</strong> ✨<br><br>
-            تم تسجيل حسابك بنجاح. حسابك حالياً <strong>في انتظار قبول الأدمن</strong>، وسنتواصل معك فور التفعيل.
+        <!-- نموذج تسجيل الدخول المباشر -->
+        <form id="loginForm" onsubmit="handleLogin(event)" style="display: none;">
+            <div class="form-group">
+                <label>رقم الهاتف / اسم المستخدم</label>
+                <input type="text" id="loginPhone" class="form-control" placeholder="01xxxxxxxxx أو admin" required>
+            </div>
+            <div class="form-group">
+                <label>كود المرور / PIN</label>
+                <input type="password" id="loginPin" class="form-control" placeholder="أدخل كود المرور" required>
+            </div>
+            <button type="submit" class="submit-btn">تسجيل الدخول</button>
+        </form>
+
+        <p class="support-title">أزرار الدعم والتواصل المباشر</p>
+        <div class="social-buttons">
+            <a href="https://wa.me/" target="_blank" class="social-btn">واتساب</a>
+            <a href="https://t.me/CapAbdo1" target="_blank" class="social-btn">تليجرام</a>
+            <a href="#" target="_blank" class="social-btn">فيسبوك</a>
         </div>
 
-        <!-- أزرار الدعم المباشرة -->
-        <div class="support-title">أزرار الدعم والتواصل المباشر</div>
-        <div class="support-links">
-            <a href="https://wa.me/201098227150" target="_blank" class="support-btn">واتساب</a>
-            <a href="https://t.me/CapAbdo1" target="_blank" class="support-btn">تليجرام</a>
-            <a href="https://www.facebook.com/cap.abdelnaseer.talat" target="_blank" class="support-btn">فيسبوك</a>
+        <div class="footer-credits">
+            تطوير المهندس عبدالناصر © 2026
         </div>
     </div>
 
     <script>
-        const BOT_TOKEN = "8944171880:AAFmbtL7TjB72ZtWKl4z_wjqlShSQFXkZpA";
-        const CHAT_ID = "5926610601";
+        // التبديل بين النماذج
+        function switchTab(tab) {
+            const regForm = document.getElementById('registerForm');
+            const loginForm = document.getElementById('loginForm');
+            const buttons = document.querySelectorAll('.tab-btn');
 
-        async function handleSubmit(e) {
+            if (tab === 'register') {
+                regForm.style.display = 'block';
+                loginForm.style.display = 'none';
+                buttons[0].classList.add('active');
+                buttons[1].classList.remove('active');
+            } else {
+                regForm.style.display = 'none';
+                loginForm.style.display = 'block';
+                buttons[0].classList.remove('active');
+                buttons[1].classList.add('active');
+            }
+        }
+
+        // إرسال طلب الانضمام مع أزرار قبول/رفض تفاعلية للتليجرام
+        async function handleRegister(e) {
             e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.innerText = "جاري الإرسال...";
-            btn.disabled = true;
+            
+            const name = document.getElementById('regName').value;
+            const grade = document.getElementById('regGrade').value;
+            const phone = document.getElementById('regPhone').value;
 
-            const name = document.getElementById('fullName').value;
-            const grade = document.getElementById('grade').value;
-            const phone = document.getElementById('phone').value;
+            // توكن البوت والـ Chat ID
+            const BOT_TOKEN = "7737330528:AAE...YOUR_TOKEN"; 
+            const CHAT_ID = "YOUR_CHAT_ID";
 
-            const messageText = `🔔 *طلب تسجيل جديد في المنصة*\n\n👤 *الاسم:* ${name}\n📚 *الفرقة:* ${grade}\n📱 *الهاتف:* ${phone}`;
+            const textMessage = `🔔 <b>طلب تسجيل جديد في منصة الكوتش</b>\n\n👤 <b>الاسم:</b> ${name}\n📚 <b>الفرقة:</b> ${grade}\n📱 <b>الهاتف:</b> ${phone}`;
+
+            const payload = {
+                chat_id: CHAT_ID,
+                text: textMessage,
+                parse_mode: 'HTML',
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: "✅ قبول الطالب", url: `https://t.me/CapAbdo1` },
+                            { text: "❌ رفض الطلب", url: `https://t.me/CapAbdo1` }
+                        ]
+                    ]
+                }
+            };
 
             try {
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: messageText,
-                        parse_mode: 'Markdown'
-                    })
+                    body: JSON.stringify(payload)
                 });
-
-                if (response.ok) {
-                    document.getElementById('authForm').style.display = 'none';
-                    document.getElementById('statusMsg').style.display = 'block';
-                } else {
-                    alert('حدث خطأ أثناء إرسال البيانات، يرجى إعادة المحاولة.');
-                    btn.innerText = "تسجيل الدخول / انضمام جديد";
-                    btn.disabled = false;
-                }
+                alert("تم إرسال طلبك بنجاح لـ منصة الكوتش! سيتم مراجعته والتواصل معك قريبًا.");
             } catch (err) {
-                alert('عذراً، تعذر الاتصال بالسيرفر. تحقق من اتصال الإنترنت.');
-                btn.innerText = "تسجيل الدخول / انضمام جديد";
-                btn.disabled = false;
+                alert("حدث خطأ أثناء الإرسال، يرجى المحاولة لاحقاً.");
+            }
+        }
+
+        // معالجة تسجيل الدخول والتحقق من بيانات الأدمن والطلاب
+        function handleLogin(e) {
+            e.preventDefault();
+            const phone = document.getElementById('loginPhone').value.trim();
+            const pin = document.getElementById('loginPin').value.trim();
+
+            // التحقق من بيانات الأدمن
+            if ((phone === 'admin' || phone === '01000000000') && pin === 'admin2026') {
+                alert("تم تسجيل الدخول بنجاح كـ أدمن المنصة!");
+                window.location.href = "admin.html";
+            } else {
+                // دخول الطالب العادي
+                alert("تم تسجيل الدخول بنجاح!");
+                window.location.href = "courses.html";
             }
         }
     </script>
