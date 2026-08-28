@@ -3,400 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم الأدمن | منصة الكوتش</title>
+    <title>لوحة التحكم | منصة الكوتش</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: rgba(18, 24, 38, 0.95);
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
-            --primary: #3b82f6;
-            --primary-glow: rgba(59, 130, 246, 0.4);
-            --success: #10b981;
-            --danger: #ef4444;
-            --border-color: #1e293b;
-            --input-bg: #0f172a;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 25px;
-        }
-
-        .header h1 { font-size: 1.4rem; color: var(--primary); margin: 0; }
-
-        .admin-nav {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            overflow-x: auto;
-        }
-
-        .nav-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 12px 18px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .nav-btn.active {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 0 15px var(--primary-glow);
-        }
-
-        .panel-section {
-            display: none;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 25px;
-        }
-
-        .panel-section.active { display: block; }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        .data-table th, .data-table td {
-            padding: 12px;
-            text-align: right;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.9rem;
-        }
-
-        .data-table th { color: var(--text-muted); }
-
-        .action-btn {
-            padding: 6px 12px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.8rem;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .btn-wa { background: #25D366; color: #fff; }
-        .btn-approve { background: var(--success); color: #fff; }
-        .btn-delete { background: var(--danger); color: #fff; }
-
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 6px; font-size: 0.85rem; color: var(--text-muted); }
-        .form-control {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: var(--input-bg);
-            color: #fff;
-            box-sizing: border-box;
-        }
-
-        .btn-submit {
-            background: var(--primary);
-            color: #fff;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .empty-msg {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 20px;
-        }
+        body { background: #0b0f19; color: #fff; font-family: sans-serif; padding: 20px; }
+        h1 { color: #00e5ff; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: rgba(255,255,255,0.05); }
+        th, td { padding: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        th { background: rgba(0,229,255,0.2); }
+        .btn-approve { background: #2ed573; color: #000; padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .btn-reject { background: #ff4757; color: #fff; padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer; margin-right: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>⚙️ لوحة تحكم الأدمن | المهندس عبدالناصر</h1>
-        <button class="action-btn btn-delete" onclick="clearAllData()">🗑️ مسح كافة البيانات والمُدخلات</button>
-    </div>
+    <h1>⚙️ لوحة إدارة منصة الكوتش</h1>
 
-    <div class="admin-nav">
-        <button class="nav-btn active" onclick="switchSection('requests')">📥 الطلبات الحقيقية المسجلة</button>
-        <button class="nav-btn" onclick="switchSection('students')">👥 الطلاب المفعلين والـ PIN</button>
-        <button class="nav-btn" onclick="switchSection('upload')">📤 رفع المحتوى والمواد (فيديو/صور/PDF)</button>
-        <button class="nav-btn" onclick="switchSection('contentList')">📚 المحتوى المنشور حسب الفرق</button>
-    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>الاسم</th>
+                <th>الفرقة</th>
+                <th>الهاتف</th>
+                <th>الحالة</th>
+                <th>كود المرور (PIN)</th>
+                <th>إجراءات</th>
+            </tr>
+        </thead>
+        <tbody id="studentsTable">
+            <tr><td colspan="6">جاري تحميل البيانات من السحابة...</td></tr>
+        </tbody>
+    </table>
 
-    <!-- 1. طلبات التسجيل الحقيقية -->
-    <div id="requests" class="panel-section active">
-        <h2>📥 طلَبَات الانضمام المباشرة من الموقع</h2>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>اسم الطالب</th>
-                    <th>الفرقة الدراسية</th>
-                    <th>رقم الهاتف</th>
-                    <th>الإجراء والإرسال للواتساب</th>
-                </tr>
-            </thead>
-            <tbody id="requestsTableBody"></tbody>
-        </table>
-        <div id="noRequests" class="empty-msg" style="display:none;">لا توجد طلبات جديدة حالياً. البيانات تظهر فور تسجيل أي طالب.</div>
-    </div>
+<script>
+    const SUPABASE_URL = "https://qvkpeoqbmoqczfjjexfs.supabase.com";
+    const SUPABASE_KEY = "sb_publishable_VpMTCDC7K8W4DcOc1-Y48w_ykbjl94q";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    <!-- 2. الطلاب المقبولين -->
-    <div id="students" class="panel-section">
-        <h2>👥 قائمة الطلاب المفعلين وأكواد الدخول</h2>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>الاسم</th>
-                    <th>الفرقة</th>
-                    <th>الهاتف</th>
-                    <th>كود الدخول (PIN)</th>
-                    <th>مراسلة واتساب</th>
-                    <th>إزالة</th>
-                </tr>
-            </thead>
-            <tbody id="studentsTableBody"></tbody>
-        </table>
-    </div>
+    // 1. جلب قائمة الطلاب من قاعدة البيانات السحابية
+    async function loadStudents() {
+        const { data: students, error } = await supabaseClient
+            .from('students')
+            .select('*')
+            .order('id', { ascending: false });
 
-    <!-- 3. رفع المحتوى وصلاحيات الأدمن -->
-    <div id="upload" class="panel-section">
-        <h2>📤 مركز رفع المحتوى والمحاضرات</h2>
-        <form onsubmit="handleUploadContent(event)">
-            <div class="form-group">
-                <label>عنوان المحتوى / المادة</label>
-                <input type="text" id="contentTitle" class="form-control" placeholder="مثال: محاضرة التشريح الوظيفي" required>
-            </div>
-            <div class="form-group">
-                <label>تحديد الفرقة الدراسية الموجه لها المحتوى</label>
-                <select id="contentGrade" class="form-control" required>
-                    <option value="الفرقة الأولى">الفرقة الأولى</option>
-                    <option value="الفرقة الثانية">الفرقة الثانية</option>
-                    <option value="الفرقة الثالثة">الفرقة الثالثة</option>
-                    <option value="الفرقة الرابعة">الفرقة الرابعة</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>نوع المحتوى</label>
-                <select id="contentType" class="form-control" required>
-                    <option value="فيديو">فيديو (يوتيوب / درايف / رابط مباشر)</option>
-                    <option value="ملف PDF">ملف PDF / ملخصات</option>
-                    <option value="صورة / توضيح">صورة / مخطط دراسي</option>
-                    <option value="ملاحظات">ملاحظات وشرح مكتوب</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>رابط المحتوى (رابط الفيديو أو الصورة أو ملف الـ PDF)</label>
-                <input type="url" id="contentUrl" class="form-control" placeholder="https://..." required>
-            </div>
-            <div class="form-group">
-                <label>وصف / ملاحظات إضافية للطالب</label>
-                <textarea id="contentDesc" class="form-control" rows="3" placeholder="أدخل أي ملاحظات مهمة للمادة..."></textarea>
-            </div>
-            <button type="submit" class="btn-submit">🚀 نشر المحتوى فوراً للمنصة</button>
-        </form>
-    </div>
+        const tableBody = document.getElementById('studentsTable');
+        tableBody.innerHTML = '';
 
-    <!-- 4. قائمة المحتوى المنشور -->
-    <div id="contentList" class="panel-section">
-        <h2>📚 كافة المحتويات والمواد المنشورة</h2>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>العنوان</th>
-                    <th>الفرقة</th>
-                    <th>النوع</th>
-                    <th>الرابط</th>
-                    <th>حذف</th>
-                </tr>
-            </thead>
-            <tbody id="contentTableBody"></tbody>
-        </table>
-    </div>
-
-    <script>
-        function getStorage(key) {
-            return JSON.parse(localStorage.getItem(key)) || [];
+        if (error || !students || students.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="6">لا يوجد طلبات تسجيل حالياً.</td></tr>';
+            return;
         }
 
-        function setStorage(key, data) {
-            localStorage.setItem(key, JSON.stringify(data));
+        students.forEach(student => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${student.name}</td>
+                <td>${student.grade}</td>
+                <td><a href="https://wa.me/2${student.phone}" target="_blank" style="color:#00e5ff">${student.phone}</a></td>
+                <td>${student.status === 'approved' ? '✅ مقبول' : '⏳ قيد الانتظار'}</td>
+                <td><b>${student.pin || '---'}</b></td>
+                <td>
+                    ${student.status !== 'approved' ? `
+                        <button class="btn-approve" onclick="approveStudent('${student.id}')">قبول وتوليد كود</button>
+                    ` : 'مفعل'}
+                    <button class="btn-reject" onclick="deleteStudent('${student.id}')">حذف</button>
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    // 2. قبول الطالب وتوليد كود مرور تلقائي له في السحابة
+    async function approveStudent(id) {
+        const generatedPin = Math.floor(1000 + Math.random() * 9000).toString(); // كود عشوائي من 4 أرقام
+
+        const { error } = await supabaseClient
+            .from('students')
+            .update({ status: 'approved', pin: generatedPin })
+            .eq('id', id);
+
+        if (error) {
+            alert("حدث خطأ أثناء قبول الطالب");
+        } else {
+            alert(`تم قبول الطالب بنجاح! كود المرور الخاص به هو: ${generatedPin}`);
+            loadStudents();
         }
+    }
 
-        function switchSection(id) {
-            document.querySelectorAll('.panel-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            event.target.classList.add('active');
+    // 3. حذف الطالب من السحابة
+    async function deleteStudent(id) {
+        if (confirm("هل أنت تأكد من حذف هذا الطالب؟")) {
+            const { error } = await supabaseClient
+                .from('students')
+                .delete()
+                .eq('id', id);
+
+            if (!error) loadStudents();
         }
+    }
 
-        function renderAll() {
-            renderRequests();
-            renderStudents();
-            renderContent();
-        }
-
-        function renderRequests() {
-            const reqs = getStorage('pendingRequests');
-            const tbody = document.getElementById('requestsTableBody');
-            const noReqs = document.getElementById('noRequests');
-            tbody.innerHTML = '';
-
-            if (reqs.length === 0) {
-                noReqs.style.display = 'block';
-                return;
-            }
-            noReqs.style.display = 'none';
-
-            reqs.forEach((r, index) => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><b>${r.name}</b></td>
-                        <td>${r.grade}</td>
-                        <td>${r.phone}</td>
-                        <td>
-                            <button class="action-btn btn-approve" onclick="approveStudent(${index})">✅ قبول وتوليد PIN</button>
-                            <button class="action-btn btn-delete" onclick="rejectRequest(${index})">❌ رفض</button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function approveStudent(index) {
-            let reqs = getStorage('pendingRequests');
-            let students = getStorage('approvedStudents');
-            const student = reqs[index];
-            const generatedPin = Math.floor(1000 + Math.random() * 9000);
-
-            const approvedObj = { ...student, pin: generatedPin };
-            students.push(approvedObj);
-            reqs.splice(index, 1);
-
-            setStorage('pendingRequests', reqs);
-            setStorage('approvedStudents', students);
-
-            renderAll();
-
-            let formattedPhone = student.phone.startsWith('0') ? '2' + student.phone : student.phone;
-            const message = encodeURIComponent(`مرحباً يا كابتن ${student.name} 🥇\nتم قبول طلب انضمامك لـ *منصة الكوتش*.\n\nبيانات دخولك الحصرية:\n👤 رقم الهاتف: ${student.phone}\n🔑 كود المرور (PIN): ${generatedPin}\n\nرابط المنصة: https://cap-abdelnaseer-talat.github.io/DrAli1`);
-            window.open(`https://wa.me/${formattedPhone}?text=${message}`, '_blank');
-        }
-
-        function rejectRequest(index) {
-            let reqs = getStorage('pendingRequests');
-            reqs.splice(index, 1);
-            setStorage('pendingRequests', reqs);
-            renderAll();
-        }
-
-        function renderStudents() {
-            const students = getStorage('approvedStudents');
-            const tbody = document.getElementById('studentsTableBody');
-            tbody.innerHTML = '';
-
-            students.forEach((s, index) => {
-                let formattedPhone = s.phone.startsWith('0') ? '2' + s.phone : s.phone;
-                const message = encodeURIComponent(`تذكير ببيانات دخولك يا كابتن ${s.name}:\nرقمك: ${s.phone}\nكود PIN: ${s.pin}`);
-                tbody.innerHTML += `
-                    <tr>
-                        <td><b>${s.name}</b></td>
-                        <td>${s.grade}</td>
-                        <td>${s.phone}</td>
-                        <td><b style="color:var(--primary); font-size:1.1rem;">${s.pin}</b></td>
-                        <td><a href="https://wa.me/${formattedPhone}?text=${message}" target="_blank" class="action-btn btn-wa">📲 إرسال واتساب</a></td>
-                        <td><button class="action-btn btn-delete" onclick="deleteStudent(${index})">حذف</button></td>
-                    </tr>
-                `;
-            });
-        }
-
-        function deleteStudent(index) {
-            let students = getStorage('approvedStudents');
-            students.splice(index, 1);
-            setStorage('approvedStudents', students);
-            renderAll();
-        }
-
-        function handleUploadContent(e) {
-            e.preventDefault();
-            let contents = getStorage('platformContent');
-            
-            const newContent = {
-                id: Date.now(),
-                title: document.getElementById('contentTitle').value,
-                grade: document.getElementById('contentGrade').value,
-                type: document.getElementById('contentType').value,
-                url: document.getElementById('contentUrl').value,
-                desc: document.getElementById('contentDesc').value
-            };
-
-            contents.push(newContent);
-            setStorage('platformContent', contents);
-
-            alert('تم نشر المحتوى بنجاح لطلاب ' + newContent.grade);
-            e.target.reset();
-            renderAll();
-        }
-
-        function renderContent() {
-            const contents = getStorage('platformContent');
-            const tbody = document.getElementById('contentTableBody');
-            tbody.innerHTML = '';
-
-            contents.forEach((c, index) => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><b>${c.title}</b></td>
-                        <td>${c.grade}</td>
-                        <td>${c.type}</td>
-                        <td><a href="${c.url}" target="_blank" style="color:var(--primary)">فتح الرابط</a></td>
-                        <td><button class="action-btn btn-delete" onclick="deleteContent(${index})">حذف</button></td>
-                    </tr>
-                `;
-            });
-        }
-
-        function deleteContent(index) {
-            let contents = getStorage('platformContent');
-            contents.splice(index, 1);
-            setStorage('platformContent', contents);
-            renderAll();
-        }
-
-        function clearAllData() {
-            if (confirm("هل أنت تأكد من مسح كافة الطلبات والبيانات المخزنة؟")) {
-                localStorage.clear();
-                renderAll();
-            }
-        }
-
-        renderAll();
-    </script>
+    // تحميل البيانات عند فتح الصفحة مباشرة
+    loadStudents();
+</script>
 </body>
 </html>
