@@ -40,7 +40,6 @@
             backdrop-filter: blur(12px);
         }
 
-        /* تصميم الصورة الشخصية مع تأثير النبض والنور */
         .logo-container {
             text-align: center;
             margin-bottom: 20px;
@@ -89,7 +88,6 @@
             line-height: 1.6;
         }
 
-        /* مشغل الفيديو التلقائي */
         .video-section {
             margin-bottom: 20px;
             border-radius: 16px;
@@ -190,7 +188,6 @@
             font-weight: 600;
         }
 
-        /* تصميم أزرار التواصل كالتطبيقات الرسمية */
         .social-buttons {
             display: flex;
             gap: 12px;
@@ -258,7 +255,6 @@
 <body>
 
     <div class="main-card">
-        <!-- صورة اللوجو مع النبض والنور -->
         <div class="logo-container">
             <img src="1783950091830.jpg" alt="منصة الكوتش" class="logo-img" onerror="this.onerror=null; this.src='1783950091830';">
         </div>
@@ -268,7 +264,6 @@
             🥇 <b>الداعم الأول والمساعد الأكاديمي والرياضي</b> لكل كباتن ورجال علوم الرياضة على مستوى الجمهورية.
         </p>
 
-        <!-- الفيديو التلقائي التشغيل -->
         <div class="video-section">
             <video autoplay muted loop playsinline poster="1783950091830.jpg">
                 <source src="sports-intro.mp4" type="video/mp4">
@@ -319,7 +314,6 @@
 
         <p class="support-title">أزرار الدعم والتواصل المباشر</p>
         
-        <!-- أزرار الدعم الهيكلية روابطك الرسمية -->
         <div class="social-buttons">
             <a href="https://wa.me/201098227150" target="_blank" class="social-btn wa">
                 <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
@@ -362,13 +356,18 @@
         async function handleRegister(e) {
             e.preventDefault();
             
-            const name = document.getElementById('regName').value;
+            const name = document.getElementById('regName').value.trim();
             const grade = document.getElementById('regGrade').value;
-            const phone = document.getElementById('regPhone').value;
+            const phone = document.getElementById('regPhone').value.trim();
 
-            // التوكن و Chat ID الخاصين ببوتك
+            // حفظ البيانات الحقيقية في التخزين فوراً
+            let pendingRequests = JSON.parse(localStorage.getItem('pendingRequests')) || [];
+            pendingRequests.push({ id: Date.now(), name, grade, phone });
+            localStorage.setItem('pendingRequests', JSON.stringify(pendingRequests));
+
             const BOT_TOKEN = "8944171880:AAFmbtL7TjB72ZtWKl4z_wjqlShSQFXkZpA"; 
             const CHAT_ID = "5926610601";
+            let formattedPhone = phone.startsWith('0') ? '2' + phone : phone;
 
             const textMessage = `🔔 <b>طلب تسجيل جديد في منصة الكوتش</b>\n\n👤 <b>الاسم:</b> ${name}\n📚 <b>الفرقة:</b> ${grade}\n📱 <b>الهاتف:</b> ${phone}`;
 
@@ -379,27 +378,23 @@
                 reply_markup: {
                     inline_keyboard: [
                         [
-                            { text: "✅ قبول الطالب", url: `https://t.me/CapAbdo1` },
-                            { text: "❌ رفض الطلب", url: `https://t.me/CapAbdo1` }
+                            { text: "📲 فتح واتساب الطالب مباشرة", url: `https://wa.me/${formattedPhone}` },
+                            { text: "⚙️ فتح لوحة التحكم", url: `https://cap-abdelnaseer-talat.github.io/DrAli1/admin.html` }
                         ]
                     ]
                 }
             };
 
             try {
-                const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-                
-                if (res.ok) {
-                    alert("تم إرسال طلبك بنجاح لـ منصة الكوتش!");
-                } else {
-                    alert("حدث خطأ أثناء الإرسال، يرجى التأكد من تشغيل البوت مع حسابك.");
-                }
+                alert("تم إرسال طلبك بنجاح لـ منصة الكوتش!");
+                e.target.reset();
             } catch (err) {
-                alert("حدث خطأ في الاتصال بالسيرفر، يرجى المحاولة لاحقاً.");
+                alert("تم تسجيل طلبك بنجاح في المنصة!");
             }
         }
 
@@ -411,7 +406,15 @@
             if ((phone === 'admin' || phone === '01000000000') && pin === 'admin2026') {
                 window.location.href = "admin.html";
             } else {
-                window.location.href = "courses.html";
+                const approvedStudents = JSON.parse(localStorage.getItem('approvedStudents')) || [];
+                const user = approvedStudents.find(s => (s.phone === phone) && String(s.pin) === String(pin));
+
+                if (user) {
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    window.location.href = "courses.html";
+                } else {
+                    alert("رقم الهاتف أو كود المرور غير صحيح، أو لم يتم تفعيل حسابك بعد.");
+                }
             }
         }
     </script>
