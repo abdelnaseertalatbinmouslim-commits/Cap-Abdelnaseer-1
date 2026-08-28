@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة الكوتش | El-Coach Platform</title>
 
-    <!-- مكتبات Firebase السحابية -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
     <!-- خط تجوال العربي الفخم -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
 
@@ -18,18 +14,13 @@
             --primary-blue: #3b82f6;
             --cyan-glow: #06b6d4;
             --accent-gold: #f59e0b;
-            --glass-bg: rgba(15, 23, 42, 0.65);
+            --glass-bg: rgba(15, 23, 42, 0.75);
             --glass-border: rgba(255, 255, 255, 0.12);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
         }
 
-        * {
-            box-sizing: border-box;
-            font-family: 'Tajawal', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; font-family: 'Tajawal', sans-serif; margin: 0; padding: 0; }
 
         body {
             background-color: var(--bg-dark);
@@ -43,304 +34,110 @@
             overflow-x: hidden;
         }
 
-        /* خلفية زجاجية متحركة وبتنور (Glowing Ambient Background) */
         body::before, body::after {
-            content: '';
-            position: fixed;
-            width: 320px;
-            height: 320px;
-            border-radius: 50%;
-            filter: blur(90px);
-            z-index: 0;
+            content: ''; position: fixed; width: 320px; height: 320px;
+            border-radius: 50%; filter: blur(90px); z-index: 0;
             animation: pulseGlow 8s infinite alternate ease-in-out;
         }
-        body::before {
-            background: rgba(59, 130, 246, 0.35);
-            top: -50px;
-            right: -50px;
-        }
-        body::after {
-            background: rgba(6, 182, 212, 0.25);
-            bottom: -50px;
-            left: -50px;
-            animation-delay: 4s;
-        }
+        body::before { background: rgba(59, 130, 246, 0.35); top: -50px; right: -50px; }
+        body::after { background: rgba(6, 182, 212, 0.25); bottom: -50px; left: -50px; animation-delay: 4s; }
 
         @keyframes pulseGlow {
             0% { transform: scale(1) translate(0, 0); opacity: 0.6; }
             100% { transform: scale(1.3) translate(20px, 30px); opacity: 0.9; }
         }
 
-        /* الكارت الزجاجي الرئيسي (Glassmorphic Card) */
         .glass-card {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            max-width: 440px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px) saturate(180%);
+            position: relative; z-index: 10; width: 100%; max-width: 460px;
+            background: var(--glass-bg); backdrop-filter: blur(25px) saturate(180%);
             -webkit-backdrop-filter: blur(25px) saturate(180%);
-            border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 28px 22px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8),
-                        0 0 35px rgba(59, 130, 246, 0.25);
-            transition: all 0.4s ease;
+            border: 1px solid var(--glass-border); border-radius: 28px; padding: 28px 22px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 35px rgba(59, 130, 246, 0.25);
         }
 
-        /* الصورة الشخصية العلوية بإطار نيون مضيء */
-        .profile-wrapper {
-            text-align: center;
-            margin-bottom: 16px;
-            position: relative;
-        }
-
+        .profile-wrapper { text-align: center; margin-bottom: 16px; }
         .profile-img-container {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto;
-            border-radius: 50%;
-            padding: 4px;
+            width: 110px; height: 110px; margin: 0 auto; border-radius: 50%; padding: 4px;
             background: linear-gradient(135deg, var(--primary-blue), var(--cyan-glow), var(--accent-gold));
-            box-shadow: 0 0 25px rgba(59, 130, 246, 0.6), inset 0 0 15px rgba(6, 182, 212, 0.5);
-            animation: ringRotate 6s linear infinite;
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.6); animation: ringRotate 6s linear infinite;
         }
 
-        @keyframes ringRotate {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
-        }
+        @keyframes ringRotate { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
 
-        .profile-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid var(--bg-dark);
-            display: block;
-        }
+        .profile-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 2px solid var(--bg-dark); }
 
-        /* العناوين والطباعة */
         .app-title {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 900;
-            margin: 8px 0 4px 0;
+            text-align: center; font-size: 1.9rem; font-weight: 900; margin: 8px 0 4px 0;
             background: linear-gradient(135deg, #ffffff 30%, var(--primary-blue), var(--cyan-glow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        .app-subtitle {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.88rem;
-            font-weight: 500;
-            margin-bottom: 22px;
-            line-height: 1.6;
-            padding: 0 8px;
-        }
+        .app-subtitle { text-align: center; color: var(--text-muted); font-size: 0.88rem; margin-bottom: 20px; line-height: 1.6; }
 
-        /* مشغل الفيديو المزود بهالة ضوئية */
+        /* حاوية الفيديو مع دعم يوتيوب والملفات المحلية */
         .video-container {
-            width: 100%;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(59, 130, 246, 0.4);
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), inset 0 0 10px rgba(0,0,0,0.8);
-            margin-bottom: 22px;
-            background: #000;
-            position: relative;
+            width: 100%; border-radius: 20px; overflow: hidden;
+            border: 1px solid rgba(59, 130, 246, 0.4); box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            margin-bottom: 20px; background: #000; position: relative; padding-bottom: 56.25%; height: 0;
+        }
+        .video-container iframe, .video-container video {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; object-fit: cover;
         }
 
-        .video-container video {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 20px;
-            object-fit: cover;
-        }
-
-        /* أزرار التبديل الزجاجية (Tabs) */
         .tab-wrapper {
-            display: flex;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 5px;
-            margin-bottom: 22px;
+            display: flex; background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--glass-border); border-radius: 16px; padding: 5px; margin-bottom: 20px;
         }
 
         .tab-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            font-weight: 700;
-            font-size: 0.92rem;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex: 1; padding: 12px; border: none; background: transparent;
+            color: var(--text-muted); font-weight: 700; font-size: 0.9rem;
+            border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
         }
 
-        .tab-btn.active {
-            background: linear-gradient(135deg, var(--primary-blue), #1d4ed8);
-            color: #ffffff;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
-        }
+        .tab-btn.active { background: linear-gradient(135deg, var(--primary-blue), #1d4ed8); color: #ffffff; box-shadow: 0 0 20px rgba(59, 130, 246, 0.6); }
 
-        /* حقول الإدخال الزجاجية (Glass Inputs) */
-        .form-group {
-            margin-bottom: 18px;
-            text-align: right;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.86rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #e2e8f0;
-        }
+        .form-group { margin-bottom: 16px; text-align: right; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
 
         .form-control {
-            width: 100%;
-            padding: 13px 16px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(15, 23, 42, 0.7);
-            color: var(--text-main);
-            font-size: 0.95rem;
-            outline: none;
-            transition: all 0.3s ease;
+            width: 100%; padding: 12px 14px; border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(15, 23, 42, 0.7);
+            color: var(--text-main); font-size: 0.95rem; outline: none;
         }
 
-        .form-control:focus {
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-            background: rgba(15, 23, 42, 0.9);
-        }
-
-        /* زر الإرسال المتوهج (Glowing Action Button) */
         .submit-btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 14px;
-            border: none;
+            width: 100%; padding: 14px; border-radius: 14px; border: none;
             background: linear-gradient(135deg, var(--primary-blue), var(--cyan-glow));
-            color: #ffffff;
-            font-size: 1.05rem;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
-            transition: all 0.3s ease;
-            margin-top: 6px;
+            color: #ffffff; font-size: 1rem; font-weight: 800; cursor: pointer;
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.5); transition: all 0.3s ease; margin-top: 6px;
         }
 
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 35px rgba(6, 182, 212, 0.7);
+        /* لوحة الأدمن المصممة */
+        .admin-panel { display: none; background: rgba(15, 23, 42, 0.9); border-radius: 16px; padding: 16px; border: 1px solid var(--cyan-glow); margin-top: 15px; }
+        .admin-panel h3 { color: var(--cyan-glow); font-size: 1.1rem; margin-bottom: 12px; text-align: center; }
+        .student-item {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; padding: 10px; margin-bottom: 10px; display: flex;
+            justify-content: space-between; align-items: center; font-size: 0.85rem;
         }
+        .del-btn { background: #ef4444; color: #fff; border: none; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
-        /* قسم الدعم والتواصل الأنيق مع أيقونات الأبلكيشنز */
-        .support-title {
-            text-align: center;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            margin: 24px 0 14px 0;
-            position: relative;
-        }
-
-        .support-title::before, .support-title::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 25%;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .support-title::before { right: 0; }
-        .support-title::after { left: 0; }
-
-        .social-grid {
-            display: flex;
-            gap: 12px;
-        }
-
+        .social-grid { display: flex; gap: 10px; margin-top: 20px; }
         .social-card {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 8px;
-            border-radius: 16px;
-            text-decoration: none;
-            font-weight: 800;
-            font-size: 0.85rem;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 10px 4px; border-radius: 14px; text-decoration: none; font-weight: 800; font-size: 0.82rem;
+            border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.03);
         }
+        .social-card.wa { color: #25D366; } .social-card.tg { color: #0088cc; } .social-card.fb { color: #1877F2; }
+        .social-card svg { width: 18px; height: 18px; fill: currentColor; }
 
-        /* ألوان النيون الرسمية للتطبيقات */
-        .social-card.wa {
-            color: #25D366;
-            border-color: rgba(37, 211, 102, 0.3);
-        }
-        .social-card.wa:hover {
-            background: rgba(37, 211, 102, 0.15);
-            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .social-card.tg {
-            color: #0088cc;
-            border-color: rgba(0, 136, 204, 0.3);
-        }
-        .social-card.tg:hover {
-            background: rgba(0, 136, 204, 0.15);
-            box-shadow: 0 0 20px rgba(0, 136, 204, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .social-card.fb {
-            color: #1877F2;
-            border-color: rgba(24, 119, 242, 0.3);
-        }
-        .social-card.fb:hover {
-            background: rgba(24, 119, 242, 0.15);
-            box-shadow: 0 0 20px rgba(24, 119, 242, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .social-card svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
-
-        /* الحقوق والتوقيع */
-        .footer-credits {
-            text-align: center;
-            margin-top: 24px;
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding-top: 16px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
+        .footer-credits { text-align: center; margin-top: 20px; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 14px; }
     </style>
 </head>
 <body>
 
     <div class="glass-card">
-        <!-- الصورة الشخصية العلوية بملف الصورة المرفوع 1783950091830 -->
         <div class="profile-wrapper">
             <div class="profile-img-container">
                 <img src="1783950091830.jpg" onerror="this.onerror=null; this.src='1783950091830.png'; this.onerror=function(){this.src='1783950091830';}" alt="الكوتش عبدالناصر" class="profile-img">
@@ -350,22 +147,18 @@
         <h1 class="app-title">منصة الكوتش</h1>
         <p class="app-subtitle">🥇 الداعم الأول والمساعد الأكاديمي والرياضي لكل كباتن ورجال علوم الرياضة على مستوى الجمهورية.</p>
 
-        <!-- الفيديو المرفوع (bebo123) -->
+        <!-- مشغل فيديو يوتيوب المدمج المباشر -->
         <div class="video-container">
-            <video autoplay muted loop playsinline id="heroVideo">
-                <source src="bebo123.mp4" type="video/mp4">
-                <source src="bebo123" type="video/mp4">
-                متصفحك لا يدعم تشغيل الفيديو.
-            </video>
+            <!-- غيّر لينك فيديو اليوتيوب هنا برابط قناتك أو أي فيديو آخر -->
+            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&controls=1" allowfullscreen></iframe>
         </div>
 
-        <!-- أزرار التبديل -->
-        <div class="tab-wrapper">
+        <div class="tab-wrapper" id="tabWrapper">
             <button class="tab-btn active" onclick="switchTab('register')">طلب انضمام جديد</button>
             <button class="tab-btn" onclick="switchTab('login')">تسجيل الدخول</button>
         </div>
 
-        <!-- نموذج طلب الانضمام -->
+        <!-- نموذج الانضمام -->
         <form id="registerForm" onsubmit="handleRegister(event)">
             <div class="form-group">
                 <label>الاسم الثلاثي / الخماسي</label>
@@ -391,99 +184,115 @@
         <!-- نموذج تسجيل الدخول -->
         <form id="loginForm" onsubmit="handleLogin(event)" style="display: none;">
             <div class="form-group">
-                <label>رقم الهاتف / اسم المستخدم</label>
-                <input type="text" id="loginPhone" class="form-control" placeholder="01xxxxxxxxx أو admin" required>
+                <label>اسم المستخدم / الأدمن</label>
+                <input type="text" id="loginPhone" class="form-control" placeholder="admin" required>
             </div>
             <div class="form-group">
                 <label>كود المرور / PIN</label>
-                <input type="password" id="loginPin" class="form-control" placeholder="أدخل كود المرور" required>
+                <input type="password" id="loginPin" class="form-control" placeholder="1234" required>
             </div>
             <button type="submit" class="submit-btn">تسجيل الدخول 🔓</button>
         </form>
 
-        <!-- أزرار الدعم مع أشكال التطبيقات المضيئة -->
-        <div class="support-title">الدعم والتواصل المباشر</div>
+        <!-- لوحة تحكم الأدمن للطلبات المسجلة -->
+        <div id="adminPanel" class="admin-panel">
+            <h3>لوحة تحكم الكوتش (الطلبات المسجلة)</h3>
+            <div id="studentsList">جاري التحميل...</div>
+            <button onclick="logoutAdmin()" class="submit-btn" style="background:#ef4444; margin-top:12px;">تسجيل الخروج</button>
+        </div>
+
         <div class="social-grid">
-            <!-- WhatsApp -->
-            <a href="https://wa.me/201098227150" target="_blank" class="social-card wa">
-                <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                واتساب
-            </a>
-            <!-- Telegram -->
-            <a href="https://t.me/CapAbdo1" target="_blank" class="social-card tg">
-                <svg viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.121l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.458c.538-.196 1.006.128.832.941z"/></svg>
-                تليجرام
-            </a>
-            <!-- Facebook -->
-            <a href="https://www.facebook.com/cap.abdelnaseer.talat" target="_blank" class="social-card fb">
-                <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                فيسبوك
-            </a>
+            <a href="https://wa.me/201098227150" target="_blank" class="social-card wa"><svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>واتساب</a>
+            <a href="https://t.me/CapAbdo1" target="_blank" class="social-card tg"><svg viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.121l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.458c.538-.196 1.006.128.832.941z"/></svg>تليجرام</a>
+            <a href="https://www.facebook.com/cap.abdelnaseer.talat" target="_blank" class="social-card fb"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>فيسبوك</a>
         </div>
 
         <div class="footer-credits">تطوير المهندس عبدالناصر © 2026</div>
     </div>
 
     <script>
-        // بيانات مشروع Firebase الحقيقية الخاصة بك
-        const firebaseConfig = {
-            apiKey: "AIzaSyAtRET95Dlp58sEPKm3g_nJ_90AQFme_P0",
-            authDomain: "elcoach-a06cd.firebaseapp.com",
-            databaseURL: "https://elcoach-a06cd-default-rtdb.firebaseio.com",
-            projectId: "elcoach-a06cd",
-            storageBucket: "elcoach-a06cd.firebasestorage.app",
-            messagingSenderId: "1005781255562",
-            appId: "1:1005781255562:web:8cfa840d88739de42cf473",
-            measurementId: "G-4EC0Q65RK8"
-        };
-
-        // تهيئة Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const db = firebase.database();
-
         function switchTab(tab) {
             document.getElementById('registerForm').style.display = (tab === 'register') ? 'block' : 'none';
             document.getElementById('loginForm').style.display = (tab === 'login') ? 'block' : 'none';
+            document.getElementById('adminPanel').style.display = 'none';
             const btns = document.querySelectorAll('.tab-btn');
             btns[0].classList.toggle('active', tab === 'register');
             btns[1].classList.toggle('active', tab === 'login');
         }
 
-        async function handleRegister(e) {
+        // تسجيل الطلبات محلياً بدون سيرفر
+        function handleRegister(e) {
             e.preventDefault();
-            const btn = document.getElementById('btnReg');
-            btn.disabled = true;
-            btn.innerText = "جاري الحفظ في السيرفر...";
-
             const name = document.getElementById('regName').value.trim();
             const grade = document.getElementById('regGrade').value;
             const phone = document.getElementById('regPhone').value.trim();
 
-            try {
-                const newReqRef = db.ref('pendingRequests').push();
-                await newReqRef.set({
-                    id: newReqRef.key,
-                    name: name,
-                    grade: grade,
-                    phone: phone,
-                    timestamp: Date.now()
-                });
+            const newStudent = { id: Date.now(), name, grade, phone };
 
-                alert("تم إرسال طلبك بنجاح وسيتواصل معك الكوتش قريبًا!");
-                document.getElementById('registerForm').reset();
-            } catch (error) {
-                alert("حدث خطأ أثناء الحفظ، أعد المحاولة: " + error.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "إرسال طلب الانضمام 🚀";
+            // حفظ في ذاكرة المتصفح المحلية
+            let students = JSON.parse(localStorage.getItem('coach_students') || '[]');
+            students.push(newStudent);
+            localStorage.setItem('coach_students', JSON.stringify(students));
+
+            alert("✅ تم إرسال طلبك بنجاح وسيتواصل معك الكوتش قريبًا!");
+            document.getElementById('registerForm').reset();
+        }
+
+        // تسجيل دخول الأدمن
+        function handleLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('loginPhone').value.trim();
+            const pin = document.getElementById('loginPin').value.trim();
+
+            if (user === "admin" && pin === "1234") {
+                document.getElementById('registerForm').style.display = 'none';
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('tabWrapper').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                loadStudentsForAdmin();
+            } else {
+                alert("بيانات الدخول غير صحيحة! الأدمن: admin والرمز: 1234");
             }
         }
 
-        function handleLogin(e) {
-            e.preventDefault();
-            alert("ميزة تسجيل الدخول تحت الصيانة والتحديث.");
+        // عرض الطلاب في لوحة الأدمن
+        function loadStudentsForAdmin() {
+            const listDiv = document.getElementById('studentsList');
+            let students = JSON.parse(localStorage.getItem('coach_students') || '[]');
+            
+            if (students.length === 0) {
+                listDiv.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>لا توجد طلبات مسجلة حالياً.</p>";
+                return;
+            }
+
+            let html = "";
+            students.forEach((item, index) => {
+                html += `
+                    <div class="student-item">
+                        <div>
+                            <strong>${item.name}</strong> (${item.grade})<br>
+                            <small style="color:var(--cyan-glow);">${item.phone}</small>
+                        </div>
+                        <button class="del-btn" onclick="deleteStudent(${index})">حذف</button>
+                    </div>
+                `;
+            });
+            listDiv.innerHTML = html;
+        }
+
+        // حذف طالب من القائمة
+        function deleteStudent(index) {
+            if(confirm("هل أنت متأكد من حذف هذا الطالب؟")) {
+                let students = JSON.parse(localStorage.getItem('coach_students') || '[]');
+                students.splice(index, 1);
+                localStorage.setItem('coach_students', JSON.stringify(students));
+                loadStudentsForAdmin();
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('tabWrapper').style.display = 'flex';
+            switchTab('register');
         }
     </script>
 </body>
