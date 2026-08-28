@@ -108,15 +108,15 @@
 
         .nav-btn {
             flex: 1;
-            min-width: 130px;
-            padding: 12px 16px;
+            min-width: 120px;
+            padding: 12px 14px;
             border: 1px solid var(--glass-border);
             background: var(--glass-input);
             color: var(--text-sub);
             border-radius: 14px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-align: center;
             white-space: nowrap;
         }
@@ -298,10 +298,11 @@
             <button class="nav-btn active" onclick="switchAdminTab('requests', event)">📥 طلبات الانضمام</button>
             <button class="nav-btn" onclick="switchAdminTab('students', event)">👥 الطلاب المفعلين</button>
             <button class="nav-btn" onclick="switchAdminTab('upload', event)">📚 رفع المحتوى</button>
+            <button class="nav-btn" onclick="switchAdminTab('notifications', event)" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">🔔 الإشعارات</button>
             <button class="nav-btn" onclick="switchAdminTab('settings', event)">🎛️ التحكم في الأزرار</button>
         </div>
 
-        <!-- 1. قسم متابعة الطلبات والقبول -->
+        <!-- 1. جدول طلبات الانضمام المعلقة (تاريخ ووقت التسجيل بدقة) -->
         <div id="tab-requests" class="tab-content active">
             <div class="section-card">
                 <div class="section-header-flex">
@@ -312,22 +313,22 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>الاسم</th>
-                                <th>الفرقة</th>
-                                <th>الهاتف</th>
-                                <th>التاريخ</th>
+                                <th>اسم الطالب</th>
+                                <th>الفئة الدراسية</th>
+                                <th>رقم الهاتف</th>
+                                <th>تاريخ ووقت التسجيل</th>
                                 <th>الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody id="pendingRequestsTable">
-                            <tr><td colspan="5" style="text-align:center;">جاري تحميل الطلبات...</td></tr>
+                            <tr><td colspan="5" style="text-align:center;">جاري تحميل الطلبات المعلقة...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- 2. قسم الطلاب المقبولين ومتابعة الـ PIN -->
+        <!-- 2. جدول الطلاب المقبولين (مع علامة صح وأكسس كامل) -->
         <div id="tab-students" class="tab-content">
             <div class="section-card">
                 <h2>👥 قائمة الطلاب المفعلين والأكواد (PIN)</h2>
@@ -335,11 +336,11 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>الاسم</th>
-                                <th>الفرقة</th>
-                                <th>الهاتف</th>
+                                <th>اسم الطالب</th>
+                                <th>الفئة الدراسية</th>
+                                <th>رقم الهاتف</th>
                                 <th>كود المرور (PIN)</th>
-                                <th>إلغاء التفعيل</th>
+                                <th>حالة التفعيل والوصول</th>
                             </tr>
                         </thead>
                         <tbody id="approvedStudentsTable">
@@ -350,23 +351,30 @@
             </div>
         </div>
 
-        <!-- 3. قسم رفع المحتوى والبيانات -->
+        <!-- 3. قسم رفع المحتوى والبيانات (حسب الفئة الدراسية والترمات) -->
         <div id="tab-upload" class="tab-content">
             <div class="section-card">
-                <h2>➕ إضافة درس أو محتوى جديد</h2>
+                <h2>➕ إضافة درس أو محتوى جديد للفئة الدراسية</h2>
                 <form id="uploadContentForm" onsubmit="handleContentUpload(event)">
                     <div class="form-group">
-                        <label>عنوان المحتوى / الكورس</label>
+                        <label>عنوان المحتوى / المحاضرة</label>
                         <input type="text" id="courseTitle" class="form-control" placeholder="مثال: محاضرة التشريح - الفصل الأول" required>
                     </div>
                     <div class="form-group">
-                        <label>الفرقة المستهدفة</label>
+                        <label>الفئة الدراسية المستهدفة</label>
                         <select id="courseGrade" class="form-control" required>
-                            <option value="الجميع">جميع الفرق</option>
-                            <option value="الفرقة الأولى">الفرقة الأولى</option>
-                            <option value="الفرقة الثانية">الفرقة الثانية</option>
-                            <option value="الفرقة الثالثة">الفرقة الثالثة</option>
-                            <option value="الفرقة الرابعة">الفرقة الرابعة</option>
+                            <option value="الجميع">جميع الفئات</option>
+                            <option value="الفئة الأولى">الفئة الأولى</option>
+                            <option value="الفئة الثانية">الفئة الثانية</option>
+                            <option value="الفئة الثالثة">الفئة الثالثة</option>
+                            <option value="الفئة الرابعة">الفئة الرابعة</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>الفصل الدراسي (الترم)</label>
+                        <select id="courseTerm" class="form-control" required>
+                            <option value="الترم الأول">الترم الأول</option>
+                            <option value="الترم الثاني">الترم الثاني</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -377,7 +385,7 @@
                         <label>وصف قصير</label>
                         <textarea id="courseDesc" class="form-control" rows="3" placeholder="أدخل تفاصيل المحتوى..."></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width:100%; padding:12px;">رفع المحتوى فوراً</button>
+                    <button type="submit" class="btn btn-primary" style="width:100%; padding:12px;">رفع المحتوى للفئة المحددة فوراً</button>
                 </form>
             </div>
 
@@ -389,13 +397,48 @@
             </div>
         </div>
 
-        <!-- 4. قسم التحكم في الأزرار والإعدادات -->
+        <!-- 4. قسم صندوق الإشعارات (الجرس الأحمر) لبث التحديثات واللينكات -->
+        <div id="tab-notifications" class="tab-content">
+            <div class="section-card">
+                <h2 style="color: #ef4444;">🔔 صندوق إرسال الإشعارات اللحظية</h2>
+                <form id="sendNotificationForm" onsubmit="handleSendNotification(event)">
+                    <div class="form-group">
+                        <label>عنوان الإشعار أو التحديث</label>
+                        <input type="text" id="notifTitle" class="form-control" placeholder="مثال: تنبيه هام بخصوص محاضرات الترم الأول" required>
+                    </div>
+                    <div class="form-group">
+                        <label>نص الإشعار / اللينك التوجيهي</label>
+                        <textarea id="notifBody" class="form-control" rows="3" placeholder="اكتب تفاصيل الرسالة أو الصق اللينك المطلوب..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>الفئة المستهدفة بالإشعار</label>
+                        <select id="notifTarget" class="form-control" required>
+                            <option value="الجميع">جميع الفئات والطلاب</option>
+                            <option value="الفئة الأولى">الفئة الأولى فقط</option>
+                            <option value="الفئة الثانية">الفئة الثانية فقط</option>
+                            <option value="الفئة الثالثة">الفئة الثالثة فقط</option>
+                            <option value="الفئة الرابعة">الفئة الرابعة فقط</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-danger" style="width:100%; padding:12px; font-weight:bold;">🚨 إرسال وبث الإشعار فوراً</button>
+                </form>
+            </div>
+
+            <div class="section-card">
+                <h2>📜 سجل الإشعارات والرسائل المرسلة</h2>
+                <div id="sentNotificationsList">
+                    <p style="text-align:center; color: var(--text-sub);">جاري تحميل السجل...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. قسم التحكم في الأزرار والإعدادات -->
         <div id="tab-settings" class="tab-content">
             <div class="section-card">
                 <h2>🎛️ تحديث روابط أزرار التواصل والدعم</h2>
                 <form id="settingsForm" onsubmit="handleSettingsSave(event)">
                     <div class="form-group">
-                        <label>رقم الواتساب (شامل كود الدولة 20)</label>
+                        <label>رقم الواتساب للدعم (شامل كود الدولة 20)</label>
                         <input type="text" id="settingWhatsapp" class="form-control" placeholder="201098227150" required>
                     </div>
                     <div class="form-group">
@@ -428,6 +471,7 @@
             loadCoursesData();
             loadSettingsData();
             loadStatsData();
+            loadNotificationsData();
         });
 
         function switchAdminTab(tab, evt) {
@@ -438,22 +482,20 @@
             if(evt) evt.target.classList.add('active');
         }
 
-        // تحميل وتحديث بطاقات الإحصائيات
+        // تحميل الإحصائيات والزوار
         async function loadStatsData() {
             try {
-                // جلب بيانات الإحصائيات والزوار من فايربيس
                 const resStats = await fetch(`${FIREBASE_URL}/stats.json`);
                 const statsData = await resStats.json() || {};
                 
                 document.getElementById('statVisitors').innerText = statsData.visitorsCount || 0;
                 document.getElementById('statOnline').innerText = statsData.onlineNow || 1;
-
             } catch (err) {
                 console.error("خطأ في جلب الإحصائيات:", err);
             }
         }
 
-        // 1. تحميل وإدارة طلبات الطلاب (المعلقة والمقبولة)
+        // تحميل وإدارة طلبات الطلاب في جدول منفصل مع تاريخ ووقت التسجيل
         async function loadStudentsData() {
             try {
                 const res = await fetch(`${FIREBASE_URL}/students.json`);
@@ -472,17 +514,22 @@
 
                 Object.keys(globalStudentsData).forEach(id => {
                     const student = globalStudentsData[id];
+                    // تنسيق التاريخ والوقت بدقة
+                    const formattedDate = student.createdAt ? new Date(student.createdAt).toLocaleString('ar-EG', {
+                        year: 'numeric', month: '2-digit', day: '2-digit',
+                        hour: '2-digit', minute: '2-digit'
+                    }) : 'غير محدد';
 
                     if (student.status === 'pending') {
                         hasPending = true;
                         pendingTable.innerHTML += `
                             <tr>
                                 <td><b>${student.name}</b></td>
-                                <td>${student.grade}</td>
+                                <td><span style="color: var(--accent-cyan);">${student.grade || 'غير محدد'}</span></td>
                                 <td>${student.phone}</td>
-                                <td>${student.createdAt ? new Date(student.createdAt).toLocaleDateString('ar-EG') : 'غير محدد'}</td>
+                                <td style="font-size:0.8rem; color:var(--text-sub);">${formattedDate}</td>
                                 <td>
-                                    <button class="btn btn-success btn-sm" onclick="approveStudent('${id}', '${student.name}', '${student.phone}')">✅ قبول وتوليد PIN</button>
+                                    <button class="btn btn-success btn-sm" onclick="approveStudent('${id}', '${student.name}', '${student.phone}')">✅ قبول وتوليد المفتاح</button>
                                     <button class="btn btn-danger btn-sm" onclick="rejectStudent('${id}')">❌ رفض</button>
                                 </td>
                             </tr>
@@ -493,12 +540,14 @@
                         approvedTable.innerHTML += `
                             <tr>
                                 <td><b>${student.name}</b></td>
-                                <td>${student.grade}</td>
+                                <td><span style="color: var(--accent-cyan);">${student.grade || 'غير محدد'}</span></td>
                                 <td>${student.phone}</td>
                                 <td><span class="pin-badge">${student.pin}</span></td>
                                 <td>
-                                    <button class="btn btn-danger btn-sm" onclick="rejectStudent('${id}')">إلغاء الحساب</button>
-                                    <a class="btn btn-success btn-sm" href="https://wa.me/${student.phone.startsWith('0') ? '2'+student.phone : student.phone}?text=${encodeURIComponent('أهلاً بك في منصة الكوتش! كود الدخول الخاص بك هو: ' + student.pin)}" target="_blank">📲 إرسال PIN بالواتس</a>
+                                    <span style="color: var(--success); font-weight: bold; display: inline-flex; align-items: center; gap: 4px;">
+                                        ✔️ تم الاعتماد والوصول
+                                    </span>
+                                    <button class="btn btn-danger btn-sm" style="margin-right: 10px;" onclick="rejectStudent('${id}')">إلغاء</button>
                                 </td>
                             </tr>
                         `;
@@ -532,14 +581,14 @@
                     })
                 });
 
-                const msg = `🎉 <b>تم قبول الطالب وتوليد الكود!</b>\n\n👤 <b>الاسم:</b> ${name}\n📱 <b>الهاتف:</b> ${phone}\n🔑 <b>PIN الدخول:</b> <code>${generatedPin}</code>`;
+                const msg = `🎉 <b>تم قبول الطالب وتوليد كود الدخول!</b>\n\n👤 <b>الاسم:</b> ${name}\n📱 <b>الهاتف:</b> ${phone}\n🔑 <b>PIN الدخول:</b> <code>${generatedPin}</code>`;
                 await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'HTML' })
                 });
 
-                alert(`تم قبول الطالب بنجاح! \nالكود الخاص به هو: ${generatedPin}`);
+                alert(`تم قبول الطالب بنجاح! الكود الخاص به: ${generatedPin}`);
                 loadStudentsData();
             } catch (err) {
                 alert("حدث خطأ أثناء اعتماد الطالب.");
@@ -555,13 +604,11 @@
                 return;
             }
 
-            if (!confirm(`هل أنت تأكد من قبول جميع الطلبات المعلقة وعددها (${pendingIds.length}) طلب؟`)) return;
+            if (!confirm(`هل أنت متأكد من قبول جميع الطلبات المعلقة وعددها (${pendingIds.length}) طلب؟`)) return;
 
             try {
                 for (const id of pendingIds) {
-                    const student = globalStudentsData[id];
                     const generatedPin = Math.floor(1000 + Math.random() * 9000);
-
                     await fetch(`${FIREBASE_URL}/students/${id}.json`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
@@ -572,7 +619,7 @@
                     });
                 }
 
-                alert("تم قبول جميع الطلبات المعلقة بنجاح وتوليد الأكواد الخاصة بهم!");
+                alert("تم قبول جميع الطلبات المعلقة وتوليد الأكواد الخاصة بهم بنجاح!");
                 loadStudentsData();
             } catch (err) {
                 console.error(err);
@@ -580,9 +627,9 @@
             }
         }
 
-        // رفض أو إغلاق حساب طالب
+        // رفض أو إيقاف حساب طالب
         async function rejectStudent(id) {
-            if (!confirm("هل أنت تأكد من إجراء الرفض/تغيير حالة الطالب؟")) return;
+            if (!confirm("هل أنت متأكد من تغيير حالة الطالب؟")) return;
 
             try {
                 await fetch(`${FIREBASE_URL}/students/${id}.json`, {
@@ -592,17 +639,18 @@
                 });
                 loadStudentsData();
             } catch (err) {
-                alert("حدث خطأ أثناء عملية الرفض.");
+                alert("حدث خطأ أثناء العملية.");
             }
         }
 
-        // 2. رفع وإدارة المحتوى والكورسات
+        // رفع وإدارة المحتوى مرتبطة بالفئة والترمات
         async function handleContentUpload(e) {
             e.preventDefault();
 
             const courseData = {
                 title: document.getElementById('courseTitle').value.trim(),
                 grade: document.getElementById('courseGrade').value,
+                term: document.getElementById('courseTerm').value,
                 link: document.getElementById('courseLink').value.trim(),
                 desc: document.getElementById('courseDesc').value.trim(),
                 createdAt: new Date().toISOString()
@@ -615,7 +663,7 @@
                     body: JSON.stringify(courseData)
                 });
 
-                alert("تم رفع المحتوى بنجاح على المنصة!");
+                alert("تم رفع المحتوى بنجاح وتوجيهه للفئة الدراسية المحددة!");
                 e.target.reset();
                 loadCoursesData();
             } catch (err) {
@@ -640,10 +688,11 @@
                 keys.forEach(id => {
                     const c = data[id];
                     listContainer.innerHTML += `
-                        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:12px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:12px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                             <div>
-                                <h4 style="margin:0 0 5px 0;">${c.title} <small style="color:var(--accent-cyan)">(${c.grade})</small></h4>
-                                <small style="color:var(--text-sub);">${c.desc || 'لا يوجد وصف'}</small>
+                                <h4 style="margin:0 0 5px 0;">${c.title}</h4>
+                                <span style="color:var(--accent-cyan); font-size:0.82rem; font-weight:bold;">${c.grade} — ${c.term || 'الترم الأول'}</span>
+                                <p style="margin:5px 0 0 0; font-size:0.82rem; color:var(--text-sub);">${c.desc || ''}</p>
                             </div>
                             <div>
                                 <a href="${c.link}" target="_blank" class="btn btn-primary btn-sm">عرض</a>
@@ -663,7 +712,72 @@
             loadCoursesData();
         }
 
-        // 3. التحكم في إعدادات الأزرار
+        // إرسال وبث الإشعارات (الجرس الأحمر)
+        async function handleSendNotification(e) {
+            e.preventDefault();
+            const notifData = {
+                title: document.getElementById('notifTitle').value.trim(),
+                body: document.getElementById('notifBody').value.trim(),
+                target: document.getElementById('notifTarget').value,
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                await fetch(`${FIREBASE_URL}/notifications.json`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(notifData)
+                });
+
+                alert("تم إرسال الإشعار وبثه بنجاح للطلاب المستهدفين!");
+                e.target.reset();
+                loadNotificationsData();
+            } catch (err) {
+                alert("حدث خطأ أثناء إرسال الإشعار.");
+            }
+        }
+
+        async function loadNotificationsData() {
+            try {
+                const res = await fetch(`${FIREBASE_URL}/notifications.json`);
+                const data = await res.json() || {};
+                const listContainer = document.getElementById('sentNotificationsList');
+
+                listContainer.innerHTML = '';
+                const keys = Object.keys(data);
+
+                if (keys.length === 0) {
+                    listContainer.innerHTML = `<p style="text-align:center; color: var(--text-sub);">لم يتم إرسال أي إشعارات سابقة.</p>`;
+                    return;
+                }
+
+                keys.reverse().forEach(id => {
+                    const n = data[id];
+                    listContainer.innerHTML += `
+                        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:12px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <h4 style="margin:0 0 5px 0; color:#ef4444;">🔔 ${n.title} <small style="color:var(--accent-cyan)">(${n.target})</small></h4>
+                                <p style="margin:0; font-size:0.85rem; color:var(--text-main);">${n.body}</p>
+                                <small style="color:var(--text-sub);">${new Date(n.createdAt).toLocaleString('ar-EG')}</small>
+                            </div>
+                            <div>
+                                <button onclick="deleteNotification('${id}')" class="btn btn-danger btn-sm">حذف</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function deleteNotification(id) {
+            if (!confirm("هل أنت متأكد من حذف هذا الإشعار؟")) return;
+            await fetch(`${FIREBASE_URL}/notifications/${id}.json`, { method: 'DELETE' });
+            loadNotificationsData();
+        }
+
+        // إعدادات أزرار التواصل والدعم
         async function loadSettingsData() {
             try {
                 const res = await fetch(`${FIREBASE_URL}/settings.json`);
