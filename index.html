@@ -212,6 +212,25 @@
             color: #fff;
         }
 
+        /* صندوق الإخطار بالانضمام للقناة */
+        .whatsapp-notice {
+            background: rgba(37, 211, 102, 0.1);
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            border-radius: 16px;
+            padding: 12px 14px;
+            margin-bottom: 18px;
+            font-size: 0.85rem;
+            color: #25D366;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .whatsapp-notice a {
+            color: #25D366;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
         /* أزرار الإرسال الفخمة */
         .submit-btn {
             width: 100%;
@@ -340,6 +359,10 @@
 
         <!-- نموذج طلب الانضمام -->
         <form id="registerForm" onsubmit="handleRegister(event)">
+            <div class="whatsapp-notice">
+                ⚠️ **شرط أساسي لاكتمال التسجيل:** يجب الانضمام لقناة الواتساب الرسمية لمتابعة حالة قبول حسابك.
+            </div>
+
             <div class="form-group">
                 <label>الاسم الثلاثي / الخماسي</label>
                 <input type="text" id="regName" class="form-control" placeholder="أدخل اسمك بالكامل" required>
@@ -358,7 +381,7 @@
                 <label>رقم الهاتف (واتساب)</label>
                 <input type="tel" id="regPhone" class="form-control" placeholder="01xxxxxxxxx" required>
             </div>
-            <button type="submit" class="submit-btn">إرسال طلب الانضمام</button>
+            <button type="submit" id="regSubmitBtn" class="submit-btn">إرسال طلب الانضمام والدخول للقناة</button>
         </form>
 
         <!-- نموذج تسجيل الدخول -->
@@ -400,6 +423,30 @@
         const FIREBASE_URL = "https://abodaa-default-rtdb.firebaseio.com";
         const BOT_TOKEN = "8944171880:AAFmbtL7TjB72ZtWKl4z_wjqlShSQFXkZpA"; 
         const CHAT_ID = "5926610601";
+        const WA_CHANNEL_URL = "https://whatsapp.com/channel/0029VbDGX1rJpe8ZM6H5h02T";
+
+        // فحص حالة التسجيل السابقة فور تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', () => {
+            checkRegistrationStatus();
+        });
+
+        function checkRegistrationStatus() {
+            const hasRegistered = localStorage.getItem('elcoach_registered');
+            if (hasRegistered) {
+                const regForm = document.getElementById('registerForm');
+                regForm.innerHTML = `
+                    <div style="text-align: center; padding: 20px 10px;">
+                        <h3 style="color: #06b6d4; margin-bottom: 10px;">تم تسجيل طلبك بالفعل!</h3>
+                        <p style="color: var(--text-sub); font-size: 0.9rem; line-height: 1.6;">
+                            لقد قمت بإرسال طلب انضمام سابقاً لهذا الجهاز. يمكنك متابعة حالة القبول أو تسجيل الدخول فور التفعيل.
+                        </p>
+                        <a href="${WA_CHANNEL_URL}" target="_blank" class="submit-btn" style="display: block; text-decoration: none; margin-top: 15px;">
+                            الانضمام لقناة الواتساب الرسمية
+                        </a>
+                    </div>
+                `;
+            }
+        }
 
         function switchTab(tab) {
             const regForm = document.getElementById('registerForm');
@@ -421,20 +468,38 @@
 
         async function handleRegister(e) {
             e.preventDefault();
+
+            // منع التسجيل في حال وجود طلب سابق مسجل محلياً
+            if (localStorage.getItem('elcoach_registered')) {
+                alert("تم تسجيل طلبك مسبقاً من هذا الجهاز!");
+                return;
+            }
             
             const name = document.getElementById('regName').value.trim();
             const grade = document.getElementById('regGrade').value;
             const phone = document.getElementById('regPhone').value.trim();
 
-            const studentData = {
-                name: name,
-                grade: grade,
-                phone: phone,
-                status: 'pending',
-                createdAt: new Date().toISOString()
-            };
-
             try {
+                // فحص الرقم داخل قاعدة فايربيس للتأكد من عدم التكرار برقم الهاتف
+                const checkRes = await fetch(`${FIREBASE_URL}/students.json`);
+                const existingData = await checkRes.json();
+
+                if (existingData) {
+                    const isPhoneDuplicate = Object.values(existingData).some(student => student.phone === phone);
+                    if (isPhoneDuplicate) {
+                        alert("رقم الهاتف هذا مسجل بالفعل في المنصة! يرجى الانتظار لحين التفعيل أو التواصل مع الدعم.");
+                        return;
+                    }
+                }
+
+                const studentData = {
+                    name: name,
+                    grade: grade,
+                    phone: phone,
+                    status: 'pending',
+                    createdAt: new Date().toISOString()
+                };
+
                 // 1. الحفظ الفوري في قاعدة بيانات فايربيس Firebase
                 const res = await fetch(`${FIREBASE_URL}/students.json`, {
                     method: 'POST',
@@ -468,12 +533,18 @@
                     body: JSON.stringify(payload)
                 });
 
-                alert("تم إرسال طلبك بنجاح وتسجيله في منصة الكوتش!");
-                e.target.reset();
+                // حفظ حالة التسجيل على الجهاز لحظر إعادة التسجيل
+                localStorage.setItem('elcoach_registered', 'true');
+                localStorage.setItem('elcoach_user_phone', phone);
+
+                alert("تم إرسال طلبك بنجاح! سيتم تحويلك الآن لقناة الواتساب الرسمية لإكمال شرط التسجيل.");
+                
+                // التوجيه التلقائي لقناة الواتساب
+                window.location.href = WA_CHANNEL_URL;
 
             } catch (err) {
                 console.error(err);
-                alert("حدث خطأ أثناء الاتصال الخادم، يرجى إعادة المحاولة.");
+                alert("حدث خطأ أثناء الاتصال بالخادم، يرجى إعادة المحاولة.");
             }
         }
 
@@ -517,4 +588,3 @@
     </script>
 </body>
 </html>
-
