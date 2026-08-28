@@ -1,4 +1,4 @@
-here<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -318,6 +318,31 @@ here<!DOCTYPE html>
             transform: translateY(-2px);
         }
 
+        /* زر الدعم العائم الجانبي */
+        .floating-support-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.5);
+            color: white;
+            text-decoration: none;
+            z-index: 9999;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: pulseFloat 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseFloat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 15px 35px rgba(37, 211, 102, 0.7); }
+        }
+
         .footer-credits {
             text-align: center;
             margin-top: 26px;
@@ -342,7 +367,7 @@ here<!DOCTYPE html>
             🥇 <b>الداعم الأول والمساعد الأكاديمي والرياضي</b> لكل كباتن ورجال علوم الرياضة على مستوى الجمهورية.
         </p>
 
-        <!-- مشغل الفيديو الجديد -->
+        <!-- مشغل الفيديو -->
         <div class="video-section">
             <video autoplay muted loop playsinline poster="1783950091830.jpg">
                 <source src="bebo123.mp4" type="video/mp4">
@@ -381,7 +406,7 @@ here<!DOCTYPE html>
                 <label>رقم الهاتف (واتساب)</label>
                 <input type="tel" id="regPhone" class="form-control" placeholder="01xxxxxxxxx" required>
             </div>
-            <button type="submit" id="regSubmitBtn" class="submit-btn">إرسال طلب الانضمام والدخول للقناة</button>
+            <button type="submit" id="regSubmitBtn" class="submit-btn">إرسال طلب الانضمام والدخول لقناة الدعم</button>
         </form>
 
         <!-- نموذج تسجيل الدخول -->
@@ -419,13 +444,17 @@ here<!DOCTYPE html>
         </div>
     </div>
 
+    <!-- زر الدعم العائم المباشر -->
+    <a href="https://wa.me/201098227150" target="_blank" class="floating-support-btn" title="تواصل مع الدعم الفني">
+        <svg width="30" height="30" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+    </a>
+
     <script>
         const FIREBASE_URL = "https://abodaa-default-rtdb.firebaseio.com";
         const BOT_TOKEN = "8944171880:AAFmbtL7TjB72ZtWKl4z_wjqlShSQFXkZpA"; 
         const CHAT_ID = "5926610601";
         const WA_CHANNEL_URL = "https://whatsapp.com/channel/0029VbDGX1rJpe8ZM6H5h02T";
 
-        // فحص حالة التسجيل السابقة فور تحميل الصفحة
         window.addEventListener('DOMContentLoaded', () => {
             checkRegistrationStatus();
         });
@@ -469,7 +498,6 @@ here<!DOCTYPE html>
         async function handleRegister(e) {
             e.preventDefault();
 
-            // منع التسجيل في حال وجود طلب سابق مسجل محلياً
             if (localStorage.getItem('elcoach_registered')) {
                 alert("تم تسجيل طلبك مسبقاً من هذا الجهاز!");
                 return;
@@ -479,8 +507,13 @@ here<!DOCTYPE html>
             const grade = document.getElementById('regGrade').value;
             const phone = document.getElementById('regPhone').value.trim();
 
+            // تجهيز الوقت والتاريخ بدقة بتوقيت مصر Local String
+            const now = new Date();
+            const dateFormatted = now.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+            const timeFormatted = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', hour12: true });
+            const registrationTimestamp = `${dateFormatted} - ${timeFormatted}`;
+
             try {
-                // فحص الرقم داخل قاعدة فايربيس للتأكد من عدم التكرار برقم الهاتف
                 const checkRes = await fetch(`${FIREBASE_URL}/students.json`);
                 const existingData = await checkRes.json();
 
@@ -497,10 +530,10 @@ here<!DOCTYPE html>
                     grade: grade,
                     phone: phone,
                     status: 'pending',
-                    createdAt: new Date().toISOString()
+                    createdAt: registrationTimestamp,
+                    isoDate: now.toISOString()
                 };
 
-                // 1. الحفظ الفوري في قاعدة بيانات فايربيس Firebase
                 const res = await fetch(`${FIREBASE_URL}/students.json`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -509,9 +542,8 @@ here<!DOCTYPE html>
 
                 if (!res.ok) throw new Error("تعذر حفظ الطلب في فايربيس");
 
-                // 2. إرسال الإشعار المباشر عبر بوت التليجرام
                 let formattedPhone = phone.startsWith('0') ? '2' + phone : phone;
-                const textMessage = `🔔 <b>طلب تسجيل جديد في منصة الكوتش</b>\n\n👤 <b>الاسم:</b> ${name}\n📚 <b>الفرقة:</b> ${grade}\n📱 <b>الهاتف:</b> ${phone}`;
+                const textMessage = `🔔 <b>طلب تسجيل جديد في منصة الكوتش</b>\n\n👤 <b>الاسم:</b> ${name}\n📚 <b>الفرقة:</b> ${grade}\n📱 <b>الهاتف:</b> ${phone}\n⏰ <b>تاريخ ووقت التسجيل:</b> ${registrationTimestamp}`;
 
                 const payload = {
                     chat_id: CHAT_ID,
@@ -533,13 +565,11 @@ here<!DOCTYPE html>
                     body: JSON.stringify(payload)
                 });
 
-                // حفظ حالة التسجيل على الجهاز لحظر إعادة التسجيل
                 localStorage.setItem('elcoach_registered', 'true');
                 localStorage.setItem('elcoach_user_phone', phone);
+                localStorage.setItem('elcoach_user_grade', grade);
 
                 alert("تم إرسال طلبك بنجاح! سيتم تحويلك الآن لقناة الواتساب الرسمية لإكمال شرط التسجيل.");
-                
-                // التوجيه التلقائي لقناة الواتساب
                 window.location.href = WA_CHANNEL_URL;
 
             } catch (err) {
@@ -553,14 +583,12 @@ here<!DOCTYPE html>
             const phone = document.getElementById('loginPhone').value.trim();
             const pin = document.getElementById('loginPin').value.trim();
 
-            // دخول مسؤول المنصة
             if ((phone === 'admin' || phone === '01000000000') && pin === 'admin2026') {
                 window.location.href = "admin.html";
                 return;
             }
 
             try {
-                // التحقق من الطلاب المفعلين داخل فايربيس Firebase
                 const res = await fetch(`${FIREBASE_URL}/students.json`);
                 const data = await res.json();
 
@@ -576,6 +604,7 @@ here<!DOCTYPE html>
 
                 if (foundUser) {
                     localStorage.setItem('currentUser', JSON.stringify(foundUser));
+                    localStorage.setItem('elcoach_user_grade', foundUser.grade);
                     window.location.href = "courses.html";
                 } else {
                     alert("رقم الهاتف أو كود المرور غير صحيح، أو لم يتم تفعيل حسابك بعد من اللوحة.");
@@ -588,3 +617,4 @@ here<!DOCTYPE html>
     </script>
 </body>
 </html>
+
