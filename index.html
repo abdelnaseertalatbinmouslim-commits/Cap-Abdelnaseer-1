@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة الكوتش | تسجيل الدخول والانضمام</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #080c14; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow-x: hidden; position: relative; }
+        
+        /* خلفية الفيديو */
+        .video-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; opacity: 0.35; filter: brightness(0.7); }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(11, 15, 25, 0.4) 0%, rgba(8, 12, 20, 0.9) 100%); z-index: -1; }
+
+        .container { width: 90%; max-width: 450px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 30px 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); z-index: 1; }
+        .header { text-align: center; margin-bottom: 25px; }
+        .header h1 { font-size: 26px; color: #00e5ff; font-weight: 700; margin-bottom: 5px; text-shadow: 0 0 10px rgba(0,229,255,0.3); }
+        .header p { font-size: 14px; color: #a0aec0; }
+
+        .tabs { display: flex; background: rgba(0, 0, 0, 0.3); border-radius: 12px; padding: 4px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #a0aec0; font-size: 15px; font-weight: 600; cursor: pointer; border-radius: 8px; transition: 0.3s; }
+        .tab-btn.active { background: #00e5ff; color: #080c14; box-shadow: 0 2px 10px rgba(0,229,255,0.4); }
+
+        .form-group { margin-bottom: 18px; text-align: right; }
+        .form-group label { display: block; font-size: 13px; color: #cbd5e0; margin-bottom: 6px; }
+        .form-group input, .form-group select { width: 100%; padding: 12px 15px; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; color: #fff; font-size: 14px; outline: none; transition: 0.3s; }
+        .form-group input:focus, .form-group select:focus { border-color: #00e5ff; box-shadow: 0 0 8px rgba(0,229,255,0.3); }
+        .form-group select option { background: #0f172a; color: #fff; }
+
+        .submit-btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #00e5ff, #0088ff); border: none; border-radius: 10px; color: #080c14; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,229,255,0.4); }
+
+        /* وسائل التواصل الاجتماعي */
+        .social-links { display: flex; justify-content: center; gap: 15px; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .social-btn { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.08); color: #fff; text-decoration: none; font-size: 18px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); }
+        .social-btn:hover { background: #00e5ff; color: #080c14; transform: scale(1.1); }
+    </style>
+</head>
+<body>
+
+    <!-- خلفية الفيديو -->
+    <video class="video-bg" autoplay loop muted playsinline>
+        <source src="bebo123.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>منصة الكوتش</h1>
+            <p>بوابتك الأكاديمية والرياضية الشاملة</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('register')">طلب انضمام</button>
+            <button class="tab-btn" onclick="switchTab('login')">تسجيل الدخول</button>
+        </div>
+
+        <!-- نموذج الانضمام -->
+        <form id="registerForm" onsubmit="handleRegister(event)">
+            <div class="form-group">
+                <label>الاسم بالكامل</label>
+                <input type="text" id="regName" placeholder="أدخل اسمك رباعي" required>
+            </div>
+            <div class="form-group">
+                <label>الفرقة الدراسية</label>
+                <select id="regGrade" required>
+                    <option value="" disabled selected>اختر الفرقة</option>
+                    <option value="الفرقة الأولى">الفرقة الأولى</option>
+                    <option value="الفرقة الثانية">الفرقة الثانية</option>
+                    <option value="الفرقة الثالثة">الفرقة الثالثة</option>
+                    <option value="الفرقة الرابعة">الفرقة الرابعة</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>رقم الواتساب</label>
+                <input type="tel" id="regPhone" placeholder="01xxxxxxxx" required>
+            </div>
+            <button type="submit" class="submit-btn">إرسال طلب الانضمام</button>
+        </form>
+
+        <!-- نموذج تسجيل الدخول -->
+        <form id="loginForm" onsubmit="handleLogin(event)" style="display: none;">
+            <div class="form-group">
+                <label>رقم الهاتف</label>
+                <input type="text" id="loginPhone" placeholder="أدخل رقم الهاتف" required>
+            </div>
+            <div class="form-group">
+                <label>كود المرور (PIN)</label>
+                <input type="password" id="loginPin" placeholder="أدخل كود المرور الخاص بك" required>
+            </div>
+            <button type="submit" class="submit-btn">دخول المنصة</button>
+        </form>
+
+        <!-- أزرار التواصل الاجتماعي -->
+        <div class="social-links">
+            <a href="https://wa.me/201000000000" target="_blank" class="social-btn" title="واتساب">📲</a>
+            <a href="https://t.me/Cap_Abdelnaseer" target="_blank" class="social-btn" title="تليجرام">✈️</a>
+            <a href="https://facebook.com" target="_blank" class="social-btn" title="فيسبوك">📘</a>
+        </div>
+    </div>
+
+<script>
+    const FIREBASE_URL = "https://abodaa-default-rtdb.firebaseio.com";
+    const BOT_TOKEN = "8944171880:AAFmbtL7TjB72ZtWKl4z_wjqlShSQFXkZpA";
+    const CHAT_ID = "5926610601";
+
+    function switchTab(tab) {
+        const regForm = document.getElementById('registerForm');
+        const loginForm = document.getElementById('loginForm');
+        const buttons = document.querySelectorAll('.tab-btn');
+
+        if (tab === 'register') {
+            regForm.style.display = 'block';
+            loginForm.style.display = 'none';
+            buttons[0].classList.add('active');
+            buttons[1].classList.remove('active');
+        } else {
+            regForm.style.display = 'none';
+            loginForm.style.display = 'block';
+            buttons[0].classList.remove('active');
+            buttons[1].classList.add('active');
+        }
+    }
+
+    async function handleRegister(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('regName').value.trim();
+        const grade = document.getElementById('regGrade').value;
+        const phone = document.getElementById('regPhone').value.trim();
+
+        const studentData = {
+            name: name,
+            grade: grade,
+            phone: phone,
+            status: 'pending',
+            createdAt: new Date().toISOString()
+        };
+
+        try {
+            // حفظ في قاعدة البيانات
+            const response = await fetch(`${FIREBASE_URL}/students.json`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(studentData)
+            });
+
+            if (!response.ok) throw new Error("تعذر حفظ الطلب");
+
+            // إرسال إشعار للبوت عبر التليجرام
+            let formattedPhone = phone.startsWith('0') ? '2' + phone : phone;
+            const textMessage = `🔔 <b>طلب تسجيل جديد في منصة الكوتش</b>\n\n👤 <b>الاسم:</b> ${name}\n📚 <b>الفرقة:</b> ${grade}\n📱 <b>الهاتف:</b> ${phone}`;
+
+            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: textMessage,
+                    parse_mode: 'HTML',
+                    reply_markup: {
+                        inline_keyboard: [[
+                            { text: "📲 فتح واتساب الطالب", url: `https://wa.me/${formattedPhone}` },
+                            { text: "⚙️ لوحة التحكم", url: `https://cap-abdelnaseer-talat.github.io/DrAli1/admin.html` }
+                        ]]
+                    }
+                })
+            });
+
+            alert("تم إرسال طلبك بنجاح لـ منصة الكوتش!");
+            e.target.reset();
+
+        } catch (error) {
+            console.error(error);
+            alert("حدث خطأ أثناء الإرسال، برجاء المحاولة لاحقاً.");
+        }
+    }
+
+    async function handleLogin(e) {
+        e.preventDefault();
+        const phone = document.getElementById('loginPhone').value.trim();
+        const pin = document.getElementById('loginPin').value.trim();
+
+        // دخول الأدمن الخاص
+        if ((phone === 'admin' || phone === '01000000000') && pin === 'admin2026') {
+            window.location.href = "admin.html";
+            return;
+        }
+
+        try {
+            const response = await fetch(`${FIREBASE_URL}/students.json`);
+            const data = await response.json();
+
+            let foundUser = null;
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    const student = data[key];
+                    if (student.phone === phone && student.pin === pin && student.status === 'approved') {
+                        foundUser = { id: key, ...student };
+                    }
+                });
+            }
+
+            if (foundUser) {
+                localStorage.setItem('currentUser', JSON.stringify(foundUser));
+                window.location.href = "courses.html";
+            } else {
+                alert("رقم الهاتف أو كود المرور غير صحيح، أو لم يتم قبول حسابك بعد.");
+            }
+        } catch (err) {
+            alert("حدث خطأ أثناء الاتصال بالسيرفر.");
+        }
+    }
+</script>
+</body>
+</html>
+
