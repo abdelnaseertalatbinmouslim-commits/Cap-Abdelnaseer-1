@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة الكوتش | El-Coach Platform</title>
+    <!-- manifest لدعم تحويل الموقع لتطبيق PWA -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJub21lIjogItmF2YbYtNipINin2YTZg9mI2KrYtCIsCiAgInNob3J0X25hbWUiOiAi2KfZhNmD2YjYqti0IiwKICAic3RhcnRfdXJsIjogIi4vIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMDUwODExIiwKICAidGhlbWVfY29sb3IiOiAiIzNiODJmNiIKfQ==">
     <style>
         :root {
             --bg-dark: #050811;
@@ -15,6 +17,21 @@
             --glass-input: rgba(2, 6, 23, 0.6);
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
+            --card-inner: rgba(255, 255, 255, 0.05);
+        }
+
+        /* متغيرات الوضع الفاتح Light Mode */
+        body.light-mode {
+            --bg-dark: #f0f4f8;
+            --primary: #2563eb;
+            --primary-glow: rgba(37, 99, 235, 0.3);
+            --accent-cyan: #0284c7;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --glass-input: rgba(241, 245, 249, 0.9);
+            --text-main: #0f172a;
+            --text-sub: #475569;
+            --card-inner: rgba(0, 0, 0, 0.03);
         }
 
         * {
@@ -28,7 +45,7 @@
             background-color: var(--bg-dark);
             color: var(--text-main);
             min-height: 100vh;
-            padding: 24px 12px;
+            padding: 24px 12px 80px 12px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -67,6 +84,68 @@
             100% { transform: translate(30px, 40px) scale(1.15); }
         }
 
+        /* شريط التذكير بالصلاة على النبي */
+        .salawat-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, var(--primary), var(--accent-cyan));
+            color: #ffffff;
+            text-align: center;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            z-index: 10000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* شريط الأدوات العلوي داخل الكارت */
+        .top-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: var(--glass-input);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 8px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+
+        .icon-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        /* زر تثبيت التطبيق PWA */
+        .pwa-install-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: none;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
         /* الكارت الرئيسي - الزجاجي */
         .main-card {
             width: 100%;
@@ -80,6 +159,45 @@
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             position: relative;
+            margin-top: 25px;
+        }
+
+        /* معلومات المستخدم النشط وزر خروج */
+        .user-header-card {
+            background: var(--card-inner);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 12px 16px;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .user-info-text strong {
+            color: var(--accent-cyan);
+            display: block;
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: #ef4444;
+            color: white;
         }
 
         /* الصورة العلوية الهولوجرامية */
@@ -115,7 +233,7 @@
             font-size: 1.85rem;
             font-weight: 900;
             margin: 12px 0 6px 0;
-            background: linear-gradient(135deg, #ffffff 0%, var(--accent-cyan) 50%, var(--primary) 100%);
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--accent-cyan) 50%, var(--primary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.5px;
@@ -127,6 +245,23 @@
             font-size: 0.9rem;
             margin-bottom: 24px;
             line-height: 1.6;
+        }
+
+        /* صندوق البحث السريع */
+        .search-box {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: 14px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-input);
+            color: var(--text-main);
+            font-size: 0.85rem;
+            outline: none;
         }
 
         /* قسم الفيديو الفخم */
@@ -251,6 +386,109 @@
             box-shadow: 0 12px 30px rgba(6, 182, 212, 0.5);
         }
 
+        /* أدوات التفاعلات الإضافية: كويز وشات بوت وقيم نفسك */
+        .extra-tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .tool-card-btn {
+            background: var(--card-inner);
+            border: 1px solid var(--glass-border);
+            padding: 12px;
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tool-card-btn:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        /* صندوق الشات بوت النافذ */
+        .chatbot-modal {
+            display: none;
+            position: fixed;
+            bottom: 95px;
+            right: 20px;
+            width: 320px;
+            max-height: 420px;
+            background: var(--bg-dark);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            z-index: 10000;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, var(--primary), var(--accent-cyan));
+            color: white;
+            padding: 12px 16px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-body {
+            padding: 12px;
+            height: 280px;
+            overflow-y: auto;
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .chat-msg {
+            padding: 8px 12px;
+            border-radius: 12px;
+            max-width: 80%;
+            line-height: 1.4;
+        }
+
+        .chat-msg.bot {
+            background: var(--card-inner);
+            border: 1px solid var(--glass-border);
+            align-self: flex-start;
+        }
+
+        .chat-msg.user {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+        }
+
+        .chatbot-input {
+            display: flex;
+            padding: 8px;
+            border-top: 1px solid var(--glass-border);
+            gap: 4px;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-input);
+            color: var(--text-main);
+            outline: none;
+        }
+
         /* أزرار التواصل والدعم */
         .support-title {
             text-align: center;
@@ -356,7 +594,28 @@
 </head>
 <body>
 
+    <!-- شريط الصلاة على النبي ثابت أعلى الصفحة -->
+    <div class="salawat-bar">
+        <span>✨ اللهم صلِّ وسلّم وبارك على نبينا محمد ✨</span>
+    </div>
+
     <div class="main-card">
+
+        <!-- شريط الأدوات العلوي (زر الثيم + تثبيت التطبيق) -->
+        <div class="top-toolbar">
+            <button class="icon-btn" onclick="toggleTheme()" id="themeBtn">🌙 الوضع الليلي</button>
+            <button class="pwa-install-btn" id="installPwaBtn" onclick="installApp()">📲 تثبيت التطبيق</button>
+        </div>
+
+        <!-- كارت بيانات الحساب وتسجيل الخروج المباشر -->
+        <div id="userHeaderCard" class="user-header-card" style="display: none;">
+            <div class="user-info-text">
+                مرحباً بك: <strong id="headerUserName">الكابتن</strong>
+                <span id="headerUserGrade" style="font-size: 0.78rem; color: var(--text-sub);">الفرقة</span>
+            </div>
+            <button class="logout-btn" onclick="handleLogout()">تسجيل خروج 🚪</button>
+        </div>
+
         <!-- الصورة العلوية -->
         <div class="logo-container">
             <img src="1783950091830.jpg" alt="منصة الكوتش" class="logo-img" onerror="this.onerror=null; this.src='1783950091830';">
@@ -366,6 +625,11 @@
         <p class="app-subtitle">
             🥇 <b>الداعم الأول والمساعد الأكاديمي والرياضي</b> لكل كباتن ورجال علوم الرياضة على مستوى الجمهورية.
         </p>
+
+        <!-- مستطيل البحث السريع -->
+        <div class="search-box">
+            <input type="text" class="search-input" id="quickSearch" placeholder="🔍 ابحث عن المقررات أو المحاضرات بسرعة..." onkeyup="filterContent()">
+        </div>
 
         <!-- مشغل الفيديو -->
         <div class="video-section">
@@ -422,6 +686,18 @@
             <button type="submit" class="submit-btn">تسجيل الدخول</button>
         </form>
 
+        <!-- شبكة أدوات الكويزات والشات بوت المضافة -->
+        <div class="extra-tools-grid">
+            <div class="tool-card-btn" onclick="openQuiz()">
+                <span>📝 كويزات وتقييمات</span>
+                <span style="font-size: 0.75rem; color: var(--text-sub);">قَيّم مستواك الآن</span>
+            </div>
+            <div class="tool-card-btn" onclick="toggleChatbot()">
+                <span>🤖 الشات بوت الفني</span>
+                <span style="font-size: 0.75rem; color: var(--text-sub);">متابعة واستفسارات</span>
+            </div>
+        </div>
+
         <p class="support-title">أزرار الدعم والتواصل المباشر</p>
         
         <div class="social-buttons">
@@ -444,6 +720,21 @@
         </div>
     </div>
 
+    <!-- نافذة الشات بوت المباشر للمتابعة والتواصل -->
+    <div class="chatbot-modal" id="chatbotModal">
+        <div class="chatbot-header">
+            <span>🤖 كابتن بوت للمتابعة</span>
+            <span style="cursor: pointer;" onclick="toggleChatbot()">✕</span>
+        </div>
+        <div class="chatbot-body" id="chatBody">
+            <div class="chat-msg bot">مرحباً بك في منصة الكوتش! كيف يمكنني مساعدتك في المقررات أو المتابعة اليوم؟</div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatInput" placeholder="اكتب سؤالك هنا..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+            <button class="icon-btn" onclick="sendChatMessage()">إرسال</button>
+        </div>
+    </div>
+
     <!-- زر الدعم العائم المباشر -->
     <a href="https://wa.me/201098227150" target="_blank" class="floating-support-btn" title="تواصل مع الدعم الفني">
         <svg width="30" height="30" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
@@ -454,11 +745,135 @@
         const BOT_TOKEN = "8944171880:AAFmbtL7TjB72ZtWKl4z_wjqlShSQFXkZpA"; 
         const CHAT_ID = "5926610601";
         const WA_CHANNEL_URL = "https://whatsapp.com/channel/0029VbDGX1rJpe8ZM6H5h02T";
+        let deferredPrompt = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             checkRegistrationStatus();
+            checkActiveUser();
+            requestNotificationPermission();
         });
 
+        // 1. طلب صلاحية إشعارات الموبايل Push Notifications
+        function requestNotificationPermission() {
+            if ("Notification" in window && Notification.permission !== "granted") {
+                Notification.requestPermission();
+            }
+        }
+
+        // إرسال إشعار للموبايل حتى لو المنصة مغلقة
+        function triggerPushNotification(title, body) {
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(title, {
+                    body: body,
+                    icon: '1783950091830.jpg'
+                });
+            }
+        }
+
+        // 2. التحقق من وجود مستخدم مسجل ودخوله
+        function checkActiveUser() {
+            const userRaw = localStorage.getItem('currentUser');
+            if (userRaw) {
+                const user = JSON.parse(userRaw);
+                document.getElementById('userHeaderCard').style.display = 'flex';
+                document.getElementById('headerUserName').innerText = user.name || 'الكابتن';
+                document.getElementById('headerUserGrade').innerText = user.grade || '';
+
+                // إشعار ترحيبي
+                triggerPushNotification("أهلاً بك مجدداً! 🏅", `مرحباً بك يا كابتن ${user.name} في منصة الكوتش.`);
+            }
+        }
+
+        // تسجيل الخروج المباشر
+        function handleLogout() {
+            if (confirm("هل أنت تأكد من رغبتك في تسجيل الخروج؟")) {
+                localStorage.removeItem('currentUser');
+                location.reload();
+            }
+        }
+
+        // 3. دعم تثبيت التطبيق (PWA)
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPwaBtn').style.display = 'inline-flex';
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('تم تثبيت التطبيق بنجاح');
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                alert("لتثبيت التطبيق على هاتفك: اضغط على خيارات المتصفح (⋮) ثم اختر 'الإضافة إلى الشاشة الرئيسية'.");
+            }
+        }
+
+        // 4. تبديل الوضع الليلي والنهار
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            document.getElementById('themeBtn').innerText = isLight ? '☀️ الوضع العادي' : '🌙 الوضع الليلي';
+        }
+
+        // 5. البحث السريع
+        function filterContent() {
+            const q = document.getElementById('quickSearch').value.toLowerCase();
+            const title = document.querySelector('.app-title');
+            const sub = document.querySelector('.app-subtitle');
+
+            if (title.innerText.toLowerCase().includes(q) || sub.innerText.toLowerCase().includes(q)) {
+                title.style.opacity = '1';
+                sub.style.opacity = '1';
+            } else {
+                title.style.opacity = '0.4';
+                sub.style.opacity = '0.4';
+            }
+        }
+
+        // 6. الشات بوت للمتابعة والتواصل
+        function toggleChatbot() {
+            const modal = document.getElementById('chatbotModal');
+            modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const txt = input.value.trim();
+            if (!txt) return;
+
+            const body = document.getElementById('chatBody');
+            body.innerHTML += `<div class="chat-msg user">${txt}</div>`;
+            input.value = '';
+
+            setTimeout(() => {
+                let reply = "شكراً لتواصلك يا كابتن! سيتم مراجعة استفسارك ومتابعتك دراسياً قريباً.";
+                if (txt.includes("ترم") || txt.includes("مادة")) {
+                    reply = "يمكنك الانتقال لصفحة المقررات من خلال الدخول لحسابك لاستعراض مواد الترم الأول والثاني.";
+                } else if (txt.includes("كود") || txt.includes("تفعيل")) {
+                    reply = "يتم إرسال كود التفعيل عبر تليجرام أو الواتساب فور مراجعة طلبك.";
+                }
+                body.innerHTML += `<div class="chat-msg bot">${reply}</div>`;
+                body.scrollTop = body.scrollHeight;
+            }, 700);
+        }
+
+        // 7. فتح الكويزات وقيّم نفسك
+        function openQuiz() {
+            const userRaw = localStorage.getItem('currentUser');
+            if (!userRaw) {
+                alert("يرجى تسجيل الدخول أولاً للوصول لخدمة الاختبارات وتقييم المستوى!");
+                switchTab('login');
+                return;
+            }
+            window.location.href = "courses.html";
+        }
+
+        // 8. المنطق الأساسي للتسجيل والدخول القديم
         function checkRegistrationStatus() {
             const hasRegistered = localStorage.getItem('elcoach_registered');
             if (hasRegistered) {
@@ -568,6 +983,8 @@
                 localStorage.setItem('elcoach_user_phone', phone);
                 localStorage.setItem('elcoach_user_grade', grade);
 
+                triggerPushNotification("تم إرسال الطلب بنجاح! 🚀", `أهلاً بك يا ${name}، يرجى إكمال شرط الانضمام للقناة.`);
+
                 alert("تم إرسال طلبك بنجاح! سيتم تحويلك الآن لقناة الواتساب الرسمية لإكمال شرط التسجيل.");
                 window.location.href = WA_CHANNEL_URL;
 
@@ -604,6 +1021,9 @@
                 if (foundUser) {
                     localStorage.setItem('currentUser', JSON.stringify(foundUser));
                     localStorage.setItem('elcoach_user_grade', foundUser.grade);
+
+                    triggerPushNotification("تسجيل دخول ناجح 🎉", `مرحباً بك يا كابتن ${foundUser.name}`);
+
                     window.location.href = "courses.html";
                 } else {
                     alert("رقم الهاتف أو كود المرور غير صحيح، أو لم يتم تفعيل حسابك بعد من اللوحة.");
@@ -616,4 +1036,3 @@
     </script>
 </body>
 </html>
-
