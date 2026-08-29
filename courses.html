@@ -371,6 +371,19 @@
             font-size: 0.75rem;
         }
 
+        /* شريط العداد التنازلي للامتحان */
+        .exam-timer-bar {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
         /* تنسيق أسئلة الامتحان داخل نافذة الـ Quiz */
         .quiz-question-card {
             background: var(--input-bg);
@@ -507,7 +520,7 @@
                 <button class="close-modal" onclick="closeQuizModal()">✖</button>
             </div>
             <div id="quizModalBody">
-                <!-- أسئلة الكويز تظهر هنا ديناميكياً -->
+                <!-- أسئلة الكويز تظهر هنا ديناميكياً مع العداد -->
             </div>
         </div>
     </div>
@@ -516,6 +529,7 @@
         const FIREBASE_URL = "https://abodaa-default-rtdb.firebaseio.com";
         let activeQuizData = null;
         let activeQuizId = null;
+        let examTimerInterval = null;
 
         document.addEventListener("DOMContentLoaded", () => {
             loadStudentInfo();
@@ -551,7 +565,6 @@
                 localStorage.removeItem('currentUser');
                 localStorage.removeItem('studentName');
                 localStorage.removeItem('studentGrade');
-                // إعادة التوجيه لصفحة تسجيل الدخول أو الواجهة الرئيسية (index.html)
                 window.location.href = "index.html";
             }
         }
@@ -637,7 +650,7 @@
             }
         }
 
-        // جلب الكويزات المتاحة الخاصة بفرقة الطالب (محدث لضمان المطابقة الفورية)
+        // جلب الكويزات المتاحة الخاصة بفرقة الطالب
         async function fetchAvailableExams() {
             try {
                 const res = await fetch(`${FIREBASE_URL}/quizzes.json`);
@@ -662,9 +675,9 @@
                             <div class="exam-item">
                                 <div class="exam-info">
                                     <h4>📝 ${quiz.title}</h4>
-                                    <p>المدة: ${quiz.duration} دقائق | الدرجة الكلية: ${quiz.totalMarks}</p>
+                                    <p>المدة: ${quiz.duration || 10} دقائق | الدرجة: ${quiz.totalMarks}</p>
                                 </div>
-                                <button class="start-exam-btn" onclick="openQuiz('${id}')">بدء الاختبار</button>
+                                <button class="start-exam-btn" onclick="checkAndOpenQuiz('${id}')">بدء الاختبار</button>
                             </div>
                         `;
                     }
@@ -679,25 +692,71 @@
             }
         }
 
-        // فتح نافذة الامتحان وتحميل الأسئلة
-        async function openQuiz(quizId) {
+        // التحقق من محاولات الطالب قبل فتح الامتحان
+        async function checkAndOpenQuiz(quizId) {
+            const studentName = localStorage.getItem('studentName') || 'طالب غير معروف';
+            
             try {
-                const res = await fetch(`${FIREBASE_URL}/quizzes/${quizId}.json`);
-                const quiz = await res.json();
+                // جلب نتائج الطالب الحالية لهذا الامتحان للتأكد من عدد المحاولات
+                const res = await fetch(`${FIREBASE_URL}/quiz_results.json`);
+                const results = await res.json() || {};
+                
+                let studentAttempts = 0;
+                Object.keys(results).forEach(key => {
+                    const r = results[key];
+                    if (r.studentName === studentName && (r.quizId === quizId || r.quizTitle === activeQuizTitleMatcher)) {
+                        studentAttempts++;
+                    }
+                });
+
+                const quizRes = await fetch(`${FIREBASE_URL}/quizzes/${quizId}.json`);
+                const quiz = await quizRes.json();
                 if (!quiz) return;
 
-                activeQuizData = quiz;
-                activeQuizId = quizId;
+                // الحد الأقصى للمحاولات (افتراضي 1 لو الأدمن مش محدده)
+                const maxAttempts = parseInt(quiz.maxAttempts || 1);
 
-                document.getElementById('quizModalTitle').innerText = quiz.title;
-                const modalBody = document.getElementById('quizModalBody');
-                modalBody.innerHTML = '';
+                if (studentAttempts >= maxAttempts) {
+                    alert(`عذراً يا كابتن، لقد استنفذت عدد المحاولات المسموحة (${maxAttempts}) لهذا الاختبار.`);
+                    return;
+                }
 
-                if (!quiz.questions || quiz.questions.length === 0) {
-                    modalBody.innerHTML = `<p style="text-align: center;">هذا الاختبار لا يحتوي على أسئلة بعد.</p>`;
-                } else {
-                    quiz.questions.forEach((q, qIndex) => {
-                        let optionsHtml = '';
+                openQuiz(quizId, quiz);
+            } catch (err) {
+                console.error("خطأ في التحقق من المحاولات:", err);
+                alert("حدث خطأ ما، يرجى المحاولة مرة أخرى.");
+            }
+        }
+
+        let activeQuizTitleMatcher = '';
+
+        // فتح نافذة الامتحان وتحميل الأسئلة وبدء العداد التنازلي
+        function openQuiz(quizId, quiz) {
+            activeQuizData = quiz;
+            activeQuizId = quizId;
+            activeQuizTitleMatcher = quiz.title;
+
+            document.getElementById('quizModalTitle').innerText = quiz.title;
+            const modalBody = document.getElementById('quizModalBody');
+            modalBody.innerHTML = '';
+
+            if (!quiz.questions || quiz.questions.length === 0) {
+                modalBody.innerHTML = `<p style="text-align: center;">هذا الاختبار لا يحتوي على أسئلة بعد.</p>`;
+            } else {
+                // شريط العداد التنازلي
+                let durationMinutes = parseInt(quiz.duration || 10);
+                let timeLeft = durationMinutes * 60; // بالثواني
+
+                modalBody.innerHTML += `
+                    <div class="exam-timer-bar" id="examTimerDisplay">
+                        ⏳ الوقت المتبقي: ${durationMinutes}:00
+                    </div>
+                `;
+
+                // بناء الأسئلة والخيارات بوضوح
+                quiz.questions.forEach((q, qIndex) => {
+                    let optionsHtml = '';
+                    if (q.options && Array.isArray(q.options)) {
                         q.options.forEach((opt, optIndex) => {
                             optionsHtml += `
                                 <label class="quiz-option">
@@ -706,49 +765,72 @@
                                 </label>
                             `;
                         });
+                    }
 
-                        modalBody.innerHTML += `
-                            <div class="quiz-question-card">
-                                <p>${qIndex + 1}. ${q.questionText}</p>
-                                ${optionsHtml}
-                            </div>
-                        `;
-                    });
+                    modalBody.innerHTML += `
+                        <div class="quiz-question-card">
+                            <p>${qIndex + 1}. ${q.questionText || q.question || 'سؤال بدون عنوان'}</p>
+                            ${optionsHtml}
+                        </div>
+                    `;
+                });
 
-                    modalBody.innerHTML += `<button class="submit-quiz-btn" onclick="submitQuizAnswers()">إرسال الحل وتسليم الامتحان</button>`;
-                }
+                modalBody.innerHTML += `<button class="submit-quiz-btn" onclick="submitQuizAnswers()">إرسال الحل وتسليم الامتحان</button>`;
 
-                document.getElementById('quizModal').style.display = 'flex';
-            } catch (err) {
-                console.error("خطأ في فتح الامتحان:", err);
+                // تشغيل العداد التنازلي
+                if (examTimerInterval) clearInterval(examTimerInterval);
+                examTimerInterval = setInterval(() => {
+                    timeLeft--;
+                    let mins = Math.floor(timeLeft / 60);
+                    let secs = timeLeft % 60;
+                    const timerEl = document.getElementById('examTimerDisplay');
+                    if (timerEl) {
+                        timerEl.innerText = `⏳ الوقت المتبقي: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                    }
+                    if (timeLeft <= 0) {
+                        clearInterval(examTimerInterval);
+                        alert("انتهى وقت الامتحان! سيتم إرسال إجاباتك تلقائياً.");
+                        submitQuizAnswers(true);
+                    }
+                }, 1000);
             }
+
+            document.getElementById('quizModal').style.display = 'flex';
         }
 
-        // إرسال حل الامتحان وحساب الدرجة ورفعها لـ Firebase
-        async function submitQuizAnswers() {
+        // إرسال حل الامتحان وحساب الدرجة والنسبة المئوية ورفعها لـ Firebase
+        async function submitQuizAnswers(isAutoSubmit = false) {
             if (!activeQuizData) return;
+            if (examTimerInterval) clearInterval(examTimerInterval);
 
             let score = 0;
             const totalQuestions = activeQuizData.questions.length;
 
             activeQuizData.questions.forEach((q, qIndex) => {
                 const selected = document.querySelector(`input[name="question_${qIndex}"]:checked`);
-                if (selected && parseInt(selected.value) === parseInt(q.correctOption)) {
+                // دعم حقل الإجابة الصحيحة سواء كان correctOption أو correctAnswer
+                const correctIdx = q.correctOption !== undefined ? parseInt(q.correctOption) : parseInt(q.correctAnswer);
+                if (selected && parseInt(selected.value) === correctIdx) {
                     score++;
                 }
             });
 
             const studentName = localStorage.getItem('studentName') || 'طالب غير معروف';
             const studentGrade = localStorage.getItem('studentGrade') || 'غير محددة';
-            const finalMark = (score / totalQuestions) * parseInt(activeQuizData.totalMarks);
+            const totalMarksNum = parseInt(activeQuizData.totalMarks || 100);
+            const finalMark = Math.round((score / totalQuestions) * totalMarksNum);
             const percentage = Math.round((score / totalQuestions) * 100);
             const now = new Date().toLocaleString('ar-EG');
 
+            // هيكل النتيجة الشامل (يتضمن الاسم، الكود، الدرجة، والنسبة المئوية)
             const resultData = {
+                quizId: activeQuizId,
+                quizTitle: activeQuizData.title,
                 studentName: studentName,
                 studentGrade: studentGrade,
-                quizTitle: activeQuizData.title,
-                score: `${Math.round(finalMark)} / ${activeQuizData.totalMarks}`,
+                score: `${finalMark} / ${totalMarksNum}`,
+                rawScore: finalMark,
+                totalMarks: totalMarksNum,
                 percentage: `${percentage}%`,
                 submittedAt: now
             };
@@ -760,15 +842,18 @@
                     body: JSON.stringify(resultData)
                 });
 
-                alert(`تم تسليم الاختبار بنجاح!\n\nدرجتك: ${Math.round(finalMark)} من ${activeQuizData.totalMarks} (${percentage}%)`);
+                alert(`تم تسليم الاختبار بنجاح!\n\nدرجتك: ${finalMark} من ${totalMarksNum} (${percentage}%)`);
                 closeQuizModal();
             } catch (err) {
                 console.error("خطأ في تسليم الامتحان:", err);
-                alert("حدث خطأ أثناء إرسال النتيجة، يرجى المحاولة مرة أخرى.");
+                if (!isAutoSubmit) {
+                    alert("حدث خطأ أثناء إرسال النتيجة، يرجى المحاولة مرة أخرى.");
+                }
             }
         }
 
         function closeQuizModal() {
+            if (examTimerInterval) clearInterval(examTimerInterval);
             document.getElementById('quizModal').style.display = 'none';
         }
 
