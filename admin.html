@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الشاملة | منصة الكوتش</title>
+    <title>لوحة التحكم الشاملة | منصة الكابتن</title>
     <style>
         :root {
             --bg-dark: #050811;
@@ -62,7 +62,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* شبكة الإحصائيات الفخمة */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -97,7 +96,6 @@
         .stat-card.approved .stat-value { color: var(--primary); }
         .stat-card.quizzes .stat-value { color: var(--warning); }
 
-        /* Nav Tabs */
         .admin-nav {
             display: flex;
             gap: 8px;
@@ -136,7 +134,6 @@
             display: block;
         }
 
-        /* Cards & Modern List Items */
         .section-card {
             background: rgba(2, 6, 23, 0.6);
             border: 1px solid var(--glass-border);
@@ -164,7 +161,10 @@
             gap: 6px;
         }
 
-        /* Modern Card-Based Table Layout for Mobile & Desktop */
+        .search-box {
+            margin-bottom: 12px;
+        }
+
         .table-container {
             width: 100%;
             overflow-x: auto;
@@ -212,7 +212,6 @@
             border-bottom-left-radius: 12px;
         }
 
-        /* Form elements */
         .form-group {
             margin-bottom: 12px;
         }
@@ -240,7 +239,6 @@
             box-shadow: 0 0 10px var(--primary-glow);
         }
 
-        /* Action Buttons */
         .btn {
             padding: 7px 12px;
             border-radius: 8px;
@@ -279,7 +277,6 @@
             margin-bottom: 12px;
         }
 
-        /* Modal / Popups */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -367,17 +364,15 @@
 
     <div class="admin-container">
         <div class="header">
-            <h1>⚙️ لوحة التحكم الإدارية — منصة الكوتش</h1>
+            <h1>⚙️ لوحة التحكم الإدارية — منصة الكابتن</h1>
         </div>
 
-        <!-- شبكة الإحصائيات اللحظية -->
         <div class="stats-grid">
             <div class="stat-card visitors">
                 <div class="stat-title">🌐 إجمالي الزائرين</div>
                 <div class="stat-value" id="statVisitors">0</div>
             </div>
             <div class="stat-card online">
-                <div class="stat-title">🟢 المتواجدين حالياً</div>
                 <div class="stat-value" id="statOnline">0</div>
             </div>
             <div class="stat-card approved">
@@ -390,7 +385,6 @@
             </div>
         </div>
 
-        <!-- أزرار التنقل الرئيسية -->
         <div class="admin-nav">
             <button class="nav-btn active" onclick="switchAdminTab('requests', event)">📥 طلبات الانضمام</button>
             <button class="nav-btn" onclick="switchAdminTab('students', event)">👥 الطلاب والتقارير</button>
@@ -427,10 +421,15 @@
             </div>
         </div>
 
-        <!-- 2. الطلاب والتقارير الشاملة -->
+        <!-- 2. الطلاب والتقارير الشاملة + خانة البحث -->
         <div id="tab-students" class="tab-content">
             <div class="section-card">
-                <h2>👥 قائمة الطلاب المفعلين وسجلات التقرير الشامل</h2>
+                <div class="section-header-flex">
+                    <h2>👥 قائمة الطلاب المفعلين وسجلات التقرير الشامل</h2>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="searchStudentInput" class="form-control" placeholder="🔍 ابحث عن اسم أي مشترك أو رقم هاتف..." onkeyup="filterStudentsTable()">
+                </div>
                 <div class="table-container">
                     <table class="data-table">
                         <thead>
@@ -476,7 +475,7 @@
                         </div>
                         <div class="form-group" style="flex:1;">
                             <label>الدرجة النهائية</label>
-                            <input type="number" id="quizTotalScore" class="form-control" value="10" required>
+                            <input type="number" id="quizTotalScore" class="form-control" value="100" required>
                         </div>
                     </div>
 
@@ -496,10 +495,16 @@
             </div>
         </div>
 
-        <!-- 4. نتائج الامتحانات والدرجات -->
+        <!-- 4. نتائج الامتحانات والدرجات + بحث وحذف النتائج القديمة -->
         <div id="tab-results" class="tab-content">
             <div class="section-card">
-                <h2>📊 سجل نتائج وتدقيق امتحانات الطلاب</h2>
+                <div class="section-header-flex">
+                    <h2>📊 سجل نتائج وتدقيق امتحانات الطلاب</h2>
+                    <button class="btn btn-danger btn-sm" onclick="deleteAllOldResults()">🗑️ مسح كل النتايج القديمة</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="searchResultInput" class="form-control" placeholder="🔍 ابحث عن اسم المشترك في نتائج الامتحانات..." onkeyup="filterResultsTable()">
+                </div>
                 <div class="table-container">
                     <table class="data-table">
                         <thead>
@@ -509,10 +514,11 @@
                                 <th>الدرجة</th>
                                 <th>النسبة المئوية</th>
                                 <th>وقت التسليم</th>
+                                <th>إجراء</th>
                             </tr>
                         </thead>
                         <tbody id="quizResultsTable">
-                            <tr><td colspan="5" style="text-align:center;">جاري تحميل نتائج الامتحانات...</td></tr>
+                            <tr><td colspan="6" style="text-align:center;">جاري تحميل نتائج الامتحانات...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -689,7 +695,6 @@
             }
         }
 
-        // دالة آمنة لتنسيق التاريخ بدون أي Invalid Date
         function formatSafeDate(dateString) {
             if (!dateString) return 'غير محدد';
             const d = new Date(dateString);
@@ -700,7 +705,7 @@
             });
         }
 
-        /* --- إدارة الطلاب والتقارير --- */
+        /* --- إدارة الطلاب والتقارير مع البحث الفوري --- */
         async function loadStudentsData() {
             try {
                 const res = await fetch(`${FIREBASE_URL}/students.json`);
@@ -742,7 +747,7 @@
                         hasApproved = true;
                         countApproved++;
                         approvedTable.innerHTML += `
-                            <tr>
+                            <tr class="student-row" data-name="${(student.name || '').toLowerCase()}" data-phone="${student.phone || ''}">
                                 <td data-label="اسم الطالب"><b>${student.name || 'بدون اسم'}</b></td>
                                 <td data-label="الفئة الدراسية"><span style="color: var(--accent-cyan);">${student.grade || 'غير محدد'}</span></td>
                                 <td data-label="رقم الهاتف">${student.phone || 'غير متوفر'}</td>
@@ -766,6 +771,20 @@
             } catch (err) {
                 console.error("خطأ في جلب الطلاب:", err);
             }
+        }
+
+        function filterStudentsTable() {
+            let filter = document.getElementById('searchStudentInput').value.toLowerCase();
+            let rows = document.querySelectorAll('.student-row');
+            rows.forEach(row => {
+                let name = row.getAttribute('data-name');
+                let phone = row.getAttribute('data-phone');
+                if (name.includes(filter) || phone.includes(filter)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
         }
 
         async function approveStudent(id, name, phone) {
@@ -828,7 +847,6 @@
             }
         }
 
-        /* --- تقرير الطالب التفصيلي (Modal) --- */
         function openStudentReport(studentId) {
             const s = globalStudentsData[studentId];
             if (!s) return;
@@ -846,16 +864,16 @@
 
             Object.keys(globalResultsData).forEach(rId => {
                 const r = globalResultsData[rId];
-                if (r && (r.studentId === studentId || r.phone === s.phone)) {
+                if (r && (r.studentId === studentId || r.phone === s.phone || r.studentName === s.name)) {
                     quizCount++;
-                    const scoreVal = (r.score !== undefined && !isNaN(r.score)) ? r.score : 0;
-                    const totalVal = (r.totalScore !== undefined && !isNaN(r.totalScore)) ? r.totalScore : 10;
-                    const percVal = (r.percentage !== undefined && !isNaN(r.percentage)) ? r.percentage : Math.round((scoreVal / totalVal) * 100);
+                    const scoreVal = (r.rawScore !== undefined && !isNaN(r.rawScore)) ? r.rawScore : ((r.score !== undefined && !isNaN(r.score)) ? parseInt(r.score) : 0);
+                    const totalVal = (r.totalMarks !== undefined && !isNaN(r.totalMarks)) ? r.totalMarks : 100;
+                    const percVal = r.percentage || `${Math.round((scoreVal / totalVal) * 100)}%`;
 
                     quizHtml += `
                         <tr>
                             <td data-label="الاختبار">${r.quizTitle || 'امتحان'}</td>
-                            <td data-label="الدرجة"><b style="color:var(--success);">${scoreVal} / ${totalVal}</b> (${percVal}%)</td>
+                            <td data-label="الدرجة"><b style="color:var(--success);">${scoreVal} / ${totalVal}</b> (${percVal})</td>
                             <td data-label="التاريخ">${formatSafeDate(r.submittedAt)}</td>
                         </tr>
                     `;
@@ -938,7 +956,7 @@
                 title: document.getElementById('quizTitle').value.trim(),
                 grade: document.getElementById('quizGrade').value,
                 duration: parseInt(document.getElementById('quizDuration').value) || 15,
-                totalScore: parseInt(document.getElementById('quizTotalScore').value) || 10,
+                totalMarks: parseInt(document.getElementById('quizTotalScore').value) || 100,
                 questions: questions,
                 createdAt: new Date().toISOString()
             };
@@ -982,7 +1000,7 @@
                         <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:10px 12px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                             <div>
                                 <h4 style="margin:0 0 4px 0; color:var(--accent-cyan); font-size:0.95rem;">${q.title || 'امتحان'}</h4>
-                                <small style="color:var(--text-sub);">الفئة: ${q.grade || 'الجميع'} | المدة: ${q.duration || 15}د | الأسئلة: ${q.questions ? q.questions.length : 0}</small>
+                                <small style="color:var(--text-sub);">الفئة: ${q.grade || 'الجميع'} | المدة: ${q.duration || 15}د | الدرجة: ${q.totalMarks || 100}</small>
                             </div>
                             <div style="display:flex; gap:5px; flex-wrap:wrap;">
                                 <button class="btn btn-warning btn-sm" onclick="broadcastQuizNotification('${q.title || ''}', '${q.grade || 'الجميع'}')">🚨 تنبيه</button>
@@ -1022,7 +1040,7 @@
             loadQuizzesData();
         }
 
-        /* --- تحميل درجات ونتائج الاختبارات بدون NaN --- */
+        /* --- تحميل درجات ونتائج الاختبارات وحذف النتائج القديمة --- */
         async function loadResultsData() {
             try {
                 const res = await fetch(`${FIREBASE_URL}/quiz_results.json`);
@@ -1033,7 +1051,7 @@
                 const keys = Object.keys(globalResultsData);
 
                 if(keys.length === 0) {
-                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-sub);">لا توجد أي تسليمات للامتحانات بعد.</td></tr>';
+                    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-sub);">لا توجد أي تسليمات للامتحانات بعد.</td></tr>';
                     return;
                 }
 
@@ -1041,22 +1059,59 @@
                     const r = globalResultsData[id];
                     if(!r) return;
 
-                    const scoreVal = (r.score !== undefined && !isNaN(r.score)) ? r.score : 0;
-                    const totalVal = (r.totalScore !== undefined && !isNaN(r.totalScore)) ? r.totalScore : 10;
-                    const percVal = (r.percentage !== undefined && !isNaN(r.percentage)) ? r.percentage : Math.round((scoreVal / totalVal) * 100);
+                    const scoreVal = (r.rawScore !== undefined && !isNaN(r.rawScore)) ? r.rawScore : ((r.score !== undefined && !isNaN(r.score)) ? parseInt(r.score) : 0);
+                    const totalVal = (r.totalMarks !== undefined && !isNaN(r.totalMarks)) ? r.totalMarks : 100;
+                    const percVal = r.percentage || `${Math.round((scoreVal / totalVal) * 100)}%`;
 
                     tableBody.innerHTML += `
-                        <tr>
+                        <tr class="result-row" data-name="${(r.studentName || '').toLowerCase()}">
                             <td data-label="اسم الطالب"><b>${r.studentName || 'طالب'}</b></td>
                             <td data-label="عنوان الامتحان">${r.quizTitle || 'امتحان'}</td>
                             <td data-label="الدرجة"><b style="color:var(--success);">${scoreVal} / ${totalVal}</b></td>
-                            <td data-label="النسبة"><span class="pin-badge">${percVal}%</span></td>
+                            <td data-label="النسبة"><span class="pin-badge">${percVal}</span></td>
                             <td data-label="وقت التسليم" style="font-size:0.78rem; color:var(--text-sub);">${formatSafeDate(r.submittedAt)}</td>
+                            <td data-label="إجراء">
+                                <button class="btn btn-danger btn-sm" onclick="deleteSingleResult('${id}')">حذف</button>
+                            </td>
                         </tr>
                     `;
                 });
             } catch(err) {
                 console.error(err);
+            }
+        }
+
+        function filterResultsTable() {
+            let filter = document.getElementById('searchResultInput').value.toLowerCase();
+            let rows = document.querySelectorAll('.result-row');
+            rows.forEach(row => {
+                let name = row.getAttribute('data-name');
+                if (name.includes(filter)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        async function deleteSingleResult(resultId) {
+            if (!confirm("هل أنت متأكد من حذف هذه النتيجة؟")) return;
+            try {
+                await fetch(`${FIREBASE_URL}/quiz_results/${resultId}.json`, { method: 'DELETE' });
+                loadResultsData();
+            } catch (err) {
+                alert("حدث خطأ أثناء الحذف.");
+            }
+        }
+
+        async function deleteAllOldResults() {
+            if (!confirm("تحذير هام: هل أنت متأكد من رغبتك في حذف وحرق جميع النتائج القديمة بالكامل؟")) return;
+            try {
+                await fetch(`${FIREBASE_URL}/quiz_results.json`, { method: 'DELETE' });
+                alert("تم حذف جميع النتائج القديمة بنجاح!");
+                loadResultsData();
+            } catch (err) {
+                alert("حدث خطأ أثناء عملية الحذف الشامل.");
             }
         }
 
@@ -1158,29 +1213,26 @@
             try {
                 const res = await fetch(`${FIREBASE_URL}/notifications.json`);
                 const data = await res.json() || {};
-                const listContainer = document.getElementById('sentNotificationsList');
-
-                listContainer.innerHTML = '';
+                const container = document.getElementById('sentNotificationsList');
+                container.innerHTML = '';
                 const keys = Object.keys(data);
 
                 if (keys.length === 0) {
-                    listContainer.innerHTML = `<p style="text-align:center; color: var(--text-sub); font-size:0.85rem;">لم يتم إرسال أي إشعارات سابقة.</p>`;
+                    container.innerHTML = '<p style="text-align:center; color:var(--text-sub); font-size:0.85rem;">لم يتم إرسال أي إشعارات بعد.</p>';
                     return;
                 }
 
                 keys.reverse().forEach(id => {
                     const n = data[id];
                     if(!n) return;
-                    listContainer.innerHTML += `
-                        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:10px 12px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                    container.innerHTML += `
+                        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:10px 12px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
                             <div>
-                                <h4 style="margin:0 0 4px 0; color:#ef4444; font-size:0.9rem;">🔔 ${n.title || 'تنبيه'} <small style="color:var(--accent-cyan)">(${n.target || 'الجميع'})</small></h4>
-                                <p style="margin:0; font-size:0.82rem; color:var(--text-main);">${n.body || ''}</p>
-                                <small style="color:var(--text-sub); font-size:0.75rem;">${formatSafeDate(n.createdAt)}</small>
+                                <h4 style="margin:0 0 4px 0; color:var(--danger); font-size:0.95rem;">📢 ${n.title}</h4>
+                                <p style="margin:0 0 4px 0; font-size:0.85rem;">${n.body}</p>
+                                <small style="color:var(--text-sub);">المستهدف: ${n.target || 'الجميع'} | ${formatSafeDate(n.createdAt)}</small>
                             </div>
-                            <div>
-                                <button onclick="deleteNotification('${id}')" class="btn btn-danger btn-sm">حذف</button>
-                            </div>
+                            <button class="btn btn-danger btn-sm" onclick="deleteNotification('${id}')">حذف</button>
                         </div>
                     `;
                 });
@@ -1190,23 +1242,9 @@
         }
 
         async function deleteNotification(id) {
-            if (!confirm("هل أنت متأكد من حذف هذا الإشعار؟")) return;
+            if(!confirm("هل أنت متأكد من حذف هذا الإشعار؟")) return;
             await fetch(`${FIREBASE_URL}/notifications/${id}.json`, { method: 'DELETE' });
             loadNotificationsData();
-        }
-
-        async function loadSettingsData() {
-            try {
-                const res = await fetch(`${FIREBASE_URL}/settings.json`);
-                const data = await res.json();
-                if (data) {
-                    document.getElementById('settingWhatsapp').value = data.whatsapp || '';
-                    document.getElementById('settingTelegram').value = data.telegram || '';
-                    document.getElementById('settingFacebook').value = data.facebook || '';
-                }
-            } catch (err) {
-                console.error(err);
-            }
         }
 
         async function handleSettingsSave(e) {
@@ -1223,9 +1261,23 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(settingsData)
                 });
-                alert("تم تحديث إعدادات الأزرار بنجاح!");
+                alert("تم تحديث إعدادات الروابط بنجاح!");
             } catch (err) {
                 alert("حدث خطأ أثناء حفظ الإعدادات.");
+            }
+        }
+
+        async function loadSettingsData() {
+            try {
+                const res = await fetch(`${FIREBASE_URL}/settings.json`);
+                const s = await res.json();
+                if(s) {
+                    if(s.whatsapp) document.getElementById('settingWhatsapp').value = s.whatsapp;
+                    if(s.telegram) document.getElementById('settingTelegram').value = s.telegram;
+                    if(s.facebook) document.getElementById('settingFacebook').value = s.facebook;
+                }
+            } catch(err) {
+                console.error(err);
             }
         }
     </script>
