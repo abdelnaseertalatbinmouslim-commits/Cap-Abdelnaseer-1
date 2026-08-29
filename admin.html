@@ -10,9 +10,9 @@
             --primary: #3b82f6;
             --primary-glow: rgba(59, 130, 246, 0.4);
             --accent-cyan: #06b6d4;
-            --glass-bg: rgba(15, 23, 42, 0.75);
+            --glass-bg: rgba(15, 23, 42, 0.85);
             --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-input: rgba(2, 6, 23, 0.6);
+            --glass-input: rgba(2, 6, 23, 0.7);
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
             --success: #10b981;
@@ -28,7 +28,7 @@
         body {
             margin: 0;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-dark);
+            background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
             color: var(--text-main);
             min-height: 100vh;
             padding: 20px 10px;
@@ -38,13 +38,13 @@
 
         .admin-container {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1050px;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: 28px;
             padding: 28px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+            backdrop-filter: blur(25px);
         }
 
         .header {
@@ -71,12 +71,12 @@
         }
 
         .stat-card {
-            background: rgba(2, 6, 23, 0.5);
+            background: rgba(2, 6, 23, 0.6);
             border: 1px solid var(--glass-border);
             border-radius: 18px;
             padding: 16px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
 
         .stat-card .stat-title {
@@ -138,11 +138,12 @@
 
         /* Cards & Tables */
         .section-card {
-            background: rgba(2, 6, 23, 0.4);
+            background: rgba(2, 6, 23, 0.5);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 20px;
             margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
 
         .section-header-flex {
@@ -205,6 +206,7 @@
 
         .form-control:focus {
             border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
         }
 
         /* Action Buttons */
@@ -223,7 +225,7 @@
 
         .btn-success { background: var(--success); color: #fff; }
         .btn-danger { background: var(--danger); color: #fff; }
-        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 12px var(--primary-glow); }
         .btn-warning { background: var(--warning); color: #000; }
         .btn-sm { padding: 6px 10px; font-size: 0.78rem; }
 
@@ -302,7 +304,7 @@
             <button class="nav-btn" onclick="switchAdminTab('settings', event)">🎛️ التحكم في الأزرار</button>
         </div>
 
-        <!-- 1. جدول طلبات الانضمام المعلقة (تاريخ ووقت التسجيل بدقة) -->
+        <!-- 1. جدول طلبات الانضمام المعلقة -->
         <div id="tab-requests" class="tab-content active">
             <div class="section-card">
                 <div class="section-header-flex">
@@ -328,7 +330,7 @@
             </div>
         </div>
 
-        <!-- 2. جدول الطلاب المقبولين (مع علامة صح وأكسس كامل) -->
+        <!-- 2. جدول الطلاب المقبولين -->
         <div id="tab-students" class="tab-content">
             <div class="section-card">
                 <h2>👥 قائمة الطلاب المفعلين والأكواد (PIN)</h2>
@@ -351,7 +353,7 @@
             </div>
         </div>
 
-        <!-- 3. قسم رفع المحتوى والبيانات (حسب الفئة الدراسية والترمات) -->
+        <!-- 3. قسم رفع المحتوى والبيانات -->
         <div id="tab-upload" class="tab-content">
             <div class="section-card">
                 <h2>➕ إضافة درس أو محتوى جديد للفئة الدراسية</h2>
@@ -397,7 +399,7 @@
             </div>
         </div>
 
-        <!-- 4. قسم صندوق الإشعارات (الجرس الأحمر) لبث التحديثات واللينكات -->
+        <!-- 4. قسم صندوق الإشعارات (الجرس الأحمر) -->
         <div id="tab-notifications" class="tab-content">
             <div class="section-card">
                 <h2 style="color: #ef4444;">🔔 صندوق إرسال الإشعارات اللحظية</h2>
@@ -482,7 +484,6 @@
             if(evt) evt.target.classList.add('active');
         }
 
-        // تحميل الإحصائيات والزوار
         async function loadStatsData() {
             try {
                 const resStats = await fetch(`${FIREBASE_URL}/stats.json`);
@@ -495,7 +496,6 @@
             }
         }
 
-        // تحميل وإدارة طلبات الطلاب في جدول منفصل مع تاريخ ووقت التسجيل
         async function loadStudentsData() {
             try {
                 const res = await fetch(`${FIREBASE_URL}/students.json`);
@@ -514,7 +514,6 @@
 
                 Object.keys(globalStudentsData).forEach(id => {
                     const student = globalStudentsData[id];
-                    // تنسيق التاريخ والوقت بدقة
                     const formattedDate = student.createdAt ? new Date(student.createdAt).toLocaleString('ar-EG', {
                         year: 'numeric', month: '2-digit', day: '2-digit',
                         hour: '2-digit', minute: '2-digit'
@@ -567,7 +566,6 @@
             }
         }
 
-        // قبول طالب فردي وتوليد PIN
         async function approveStudent(id, name, phone) {
             const generatedPin = Math.floor(1000 + Math.random() * 9000);
 
@@ -595,7 +593,6 @@
             }
         }
 
-        // قبول جميع الطلبات المعلقة دفعة واحدة
         async function approveAllStudents() {
             const pendingIds = Object.keys(globalStudentsData).filter(id => globalStudentsData[id].status === 'pending');
 
@@ -627,7 +624,6 @@
             }
         }
 
-        // رفض أو إيقاف حساب طالب
         async function rejectStudent(id) {
             if (!confirm("هل أنت متأكد من تغيير حالة الطالب؟")) return;
 
@@ -643,7 +639,6 @@
             }
         }
 
-        // رفع وإدارة المحتوى مرتبطة بالفئة والترمات
         async function handleContentUpload(e) {
             e.preventDefault();
 
@@ -712,7 +707,6 @@
             loadCoursesData();
         }
 
-        // إرسال وبث الإشعارات (الجرس الأحمر)
         async function handleSendNotification(e) {
             e.preventDefault();
             const notifData = {
@@ -777,7 +771,6 @@
             loadNotificationsData();
         }
 
-        // إعدادات أزرار التواصل والدعم
         async function loadSettingsData() {
             try {
                 const res = await fetch(`${FIREBASE_URL}/settings.json`);
@@ -797,7 +790,7 @@
             const settingsData = {
                 whatsapp: document.getElementById('settingWhatsapp').value.trim(),
                 telegram: document.getElementById('settingTelegram').value.trim(),
-                facebook: document.getElementById('settingFacebook').value.trim()
+                facebook: document.getElementById('settingFacebook'].value.trim()
             };
 
             try {
