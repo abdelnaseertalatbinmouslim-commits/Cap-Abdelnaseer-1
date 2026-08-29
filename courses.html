@@ -53,7 +53,7 @@
             position: relative;
         }
 
-        /* شريط العلوي (الجرس والترحيب) */
+        /* شريط العلوي (الجرس وزر الخروج والترحيب) */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -61,7 +61,13 @@
             margin-bottom: 16px;
         }
 
-        .notification-bell {
+        .top-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .notification-bell, .logout-btn-top {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 50%;
@@ -73,10 +79,16 @@
             cursor: pointer;
             position: relative;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
         }
 
-        .notification-bell span {
-            font-size: 1.2rem;
+        .notification-bell:hover, .logout-btn-top:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+            transform: scale(1.05);
         }
 
         .notif-badge-dot {
@@ -414,18 +426,23 @@
 <body>
 
     <div class="container">
-        <!-- شريط علوي يضم الجرس وإشعارات الأدمن -->
+        <!-- شريط علوي يضم الجرس، زر تسجيل الخروج، ولوحة الطالب -->
         <div class="top-bar">
             <span style="font-weight: 700; font-size: 1.05rem;">لوحة الطالب</span>
-            <div class="notification-bell" onclick="toggleNotificationsModal()">
-                <span>🔔</span>
-                <div class="notif-badge-dot" id="notifDot"></div>
+            <div class="top-actions">
+                <button class="logout-btn-top" onclick="logoutStudent()" title="تسجيل الخروج">
+                    🚪
+                </button>
+                <div class="notification-bell" onclick="toggleNotificationsModal()" title="الإشعارات">
+                    <span>🔔</span>
+                    <div class="notif-badge-dot" id="notifDot"></div>
+                </div>
             </div>
         </div>
 
         <!-- كارت بيانات المشترك -->
         <div class="user-card">
-            <img src="logo.png" alt="صورة الطالب" class="avatar">
+            <img src="logo.png" alt="صورة الطالب" class="avatar" onerror="this.onerror=null; this.src='1783950091830.jpg';">
             <div class="user-info">
                 <h2 id="studentName">مرحباً بك يا كابتن</h2>
                 <p>مفعل ومسجل بالمنصة برمز الوصول</p>
@@ -513,8 +530,8 @@
             let name = urlParams.get('name');
             let grade = urlParams.get('grade');
 
-            if (!name) name = localStorage.getItem('studentName');
-            if (!grade) grade = localStorage.getItem('studentGrade');
+            if (!name) name = localStorage.getItem('studentName') || (localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')).name : null);
+            if (!grade) grade = localStorage.getItem('studentGrade') || (localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')).grade : null);
 
             if (name) {
                 document.getElementById('studentName').innerText = name;
@@ -528,7 +545,18 @@
             }
         }
 
-        // تحديث سجل نشاط الطالب وآخر ظهور في فايربيس (للتقرير الشامل)
+        // دالة تسجيل الخروج الفورية
+        function logoutStudent() {
+            if (confirm("هل أنت متأكد من رغبتك في تسجيل الخروج من المنصة؟")) {
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('studentName');
+                localStorage.removeItem('studentGrade');
+                // إعادة التوجيه لصفحة تسجيل الدخول أو الواجهة الرئيسية (index.html)
+                window.location.href = "index.html";
+            }
+        }
+
+        // تحديث سجل نشاط الطالب وآخر ظهور في فايربيس
         async function updateStudentActivity() {
             const studentName = localStorage.getItem('studentName');
             if (!studentName) return;
@@ -573,7 +601,7 @@
                 container.innerHTML = '';
 
                 const keys = Object.keys(notifs);
-                const currentGrade = localStorage.getItem('studentGrade') || 'الجميع';
+                const currentGrade = (localStorage.getItem('studentGrade') || 'الجميع').trim();
                 let hasValidNotif = false;
 
                 if (keys.length === 0) {
@@ -583,7 +611,8 @@
 
                 keys.reverse().forEach(id => {
                     const n = notifs[id];
-                    if (n.target === 'الجميع' || n.target === currentGrade) {
+                    const targetNotif = (n.target || 'الجميع').trim();
+                    if (targetNotif === 'الجميع' || currentGrade.includes(targetNotif) || targetNotif.includes(currentGrade)) {
                         hasValidNotif = true;
                         container.innerHTML += `
                             <div class="notif-item">
@@ -608,7 +637,7 @@
             }
         }
 
-        // جلب الكويزات المتاحة الخاصة بفرقة الطالب
+        // جلب الكويزات المتاحة الخاصة بفرقة الطالب (محدث لضمان المطابقة الفورية)
         async function fetchAvailableExams() {
             try {
                 const res = await fetch(`${FIREBASE_URL}/quizzes.json`);
@@ -616,13 +645,18 @@
                 const container = document.getElementById('studentExamsContainer');
                 container.innerHTML = '';
 
-                const currentGrade = localStorage.getItem('studentGrade') || 'الجميع';
+                const currentGrade = (localStorage.getItem('studentGrade') || '').trim();
                 const keys = Object.keys(quizzes);
                 let found = false;
 
                 keys.forEach(id => {
                     const quiz = quizzes[id];
-                    if (quiz.target === 'الجميع' || quiz.target === currentGrade) {
+                    const quizTarget = (quiz.target || quiz.grade || 'الجميع').trim();
+                    
+                    if (quizTarget === 'الجميع' || 
+                        (currentGrade && quizTarget.includes(currentGrade)) || 
+                        (currentGrade && currentGrade.includes(quizTarget))) {
+                        
                         found = true;
                         container.innerHTML += `
                             <div class="exam-item">
@@ -641,6 +675,7 @@
                 }
             } catch (err) {
                 console.error("خطأ في تحميل الاختبارات:", err);
+                document.getElementById('studentExamsContainer').innerHTML = `<p style="text-align: center; color: var(--danger); font-size: 0.85rem;">تعذر تحميل الاختبارات.</p>`;
             }
         }
 
@@ -689,7 +724,7 @@
             }
         }
 
-        // إرسال حل الامتحان وحساب الدرجة ورفعها لـ Firebase (لتظهر في نتائج الأدمن والتقرير الشامل)
+        // إرسال حل الامتحان وحساب الدرجة ورفعها لـ Firebase
         async function submitQuizAnswers() {
             if (!activeQuizData) return;
 
