@@ -10,9 +10,9 @@
             --primary: #3b82f6;
             --primary-glow: rgba(59, 130, 246, 0.4);
             --accent-cyan: #06b6d4;
-            --glass-bg: rgba(15, 23, 42, 0.85);
+            --glass-bg: rgba(15, 23, 42, 0.90);
             --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-input: rgba(2, 6, 23, 0.7);
+            --glass-input: rgba(2, 6, 23, 0.8);
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
             --success: #10b981;
@@ -22,7 +22,7 @@
 
         * {
             box-sizing: border-box;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
 
         body {
@@ -31,7 +31,7 @@
             background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
             color: var(--text-main);
             min-height: 100vh;
-            padding: 20px 10px;
+            padding: 15px 8px;
             display: flex;
             justify-content: center;
         }
@@ -41,53 +41,53 @@
             max-width: 1150px;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 28px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.7);
-            backdrop-filter: blur(25px);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
         }
 
         .header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 15px;
+            padding-bottom: 12px;
         }
 
         .header h1 {
             margin: 0;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             background: linear-gradient(135deg, #fff 0%, var(--accent-cyan) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* الإحصائيات الفخمة */
+        /* شبكة الإحصائيات الفخمة */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .stat-card {
-            background: rgba(2, 6, 23, 0.6);
+            background: rgba(2, 6, 23, 0.7);
             border: 1px solid var(--glass-border);
-            border-radius: 18px;
-            padding: 16px;
+            border-radius: 16px;
+            padding: 12px;
             text-align: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         .stat-card .stat-title {
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             color: var(--text-sub);
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .stat-card .stat-value {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 900;
             color: #fff;
         }
@@ -100,23 +100,23 @@
         /* Nav Tabs */
         .admin-nav {
             display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
+            gap: 8px;
+            margin-bottom: 20px;
             overflow-x: auto;
             padding-bottom: 5px;
         }
 
         .nav-btn {
             flex: 1;
-            min-width: 130px;
-            padding: 12px 14px;
+            min-width: 120px;
+            padding: 10px 12px;
             border: 1px solid var(--glass-border);
             background: var(--glass-input);
             color: var(--text-sub);
-            border-radius: 14px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-align: center;
             white-space: nowrap;
         }
@@ -125,7 +125,7 @@
             background: linear-gradient(135deg, var(--primary), var(--accent-cyan));
             color: #fff;
             border-color: transparent;
-            box-shadow: 0 4px 15px var(--primary-glow);
+            box-shadow: 0 4px 12px var(--primary-glow);
         }
 
         .tab-content {
@@ -136,72 +136,103 @@
             display: block;
         }
 
-        /* Cards & Tables */
+        /* Cards & Modern List Items */
         .section-card {
-            background: rgba(2, 6, 23, 0.5);
+            background: rgba(2, 6, 23, 0.6);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
         }
 
         .section-header-flex {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
             gap: 10px;
         }
 
         .section-card h2 {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             margin: 0;
             color: var(--accent-cyan);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+        }
+
+        /* Modern Card-Based Table Layout for Mobile & Desktop */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
         }
 
         .data-table {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        .data-table th, .data-table td {
-            padding: 12px 10px;
-            text-align: right;
-            border-bottom: 1px solid var(--glass-border);
-            font-size: 0.88rem;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+            margin-top: 5px;
         }
 
         .data-table th {
             color: var(--text-sub);
             font-weight: 600;
+            padding: 8px 12px;
+            text-align: right;
+            font-size: 0.82rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .data-table tbody tr {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+        }
+
+        .data-table td {
+            padding: 12px 10px;
+            text-align: right;
+            font-size: 0.85rem;
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .data-table td:first-child {
+            border-right: 1px solid var(--glass-border);
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .data-table td:last-child {
+            border-left: 1px solid var(--glass-border);
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
         }
 
         /* Form elements */
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .form-group label {
             display: block;
-            font-size: 0.85rem;
-            margin-bottom: 6px;
+            font-size: 0.82rem;
+            margin-bottom: 5px;
             color: var(--text-sub);
         }
 
         .form-control {
             width: 100%;
-            padding: 12px;
-            border-radius: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
             border: 1px solid var(--glass-border);
             background: var(--glass-input);
             color: #fff;
             outline: none;
+            font-size: 0.88rem;
         }
 
         .form-control:focus {
@@ -211,105 +242,123 @@
 
         /* Action Buttons */
         .btn {
-            padding: 8px 14px;
-            border-radius: 10px;
+            padding: 7px 12px;
+            border-radius: 8px;
             border: none;
             cursor: pointer;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 700;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 5px;
             text-decoration: none;
         }
 
         .btn-success { background: var(--success); color: #fff; }
         .btn-danger { background: var(--danger); color: #fff; }
-        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 12px var(--primary-glow); }
+        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 3px 10px var(--primary-glow); }
         .btn-warning { background: var(--warning); color: #000; }
-        .btn-sm { padding: 6px 10px; font-size: 0.78rem; }
+        .btn-sm { padding: 5px 9px; font-size: 0.75rem; }
 
         .pin-badge {
-            background: rgba(6, 182, 212, 0.2);
+            background: rgba(6, 182, 212, 0.15);
             color: var(--accent-cyan);
-            padding: 4px 8px;
-            border-radius: 8px;
+            padding: 3px 8px;
+            border-radius: 6px;
             font-weight: 800;
             letter-spacing: 1px;
+            font-size: 0.82rem;
         }
 
         .question-box {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--glass-border);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 12px;
         }
 
         /* Modal / Popups */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 999;
-            padding: 15px;
+            padding: 10px;
         }
 
         .modal-card {
             background: #0f172a;
             border: 1px solid var(--glass-border);
             width: 100%;
-            max-width: 750px;
-            max-height: 90vh;
-            border-radius: 20px;
-            padding: 25px;
+            max-width: 700px;
+            max-height: 85vh;
+            border-radius: 18px;
+            padding: 20px;
             overflow-y: auto;
             position: relative;
         }
 
         .close-modal {
             position: absolute;
-            top: 15px;
-            left: 15px;
+            top: 12px;
+            left: 12px;
             background: var(--danger);
             color: #fff;
             border: none;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             cursor: pointer;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .footer-credits {
             text-align: center;
-            margin-top: 30px;
-            font-size: 0.85rem;
+            margin-top: 20px;
+            font-size: 0.8rem;
             color: var(--text-sub);
             border-top: 1px solid var(--glass-border);
-            padding-top: 18px;
+            padding-top: 15px;
             font-weight: 600;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .data-table, .data-table tbody, .data-table tr, .data-table td {
                 display: block;
                 width: 100%;
             }
             .data-table tr {
-                margin-bottom: 15px;
+                margin-bottom: 12px;
                 background: rgba(255,255,255,0.02);
-                border-radius: 12px;
-                padding: 10px;
+                border-radius: 10px;
+                padding: 8px;
+                border: 1px solid var(--glass-border);
             }
             .data-table td {
                 text-align: left;
-                padding-left: 50%;
+                padding: 6px 8px;
                 position: relative;
-                border-bottom: none;
+                border: none !important;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .data-table td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: var(--text-sub);
+                font-size: 0.78rem;
+            }
+            .data-table th {
+                display: none;
             }
         }
     </style>
@@ -345,11 +394,11 @@
         <div class="admin-nav">
             <button class="nav-btn active" onclick="switchAdminTab('requests', event)">📥 طلبات الانضمام</button>
             <button class="nav-btn" onclick="switchAdminTab('students', event)">👥 الطلاب والتقارير</button>
-            <button class="nav-btn" onclick="switchAdminTab('quizzes', event)">📝 الامتحانات والكويزات</button>
+            <button class="nav-btn" onclick="switchAdminTab('quizzes', event)">📝 الامتحانات</button>
             <button class="nav-btn" onclick="switchAdminTab('results', event)">📊 درجات الطلاب</button>
             <button class="nav-btn" onclick="switchAdminTab('upload', event)">📚 رفع المحتوى</button>
             <button class="nav-btn" onclick="switchAdminTab('notifications', event)" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">🔔 الإشعارات</button>
-            <button class="nav-btn" onclick="switchAdminTab('settings', event)">🎛️ التحكم في الأزرار</button>
+            <button class="nav-btn" onclick="switchAdminTab('settings', event)">🎛️ الأزرار</button>
         </div>
 
         <!-- 1. طلبات الانضمام -->
@@ -357,9 +406,9 @@
             <div class="section-card">
                 <div class="section-header-flex">
                     <h2>📥 طلبات الانضمام المعلقة</h2>
-                    <button class="btn btn-warning" onclick="approveAllStudents()">⚡ قبول كل الطلبات دفعة واحدة</button>
+                    <button class="btn btn-warning btn-sm" onclick="approveAllStudents()">⚡ قبول كل الطلبات دفعة واحدة</button>
                 </div>
-                <div style="overflow-x:auto;">
+                <div class="table-container">
                     <table class="data-table">
                         <thead>
                             <tr>
@@ -378,11 +427,11 @@
             </div>
         </div>
 
-        <!-- 2. الطلاب التقارير الشاملة -->
+        <!-- 2. الطلاب والتقارير الشاملة -->
         <div id="tab-students" class="tab-content">
             <div class="section-card">
                 <h2>👥 قائمة الطلاب المفعلين وسجلات التقرير الشامل</h2>
-                <div style="overflow-x:auto;">
+                <div class="table-container">
                     <table class="data-table">
                         <thead>
                             <tr>
@@ -431,11 +480,11 @@
                         </div>
                     </div>
 
-                    <h3 style="color:var(--accent-cyan); margin-top:15px;">❓ الأسئلة</h3>
+                    <h3 style="color:var(--accent-cyan); margin-top:12px; font-size:1rem;">❓ الأسئلة</h3>
                     <div id="questionsContainer"></div>
 
-                    <button type="button" class="btn btn-warning" onclick="addQuestionField()" style="margin-bottom:15px;">➕ إضافة سؤال جديد</button>
-                    <button type="submit" class="btn btn-primary" style="width:100%; padding:12px;">💾 حفظ الامتحان ونشره</button>
+                    <button type="button" class="btn btn-warning btn-sm" onclick="addQuestionField()" style="margin-bottom:12px;">➕ إضافة سؤال جديد</button>
+                    <button type="submit" class="btn btn-primary" style="width:100%; padding:10px;">💾 حفظ الامتحان ونشره</button>
                 </form>
             </div>
 
@@ -451,7 +500,7 @@
         <div id="tab-results" class="tab-content">
             <div class="section-card">
                 <h2>📊 سجل نتائج وتدقيق امتحانات الطلاب</h2>
-                <div style="overflow-x:auto;">
+                <div class="table-container">
                     <table class="data-table">
                         <thead>
                             <tr>
@@ -502,9 +551,9 @@
                     </div>
                     <div class="form-group">
                         <label>وصف قصير</label>
-                        <textarea id="courseDesc" class="form-control" rows="3" placeholder="أدخل تفاصيل المحتوى..."></textarea>
+                        <textarea id="courseDesc" class="form-control" rows="2" placeholder="أدخل تفاصيل المحتوى..."></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width:100%; padding:12px;">رفع المحتوى فوراً</button>
+                    <button type="submit" class="btn btn-primary" style="width:100%; padding:10px;">رفع المحتوى فوراً</button>
                 </form>
             </div>
 
@@ -527,7 +576,7 @@
                     </div>
                     <div class="form-group">
                         <label>نص الإشعار / اللينك التوجيهي</label>
-                        <textarea id="notifBody" class="form-control" rows="3" placeholder="اكتب تفاصيل الرسالة..." required></textarea>
+                        <textarea id="notifBody" class="form-control" rows="2" placeholder="اكتب تفاصيل الرسالة..." required></textarea>
                     </div>
                     <div class="form-group">
                         <label>الفئة المستهدفة بالإشعار</label>
@@ -539,7 +588,7 @@
                             <option value="الفئة الرابعة">الفئة الرابعة فقط</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-danger" style="width:100%; padding:12px; font-weight:bold;">🚨 إرسال وبث الإشعار فوراً</button>
+                    <button type="submit" class="btn btn-danger" style="width:100%; padding:10px; font-weight:bold;">🚨 إرسال وبث الإشعار فوراً</button>
                 </form>
             </div>
 
@@ -568,7 +617,7 @@
                         <label>رابط الفيسبوك</label>
                         <input type="url" id="settingFacebook" class="form-control" placeholder="https://www.facebook.com/..." required>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width:100%; padding:12px;">حفظ التغييرات</button>
+                    <button type="submit" class="btn btn-primary" style="width:100%; padding:10px;">حفظ التغييرات</button>
                 </form>
             </div>
         </div>
@@ -582,21 +631,21 @@
     <div id="studentReportModal" class="modal-overlay">
         <div class="modal-card">
             <button class="close-modal" onclick="closeStudentModal()">✕</button>
-            <h2 id="modalStudentName" style="color:var(--accent-cyan); margin-top:0;">📊 تقرير الطالب الشامل</h2>
+            <h2 id="modalStudentName" style="color:var(--accent-cyan); margin-top:0; font-size:1.1rem;">📊 تقرير الطالب الشامل</h2>
             
-            <div class="section-card" style="background:rgba(255,255,255,0.02);">
-                <h3 style="color:var(--primary); margin-top:0;">📌 البيانات الشخصية والأكاديمية</h3>
-                <div id="modalStudentDetails"></div>
+            <div class="section-card" style="background:rgba(255,255,255,0.02); margin-top:10px;">
+                <h3 style="color:var(--primary); margin-top:0; font-size:0.95rem;">📌 البيانات الشخصية والأكاديمية</h3>
+                <div id="modalStudentDetails" style="font-size:0.85rem;"></div>
             </div>
 
             <div class="section-card" style="background:rgba(255,255,255,0.02);">
-                <h3 style="color:var(--warning); margin-top:0;">📝 سجل الامتحانات والدرجات</h3>
+                <h3 style="color:var(--warning); margin-top:0; font-size:0.95rem;">📝 سجل الامتحانات والدرجات</h3>
                 <div id="modalStudentQuizzes"></div>
             </div>
 
             <div class="section-card" style="background:rgba(255,255,255,0.02);">
-                <h3 style="color:var(--success); margin-top:0;">👁️ المشاهدات والحضور على المحتوى</h3>
-                <div id="modalStudentViews"></div>
+                <h3 style="color:var(--success); margin-top:0; font-size:0.95rem;">👁️ المشاهدات والحضور على المحتوى</h3>
+                <div id="modalStudentViews" style="font-size:0.85rem;"></div>
             </div>
         </div>
     </div>
@@ -618,7 +667,7 @@
             loadNotificationsData();
             loadQuizzesData();
             loadResultsData();
-            addQuestionField(); // إضافة سؤال افتراضي أول عند الفتح
+            addQuestionField(); 
         });
 
         function switchAdminTab(tab, evt) {
@@ -633,12 +682,22 @@
             try {
                 const resStats = await fetch(`${FIREBASE_URL}/stats.json`);
                 const statsData = await resStats.json() || {};
-                
                 document.getElementById('statVisitors').innerText = statsData.visitorsCount || 0;
                 document.getElementById('statOnline').innerText = statsData.onlineNow || 1;
             } catch (err) {
                 console.error("خطأ في جلب الإحصائيات:", err);
             }
+        }
+
+        // دالة آمنة لتنسيق التاريخ بدون أي Invalid Date
+        function formatSafeDate(dateString) {
+            if (!dateString) return 'غير محدد';
+            const d = new Date(dateString);
+            if (isNaN(d.getTime())) return 'حديث التسجيل';
+            return d.toLocaleString('ar-EG', {
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit'
+            });
         }
 
         /* --- إدارة الطلاب والتقارير --- */
@@ -661,22 +720,21 @@
                     const student = globalStudentsData[id];
                     if(!student) return;
                     
-                    const formattedDate = student.createdAt ? new Date(student.createdAt).toLocaleString('ar-EG', {
-                        year: 'numeric', month: '2-digit', day: '2-digit',
-                        hour: '2-digit', minute: '2-digit'
-                    }) : 'غير محدد';
+                    const safeDate = formatSafeDate(student.createdAt);
 
                     if (student.status === 'pending') {
                         hasPending = true;
                         pendingTable.innerHTML += `
                             <tr>
-                                <td><b>${student.name}</b></td>
-                                <td><span style="color: var(--accent-cyan);">${student.grade || 'غير محدد'}</span></td>
-                                <td>${student.phone}</td>
-                                <td style="font-size:0.8rem; color:var(--text-sub);">${formattedDate}</td>
-                                <td>
-                                    <button class="btn btn-success btn-sm" onclick="approveStudent('${id}', '${student.name}', '${student.phone}')">✅ قبول وتوليد PIN</button>
-                                    <button class="btn btn-danger btn-sm" onclick="rejectStudent('${id}')">❌ رفض</button>
+                                <td data-label="اسم الطالب"><b>${student.name || 'بدون اسم'}</b></td>
+                                <td data-label="الفئة الدراسية"><span style="color: var(--accent-cyan);">${student.grade || 'غير محدد'}</span></td>
+                                <td data-label="رقم الهاتف">${student.phone || 'غير متوفر'}</td>
+                                <td data-label="تاريخ التسجيل" style="font-size:0.78rem; color:var(--text-sub);">${safeDate}</td>
+                                <td data-label="الإجراءات">
+                                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                                        <button class="btn btn-success btn-sm" onclick="approveStudent('${id}', '${student.name || 'طالب'}', '${student.phone || ''}')">✅ قبول</button>
+                                        <button class="btn btn-danger btn-sm" onclick="rejectStudent('${id}')">❌ رفض</button>
+                                    </div>
                                 </td>
                             </tr>
                         `;
@@ -685,13 +743,15 @@
                         countApproved++;
                         approvedTable.innerHTML += `
                             <tr>
-                                <td><b>${student.name}</b></td>
-                                <td><span style="color: var(--accent-cyan);">${student.grade || 'غير محدد'}</span></td>
-                                <td>${student.phone}</td>
-                                <td><span class="pin-badge">${student.pin}</span></td>
-                                <td>
-                                    <button class="btn btn-primary btn-sm" onclick="openStudentReport('${id}')">🔍 التقرير التفصيلي</button>
-                                    <button class="btn btn-danger btn-sm" onclick="rejectStudent('${id}')">إلغاء</button>
+                                <td data-label="اسم الطالب"><b>${student.name || 'بدون اسم'}</b></td>
+                                <td data-label="الفئة الدراسية"><span style="color: var(--accent-cyan);">${student.grade || 'غير محدد'}</span></td>
+                                <td data-label="رقم الهاتف">${student.phone || 'غير متوفر'}</td>
+                                <td data-label="كود PIN"><span class="pin-badge">${student.pin || '----'}</span></td>
+                                <td data-label="التقرير والتحكم">
+                                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                                        <button class="btn btn-primary btn-sm" onclick="openStudentReport('${id}')">🔍 تقرير</button>
+                                        <button class="btn btn-danger btn-sm" onclick="rejectStudent('${id}')">إلغاء</button>
+                                    </div>
                                 </td>
                             </tr>
                         `;
@@ -750,7 +810,7 @@
                 alert("تم قبول جميع الطلبات المعلقة!");
                 loadStudentsData();
             } catch (err) {
-                alert("حدث خطأ أثناء القبول.");
+                alert("حدث خطأ أثناء القبول الجماعي.");
             }
         }
 
@@ -773,45 +833,48 @@
             const s = globalStudentsData[studentId];
             if (!s) return;
 
-            document.getElementById('modalStudentName').innerText = `📊 تقرير الطالب: ${s.name}`;
+            document.getElementById('modalStudentName').innerText = `📊 تقرير الطالب: ${s.name || 'بدون اسم'}`;
             document.getElementById('modalStudentDetails').innerHTML = `
-                <p><b>رقم الهاتف:</b> ${s.phone}</p>
+                <p><b>رقم الهاتف:</b> ${s.phone || 'غير متوفر'}</p>
                 <p><b>الفئة الدراسية:</b> ${s.grade || 'غير محدد'}</p>
-                <p><b>كود PIN الدخول:</b> <span class="pin-badge">${s.pin}</span></p>
-                <p><b>تاريخ الانضمام:</b> ${s.createdAt ? new Date(s.createdAt).toLocaleString('ar-EG') : 'غير محدد'}</p>
+                <p><b>كود PIN الدخول:</b> <span class="pin-badge">${s.pin || '----'}</span></p>
+                <p><b>تاريخ الانضمام:</b> ${formatSafeDate(s.createdAt)}</p>
             `;
 
-            // جلب نتائج الكويز الخاصة بالمستخدم
-            let quizHtml = '<table class="data-table"><thead><tr><th>الاختبار</th><th>الدرجة</th><th>التاريخ</th></tr></thead><tbody>';
+            let quizHtml = '<div class="table-container"><table class="data-table"><thead><tr><th>الاختبار</th><th>الدرجة</th><th>التاريخ</th></tr></thead><tbody>';
             let quizCount = 0;
 
             Object.keys(globalResultsData).forEach(rId => {
                 const r = globalResultsData[rId];
-                if (r.studentId === studentId || r.phone === s.phone) {
+                if (r && (r.studentId === studentId || r.phone === s.phone)) {
                     quizCount++;
+                    const scoreVal = (r.score !== undefined && !isNaN(r.score)) ? r.score : 0;
+                    const totalVal = (r.totalScore !== undefined && !isNaN(r.totalScore)) ? r.totalScore : 10;
+                    const percVal = (r.percentage !== undefined && !isNaN(r.percentage)) ? r.percentage : Math.round((scoreVal / totalVal) * 100);
+
                     quizHtml += `
                         <tr>
-                            <td>${r.quizTitle}</td>
-                            <td><b style="color:var(--success);">${r.score} / ${r.totalScore}</b> (${r.percentage}%)</td>
-                            <td>${new Date(r.submittedAt).toLocaleString('ar-EG')}</td>
+                            <td data-label="الاختبار">${r.quizTitle || 'امتحان'}</td>
+                            <td data-label="الدرجة"><b style="color:var(--success);">${scoreVal} / ${totalVal}</b> (${percVal}%)</td>
+                            <td data-label="التاريخ">${formatSafeDate(r.submittedAt)}</td>
                         </tr>
                     `;
                 }
             });
 
-            quizHtml += '</tbody></table>';
-            if (quizCount === 0) quizHtml = '<p style="color:var(--text-sub);">لم يقم الطالب بدخول أو أداء أي امتحانات بعد.</p>';
+            quizHtml += '</tbody></table></div>';
+            if (quizCount === 0) quizHtml = '<p style="color:var(--text-sub); font-size:0.85rem;">لم يقم الطالب بدخول أو أداء أي امتحانات بعد.</p>';
             document.getElementById('modalStudentQuizzes').innerHTML = quizHtml;
 
-            // سجل المشاهدات والتفاعل
-            let viewsHtml = '<ul style="padding-right:20px;">';
-            if (s.views && Object.keys(s.views).length > 0) {
+            let viewsHtml = '<ul style="padding-right:15px; margin:5px 0;">';
+            if (s.views && typeof s.views === 'object' && Object.keys(s.views).length > 0) {
                 Object.values(s.views).forEach(v => {
-                    viewsHtml += `<li>شاهد المحتوى: <b>${v.contentTitle}</b> بتاريخ ${new Date(v.time).toLocaleString('ar-EG')}</li>`;
+                    if(v) viewsHtml += `<li>شاهد المحتوى: <b>${v.contentTitle || 'محاضرة'}</b> بتاريخ ${formatSafeDate(v.time)}</li>`;
                 });
             } else {
-                viewsHtml = '<p style="color:var(--text-sub);">لا توجد المشاهدات المسجلة حالياً.</p>';
+                viewsHtml = '<p style="color:var(--text-sub); font-size:0.85rem;">لا توجد مشاهدات مسجلة حالياً.</p>';
             }
+            viewsHtml += '</ul>';
             document.getElementById('modalStudentViews').innerHTML = viewsHtml;
 
             document.getElementById('studentReportModal').style.display = 'flex';
@@ -833,13 +896,13 @@
                     <label>السؤال ${qCount}:</label>
                     <input type="text" class="form-control q-text" placeholder="اكتب السؤال هنا..." required>
                 </div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
                     <input type="text" class="form-control q-opt0" placeholder="الخيار الأول (أ)" required>
                     <input type="text" class="form-control q-opt1" placeholder="الخيار الثاني (ب)" required>
                     <input type="text" class="form-control q-opt2" placeholder="الخيار الثالث (ج)" required>
                     <input type="text" class="form-control q-opt3" placeholder="الخيار الرابع (د)" required>
                 </div>
-                <div class="form-group" style="margin-top:10px;">
+                <div class="form-group" style="margin-top:8px;">
                     <label>الإجابة الصحيحة:</label>
                     <select class="form-control q-correct">
                         <option value="0">الخيار الأول (أ)</option>
@@ -860,12 +923,12 @@
 
             qBoxes.forEach(box => {
                 questions.push({
-                    title: box.querySelector('.q-text').value,
+                    title: box.querySelector('.q-text').value.trim(),
                     options: [
-                        box.querySelector('.q-opt0').value,
-                        box.querySelector('.q-opt1').value,
-                        box.querySelector('.q-opt2').value,
-                        box.querySelector('.q-opt3').value
+                        box.querySelector('.q-opt0').value.trim(),
+                        box.querySelector('.q-opt1').value.trim(),
+                        box.querySelector('.q-opt2').value.trim(),
+                        box.querySelector('.q-opt3').value.trim()
                     ],
                     correctIndex: parseInt(box.querySelector('.q-correct').value)
                 });
@@ -874,14 +937,14 @@
             const quizData = {
                 title: document.getElementById('quizTitle').value.trim(),
                 grade: document.getElementById('quizGrade').value,
-                duration: parseInt(document.getElementById('quizDuration').value),
-                totalScore: parseInt(document.getElementById('quizTotalScore').value),
+                duration: parseInt(document.getElementById('quizDuration').value) || 15,
+                totalScore: parseInt(document.getElementById('quizTotalScore').value) || 10,
                 questions: questions,
                 createdAt: new Date().toISOString()
             };
 
             try {
-                const res = await fetch(`${FIREBASE_URL}/quizzes.json`, {
+                await fetch(`${FIREBASE_URL}/quizzes.json`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(quizData)
@@ -908,20 +971,21 @@
                 document.getElementById('statQuizzes').innerText = keys.length;
 
                 if(keys.length === 0) {
-                    container.innerHTML = '<p style="text-align:center; color:var(--text-sub);">لم يتم رفع أي امتحانات بعد.</p>';
+                    container.innerHTML = '<p style="text-align:center; color:var(--text-sub); font-size:0.85rem;">لم يتم رفع أي امتحانات بعد.</p>';
                     return;
                 }
 
                 keys.forEach(id => {
                     const q = globalQuizzesData[id];
+                    if(!q) return;
                     container.innerHTML += `
-                        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:12px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:10px 12px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                             <div>
-                                <h4 style="margin:0 0 5px 0; color:var(--accent-cyan);">${q.title}</h4>
-                                <small>الفئة: ${q.grade} | المدة: ${q.duration} دقيقة | الأسئلة: ${q.questions ? q.questions.length : 0}</small>
+                                <h4 style="margin:0 0 4px 0; color:var(--accent-cyan); font-size:0.95rem;">${q.title || 'امتحان'}</h4>
+                                <small style="color:var(--text-sub);">الفئة: ${q.grade || 'الجميع'} | المدة: ${q.duration || 15}د | الأسئلة: ${q.questions ? q.questions.length : 0}</small>
                             </div>
-                            <div>
-                                <button class="btn btn-warning btn-sm" onclick="broadcastQuizNotification('${q.title}', '${q.grade}')">🚨 بث إشعار الامتحان للطلاب</button>
+                            <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                                <button class="btn btn-warning btn-sm" onclick="broadcastQuizNotification('${q.title || ''}', '${q.grade || 'الجميع'}')">🚨 تنبيه</button>
                                 <button class="btn btn-danger btn-sm" onclick="deleteQuiz('${id}')">حذف</button>
                             </div>
                         </div>
@@ -937,7 +1001,7 @@
 
             const notifData = {
                 title: `🚨 امتحان جديد: ${quizTitle}`,
-                body: `تم نشر امتحان جديد لمادتكم. يرجى الدخول وحل الكويز الآن قبل انتهاء وقت الامتحان!`,
+                body: `تم نشر امتحان جديد لمادتكم. يرجى الدخول وحل الكويز الآن!`,
                 target: targetGrade,
                 createdAt: new Date().toISOString()
             };
@@ -958,7 +1022,7 @@
             loadQuizzesData();
         }
 
-        /* --- تحميل درجات ونتائج الاختبارات --- */
+        /* --- تحميل درجات ونتائج الاختبارات بدون NaN --- */
         async function loadResultsData() {
             try {
                 const res = await fetch(`${FIREBASE_URL}/quiz_results.json`);
@@ -975,13 +1039,19 @@
 
                 keys.reverse().forEach(id => {
                     const r = globalResultsData[id];
+                    if(!r) return;
+
+                    const scoreVal = (r.score !== undefined && !isNaN(r.score)) ? r.score : 0;
+                    const totalVal = (r.totalScore !== undefined && !isNaN(r.totalScore)) ? r.totalScore : 10;
+                    const percVal = (r.percentage !== undefined && !isNaN(r.percentage)) ? r.percentage : Math.round((scoreVal / totalVal) * 100);
+
                     tableBody.innerHTML += `
                         <tr>
-                            <td><b>${r.studentName}</b></td>
-                            <td>${r.quizTitle}</td>
-                            <td><b style="color:var(--success);">${r.score} / ${r.totalScore}</b></td>
-                            <td><span class="pin-badge">${r.percentage}%</span></td>
-                            <td style="font-size:0.8rem; color:var(--text-sub);">${new Date(r.submittedAt).toLocaleString('ar-EG')}</td>
+                            <td data-label="اسم الطالب"><b>${r.studentName || 'طالب'}</b></td>
+                            <td data-label="عنوان الامتحان">${r.quizTitle || 'امتحان'}</td>
+                            <td data-label="الدرجة"><b style="color:var(--success);">${scoreVal} / ${totalVal}</b></td>
+                            <td data-label="النسبة"><span class="pin-badge">${percVal}%</span></td>
+                            <td data-label="وقت التسليم" style="font-size:0.78rem; color:var(--text-sub);">${formatSafeDate(r.submittedAt)}</td>
                         </tr>
                     `;
                 });
@@ -1028,7 +1098,7 @@
                 const keys = Object.keys(data);
 
                 if (keys.length === 0) {
-                    listContainer.innerHTML = `<p style="text-align:center; color: var(--text-sub);">لم يتم رفع أي محتوى بعد.</p>`;
+                    listContainer.innerHTML = `<p style="text-align:center; color: var(--text-sub); font-size:0.85rem;">لم يتم رفع أي محتوى بعد.</p>`;
                     return;
                 }
 
@@ -1036,14 +1106,14 @@
                     const c = data[id];
                     if(!c) return;
                     listContainer.innerHTML += `
-                        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:12px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:10px 12px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                             <div>
-                                <h4 style="margin:0 0 5px 0;">${c.title}</h4>
-                                <span style="color:var(--accent-cyan); font-size:0.82rem; font-weight:bold;">${c.grade} — ${c.term || 'الترم الأول'}</span>
-                                <p style="margin:5px 0 0 0; font-size:0.82rem; color:var(--text-sub);">${c.desc || ''}</p>
+                                <h4 style="margin:0 0 4px 0; font-size:0.95rem;">${c.title || 'محاضرة'}</h4>
+                                <span style="color:var(--accent-cyan); font-size:0.78rem; font-weight:bold;">${c.grade || ''} — ${c.term || 'الترم الأول'}</span>
+                                <p style="margin:4px 0 0 0; font-size:0.78rem; color:var(--text-sub);">${c.desc || ''}</p>
                             </div>
-                            <div>
-                                <a href="${c.link}" target="_blank" class="btn btn-primary btn-sm">عرض</a>
+                            <div style="display:flex; gap:5px;">
+                                <a href="${c.link || '#'}" target="_blank" class="btn btn-primary btn-sm">عرض</a>
                                 <button onclick="deleteCourse('${id}')" class="btn btn-danger btn-sm">حذف</button>
                             </div>
                         </div>
@@ -1094,7 +1164,7 @@
                 const keys = Object.keys(data);
 
                 if (keys.length === 0) {
-                    listContainer.innerHTML = `<p style="text-align:center; color: var(--text-sub);">لم يتم إرسال أي إشعارات سابقة.</p>`;
+                    listContainer.innerHTML = `<p style="text-align:center; color: var(--text-sub); font-size:0.85rem;">لم يتم إرسال أي إشعارات سابقة.</p>`;
                     return;
                 }
 
@@ -1102,11 +1172,11 @@
                     const n = data[id];
                     if(!n) return;
                     listContainer.innerHTML += `
-                        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:12px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:10px 12px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
                             <div>
-                                <h4 style="margin:0 0 5px 0; color:#ef4444;">🔔 ${n.title} <small style="color:var(--accent-cyan)">(${n.target})</small></h4>
-                                <p style="margin:0; font-size:0.85rem; color:var(--text-main);">${n.body}</p>
-                                <small style="color:var(--text-sub);">${new Date(n.createdAt).toLocaleString('ar-EG')}</small>
+                                <h4 style="margin:0 0 4px 0; color:#ef4444; font-size:0.9rem;">🔔 ${n.title || 'تنبيه'} <small style="color:var(--accent-cyan)">(${n.target || 'الجميع'})</small></h4>
+                                <p style="margin:0; font-size:0.82rem; color:var(--text-main);">${n.body || ''}</p>
+                                <small style="color:var(--text-sub); font-size:0.75rem;">${formatSafeDate(n.createdAt)}</small>
                             </div>
                             <div>
                                 <button onclick="deleteNotification('${id}')" class="btn btn-danger btn-sm">حذف</button>
@@ -1155,7 +1225,7 @@
                 });
                 alert("تم تحديث إعدادات الأزرار بنجاح!");
             } catch (err) {
-                alert("حدث خطأ أثناء الحفظ.");
+                alert("حدث خطأ أثناء حفظ الإعدادات.");
             }
         }
     </script>
