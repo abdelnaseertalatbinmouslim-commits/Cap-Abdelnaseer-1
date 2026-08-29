@@ -15,6 +15,7 @@
             --border-color: #cbd5e1;
             --input-bg: #ffffff;
             --danger: #ef4444;
+            --success: #22c55e;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -28,6 +29,7 @@
                 --border-color: #1e293b;
                 --input-bg: #0f172a;
                 --danger: #ef4444;
+                --success: #22c55e;
             }
         }
 
@@ -148,7 +150,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
 
         .term-card {
@@ -186,6 +188,56 @@
         .term-desc {
             font-size: 0.78rem;
             color: var(--text-muted);
+        }
+
+        /* قسم الامتحانات والكويزات المتاحة للطالب */
+        .exams-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+        }
+
+        .exam-item {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .exam-info h4 {
+            margin: 0 0 4px 0;
+            font-size: 0.95rem;
+            color: var(--primary);
+        }
+
+        .exam-info p {
+            margin: 0;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .start-exam-btn {
+            background: linear-gradient(135deg, var(--primary), #1d4ed8);
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .start-exam-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.03);
         }
 
         /* أزرار الدعم والتواصل */
@@ -231,7 +283,7 @@
             color: var(--primary);
         }
 
-        /* نافذة الإشعارات المنبثقة (Modal) */
+        /* نافذة الإشعارات والامتحانات المنبثقة (Modal) */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -252,8 +304,8 @@
             border: 1px solid var(--border-color);
             border-radius: 20px;
             width: 100%;
-            max-width: 450px;
-            max-height: 80vh;
+            max-width: 480px;
+            max-height: 85vh;
             overflow-y: auto;
             padding: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
@@ -270,7 +322,7 @@
 
         .modal-header h3 {
             margin: 0;
-            color: var(--danger);
+            color: var(--primary);
             font-size: 1.1rem;
         }
 
@@ -305,6 +357,49 @@
         .notif-item small {
             color: var(--text-muted);
             font-size: 0.75rem;
+        }
+
+        /* تنسيق أسئلة الامتحان داخل نافذة الـ Quiz */
+        .quiz-question-card {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 15px;
+        }
+
+        .quiz-question-card p {
+            margin: 0 0 10px 0;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .quiz-option {
+            display: block;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 0.88rem;
+        }
+
+        .quiz-option input {
+            margin-left: 8px;
+        }
+
+        .submit-quiz-btn {
+            width: 100%;
+            background: var(--success);
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
         }
 
         .footer-credits {
@@ -353,6 +448,12 @@
             </a>
         </div>
 
+        <!-- قسم الكويزات والامتحانات المتاحة للطالب -->
+        <div class="section-title">📝 الاختبارات والكويزات المتاحة</div>
+        <div class="exams-section" id="studentExamsContainer">
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.88rem; margin: 5px 0;">جاري البحث عن اختبارات جديدة...</p>
+        </div>
+
         <!-- أزرار الدعم المباشرة -->
         <div class="support-card">
             <div class="support-title">أزرار الدعم والتواصل المباشر</div>
@@ -381,12 +482,29 @@
         </div>
     </div>
 
+    <!-- نافذة تقديم الامتحان (Quiz Modal) -->
+    <div class="modal-overlay" id="quizModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="quizModalTitle">عنوان الامتحان</h3>
+                <button class="close-modal" onclick="closeQuizModal()">✖</button>
+            </div>
+            <div id="quizModalBody">
+                <!-- أسئلة الكويز تظهر هنا ديناميكياً -->
+            </div>
+        </div>
+    </div>
+
     <script>
         const FIREBASE_URL = "https://abodaa-default-rtdb.firebaseio.com";
+        let activeQuizData = null;
+        let activeQuizId = null;
 
         document.addEventListener("DOMContentLoaded", () => {
             loadStudentInfo();
             fetchSettingsAndNotifications();
+            fetchAvailableExams();
+            updateStudentActivity();
         });
 
         // جلب وعرض بيانات الطالب المسجل
@@ -395,7 +513,6 @@
             let name = urlParams.get('name');
             let grade = urlParams.get('grade');
 
-            // التخزين المؤقت المحلي إن وجد لضمان استمرارية الجلسة
             if (!name) name = localStorage.getItem('studentName');
             if (!grade) grade = localStorage.getItem('studentGrade');
 
@@ -411,10 +528,37 @@
             }
         }
 
-        // جلب أزرار التواصل والإشعارات المحدثة من الفايربيส
+        // تحديث سجل نشاط الطالب وآخر ظهور في فايربيس (للتقرير الشامل)
+        async function updateStudentActivity() {
+            const studentName = localStorage.getItem('studentName');
+            if (!studentName) return;
+            try {
+                const res = await fetch(`${FIREBASE_URL}/students.json`);
+                const students = await res.json();
+                if (students) {
+                    let studentKey = null;
+                    Object.keys(students).forEach(key => {
+                        if (students[key].name === studentName) {
+                            studentKey = key;
+                        }
+                    });
+                    if (studentKey) {
+                        const now = new Date().toLocaleString('ar-EG');
+                        await fetch(`${FIREBASE_URL}/students/${studentKey}/lastActive.json`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(now)
+                        });
+                    }
+                }
+            } catch (e) {
+                console.error("خطأ في تحديث النشاط:", e);
+            }
+        }
+
+        // جلب الإعدادات والإشعارات والتحقق من التنبيهات الجديدة
         async function fetchSettingsAndNotifications() {
             try {
-                // 1. جلب إعدادات أزرار التواصل
                 const resSettings = await fetch(`${FIREBASE_URL}/settings.json`);
                 const settings = await resSettings.json();
                 if (settings) {
@@ -423,7 +567,6 @@
                     if (settings.facebook) document.getElementById('btnFacebook').href = settings.facebook;
                 }
 
-                // 2. جلب الإشعارات
                 const resNotif = await fetch(`${FIREBASE_URL}/notifications.json`);
                 const notifs = await resNotif.json() || {};
                 const container = document.getElementById('notificationsListContainer');
@@ -440,7 +583,6 @@
 
                 keys.reverse().forEach(id => {
                     const n = notifs[id];
-                    // فلترة الإشعارات بناءً على الفئة المستهدفة (الجميع أو فئة الطالب نفسه)
                     if (n.target === 'الجميع' || n.target === currentGrade) {
                         hasValidNotif = true;
                         container.innerHTML += `
@@ -462,8 +604,137 @@
                 }
 
             } catch (err) {
-                console.error("خطأ في تحديث البيانات:", err);
+                console.error("خطأ في تحديث الإشعارات:", err);
             }
+        }
+
+        // جلب الكويزات المتاحة الخاصة بفرقة الطالب
+        async function fetchAvailableExams() {
+            try {
+                const res = await fetch(`${FIREBASE_URL}/quizzes.json`);
+                const quizzes = await res.json() || {};
+                const container = document.getElementById('studentExamsContainer');
+                container.innerHTML = '';
+
+                const currentGrade = localStorage.getItem('studentGrade') || 'الجميع';
+                const keys = Object.keys(quizzes);
+                let found = false;
+
+                keys.forEach(id => {
+                    const quiz = quizzes[id];
+                    if (quiz.target === 'الجميع' || quiz.target === currentGrade) {
+                        found = true;
+                        container.innerHTML += `
+                            <div class="exam-item">
+                                <div class="exam-info">
+                                    <h4>📝 ${quiz.title}</h4>
+                                    <p>المدة: ${quiz.duration} دقائق | الدرجة الكلية: ${quiz.totalMarks}</p>
+                                </div>
+                                <button class="start-exam-btn" onclick="openQuiz('${id}')">بدء الاختبار</button>
+                            </div>
+                        `;
+                    }
+                });
+
+                if (!found) {
+                    container.innerHTML = `<p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin: 10px 0;">لا توجد اختبارات متاحة لفئتك حالياً.</p>`;
+                }
+            } catch (err) {
+                console.error("خطأ في تحميل الاختبارات:", err);
+            }
+        }
+
+        // فتح نافذة الامتحان وتحميل الأسئلة
+        async function openQuiz(quizId) {
+            try {
+                const res = await fetch(`${FIREBASE_URL}/quizzes/${quizId}.json`);
+                const quiz = await res.json();
+                if (!quiz) return;
+
+                activeQuizData = quiz;
+                activeQuizId = quizId;
+
+                document.getElementById('quizModalTitle').innerText = quiz.title;
+                const modalBody = document.getElementById('quizModalBody');
+                modalBody.innerHTML = '';
+
+                if (!quiz.questions || quiz.questions.length === 0) {
+                    modalBody.innerHTML = `<p style="text-align: center;">هذا الاختبار لا يحتوي على أسئلة بعد.</p>`;
+                } else {
+                    quiz.questions.forEach((q, qIndex) => {
+                        let optionsHtml = '';
+                        q.options.forEach((opt, optIndex) => {
+                            optionsHtml += `
+                                <label class="quiz-option">
+                                    <input type="radio" name="question_${qIndex}" value="${optIndex}">
+                                    ${opt}
+                                </label>
+                            `;
+                        });
+
+                        modalBody.innerHTML += `
+                            <div class="quiz-question-card">
+                                <p>${qIndex + 1}. ${q.questionText}</p>
+                                ${optionsHtml}
+                            </div>
+                        `;
+                    });
+
+                    modalBody.innerHTML += `<button class="submit-quiz-btn" onclick="submitQuizAnswers()">إرسال الحل وتسليم الامتحان</button>`;
+                }
+
+                document.getElementById('quizModal').style.display = 'flex';
+            } catch (err) {
+                console.error("خطأ في فتح الامتحان:", err);
+            }
+        }
+
+        // إرسال حل الامتحان وحساب الدرجة ورفعها لـ Firebase (لتظهر في نتائج الأدمن والتقرير الشامل)
+        async function submitQuizAnswers() {
+            if (!activeQuizData) return;
+
+            let score = 0;
+            const totalQuestions = activeQuizData.questions.length;
+
+            activeQuizData.questions.forEach((q, qIndex) => {
+                const selected = document.querySelector(`input[name="question_${qIndex}"]:checked`);
+                if (selected && parseInt(selected.value) === parseInt(q.correctOption)) {
+                    score++;
+                }
+            });
+
+            const studentName = localStorage.getItem('studentName') || 'طالب غير معروف';
+            const studentGrade = localStorage.getItem('studentGrade') || 'غير محددة';
+            const finalMark = (score / totalQuestions) * parseInt(activeQuizData.totalMarks);
+            const percentage = Math.round((score / totalQuestions) * 100);
+            const now = new Date().toLocaleString('ar-EG');
+
+            const resultData = {
+                studentName: studentName,
+                studentGrade: studentGrade,
+                quizTitle: activeQuizData.title,
+                score: `${Math.round(finalMark)} / ${activeQuizData.totalMarks}`,
+                percentage: `${percentage}%`,
+                submittedAt: now
+            };
+
+            try {
+                await fetch(`${FIREBASE_URL}/quiz_results.json`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(resultData)
+                });
+
+                alert(`تم تسليم الاختبار بنجاح!\n\nدرجتك: ${Math.round(finalMark)} من ${activeQuizData.totalMarks} (${percentage}%)`);
+                closeQuizModal();
+            } catch (err) {
+                console.error("خطأ في تسليم الامتحان:", err);
+                alert("حدث خطأ أثناء إرسال النتيجة، يرجى المحاولة مرة أخرى.");
+            }
+        }
+
+        function closeQuizModal() {
+            document.getElementById('quizModal').style.display = 'none';
         }
 
         // إظهار وإخفاء نافذة الإشعارات
@@ -473,7 +744,7 @@
                 modal.style.display = 'none';
             } else {
                 modal.style.display = 'flex';
-                document.getElementById('notifDot').style.display = 'none'; // إخفاء النقطة الحمراء عند القراءة
+                document.getElementById('notifDot').style.display = 'none';
             }
         }
     </script>
