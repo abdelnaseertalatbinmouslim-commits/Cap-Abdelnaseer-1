@@ -168,14 +168,14 @@
         </div>
 
         <div class="subject-header">
-            <h1 class="subject-title">🎥 المحاضرات والمقررات الدراسية</h1>
-            <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;">يمكنك مشاهدة المحاضرات والمواد المتاحة لفئتك الدراسية مباشرة من الأزرار أدناه.</p>
+            <h1 class="subject-title" id="mainSubjectTitle">🎥 تفاصيل المادة الدراسية</h1>
+            <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;" id="mainSubjectDesc">يمكنك مشاهدة المحاضرات والمواد المتاحة للمقرر الدراسي مباشرة من الأزرار أدناه.</p>
         </div>
 
         <!-- قائمة المحاضرات الديناميكية -->
         <div class="lectures-list" id="dynamicLecturesContainer">
             <div class="lecture-card" style="text-align: center;">
-                <p style="color: var(--text-muted); margin: 0;">جاري تحميل المحاضرات المتاحة...</p>
+                <p style="color: var(--text-muted); margin: 0;">جاري تحميل محتوى المادة...</p>
             </div>
         </div>
 
@@ -188,69 +188,131 @@
         const FIREBASE_URL = "https://abodaa-default-rtdb.firebaseio.com";
 
         document.addEventListener("DOMContentLoaded", () => {
-            // عرض فئة الطالب المحفوظة في التخزين المحلي
             const studentGrade = localStorage.getItem('studentGrade') || 'الجميع';
             document.getElementById('studentGradeBadge').innerText = studentGrade;
 
-            // جلب المحاضرات المرتبطة من قاعدة البيانات
-            fetchCoursesData(studentGrade);
+            // استخراج معرف ورابط المادة من الـ URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const subjectId = urlParams.get('id');
+            const subjectName = urlParams.get('name');
+
+            if (subjectName) {
+                document.getElementById('mainSubjectTitle').innerText = decodeURIComponent(subjectName);
+            }
+
+            fetchSubjectDetails(subjectId, subjectName);
+            updateStudentActivity();
         });
 
-        async function fetchCoursesData(studentGrade) {
+        // تحديث نشاط الطالب اللحظي
+        async function updateStudentActivity() {
+            const studentName = localStorage.getItem('studentName');
+            if (!studentName) return;
+            try {
+                const res = await fetch(`${FIREBASE_URL}/students.json`);
+                const students = await res.json();
+                if (students) {
+                    let studentKey = null;
+                    Object.keys(students).forEach(key => {
+                        if (students[key].name === studentName) {
+                            studentKey = key;
+                        }
+                    });
+                    if (studentKey) {
+                        const now = new Date().toLocaleString('ar-EG');
+                        await fetch(`${FIREBASE_URL}/students/${studentKey}/lastActive.json`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(now)
+                        });
+                    }
+                }
+            } catch (e) {
+                console.error("خطأ في تحديث النشاط:", e);
+            }
+        }
+
+        async function fetchSubjectDetails(subjectId, subjectName) {
             try {
                 const res = await fetch(`${FIREBASE_URL}/courses.json`);
                 const courses = await res.json() || {};
                 const container = document.getElementById('dynamicLecturesContainer');
                 
                 container.innerHTML = '';
-                const keys = Object.keys(courses);
 
-                if (keys.length === 0) {
+                // لو مبعوث id محدد للمادة نقدر نجيبه مباشرة أو نعرض تفاصيله
+                if (subjectId && courses[subjectId]) {
+                    const c = courses[subjectId];
                     container.innerHTML = `
-                        <div class="lecture-card" style="text-align: center;">
-                            <h3 class="lecture-title" style="color: var(--text-muted);">لا توجد محاضرات مرفوعة حالياً</h3>
-                            <p class="lecture-desc">تابع لوحة الإشعارات لحين رفع محتوى جديد.</p>
+                        <div class="lecture-card">
+                            <h3 class="lecture-title">${c.title}</h3>
+                            <p class="lecture-desc">${c.desc || 'شرح تفصيلي للمقرر الدراسي والمحاضرة المطلوبة.'}</p>
+                            <div class="actions-group">
+                                <a href="${c.link || '#'}" target="_blank" class="action-btn" onclick="logContentView('${c.title}')">▶ مشاهدة المحتوى</a>
+                            </div>
                         </div>
                     `;
-                    return;
-                }
-
-                let foundCount = 0;
-
-                // تصفية المحاضرات بناءً على فئة الطالب (أو المحتوى المخصص للجميع)
-                keys.reverse().forEach(id => {
-                    const c = courses[id];
-                    if (c.grade === 'الجميع' || c.grade === studentGrade) {
-                        foundCount++;
-                        container.innerHTML += `
-                            <div class="lecture-card">
-                                <h3 class="lecture-title">${c.title}</h3>
-                                <p class="lecture-desc">${c.desc || 'شرح تفصيلي للمقرر الدراسي والمحاضرة المطلوبة.'}</p>
-                                <div class="actions-group">
-                                    <a href="${c.link}" target="_blank" class="action-btn">▶ مشاهدة المحتوى</a>
+                } else {
+                    // عرض بديل في حال لم يُحدد ID دقيق
+                    let foundCount = 0;
+                    const keys = Object.keys(courses);
+                    
+                    keys.reverse().forEach(id => {
+                        const c = courses[id];
+                        if (subjectName && c.title.includes(decodeURIComponent(subjectName))) {
+                            foundCount++;
+                            container.innerHTML += `
+                                <div class="lecture-card">
+                                    <h3 class="lecture-title">${c.title}</h3>
+                                    <p class="lecture-desc">${c.desc || 'شرح تفصيلي للمقرر الدراسي.'}</p>
+                                    <div class="actions-group">
+                                        <a href="${c.link || '#'}" target="_blank" class="action-btn" onclick="logContentView('${c.title}')">▶ مشاهدة المحتوى</a>
+                                    </div>
                                 </div>
+                            `;
+                        }
+                    });
+
+                    if (foundCount === 0) {
+                        container.innerHTML = `
+                            <div class="lecture-card" style="text-align: center;">
+                                <h3 class="lecture-title" style="color: var لهذه المادة.">عذراً، لا يوجد محتوى مضاف لهذه المادة حالياً</h3>
+                                <p class="lecture-desc">تابع لوحة الإشعارات لحين إرفاق المحاضرات.</p>
                             </div>
                         `;
                     }
-                });
-
-                if (foundCount === 0) {
-                    container.innerHTML = `
-                        <div class="lecture-card" style="text-align: center;">
-                            <h3 class="lecture-title" style="color: var(--text-muted);">لا توجد محاضرات مخصصة لفئتك الدراسية حالياً</h3>
-                            <p class="lecture-desc">يرجى مراجعة الدعم الفني أو الانتظار حتى يتم رفع المحتوى.</p>
-                        </div>
-                    `;
                 }
 
             } catch (err) {
-                console.error("خطأ في جلب المحاضرات:", err);
+                console.error("خطأ في جلب تفاصيل المادة:", err);
                 document.getElementById('dynamicLecturesContainer').innerHTML = `
                     <div class="lecture-card" style="text-align: center;">
-                        <h3 class="lecture-title" style="color: #ef4444;">حدث خطأ أثناء تحميل البيانات</h3>
-                        <p class="lecture-desc">تأكد من اتصالك بالإنترنت.</p>
+                        <h3 class="lecture-title" style="color: #ef4444;">تعذر تحميل محتوى المادة</h3>
+                        <p class="lecture-desc">تحقق من اتصالك بالإنترنت.</p>
                     </div>
                 `;
+            }
+        }
+
+        // تسجيل تفاعل المشاهدة في قاعدة البيانات
+        async function logContentView(title) {
+            const studentName = localStorage.getItem('studentName') || 'طالب غير معروف';
+            const now = new Date().toLocaleString('ar-EG');
+            
+            const viewData = {
+                studentName: studentName,
+                contentTitle: `استعراض مادة/محاضرة: ${title}`,
+                viewedAt: now
+            };
+
+            try {
+                await fetch(`${FIREBASE_URL}/content_views.json`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(viewData)
+                });
+            } catch (e) {
+                console.error("خطأ في تسجيل المشاهدة:", e);
             }
         }
     </script>
