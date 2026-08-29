@@ -385,7 +385,7 @@
         <!-- نموذج طلب الانضمام -->
         <form id="registerForm" onsubmit="handleRegister(event)">
             <div class="whatsapp-notice">
-                ⚠️ **شرط أساسي لاكتمال التسجيل:** يجب الانضمام لقناة الواتساب الرسمية لمتابعة حالة قبول حسابك.
+                ⚠️ <b>شرط أساسي لاكتمال التسجيل:</b> يجب الانضمام لقناة الواتساب الرسمية لمتابعة حالة قبول حسابك.
             </div>
 
             <div class="form-group">
@@ -507,7 +507,6 @@
             const grade = document.getElementById('regGrade').value;
             const phone = document.getElementById('regPhone').value.trim();
 
-            // تجهيز الوقت والتاريخ بدقة بتوقيت مصر Local String
             const now = new Date();
             const dateFormatted = now.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
             const timeFormatted = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', hour12: true });
@@ -617,4 +616,3 @@
     </script>
 </body>
 </html>
-
