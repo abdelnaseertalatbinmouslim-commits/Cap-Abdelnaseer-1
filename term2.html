@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -189,7 +188,36 @@
         document.addEventListener("DOMContentLoaded", () => {
             const studentGrade = localStorage.getItem('studentGrade') || 'الجميع';
             fetchTerm2Subjects(studentGrade);
+            updateStudentActivity();
         });
+
+        // تحديث نشاط الطالب في قاعدة البيانات
+        async function updateStudentActivity() {
+            const studentName = localStorage.getItem('studentName');
+            if (!studentName) return;
+            try {
+                const res = await fetch(`${FIREBASE_URL}/students.json`);
+                const students = await res.json();
+                if (students) {
+                    let studentKey = null;
+                    Object.keys(students).forEach(key => {
+                        if (students[key].name === studentName) {
+                            studentKey = key;
+                        }
+                    });
+                    if (studentKey) {
+                        const now = new Date().toLocaleString('ar-EG');
+                        await fetch(`${FIREBASE_URL}/students/${studentKey}/lastActive.json`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(now)
+                        });
+                    }
+                }
+            } catch (e) {
+                console.error("خطأ في تحديث النشاط:", e);
+            }
+        }
 
         async function fetchTerm2Subjects(studentGrade) {
             try {
@@ -214,7 +242,7 @@
                                     <span class="subject-badge">الترم الثاني</span>
                                 </div>
                                 <p class="subject-desc">${c.desc || 'محاضرات، ملخصات، واختبارات تفاعلية للمادة الدراسية.'}</p>
-                                <a href="subject.html?id=${id}&name=${encodeURIComponent(c.title)}" class="btn-view">عرض المحتوى الدراسي</a>
+                                <a href="subject.html?id=${id}&name=${encodeURIComponent(c.title)}" class="btn-view" onclick="logContentView('${c.title}')">عرض المحتوى الدراسي</a>
                             </div>
                         `;
                     }
@@ -237,6 +265,28 @@
                         <p class="subject-desc">تحقق من اتصالك بالإنترنت.</p>
                     </div>
                 `;
+            }
+        }
+
+        // تسجيل مشاهدة المادة أو المحتوى في سجلات الطالب بالفايربيز
+        async function logContentView(subjectTitle) {
+            const studentName = localStorage.getItem('studentName') || 'طالب غير معروف';
+            const now = new Date().toLocaleString('ar-EG');
+            
+            const viewData = {
+                studentName: studentName,
+                contentTitle: `مادة الترم الثاني: ${subjectTitle}`,
+                viewedAt: now
+            };
+
+            try {
+                await fetch(`${FIREBASE_URL}/content_views.json`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(viewData)
+                });
+            } catch (e) {
+                console.error("خطأ في تسجيل المشاهدة:", e);
             }
         }
     </script>
