@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة الكوتش | El-Coach Platform</title>
+    <style>
+        :root {
+            --bg-dark: #050811;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.4);
+            --accent-cyan: #06b6d4;
+            --glass-bg: rgba(15, 23, 42, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-input: rgba(2, 6, 23, 0.6);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 24px 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* خلفية الأشكال الضوئية الزجاجية */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: floatGlow 10s infinite alternate ease-in-out;
+        }
+
+        body::before {
+            background: #2563eb;
+            top: -50px;
+            right: -50px;
+        }
+
+        body::after {
+            background: #0891b2;
+            bottom: -50px;
+            left: -50px;
+            animation-delay: -5s;
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 40px) scale(1.15); }
+        }
+
+        /* الكارت الرئيسي - الزجاجي */
+        .main-card {
+            width: 100%;
+            max-width: 480px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 32px 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 
+                        inset 0 1px 1px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            position: relative;
+        }
+
+        /* الصورة العلوية الهولوجرامية */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 22px;
+            position: relative;
+        }
+
+        .logo-img {
+            width: 110px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 25px var(--primary-glow);
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px var(--primary-glow), 0 0 40px rgba(6, 182, 212, 0.2);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 35px var(--primary-glow), 0 0 70px rgba(6, 182, 212, 0.5);
+                transform: scale(1.04);
+            }
+        }
+
+        .app-title {
+            text-align: center;
+            font-size: 1.85rem;
+            font-weight: 900;
+            margin: 12px 0 6px 0;
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent-cyan) 50%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .app-subtitle {
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        /* قسم الفيديو الفخم */
+        .video-section {
+            margin-bottom: 24px;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            background: #000;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .video-section video {
+            width: 100%;
+            display: block;
+            border-radius: 24px;
+            object-fit: cover;
+        }
+
+        /* تبويبات التنقل العصرية */
+        .tab-buttons {
+            display: flex;
+            background: var(--glass-input);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 5px;
+            margin-bottom: 24px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-sub);
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 14px;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary), #2563eb);
+            color: #ffffff;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        /* عناصر النماذج */
+        .form-group {
+            margin-bottom: 18px;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-main);
+            padding-right: 4px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-input);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+            background: rgba(15, 23, 42, 0.85);
+        }
+
+        select.form-control option {
+            background-color: #0f172a;
+            color: #fff;
+        }
+
+        /* صندوق الإخطار بالانضمام للقناة */
+        .whatsapp-notice {
+            background: rgba(37, 211, 102, 0.1);
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            border-radius: 16px;
+            padding: 12px 14px;
+            margin-bottom: 18px;
+            font-size: 0.85rem;
+            color: #25D366;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .whatsapp-notice a {
+            color: #25D366;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        /* أزرار الإرسال الفخمة */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(6, 182, 212, 0.5);
+        }
+
+        /* أزرار التواصل والدعم */
+        .support-title {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            margin: 28px 0 14px 0;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 12px 8px;
+            border-radius: 16px;
+            text-decoration: none;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .social-btn.wa {
+            background: rgba(37, 211, 102, 0.12);
+            color: #25D366;
+            border-color: rgba(37, 211, 102, 0.25);
+        }
+        .social-btn.wa:hover {
+            background: #25D366;
+            color: #000;
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .social-btn.tg {
+            background: rgba(0, 136, 204, 0.12);
+            color: #38bdf8;
+            border-color: rgba(56, 189, 248, 0.25);
+        }
+        .social-btn.tg:hover {
+            background: #38bdf8;
+            color: #000;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .social-btn.fb {
+            background: rgba(24, 119, 242, 0.12);
+            color: #60a5fa;
+            border-color: rgba(96, 165, 250, 0.25);
+        }
+        .social-btn.fb:hover {
+            background: #1877F2;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(24, 119, 242, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* زر الدعم العائم الجانبي */
+        .floating-support-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.5);
+            color: white;
+            text-decoration: none;
+            z-index: 9999;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: pulseFloat 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseFloat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 15px 35px rgba(37, 211, 102, 0.7); }
+        }
+
+        .footer-credits {
+            text-align: center;
+            margin-top: 26px;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            border-top: 1px solid var(--glass-border);
+            padding-top: 16px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-card">
+        <!-- الصورة العلوية -->
+        <div class="logo-container">
+            <img src="1783950091830.jpg" alt="منصة الكوتش" class="logo-img" onerror="this.onerror=null; this.src='1783950091830';">
+        </div>
+
+        <h1 class="app-title">منصة الكوتش</h1>
+        <p class="app-subtitle">
+            🥇 <b>الداعم الأول والمساعد الأكاديمي والرياضي</b> لكل كباتن ورجال علوم الرياضة على مستوى الجمهورية.
+        </p>
+
+        <!-- مشغل الفيديو -->
+        <div class="video-section">
+            <video autoplay muted loop playsinline poster="1783950091830.jpg">
+                <source src="bebo123.mp4" type="video/mp4">
+                <source src="bebo123" type="video/mp4">
+                متصفحك لا يدعم تشغيل الفيديو.
+            </video>
+        </div>
+
+        <!-- تبويبات التنقل -->
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchTab('register')">طلب انضمام جديد</button>
+            <button class="tab-btn" onclick="switchTab('login')">تسجيل الدخول</button>
+        </div>
+
+        <!-- نموذج طلب الانضمام -->
+        <form id="registerForm" onsubmit="handleRegister(event)">
+            <div class="whatsapp-notice">
+                ⚠️ <b>شرط أساسي لاكتمال التسجيل:</b> يجب الانضمام لقناة الواتساب الرسمية لمتابعة حالة قبول حسابك.
+            </div>
+
+            <div class="form-group">
+                <label>الاسم الثلاثي / الخماسي</label>
+                <input type="text" id="regName" class="form-control" placeholder="أدخل اسمك بالكامل" required>
+            </div>
+            <div class="form-group">
+                <label>الفرقة الدراسية</label>
+                <select id="regGrade" class="form-control" required>
+                    <option value="">اختر الفرقة الدراسية</option>
+                    <option value="الفرقة الأولى">الفرقة الأولى</option>
+                    <option value="الفرقة الثانية">الفرقة الثانية</option>
+                    <option value="الفرقة الثالثة">الفرقة الثالثة</option>
+                    <option value="الفرقة الرابعة">الفرقة الرابعة</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>رقم الهاتف (واتساب)</label>
+                <input type="tel" id="regPhone" class="form-control" placeholder="01xxxxxxxxx" required>
+            </div>
+            <button type="submit" id="regSubmitBtn" class="submit-btn">إرسال طلب الانضمام والدخول لقناة الدعم</button>
+        </form>
+
+        <!-- نموذج تسجيل الدخول -->
+        <form id="loginForm" onsubmit="handleLogin(event)" style="display: none;">
+            <div class="form-group">
+                <label>رقم الهاتف / اسم المستخدم</label>
+                <input type="text" id="loginPhone" class="form-control" placeholder="01xxxxxxxxx أو admin" required>
+            </div>
+            <div class="form-group">
+                <label>كود المرور / PIN</label>
+                <input type="password" id="loginPin" class="form-control" placeholder="أدخل كود المرور" required>
+            </div>
+            <button type="submit" class="submit-btn">تسجيل الدخول</button>
+        </form>
+
+        <p class="support-title">أزرار الدعم والتواصل المباشر</p>
+        
+        <div class="social-buttons">
+            <a href="https://wa.me/201098227150" target="_blank" class="social-btn wa">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                واتساب
+            </a>
+            <a href="https://t.me/CapAbdo1" target="_blank" class="social-btn tg">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.121l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.128.832.941z"/></svg>
+                تليجرام
+            </a>
+            <a href="https://www.facebook.com/cap.abdelnaseer.talat" target="_blank" class="social-btn fb">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                فيسبوك
+            </a>
+        </div>
+
+        <div class="footer-credits">
+            تطوير المهندس عبدالناصر © 2026
+        </div>
+    </div>
+
+    <!-- زر الدعم العائم المباشر -->
+    <a href="https://wa.me/201098227150" target="_blank" class="floating-support-btn" title="تواصل مع الدعم الفني">
+        <svg width="30" height="30" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+    </a>
+
+    <script>
+        const FIREBASE_URL = "https://abodaa-default-rtdb.firebaseio.com";
+        const BOT_TOKEN = "8944171880:AAFmbtL7TjB72ZtWKl4z_wjqlShSQFXkZpA"; 
+        const CHAT_ID = "5926610601";
+        const WA_CHANNEL_URL = "https://whatsapp.com/channel/0029VbDGX1rJpe8ZM6H5h02T";
+
+        window.addEventListener('DOMContentLoaded', () => {
+            checkRegistrationStatus();
+        });
+
+        function checkRegistrationStatus() {
+            const hasRegistered = localStorage.getItem('elcoach_registered');
+            if (hasRegistered) {
+                const regForm = document.getElementById('registerForm');
+                regForm.innerHTML = `
+                    <div style="text-align: center; padding: 20px 10px;">
+                        <h3 style="color: #06b6d4; margin-bottom: 10px;">تم تسجيل طلبك بالفعل!</h3>
+                        <p style="color: var(--text-sub); font-size: 0.9rem; line-height: 1.6;">
+                            لقد قمت بإرسال طلب انضمام سابقاً لهذا الجهاز. يمكنك متابعة حالة القبول أو تسجيل الدخول فور التفعيل.
+                        </p>
+                        <a href="${WA_CHANNEL_URL}" target="_blank" class="submit-btn" style="display: block; text-decoration: none; margin-top: 15px;">
+                            الانضمام لقناة الواتساب الرسمية
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
+        function switchTab(tab) {
+            const regForm = document.getElementById('registerForm');
+            const loginForm = document.getElementById('loginForm');
+            const buttons = document.querySelectorAll('.tab-btn');
+
+            if (tab === 'register') {
+                regForm.style.display = 'block';
+                loginForm.style.display = 'none';
+                buttons[0].classList.add('active');
+                buttons[1].classList.remove('active');
+            } else {
+                regForm.style.display = 'none';
+                loginForm.style.display = 'block';
+                buttons[0].classList.remove('active');
+                buttons[1].classList.add('active');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+
+            if (localStorage.getItem('elcoach_registered')) {
+                alert("تم تسجيل طلبك مسبقاً من هذا الجهاز!");
+                return;
+            }
+            
+            const name = document.getElementById('regName').value.trim();
+            const grade = document.getElementById('regGrade').value;
+            const phone = document.getElementById('regPhone').value.trim();
+
+            const now = new Date();
+            const dateFormatted = now.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+            const timeFormatted = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', hour12: true });
+            const registrationTimestamp = `${dateFormatted} - ${timeFormatted}`;
+
+            try {
+                const checkRes = await fetch(`${FIREBASE_URL}/students.json`);
+                const existingData = await checkRes.json();
+
+                if (existingData) {
+                    const isPhoneDuplicate = Object.values(existingData).some(student => student.phone === phone);
+                    if (isPhoneDuplicate) {
+                        alert("رقم الهاتف هذا مسجل بالفعل في المنصة! يرجى الانتظار لحين التفعيل أو التواصل مع الدعم.");
+                        return;
+                    }
+                }
+
+                const studentData = {
+                    name: name,
+                    grade: grade,
+                    phone: phone,
+                    status: 'pending',
+                    createdAt: registrationTimestamp,
+                    isoDate: now.toISOString()
+                };
+
+                const res = await fetch(`${FIREBASE_URL}/students.json`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(studentData)
+                });
+
+                if (!res.ok) throw new Error("تعذر حفظ الطلب في فايربيس");
+
+                let formattedPhone = phone.startsWith('0') ? '2' + phone : phone;
+                const textMessage = `🔔 <b>طلب تسجيل جديد في منصة الكوتش</b>\n\n👤 <b>الاسم:</b> ${name}\n📚 <b>الفرقة:</b> ${grade}\n📱 <b>الهاتف:</b> ${phone}\n⏰ <b>تاريخ ووقت التسجيل:</b> ${registrationTimestamp}`;
+
+                const payload = {
+                    chat_id: CHAT_ID,
+                    text: textMessage,
+                    parse_mode: 'HTML',
+                    reply_markup: {
+                        inline_keyboard: [
+                            [
+                                { text: "📲 فتح واتساب الطالب مباشرة", url: `https://wa.me/${formattedPhone}` },
+                                { text: "⚙️ فتح لوحة التحكم", url: `https://cap-abdelnaseer-talat.github.io/DrAli1/admin.html` }
+                            ]
+                        ]
+                    }
+                };
+
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                localStorage.setItem('elcoach_registered', 'true');
+                localStorage.setItem('elcoach_user_phone', phone);
+                localStorage.setItem('elcoach_user_grade', grade);
+
+                alert("تم إرسال طلبك بنجاح! سيتم تحويلك الآن لقناة الواتساب الرسمية لإكمال شرط التسجيل.");
+                window.location.href = WA_CHANNEL_URL;
+
+            } catch (err) {
+                console.error(err);
+                alert("حدث خطأ أثناء الاتصال بالخادم، يرجى إعادة المحاولة.");
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const phone = document.getElementById('loginPhone').value.trim();
+            const pin = document.getElementById('loginPin').value.trim();
+
+            if ((phone === 'admin' || phone === '01000000000') && pin === 'admin2026') {
+                window.location.href = "admin.html";
+                return;
+            }
+
+            try {
+                const res = await fetch(`${FIREBASE_URL}/students.json`);
+                const data = await res.json();
+
+                let foundUser = null;
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        const student = data[key];
+                        if (student.phone === phone && String(student.pin) === String(pin) && student.status === 'approved') {
+                            foundUser = { id: key, ...student };
+                        }
+                    });
+                }
+
+                if (foundUser) {
+                    localStorage.setItem('currentUser', JSON.stringify(foundUser));
+                    localStorage.setItem('elcoach_user_grade', foundUser.grade);
+                    window.location.href = "courses.html";
+                } else {
+                    alert("رقم الهاتف أو كود المرور غير صحيح، أو لم يتم تفعيل حسابك بعد من اللوحة.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("حدث خطأ أثناء الاتصال بقاعدة البيانات.");
+            }
+        }
+    </script>
+</body>
+</html>
+
