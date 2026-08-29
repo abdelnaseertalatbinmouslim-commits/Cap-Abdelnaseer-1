@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم | منصة الكوتش</title>
+    <title>لوحة التحكم الشاملة | منصة الكوتش</title>
     <style>
         :root {
             --bg-dark: #050811;
@@ -38,7 +38,7 @@
 
         .admin-container {
             width: 100%;
-            max-width: 1050px;
+            max-width: 1150px;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: 28px;
@@ -65,7 +65,7 @@
         /* الإحصائيات الفخمة */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 15px;
             margin-bottom: 25px;
         }
@@ -95,7 +95,7 @@
         .stat-card.visitors .stat-value { color: var(--accent-cyan); }
         .stat-card.online .stat-value { color: var(--success); }
         .stat-card.approved .stat-value { color: var(--primary); }
-        .stat-card.rejected .stat-value { color: var(--danger); }
+        .stat-card.quizzes .stat-value { color: var(--warning); }
 
         /* Nav Tabs */
         .admin-nav {
@@ -108,7 +108,7 @@
 
         .nav-btn {
             flex: 1;
-            min-width: 120px;
+            min-width: 130px;
             padding: 12px 14px;
             border: 1px solid var(--glass-border);
             background: var(--glass-input);
@@ -238,6 +238,52 @@
             letter-spacing: 1px;
         }
 
+        .question-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        /* Modal / Popups */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            padding: 15px;
+        }
+
+        .modal-card {
+            background: #0f172a;
+            border: 1px solid var(--glass-border);
+            width: 100%;
+            max-width: 750px;
+            max-height: 90vh;
+            border-radius: 20px;
+            padding: 25px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--danger);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
         .footer-credits {
             text-align: center;
             margin-top: 30px;
@@ -286,25 +332,27 @@
                 <div class="stat-value" id="statOnline">0</div>
             </div>
             <div class="stat-card approved">
-                <div class="stat-title">✅ الطلبات المقبولة</div>
+                <div class="stat-title">✅ الطلاب المفعلين</div>
                 <div class="stat-value" id="statApproved">0</div>
             </div>
-            <div class="stat-card rejected">
-                <div class="stat-title">❌ الطلبات المرفوضة</div>
-                <div class="stat-value" id="statRejected">0</div>
+            <div class="stat-card quizzes">
+                <div class="stat-title">📝 عدد الامتحانات</div>
+                <div class="stat-value" id="statQuizzes">0</div>
             </div>
         </div>
 
         <!-- أزرار التنقل الرئيسية -->
         <div class="admin-nav">
             <button class="nav-btn active" onclick="switchAdminTab('requests', event)">📥 طلبات الانضمام</button>
-            <button class="nav-btn" onclick="switchAdminTab('students', event)">👥 الطلاب المفعلين</button>
+            <button class="nav-btn" onclick="switchAdminTab('students', event)">👥 الطلاب والتقارير</button>
+            <button class="nav-btn" onclick="switchAdminTab('quizzes', event)">📝 الامتحانات والكويزات</button>
+            <button class="nav-btn" onclick="switchAdminTab('results', event)">📊 درجات الطلاب</button>
             <button class="nav-btn" onclick="switchAdminTab('upload', event)">📚 رفع المحتوى</button>
             <button class="nav-btn" onclick="switchAdminTab('notifications', event)" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">🔔 الإشعارات</button>
             <button class="nav-btn" onclick="switchAdminTab('settings', event)">🎛️ التحكم في الأزرار</button>
         </div>
 
-        <!-- 1. جدول طلبات الانضمام المعلقة -->
+        <!-- 1. طلبات الانضمام -->
         <div id="tab-requests" class="tab-content active">
             <div class="section-card">
                 <div class="section-header-flex">
@@ -318,7 +366,7 @@
                                 <th>اسم الطالب</th>
                                 <th>الفئة الدراسية</th>
                                 <th>رقم الهاتف</th>
-                                <th>تاريخ ووقت التسجيل</th>
+                                <th>تاريخ التسجيل</th>
                                 <th>الإجراءات</th>
                             </tr>
                         </thead>
@@ -330,10 +378,10 @@
             </div>
         </div>
 
-        <!-- 2. جدول الطلاب المقبولين -->
+        <!-- 2. الطلاب التقارير الشاملة -->
         <div id="tab-students" class="tab-content">
             <div class="section-card">
-                <h2>👥 قائمة الطلاب المفعلين والأكواد (PIN)</h2>
+                <h2>👥 قائمة الطلاب المفعلين وسجلات التقرير الشامل</h2>
                 <div style="overflow-x:auto;">
                     <table class="data-table">
                         <thead>
@@ -342,7 +390,7 @@
                                 <th>الفئة الدراسية</th>
                                 <th>رقم الهاتف</th>
                                 <th>كود المرور (PIN)</th>
-                                <th>حالة التفعيل والوصول</th>
+                                <th>التقرير والتحكم</th>
                             </tr>
                         </thead>
                         <tbody id="approvedStudentsTable">
@@ -353,10 +401,79 @@
             </div>
         </div>
 
-        <!-- 3. قسم رفع المحتوى والبيانات -->
+        <!-- 3. نظام الامتحانات والكويزات -->
+        <div id="tab-quizzes" class="tab-content">
+            <div class="section-card">
+                <h2>📝 إنشاء كويز / امتحان جديد</h2>
+                <form id="createQuizForm" onsubmit="handleCreateQuiz(event)">
+                    <div class="form-group">
+                        <label>عنوان الامتحان</label>
+                        <input type="text" id="quizTitle" class="form-control" placeholder="مثال: كويز التشريح المحاضرة الأولى" required>
+                    </div>
+                    <div class="form-group">
+                        <label>الفئة المستهدفة</label>
+                        <select id="quizGrade" class="form-control" required>
+                            <option value="الجميع">جميع الفئات</option>
+                            <option value="الفئة الأولى">الفئة الأولى</option>
+                            <option value="الفئة الثانية">الفئة الثانية</option>
+                            <option value="الفئة الثالثة">الفئة الثالثة</option>
+                            <option value="الفئة الرابعة">الفئة الرابعة</option>
+                        </select>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <div class="form-group" style="flex:1;">
+                            <label>مدة الامتحان (بالدقائق)</label>
+                            <input type="number" id="quizDuration" class="form-control" value="15" required>
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>الدرجة النهائية</label>
+                            <input type="number" id="quizTotalScore" class="form-control" value="10" required>
+                        </div>
+                    </div>
+
+                    <h3 style="color:var(--accent-cyan); margin-top:15px;">❓ الأسئلة</h3>
+                    <div id="questionsContainer"></div>
+
+                    <button type="button" class="btn btn-warning" onclick="addQuestionField()" style="margin-bottom:15px;">➕ إضافة سؤال جديد</button>
+                    <button type="submit" class="btn btn-primary" style="width:100%; padding:12px;">💾 حفظ الامتحان ونشره</button>
+                </form>
+            </div>
+
+            <div class="section-card">
+                <h2>📜 قائمة الامتحانات المرفوعة</h2>
+                <div id="quizzesList">
+                    <p style="text-align:center; color: var(--text-sub);">جاري التحميل...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. نتائج الامتحانات والدرجات -->
+        <div id="tab-results" class="tab-content">
+            <div class="section-card">
+                <h2>📊 سجل نتائج وتدقيق امتحانات الطلاب</h2>
+                <div style="overflow-x:auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>اسم الطالب</th>
+                                <th>عنوان الامتحان</th>
+                                <th>الدرجة</th>
+                                <th>النسبة المئوية</th>
+                                <th>وقت التسليم</th>
+                            </tr>
+                        </thead>
+                        <tbody id="quizResultsTable">
+                            <tr><td colspan="5" style="text-align:center;">جاري تحميل نتائج الامتحانات...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. رفع المحتوى -->
         <div id="tab-upload" class="tab-content">
             <div class="section-card">
-                <h2>➕ إضافة درس أو محتوى جديد للفئة الدراسية</h2>
+                <h2>➕ إضافة درس أو محتوى جديد</h2>
                 <form id="uploadContentForm" onsubmit="handleContentUpload(event)">
                     <div class="form-group">
                         <label>عنوان المحتوى / المحاضرة</label>
@@ -387,7 +504,7 @@
                         <label>وصف قصير</label>
                         <textarea id="courseDesc" class="form-control" rows="3" placeholder="أدخل تفاصيل المحتوى..."></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width:100%; padding:12px;">رفع المحتوى للفئة المحددة فوراً</button>
+                    <button type="submit" class="btn btn-primary" style="width:100%; padding:12px;">رفع المحتوى فوراً</button>
                 </form>
             </div>
 
@@ -399,18 +516,18 @@
             </div>
         </div>
 
-        <!-- 4. قسم صندوق الإشعارات (الجرس الأحمر) -->
+        <!-- 6. الإشعارات -->
         <div id="tab-notifications" class="tab-content">
             <div class="section-card">
                 <h2 style="color: #ef4444;">🔔 صندوق إرسال الإشعارات اللحظية</h2>
                 <form id="sendNotificationForm" onsubmit="handleSendNotification(event)">
                     <div class="form-group">
                         <label>عنوان الإشعار أو التحديث</label>
-                        <input type="text" id="notifTitle" class="form-control" placeholder="مثال: تنبيه هام بخصوص محاضرات الترم الأول" required>
+                        <input type="text" id="notifTitle" class="form-control" placeholder="مثال: تنبيه هام بخصوص امتحان غداً" required>
                     </div>
                     <div class="form-group">
                         <label>نص الإشعار / اللينك التوجيهي</label>
-                        <textarea id="notifBody" class="form-control" rows="3" placeholder="اكتب تفاصيل الرسالة أو الصق اللينك المطلوب..." required></textarea>
+                        <textarea id="notifBody" class="form-control" rows="3" placeholder="اكتب تفاصيل الرسالة..." required></textarea>
                     </div>
                     <div class="form-group">
                         <label>الفئة المستهدفة بالإشعار</label>
@@ -434,7 +551,7 @@
             </div>
         </div>
 
-        <!-- 5. قسم التحكم في الأزرار والإعدادات -->
+        <!-- 7. الإعدادات والأزرار -->
         <div id="tab-settings" class="tab-content">
             <div class="section-card">
                 <h2>🎛️ تحديث روابط أزرار التواصل والدعم</h2>
@@ -461,12 +578,37 @@
         </div>
     </div>
 
+    <!-- نافذة مودال للتقرير الشامل للطالب -->
+    <div id="studentReportModal" class="modal-overlay">
+        <div class="modal-card">
+            <button class="close-modal" onclick="closeStudentModal()">✕</button>
+            <h2 id="modalStudentName" style="color:var(--accent-cyan); margin-top:0;">📊 تقرير الطالب الشامل</h2>
+            
+            <div class="section-card" style="background:rgba(255,255,255,0.02);">
+                <h3 style="color:var(--primary); margin-top:0;">📌 البيانات الشخصية والأكاديمية</h3>
+                <div id="modalStudentDetails"></div>
+            </div>
+
+            <div class="section-card" style="background:rgba(255,255,255,0.02);">
+                <h3 style="color:var(--warning); margin-top:0;">📝 سجل الامتحانات والدرجات</h3>
+                <div id="modalStudentQuizzes"></div>
+            </div>
+
+            <div class="section-card" style="background:rgba(255,255,255,0.02);">
+                <h3 style="color:var(--success); margin-top:0;">👁️ المشاهدات والحضور على المحتوى</h3>
+                <div id="modalStudentViews"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const FIREBASE_URL = "https://abodaa-default-rtdb.firebaseio.com";
         const BOT_TOKEN = "8944171880:AAFmbtL7TjB72ZtWKl4z_wjqlShSQFXkZpA";
         const CHAT_ID = "5926610601";
         
         let globalStudentsData = {};
+        let globalQuizzesData = {};
+        let globalResultsData = {};
 
         document.addEventListener("DOMContentLoaded", () => {
             loadStudentsData();
@@ -474,6 +616,9 @@
             loadSettingsData();
             loadStatsData();
             loadNotificationsData();
+            loadQuizzesData();
+            loadResultsData();
+            addQuestionField(); // إضافة سؤال افتراضي أول عند الفتح
         });
 
         function switchAdminTab(tab, evt) {
@@ -496,6 +641,7 @@
             }
         }
 
+        /* --- إدارة الطلاب والتقارير --- */
         async function loadStudentsData() {
             try {
                 const res = await fetch(`${FIREBASE_URL}/students.json`);
@@ -510,7 +656,6 @@
                 let hasPending = false;
                 let hasApproved = false;
                 let countApproved = 0;
-                let countRejected = 0;
 
                 Object.keys(globalStudentsData).forEach(id => {
                     const student = globalStudentsData[id];
@@ -530,7 +675,7 @@
                                 <td>${student.phone}</td>
                                 <td style="font-size:0.8rem; color:var(--text-sub);">${formattedDate}</td>
                                 <td>
-                                    <button class="btn btn-success btn-sm" onclick="approveStudent('${id}', '${student.name}', '${student.phone}')">✅ قبول وتوليد المفتاح</button>
+                                    <button class="btn btn-success btn-sm" onclick="approveStudent('${id}', '${student.name}', '${student.phone}')">✅ قبول وتوليد PIN</button>
                                     <button class="btn btn-danger btn-sm" onclick="rejectStudent('${id}')">❌ رفض</button>
                                 </td>
                             </tr>
@@ -545,20 +690,15 @@
                                 <td>${student.phone}</td>
                                 <td><span class="pin-badge">${student.pin}</span></td>
                                 <td>
-                                    <span style="color: var(--success); font-weight: bold; display: inline-flex; align-items: center; gap: 4px;">
-                                        ✔️ تم الاعتماد والوصول
-                                    </span>
-                                    <button class="btn btn-danger btn-sm" style="margin-right: 10px;" onclick="rejectStudent('${id}')">إلغاء</button>
+                                    <button class="btn btn-primary btn-sm" onclick="openStudentReport('${id}')">🔍 التقرير التفصيلي</button>
+                                    <button class="btn btn-danger btn-sm" onclick="rejectStudent('${id}')">إلغاء</button>
                                 </td>
                             </tr>
                         `;
-                    } else if (student.status === 'rejected') {
-                        countRejected++;
                     }
                 });
 
                 document.getElementById('statApproved').innerText = countApproved;
-                document.getElementById('statRejected').innerText = countRejected;
 
                 if (!hasPending) pendingTable.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-sub);">لا توجد طلبات معلقة حالياً</td></tr>`;
                 if (!hasApproved) approvedTable.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-sub);">لا يوجد طلاب مفعلين حالياً</td></tr>`;
@@ -575,10 +715,7 @@
                 await fetch(`${FIREBASE_URL}/students/${id}.json`, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        status: 'approved',
-                        pin: generatedPin
-                    })
+                    body: JSON.stringify({ status: 'approved', pin: generatedPin })
                 });
 
                 const msg = `🎉 <b>تم قبول الطالب وتوليد كود الدخول!</b>\n\n👤 <b>الاسم:</b> ${name}\n📱 <b>الهاتف:</b> ${phone}\n🔑 <b>PIN الدخول:</b> <code>${generatedPin}</code>`;
@@ -597,13 +734,9 @@
 
         async function approveAllStudents() {
             const pendingIds = Object.keys(globalStudentsData).filter(id => globalStudentsData[id] && globalStudentsData[id].status === 'pending');
+            if (pendingIds.length === 0) return alert("لا توجد طلبات معلقة لقبولها حالياً.");
 
-            if (pendingIds.length === 0) {
-                alert("لا توجد طلبات معلقة لقبولها حالياً.");
-                return;
-            }
-
-            if (!confirm(`هل أنت متأكد من قبول جميع الطلبات المعلقة وعددها (${pendingIds.length}) طلب؟`)) return;
+            if (!confirm(`هل أنت متأكد من قبول جميع الطلبات المعلقة (${pendingIds.length})؟`)) return;
 
             try {
                 for (const id of pendingIds) {
@@ -611,24 +744,18 @@
                     await fetch(`${FIREBASE_URL}/students/${id}.json`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            status: 'approved',
-                            pin: generatedPin
-                        })
+                        body: JSON.stringify({ status: 'approved', pin: generatedPin })
                     });
                 }
-
-                alert("تم قبول جميع الطلبات المعلقة وتوليد الأكواد الخاصة بهم بنجاح!");
+                alert("تم قبول جميع الطلبات المعلقة!");
                 loadStudentsData();
             } catch (err) {
-                console.error(err);
-                alert("حدث خطأ أثناء قبول بعض الطلبات.");
+                alert("حدث خطأ أثناء القبول.");
             }
         }
 
         async function rejectStudent(id) {
             if (!confirm("هل أنت متأكد من تغيير حالة الطالب؟")) return;
-
             try {
                 await fetch(`${FIREBASE_URL}/students/${id}.json`, {
                     method: 'PATCH',
@@ -641,6 +768,229 @@
             }
         }
 
+        /* --- تقرير الطالب التفصيلي (Modal) --- */
+        function openStudentReport(studentId) {
+            const s = globalStudentsData[studentId];
+            if (!s) return;
+
+            document.getElementById('modalStudentName').innerText = `📊 تقرير الطالب: ${s.name}`;
+            document.getElementById('modalStudentDetails').innerHTML = `
+                <p><b>رقم الهاتف:</b> ${s.phone}</p>
+                <p><b>الفئة الدراسية:</b> ${s.grade || 'غير محدد'}</p>
+                <p><b>كود PIN الدخول:</b> <span class="pin-badge">${s.pin}</span></p>
+                <p><b>تاريخ الانضمام:</b> ${s.createdAt ? new Date(s.createdAt).toLocaleString('ar-EG') : 'غير محدد'}</p>
+            `;
+
+            // جلب نتائج الكويز الخاصة بالمستخدم
+            let quizHtml = '<table class="data-table"><thead><tr><th>الاختبار</th><th>الدرجة</th><th>التاريخ</th></tr></thead><tbody>';
+            let quizCount = 0;
+
+            Object.keys(globalResultsData).forEach(rId => {
+                const r = globalResultsData[rId];
+                if (r.studentId === studentId || r.phone === s.phone) {
+                    quizCount++;
+                    quizHtml += `
+                        <tr>
+                            <td>${r.quizTitle}</td>
+                            <td><b style="color:var(--success);">${r.score} / ${r.totalScore}</b> (${r.percentage}%)</td>
+                            <td>${new Date(r.submittedAt).toLocaleString('ar-EG')}</td>
+                        </tr>
+                    `;
+                }
+            });
+
+            quizHtml += '</tbody></table>';
+            if (quizCount === 0) quizHtml = '<p style="color:var(--text-sub);">لم يقم الطالب بدخول أو أداء أي امتحانات بعد.</p>';
+            document.getElementById('modalStudentQuizzes').innerHTML = quizHtml;
+
+            // سجل المشاهدات والتفاعل
+            let viewsHtml = '<ul style="padding-right:20px;">';
+            if (s.views && Object.keys(s.views).length > 0) {
+                Object.values(s.views).forEach(v => {
+                    viewsHtml += `<li>شاهد المحتوى: <b>${v.contentTitle}</b> بتاريخ ${new Date(v.time).toLocaleString('ar-EG')}</li>`;
+                });
+            } else {
+                viewsHtml = '<p style="color:var(--text-sub);">لا توجد المشاهدات المسجلة حالياً.</p>';
+            }
+            document.getElementById('modalStudentViews').innerHTML = viewsHtml;
+
+            document.getElementById('studentReportModal').style.display = 'flex';
+        }
+
+        function closeStudentModal() {
+            document.getElementById('studentReportModal').style.display = 'none';
+        }
+
+        /* --- إدارة الكويزات والأسئلة --- */
+        function addQuestionField() {
+            const container = document.getElementById('questionsContainer');
+            const qCount = container.children.length + 1;
+
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question-box';
+            qDiv.innerHTML = `
+                <div class="form-group">
+                    <label>السؤال ${qCount}:</label>
+                    <input type="text" class="form-control q-text" placeholder="اكتب السؤال هنا..." required>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <input type="text" class="form-control q-opt0" placeholder="الخيار الأول (أ)" required>
+                    <input type="text" class="form-control q-opt1" placeholder="الخيار الثاني (ب)" required>
+                    <input type="text" class="form-control q-opt2" placeholder="الخيار الثالث (ج)" required>
+                    <input type="text" class="form-control q-opt3" placeholder="الخيار الرابع (د)" required>
+                </div>
+                <div class="form-group" style="margin-top:10px;">
+                    <label>الإجابة الصحيحة:</label>
+                    <select class="form-control q-correct">
+                        <option value="0">الخيار الأول (أ)</option>
+                        <option value="1">الخيار الثاني (ب)</option>
+                        <option value="2">الخيار الثالث (ج)</option>
+                        <option value="3">الخيار الرابع (د)</option>
+                    </select>
+                </div>
+            `;
+            container.appendChild(qDiv);
+        }
+
+        async function handleCreateQuiz(e) {
+            e.preventDefault();
+
+            const questions = [];
+            const qBoxes = document.querySelectorAll('.question-box');
+
+            qBoxes.forEach(box => {
+                questions.push({
+                    title: box.querySelector('.q-text').value,
+                    options: [
+                        box.querySelector('.q-opt0').value,
+                        box.querySelector('.q-opt1').value,
+                        box.querySelector('.q-opt2').value,
+                        box.querySelector('.q-opt3').value
+                    ],
+                    correctIndex: parseInt(box.querySelector('.q-correct').value)
+                });
+            });
+
+            const quizData = {
+                title: document.getElementById('quizTitle').value.trim(),
+                grade: document.getElementById('quizGrade').value,
+                duration: parseInt(document.getElementById('quizDuration').value),
+                totalScore: parseInt(document.getElementById('quizTotalScore').value),
+                questions: questions,
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                const res = await fetch(`${FIREBASE_URL}/quizzes.json`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(quizData)
+                });
+
+                alert("تم حفظ الامتحان ونشره بنجاح!");
+                document.getElementById('createQuizForm').reset();
+                document.getElementById('questionsContainer').innerHTML = '';
+                addQuestionField();
+                loadQuizzesData();
+            } catch (err) {
+                alert("حدث خطأ أثناء حفظ الكويز.");
+            }
+        }
+
+        async function loadQuizzesData() {
+            try {
+                const res = await fetch(`${FIREBASE_URL}/quizzes.json`);
+                globalQuizzesData = await res.json() || {};
+                const container = document.getElementById('quizzesList');
+                container.innerHTML = '';
+
+                const keys = Object.keys(globalQuizzesData);
+                document.getElementById('statQuizzes').innerText = keys.length;
+
+                if(keys.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; color:var(--text-sub);">لم يتم رفع أي امتحانات بعد.</p>';
+                    return;
+                }
+
+                keys.forEach(id => {
+                    const q = globalQuizzesData[id];
+                    container.innerHTML += `
+                        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:12px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                            <div>
+                                <h4 style="margin:0 0 5px 0; color:var(--accent-cyan);">${q.title}</h4>
+                                <small>الفئة: ${q.grade} | المدة: ${q.duration} دقيقة | الأسئلة: ${q.questions ? q.questions.length : 0}</small>
+                            </div>
+                            <div>
+                                <button class="btn btn-warning btn-sm" onclick="broadcastQuizNotification('${q.title}', '${q.grade}')">🚨 بث إشعار الامتحان للطلاب</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteQuiz('${id}')">حذف</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch(err) {
+                console.error(err);
+            }
+        }
+
+        async function broadcastQuizNotification(quizTitle, targetGrade) {
+            if(!confirm(`هل تريد إرسال تنبيه عاجل لجميع طلاب (${targetGrade}) لدخول امتحان: ${quizTitle}؟`)) return;
+
+            const notifData = {
+                title: `🚨 امتحان جديد: ${quizTitle}`,
+                body: `تم نشر امتحان جديد لمادتكم. يرجى الدخول وحل الكويز الآن قبل انتهاء وقت الامتحان!`,
+                target: targetGrade,
+                createdAt: new Date().toISOString()
+            };
+
+            await fetch(`${FIREBASE_URL}/notifications.json`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(notifData)
+            });
+
+            alert("تم بث إشعار الامتحان فوراً للطلاب!");
+            loadNotificationsData();
+        }
+
+        async function deleteQuiz(id) {
+            if (!confirm("هل أنت متأكد من حذف هذا الامتحان؟")) return;
+            await fetch(`${FIREBASE_URL}/quizzes/${id}.json`, { method: 'DELETE' });
+            loadQuizzesData();
+        }
+
+        /* --- تحميل درجات ونتائج الاختبارات --- */
+        async function loadResultsData() {
+            try {
+                const res = await fetch(`${FIREBASE_URL}/quiz_results.json`);
+                globalResultsData = await res.json() || {};
+                const tableBody = document.getElementById('quizResultsTable');
+                tableBody.innerHTML = '';
+
+                const keys = Object.keys(globalResultsData);
+
+                if(keys.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-sub);">لا توجد أي تسليمات للامتحانات بعد.</td></tr>';
+                    return;
+                }
+
+                keys.reverse().forEach(id => {
+                    const r = globalResultsData[id];
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td><b>${r.studentName}</b></td>
+                            <td>${r.quizTitle}</td>
+                            <td><b style="color:var(--success);">${r.score} / ${r.totalScore}</b></td>
+                            <td><span class="pin-badge">${r.percentage}%</span></td>
+                            <td style="font-size:0.8rem; color:var(--text-sub);">${new Date(r.submittedAt).toLocaleString('ar-EG')}</td>
+                        </tr>
+                    `;
+                });
+            } catch(err) {
+                console.error(err);
+            }
+        }
+
+        /* --- رفع المحتوى والإشعارات والإعدادات --- */
         async function handleContentUpload(e) {
             e.preventDefault();
 
@@ -660,7 +1010,7 @@
                     body: JSON.stringify(courseData)
                 });
 
-                alert("تم رفع المحتوى بنجاح وتوجيهه للفئة الدراسية المحددة!");
+                alert("تم رفع المحتوى بنجاح!");
                 e.target.reset();
                 loadCoursesData();
             } catch (err) {
@@ -726,7 +1076,7 @@
                     body: JSON.stringify(notifData)
                 });
 
-                alert("تم إرسال الإشعار وبثه بنجاح للطلاب المستهدفين!");
+                alert("تم إرسال الإشعار وبثه بنجاح!");
                 e.target.reset();
                 loadNotificationsData();
             } catch (err) {
