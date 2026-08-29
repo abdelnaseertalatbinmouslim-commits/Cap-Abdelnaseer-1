@@ -514,6 +514,8 @@
 
                 Object.keys(globalStudentsData).forEach(id => {
                     const student = globalStudentsData[id];
+                    if(!student) return;
+                    
                     const formattedDate = student.createdAt ? new Date(student.createdAt).toLocaleString('ar-EG', {
                         year: 'numeric', month: '2-digit', day: '2-digit',
                         hour: '2-digit', minute: '2-digit'
@@ -562,7 +564,7 @@
                 if (!hasApproved) approvedTable.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-sub);">لا يوجد طلاب مفعلين حالياً</td></tr>`;
 
             } catch (err) {
-                console.error(err);
+                console.error("خطأ في جلب الطلاب:", err);
             }
         }
 
@@ -594,7 +596,7 @@
         }
 
         async function approveAllStudents() {
-            const pendingIds = Object.keys(globalStudentsData).filter(id => globalStudentsData[id].status === 'pending');
+            const pendingIds = Object.keys(globalStudentsData).filter(id => globalStudentsData[id] && globalStudentsData[id].status === 'pending');
 
             if (pendingIds.length === 0) {
                 alert("لا توجد طلبات معلقة لقبولها حالياً.");
@@ -682,6 +684,7 @@
 
                 keys.forEach(id => {
                     const c = data[id];
+                    if(!c) return;
                     listContainer.innerHTML += `
                         <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:12px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                             <div>
@@ -747,6 +750,7 @@
 
                 keys.reverse().forEach(id => {
                     const n = data[id];
+                    if(!n) return;
                     listContainer.innerHTML += `
                         <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:12px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
                             <div>
@@ -790,7 +794,7 @@
             const settingsData = {
                 whatsapp: document.getElementById('settingWhatsapp').value.trim(),
                 telegram: document.getElementById('settingTelegram').value.trim(),
-                facebook: document.getElementById('settingFacebook'].value.trim()
+                facebook: document.getElementById('settingFacebook').value.trim()
             };
 
             try {
