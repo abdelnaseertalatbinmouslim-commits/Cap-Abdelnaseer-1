@@ -725,7 +725,6 @@
                     </div>
                 `;
 
-                // التعديل الجذري لضمان قراءة عنوان السؤال بكل أشكاله (title أو question أو questionText) ودعم الخيارات
                 quiz.questions.forEach((q, qIndex) => {
                     const questionTitle = q.title || q.questionText || q.question || 'سؤال بدون عنوان';
                     let optionsHtml = '';
@@ -771,7 +770,6 @@
             document.getElementById('quizModal').style.display = 'flex';
         }
 
-        // التصحيح الآمن المدعوم بالـ Index ومطابقة الحقول بدقة تامة لتفادي مشكلة 0%
         async function submitQuizAnswers(isAutoSubmit = false) {
             if (!activeQuizData) return;
             if (examTimerInterval) clearInterval(examTimerInterval);
@@ -782,7 +780,6 @@
             activeQuizData.questions.forEach((q, qIndex) => {
                 const selected = document.querySelector(`input[name="question_${qIndex}"]:checked`);
                 
-                // جلب رقم الإجابة الصحيحة بأمان تام بغض النظر عن اسم الحقل في قاعدة البيانات
                 const correctIdx = q.correctIndex !== undefined ? parseInt(q.correctIndex) : 
                                    (q.correctOption !== undefined ? parseInt(q.correctOption) : parseInt(q.correctAnswer));
                 
@@ -847,3 +844,4 @@
     </script>
 </body>
 </html>
+
