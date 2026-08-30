@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم الشاملة | منصة الكابتن</title>
+    <!-- مكتبة SheetJS لقراءة وتصدير ملفات Excel -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         :root {
             --bg-dark: #050811;
@@ -373,7 +375,7 @@
                 <div class="stat-value" id="statVisitors">0</div>
             </div>
             <div class="stat-card online">
-                <div class="stat-title">🟢 متواجد الآن</div>
+                <div class="stat-title">🟢 المتواجدون الآن</div>
                 <div class="stat-value" id="statOnline">0</div>
             </div>
             <div class="stat-card approved">
@@ -396,8 +398,17 @@
             <button class="nav-btn" onclick="switchAdminTab('settings', event)">🎛️ الأزرار</button>
         </div>
 
-        <!-- 1. طلبات الانضمام -->
+        <!-- 1. طلبات الانضمام + رفع ملف Excel شامل للطلاب -->
         <div id="tab-requests" class="tab-content active">
+            <div class="section-card" style="border: 1px dashed var(--accent-cyan); background: rgba(6, 182, 212, 0.03);">
+                <h2>📑 رفع ملف Excel شامل لتسجيل الطلاب دفعة واحدة</h2>
+                <p style="font-size:0.8rem; color:var(--text-sub); margin-top:0;">يجب أن يحتوي ملف الـ Excel على أعمدة رئيسية: <b>name</b> (اسم الطالب)، <b>phone</b> (رقم الهاتف)، <b>grade</b> (الفئة الدراسية).</p>
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:10px;">
+                    <input type="file" id="excelStudentsFile" accept=".xlsx, .xls, .csv" class="form-control" style="flex:1; min-width:200px;">
+                    <button class="btn btn-success" onclick="handleExcelStudentsUpload()">📥 استيراد واعتماد الطلاب</button>
+                </div>
+            </div>
+
             <div class="section-card">
                 <div class="section-header-flex">
                     <h2>📥 طلبات الانضمام المعلقة</h2>
@@ -422,11 +433,12 @@
             </div>
         </div>
 
-        <!-- 2. الطلاب والتقارير الشاملة + خانة البحث -->
+        <!-- 2. الطلاب والتقارير الشاملة + زر تنزيل البيانات كملف -->
         <div id="tab-students" class="tab-content">
             <div class="section-card">
                 <div class="section-header-flex">
                     <h2>👥 قائمة الطلاب المفعلين وسجلات التقرير الشامل</h2>
+                    <button class="btn btn-success btn-sm" onclick="downloadStudentsExcelReport()">📱 تنزيل بيانات الطلاب كملف Excel</button>
                 </div>
                 <div class="search-box">
                     <input type="text" id="searchStudentInput" class="form-control" placeholder="🔍 ابحث عن اسم أي مشترك أو رقم هاتف..." onkeyup="filterStudentsTable()">
@@ -450,7 +462,7 @@
             </div>
         </div>
 
-        <!-- 3. نظام الامتحانات والكويزات -->
+        <!-- 3. نظام الامتحانات والكويزات + حد أقصى للممتحنين -->
         <div id="tab-quizzes" class="tab-content">
             <div class="section-card">
                 <h2>📝 إنشاء كويز / امتحان جديد</h2>
@@ -469,14 +481,18 @@
                             <option value="الفئة الرابعة">الفئة الرابعة</option>
                         </select>
                     </div>
-                    <div style="display:flex; gap:10px;">
-                        <div class="form-group" style="flex:1;">
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <div class="form-group" style="flex:1; min-width:140px;">
                             <label>مدة الامتحان (بالدقائق)</label>
                             <input type="number" id="quizDuration" class="form-control" value="15" required>
                         </div>
-                        <div class="form-group" style="flex:1;">
+                        <div class="form-group" style="flex:1; min-width:140px;">
                             <label>الدرجة النهائية</label>
                             <input type="number" id="quizTotalScore" class="form-control" value="100" required>
+                        </div>
+                        <div class="form-group" style="flex:1; min-width:140px;">
+                            <label>الحد الأقصى للممتحنين</label>
+                            <input type="number" id="quizMaxParticipants" class="form-control" placeholder="مثال: 100 (اتركه فارغاً بلا حدود)" min="1">
                         </div>
                     </div>
 
@@ -496,12 +512,43 @@
             </div>
         </div>
 
-        <!-- 4. نتائج الامتحانات والدرجات + بحث وحذف النتائج القديمة -->
+        <!-- 4. نتائج الامتحانات والدرجات + رفع ملف نتائج + تنزيل كملف + لوحة المتابعة الحية -->
         <div id="tab-results" class="tab-content">
+            <!-- لوحة المتابعة الحية Live Stats -->
+            <div class="section-card" style="border: 1px solid var(--success); background: rgba(16, 185, 129, 0.03);">
+                <h2 style="color:var(--success);">⚡ لوحة المتابعة الحية للامتحانات (Live Stats)</h2>
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-top:10px;">
+                    <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:10px; text-align:center;">
+                        <span style="font-size:0.75rem; color:var(--text-sub);">دخلوا الامتحان</span>
+                        <div id="liveEntered" style="font-size:1.3rem; font-weight:bold; color:var(--accent-cyan);">0</div>
+                    </div>
+                    <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:10px; text-align:center;">
+                        <span style="font-size:0.75rem; color:var(--text-sub);">عملوا تسليم (Submit)</span>
+                        <div id="liveSubmitted" style="font-size:1.3rem; font-weight:bold; color:var(--success);">0</div>
+                    </div>
+                    <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:10px; text-align:center;">
+                        <span style="font-size:0.75rem; color:var(--text-sub);">أتموا الحل بالكامل</span>
+                        <div id="liveCompleted" style="font-size:1.3rem; font-weight:bold; color:var(--warning);">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card" style="border: 1px dashed var(--warning); background: rgba(245, 158, 11, 0.03);">
+                <h2>📑 رفع ملف شامل لنتائج الامتحانات (Excel)</h2>
+                <p style="font-size:0.8rem; color:var(--text-sub); margin-top:0;">يحتوي على: <b>studentName</b>، <b>quizTitle</b>، <b>score</b>، <b>totalMarks</b>.</p>
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:10px;">
+                    <input type="file" id="excelResultsFile" accept=".xlsx, .xls, .csv" class="form-control" style="flex:1; min-width:200px;">
+                    <button class="btn btn-warning" onclick="handleExcelResultsUpload()">📥 استيراد وربط الدرجات</button>
+                </div>
+            </div>
+
             <div class="section-card">
                 <div class="section-header-flex">
                     <h2>📊 سجل نتائج وتدقيق امتحانات الطلاب</h2>
-                    <button class="btn btn-danger btn-sm" onclick="deleteAllOldResults()">🗑️ مسح كل النتايج القديمة</button>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <button class="btn btn-success btn-sm" onclick="downloadResultsExcelReport()">📱 تنزيل النتائج كملف Excel</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteAllOldResults()">🗑️ مسح كل النتايج القديمة</button>
+                    </div>
                 </div>
                 <div class="search-box">
                     <input type="text" id="searchResultInput" class="form-control" placeholder="🔍 ابحث عن اسم المشترك في نتائج الامتحانات..." onkeyup="filterResultsTable()">
@@ -848,6 +895,95 @@
             }
         }
 
+        /* --- ميزة: رفع ملف Excel شامل للطلبة --- */
+        async function handleExcelStudentsUpload() {
+            const fileInput = document.getElementById('excelStudentsFile');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert("الرجاء اختيار ملف Excel أولاً.");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = async function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const jsonRows = XLSX.utils.sheet_to_json(worksheet);
+
+                    if (jsonRows.length === 0) {
+                        alert("الملف فارغ أو لا يحتوي على بيانات صحيحة.");
+                        return;
+                    }
+
+                    let addedCount = 0;
+                    for (let row of jsonRows) {
+                        const name = row.name || row['اسم الطالب'] || row['الاسم'];
+                        const phone = row.phone || row['رقم الهاتف'] || row['الهاتف'];
+                        const grade = row.grade || row['الفئة الدراسية'] || row['الفئة'] || 'الجميع';
+
+                        if (name && phone) {
+                            const generatedPin = Math.floor(1000 + Math.random() * 9000);
+                            const studentPayload = {
+                                name: String(name).trim(),
+                                phone: String(phone).trim(),
+                                grade: String(grade).trim(),
+                                status: 'approved',
+                                pin: generatedPin,
+                                createdAt: new Date().toISOString()
+                            };
+
+                            await fetch(`${FIREBASE_URL}/students.json`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(studentPayload)
+                            });
+                            addedCount++;
+                        }
+                    }
+
+                    alert(`تم استيراد واعتماد عدد (${addedCount}) طالب بنجاح من الملف!`);
+                    fileInput.value = '';
+                    loadStudentsData();
+                } catch (err) {
+                    console.error(err);
+                    alert("حدث خطأ أثناء قراءة أو رفع ملف الـ Excel.");
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        /* --- ميزة: تنزيل بيانات الطلاب كملف على التليفون --- */
+        function downloadStudentsExcelReport() {
+            const studentsList = [];
+            Object.keys(globalStudentsData).forEach(id => {
+                const s = globalStudentsData[id];
+                if (s) {
+                    studentsList.push({
+                        'اسم الطالب': s.name || '',
+                        'رقم الهاتف': s.phone || '',
+                        'الفئة الدراسية': s.grade || '',
+                        'الحالة': s.status || '',
+                        'كود PIN': s.pin || '',
+                        'تاريخ التسجيل': formatSafeDate(s.createdAt)
+                    });
+                }
+            });
+
+            if (studentsList.length === 0) {
+                alert("لا توجد بيانات طلاب لتنزيلها.");
+                return;
+            }
+
+            const worksheet = XLSX.utils.json_to_sheet(studentsList);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "الطلاب المفعلين");
+            XLSX.writeFile(workbook, "Students_Report_CaptainPlatform.xlsx");
+        }
+
         function openStudentReport(studentId) {
             const s = globalStudentsData[studentId];
             if (!s) return;
@@ -903,7 +1039,7 @@
             document.getElementById('studentReportModal').style.display = 'none';
         }
 
-        /* --- إدارة الكويزات والأسئلة --- */
+        /* --- إدارة الكويزات والأسئلة + الحد الأقصى للممتحنين --- */
         function addQuestionField() {
             const container = document.getElementById('questionsContainer');
             const qCount = container.children.length + 1;
@@ -953,11 +1089,14 @@
                 });
             });
 
+            const maxPartVal = document.getElementById('quizMaxParticipants').value.trim();
+
             const quizData = {
                 title: document.getElementById('quizTitle').value.trim(),
                 grade: document.getElementById('quizGrade').value,
                 duration: parseInt(document.getElementById('quizDuration').value) || 15,
                 totalMarks: parseInt(document.getElementById('quizTotalScore').value) || 100,
+                maxParticipants: maxPartVal ? parseInt(maxPartVal) : null,
                 questions: questions,
                 createdAt: new Date().toISOString()
             };
@@ -1001,7 +1140,7 @@
                         <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:10px 12px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                             <div>
                                 <h4 style="margin:0 0 4px 0; color:var(--accent-cyan); font-size:0.95rem;">${q.title || 'امتحان'}</h4>
-                                <small style="color:var(--text-sub);">الفئة: ${q.grade || 'الجميع'} | المدة: ${q.duration || 15}د | الدرجة: ${q.totalMarks || 100}</small>
+                                <small style="color:var(--text-sub);">الفئة: ${q.grade || 'الجميع'} | المدة: ${q.duration || 15}د | الدرجة: ${q.totalMarks || 100} ${q.maxParticipants ? `| الحد الأقصى: ${q.maxParticipants}` : ''}</small>
                             </div>
                             <div style="display:flex; gap:5px; flex-wrap:wrap;">
                                 <button class="btn btn-warning btn-sm" onclick="broadcastQuizNotification('${q.title || ''}', '${q.grade || 'الجميع'}')">🚨 تنبيه</button>
@@ -1041,7 +1180,7 @@
             loadQuizzesData();
         }
 
-        /* --- تحميل درجات ونتائج الاختبارات وحذف النتائج القديمة --- */
+        /* --- تحميل درجات ونتائج الاختبارات + رفع ملف نتائج + لوحة المتابعة الحية Live Stats --- */
         async function loadResultsData() {
             try {
                 const res = await fetch(`${FIREBASE_URL}/quiz_results.json`);
@@ -1050,6 +1189,25 @@
                 tableBody.innerHTML = '';
 
                 const keys = Object.keys(globalResultsData);
+
+                // حساب وتحديث لوحة المتابعة الحية Live Stats
+                let enteredCount = keys.length;
+                let submittedCount = 0;
+                let completedCount = 0;
+
+                keys.forEach(id => {
+                    const r = globalResultsData[id];
+                    if(r) {
+                        if(r.status === 'submitted' || r.rawScore !== undefined || r.score !== undefined) submittedCount++;
+                        const scoreVal = (r.rawScore !== undefined && !isNaN(r.rawScore)) ? r.rawScore : ((r.score !== undefined && !isNaN(r.score)) ? parseInt(r.score) : 0);
+                        const totalVal = (r.totalMarks !== undefined && !isNaN(r.totalMarks)) ? r.totalMarks : 100;
+                        if(scoreVal > 0) completedCount++;
+                    }
+                });
+
+                document.getElementById('liveEntered').innerText = enteredCount;
+                document.getElementById('liveSubmitted').innerText = submittedCount;
+                document.getElementById('liveCompleted').innerText = completedCount;
 
                 if(keys.length === 0) {
                     tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-sub);">لا توجد أي تسليمات للامتحانات بعد.</td></tr>';
@@ -1080,6 +1238,101 @@
             } catch(err) {
                 console.error(err);
             }
+        }
+
+        /* --- ميزة: رفع ملف شامل لنتائج الامتحانات (Excel) --- */
+        async function handleExcelResultsUpload() {
+            const fileInput = document.getElementById('excelResultsFile');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert("الرجاء اختيار ملف Excel للنتائج أولاً.");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = async function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const jsonRows = XLSX.utils.sheet_to_json(worksheet);
+
+                    if (jsonRows.length === 0) {
+                        alert("الملف فارغ أو غير صالح.");
+                        return;
+                    }
+
+                    let importedCount = 0;
+                    for (let row of jsonRows) {
+                        const studentName = row.studentName || row['اسم الطالب'] || row['الاسم'];
+                        const quizTitle = row.quizTitle || row['عنوان الامتحان'] || row['الاختبار'] || 'امتحان عام';
+                        const score = row.score || row['الدرجة'] || row['النتيجة'] || 0;
+                        const totalMarks = row.totalMarks || row['الدرجة النهائية'] || 100;
+
+                        if (studentName !== undefined) {
+                            const rawScore = parseInt(score) || 0;
+                            const total = parseInt(totalMarks) || 100;
+                            const percentage = `${Math.round((rawScore / total) * 100)}%`;
+
+                            const resultPayload = {
+                                studentName: String(studentName).trim(),
+                                quizTitle: String(quizTitle).trim(),
+                                rawScore: rawScore,
+                                totalMarks: total,
+                                percentage: percentage,
+                                submittedAt: new Date().toISOString()
+                            };
+
+                            await fetch(`${FIREBASE_URL}/quiz_results.json`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(resultPayload)
+                            });
+                            importedCount++;
+                        }
+                    }
+
+                    alert(`تم استيراد وربط عدد (${importedCount}) نتيجة امتحان بنجاح!`);
+                    fileInput.value = '';
+                    loadResultsData();
+                } catch (err) {
+                    console.error(err);
+                    alert("حدث خطأ أثناء معالجة ملف نتائج الـ Excel.");
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        /* --- ميزة: تنزيل النتائج والدرجات كملف على الموبايل --- */
+        function downloadResultsExcelReport() {
+            const resultsList = [];
+            Object.keys(globalResultsData).forEach(id => {
+                const r = globalResultsData[id];
+                if (r) {
+                    const scoreVal = (r.rawScore !== undefined && !isNaN(r.rawScore)) ? r.rawScore : ((r.score !== undefined && !isNaN(r.score)) ? parseInt(r.score) : 0);
+                    const totalVal = (r.totalMarks !== undefined && !isNaN(r.totalMarks)) ? r.totalMarks : 100;
+                    resultsList.push({
+                        'اسم الطالب': r.studentName || '',
+                        'عنوان الامتحان': r.quizTitle || '',
+                        'الدرجة الحاصل عليها': scoreVal,
+                        'الدرجة النهائية': totalVal,
+                        'النسبة المئوية': r.percentage || `${Math.round((scoreVal / totalVal) * 100)}%`,
+                        'وقت التسليم': formatSafeDate(r.submittedAt)
+                    });
+                }
+            });
+
+            if (resultsList.length === 0) {
+                alert("لا توجد نتائج امتحانات لتنزيلها.");
+                return;
+            }
+
+            const worksheet = XLSX.utils.json_to_sheet(resultsList);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "نتائج الامتحانات");
+            XLSX.writeFile(workbook, "Quiz_Results_CaptainPlatform.xlsx");
         }
 
         function filterResultsTable() {
@@ -1152,37 +1405,46 @@
                 listContainer.innerHTML = '';
 
                 const keys = Object.keys(data);
-                if(keys.length === 0) {
-                    listContainer.innerHTML = '<p style="text-align:center; color:var(--text-sub); font-size:0.85rem;">لا توجد محتويات مرفوعة حالياً.</p>';
+                if (keys.length === 0) {
+                    listContainer.innerHTML = '<p style="text-align:center; color: var(--text-sub); font-size:0.85rem;">لا توجد محاضرات أو محتوى مرفوع حالياً.</p>';
                     return;
                 }
 
-                keys.forEach(id => {
+                keys.reverse().forEach(id => {
                     const c = data[id];
-                    if(!c) return;
+                    if (!c) return;
                     listContainer.innerHTML += `
                         <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:10px 12px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                             <div>
                                 <h4 style="margin:0 0 4px 0; color:var(--accent-cyan); font-size:0.95rem;">${c.title || 'محاضرة'}</h4>
-                                <small style="color:var(--text-sub);">الفئة: ${c.grade || 'الجميع'} | الترم: ${c.term || 'الترم الأول'}</small>
+                                <small style="color:var(--text-sub);">الفئة: ${c.grade || 'الجميع'} | الترم: ${c.term || 'الترم الأول'} | التاريخ: ${formatSafeDate(c.createdAt)}</small>
                             </div>
-                            <button class="btn btn-danger btn-sm" onclick="deleteCourse('${id}')">حذف</button>
+                            <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                                <a href="${c.link}" target="_blank" class="btn btn-primary btn-sm">عرض</a>
+                                <button class="btn btn-danger btn-sm" onclick="deleteCourse('${id}')">حذف</button>
+                            </div>
                         </div>
                     `;
                 });
-            } catch(err) {
-                console.error(err);
+            } catch (err) {
+                console.error("خطأ في جلب المحتوى:", err);
             }
         }
 
         async function deleteCourse(id) {
             if (!confirm("هل أنت متأكد من حذف هذا المحتوى؟")) return;
-            await fetch(`${FIREBASE_URL}/courses/${id}.json`, { method: 'DELETE' });
-            loadCoursesData();
+            try {
+                await fetch(`${FIREBASE_URL}/courses/${id}.json`, { method: 'DELETE' });
+                loadCoursesData();
+            } catch (err) {
+                alert("حدث خطأ أثناء الحذف.");
+            }
         }
 
+        /* --- إدارة الإشعارات --- */
         async function handleSendNotification(e) {
             e.preventDefault();
+
             const notifData = {
                 title: document.getElementById('notifTitle').value.trim(),
                 body: document.getElementById('notifBody').value.trim(),
@@ -1196,10 +1458,11 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(notifData)
                 });
-                alert("تم إرسال الإشعار بنجاح!");
+
+                alert("تم إرسال وبث الإشعار للطلاب بنجاح!");
                 e.target.reset();
                 loadNotificationsData();
-            } catch(err) {
+            } catch (err) {
                 alert("حدث خطأ أثناء إرسال الإشعار.");
             }
         }
@@ -1208,45 +1471,62 @@
             try {
                 const res = await fetch(`${FIREBASE_URL}/notifications.json`);
                 const data = await res.json() || {};
-                const list = document.getElementById('sentNotificationsList');
-                list.innerHTML = '';
+                const listContainer = document.getElementById('sentNotificationsList');
+                listContainer.innerHTML = '';
 
                 const keys = Object.keys(data);
-                if(keys.length === 0) {
-                    list.innerHTML = '<p style="text-align:center; color:var(--text-sub); font-size:0.85rem;">لا توجد إشعارات مرسلة سابقة.</p>';
+                if (keys.length === 0) {
+                    listContainer.innerHTML = '<p style="text-align:center; color: var(--text-sub); font-size:0.85rem;">لا توجد إشعارات مرسلة مسبقاً.</p>';
                     return;
                 }
 
                 keys.reverse().forEach(id => {
                     const n = data[id];
-                    if(!n) return;
-                    list.innerHTML += `
-                        <div style="background: rgba(239, 68, 68, 0.05); border:1px solid rgba(239, 68, 68, 0.2); padding:10px; border-radius:10px; margin-bottom:8px;">
-                            <h4 style="margin:0 0 4px 0; color:#ef4444; font-size:0.9rem;">${n.title}</h4>
-                            <p style="margin:0 0 6px 0; font-size:0.85rem; color:#f8fafc;">${n.body}</p>
-                            <small style="color:var(--text-sub);">الفئة المستهدفة: ${n.target} | الوقت: ${formatSafeDate(n.createdAt)}</small>
+                    if (!n) return;
+                    listContainer.innerHTML += `
+                        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:10px 12px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                            <div>
+                                <h4 style="margin:0 0 4px 0; color:#ef4444; font-size:0.95rem;">${n.title || 'إشعار'}</h4>
+                                <p style="margin:0 0 4px 0; font-size:0.85rem; color:var(--text-main);">${n.body || ''}</p>
+                                <small style="color:var(--text-sub);">الفئة المستهدفة: ${n.target || 'الجميع'} | الوقت: ${formatSafeDate(n.createdAt)}</small>
+                            </div>
+                            <div>
+                                <button class="btn btn-danger btn-sm" onclick="deleteNotification('${id}')">حذف</button>
+                            </div>
                         </div>
                     `;
                 });
-            } catch(err) {
-                console.error(err);
+            } catch (err) {
+                console.error("خطأ في جلب الإشعارات:", err);
             }
         }
 
+        async function deleteNotification(id) {
+            if (!confirm("هل أنت متأكد من حذف هذا الإشعار؟")) return;
+            try {
+                await fetch(`${FIREBASE_URL}/notifications/${id}.json`, { method: 'DELETE' });
+                loadNotificationsData();
+            } catch (err) {
+                alert("حدث خطأ أثناء الحذف.");
+            }
+        }
+
+        /* --- إعدادات أزرار التواصل والدعم --- */
         async function loadSettingsData() {
             try {
                 const res = await fetch(`${FIREBASE_URL}/settings.json`);
                 const data = await res.json() || {};
-                if(data.whatsapp) document.getElementById('settingWhatsapp').value = data.whatsapp;
-                if(data.telegram) document.getElementById('settingTelegram').value = data.telegram;
-                if(data.facebook) document.getElementById('settingFacebook').value = data.facebook;
-            } catch(err) {
-                console.error(err);
+                if (data.whatsapp) document.getElementById('settingWhatsapp').value = data.whatsapp;
+                if (data.telegram) document.getElementById('settingTelegram').value = data.telegram;
+                if (data.facebook) document.getElementById('settingFacebook').value = data.facebook;
+            } catch (err) {
+                console.error("خطأ في جلب الإعدادات:", err);
             }
         }
 
         async function handleSettingsSave(e) {
             e.preventDefault();
+
             const settingsData = {
                 whatsapp: document.getElementById('settingWhatsapp').value.trim(),
                 telegram: document.getElementById('settingTelegram').value.trim(),
@@ -1259,11 +1539,15 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(settingsData)
                 });
-                alert("تم حفظ إعدادات الأزرار وروابط التواصل بنجاح!");
-            } catch(err) {
-                alert("حدث خطأ أثناء الحفظ.");
+
+                alert("تم تحديث روابط أزرار التواصل والدعم بنجاح!");
+            } catch (err) {
+                alert("حدث خطأ أثناء حفظ الإعدادات.");
             }
         }
     </script>
 </body>
 </html>
+
+---
+تطوير المهندس عبدالناصر © 2026
