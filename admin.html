@@ -373,6 +373,7 @@
                 <div class="stat-value" id="statVisitors">0</div>
             </div>
             <div class="stat-card online">
+                <div class="stat-title">🟢 متواجد الآن</div>
                 <div class="stat-value" id="statOnline">0</div>
             </div>
             <div class="stat-card approved">
@@ -1148,12 +1149,11 @@
                 const res = await fetch(`${FIREBASE_URL}/courses.json`);
                 const data = await res.json() || {};
                 const listContainer = document.getElementById('uploadedCoursesList');
-
                 listContainer.innerHTML = '';
-                const keys = Object.keys(data);
 
-                if (keys.length === 0) {
-                    listContainer.innerHTML = `<p style="text-align:center; color: var(--text-sub); font-size:0.85rem;">لم يتم رفع أي محتوى بعد.</p>`;
+                const keys = Object.keys(data);
+                if(keys.length === 0) {
+                    listContainer.innerHTML = '<p style="text-align:center; color:var(--text-sub); font-size:0.85rem;">لا توجد محتويات مرفوعة حالياً.</p>';
                     return;
                 }
 
@@ -1163,18 +1163,14 @@
                     listContainer.innerHTML += `
                         <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:10px 12px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                             <div>
-                                <h4 style="margin:0 0 4px 0; font-size:0.95rem;">${c.title || 'محاضرة'}</h4>
-                                <span style="color:var(--accent-cyan); font-size:0.78rem; font-weight:bold;">${c.grade || ''} — ${c.term || 'الترم الأول'}</span>
-                                <p style="margin:4px 0 0 0; font-size:0.78rem; color:var(--text-sub);">${c.desc || ''}</p>
+                                <h4 style="margin:0 0 4px 0; color:var(--accent-cyan); font-size:0.95rem;">${c.title || 'محاضرة'}</h4>
+                                <small style="color:var(--text-sub);">الفئة: ${c.grade || 'الجميع'} | الترم: ${c.term || 'الترم الأول'}</small>
                             </div>
-                            <div style="display:flex; gap:5px;">
-                                <a href="${c.link || '#'}" target="_blank" class="btn btn-primary btn-sm">عرض</a>
-                                <button onclick="deleteCourse('${id}')" class="btn btn-danger btn-sm">حذف</button>
-                            </div>
+                            <button class="btn btn-danger btn-sm" onclick="deleteCourse('${id}')">حذف</button>
                         </div>
                     `;
                 });
-            } catch (err) {
+            } catch(err) {
                 console.error(err);
             }
         }
@@ -1200,11 +1196,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(notifData)
                 });
-
-                alert("تم إرسال الإشعار وبثه بنجاح!");
+                alert("تم إرسال الإشعار بنجاح!");
                 e.target.reset();
                 loadNotificationsData();
-            } catch (err) {
+            } catch(err) {
                 alert("حدث خطأ أثناء إرسال الإشعار.");
             }
         }
@@ -1213,38 +1208,41 @@
             try {
                 const res = await fetch(`${FIREBASE_URL}/notifications.json`);
                 const data = await res.json() || {};
-                const container = document.getElementById('sentNotificationsList');
-                container.innerHTML = '';
-                const keys = Object.keys(data);
+                const list = document.getElementById('sentNotificationsList');
+                list.innerHTML = '';
 
-                if (keys.length === 0) {
-                    container.innerHTML = '<p style="text-align:center; color:var(--text-sub); font-size:0.85rem;">لم يتم إرسال أي إشعارات بعد.</p>';
+                const keys = Object.keys(data);
+                if(keys.length === 0) {
+                    list.innerHTML = '<p style="text-align:center; color:var(--text-sub); font-size:0.85rem;">لا توجد إشعارات مرسلة سابقة.</p>';
                     return;
                 }
 
                 keys.reverse().forEach(id => {
                     const n = data[id];
                     if(!n) return;
-                    container.innerHTML += `
-                        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--glass-border); padding:10px 12px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                            <div>
-                                <h4 style="margin:0 0 4px 0; color:var(--danger); font-size:0.95rem;">📢 ${n.title}</h4>
-                                <p style="margin:0 0 4px 0; font-size:0.85rem;">${n.body}</p>
-                                <small style="color:var(--text-sub);">المستهدف: ${n.target || 'الجميع'} | ${formatSafeDate(n.createdAt)}</small>
-                            </div>
-                            <button class="btn btn-danger btn-sm" onclick="deleteNotification('${id}')">حذف</button>
+                    list.innerHTML += `
+                        <div style="background: rgba(239, 68, 68, 0.05); border:1px solid rgba(239, 68, 68, 0.2); padding:10px; border-radius:10px; margin-bottom:8px;">
+                            <h4 style="margin:0 0 4px 0; color:#ef4444; font-size:0.9rem;">${n.title}</h4>
+                            <p style="margin:0 0 6px 0; font-size:0.85rem; color:#f8fafc;">${n.body}</p>
+                            <small style="color:var(--text-sub);">الفئة المستهدفة: ${n.target} | الوقت: ${formatSafeDate(n.createdAt)}</small>
                         </div>
                     `;
                 });
-            } catch (err) {
+            } catch(err) {
                 console.error(err);
             }
         }
 
-        async function deleteNotification(id) {
-            if(!confirm("هل أنت متأكد من حذف هذا الإشعار؟")) return;
-            await fetch(`${FIREBASE_URL}/notifications/${id}.json`, { method: 'DELETE' });
-            loadNotificationsData();
+        async function loadSettingsData() {
+            try {
+                const res = await fetch(`${FIREBASE_URL}/settings.json`);
+                const data = await res.json() || {};
+                if(data.whatsapp) document.getElementById('settingWhatsapp').value = data.whatsapp;
+                if(data.telegram) document.getElementById('settingTelegram').value = data.telegram;
+                if(data.facebook) document.getElementById('settingFacebook').value = data.facebook;
+            } catch(err) {
+                console.error(err);
+            }
         }
 
         async function handleSettingsSave(e) {
@@ -1261,23 +1259,9 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(settingsData)
                 });
-                alert("تم تحديث إعدادات الروابط بنجاح!");
-            } catch (err) {
-                alert("حدث خطأ أثناء حفظ الإعدادات.");
-            }
-        }
-
-        async function loadSettingsData() {
-            try {
-                const res = await fetch(`${FIREBASE_URL}/settings.json`);
-                const s = await res.json();
-                if(s) {
-                    if(s.whatsapp) document.getElementById('settingWhatsapp').value = s.whatsapp;
-                    if(s.telegram) document.getElementById('settingTelegram').value = s.telegram;
-                    if(s.facebook) document.getElementById('settingFacebook').value = s.facebook;
-                }
+                alert("تم حفظ إعدادات الأزرار وروابط التواصل بنجاح!");
             } catch(err) {
-                console.error(err);
+                alert("حدث خطأ أثناء الحفظ.");
             }
         }
     </script>
