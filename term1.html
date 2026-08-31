@@ -15,6 +15,7 @@
             --border-color: #cbd5e1;
             --input-bg: #ffffff;
             --accent-cyan: #06b6d4;
+            --success: #10b981;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -28,6 +29,7 @@
                 --border-color: #1e293b;
                 --input-bg: #0f172a;
                 --accent-cyan: #06b6d4;
+                --success: #10b981;
             }
         }
 
@@ -82,8 +84,8 @@
         }
 
         .subjects-grid {
-            display: grid;
-            grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 16px;
             margin-bottom: 28px;
         }
@@ -116,8 +118,8 @@
         }
 
         .subject-badge {
-            background: rgba(37, 99, 235, 0.15);
-            color: var(--primary);
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
             padding: 4px 10px;
             border-radius: 12px;
             font-size: 0.75rem;
@@ -129,6 +131,28 @@
             color: var(--text-muted);
             margin-bottom: 16px;
             line-height: 1.5;
+        }
+
+        /* تصميم مشغل الفيديو الداخلي المطور (Iframe) */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* نسبة العرض للارتفاع 16:9 */
+            height: 0;
+            background-color: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            margin-bottom: 16px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
 
         .btn-view {
@@ -144,7 +168,6 @@
             font-weight: 600;
             box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
             transition: all 0.3s ease;
-            box-sizing: border-box;
         }
 
         .btn-view:hover {
@@ -170,7 +193,6 @@
             <a href="courses.html" class="back-btn">← العودة للرئيسية</a>
         </div>
 
-        <!-- شبكة المواد الديناميكية -->
         <div class="subjects-grid" id="term1SubjectsContainer">
             <div class="subject-card" style="text-align: center;">
                 <p style="color: var(--text-muted); margin: 0;">جاري تحميل مواد الترم الأول...</p>
@@ -191,7 +213,6 @@
             updateStudentActivity();
         });
 
-        // تحديث نشاط الطالب في قاعدة البيانات
         async function updateStudentActivity() {
             const studentName = localStorage.getItem('studentName');
             if (!studentName) return;
@@ -219,6 +240,20 @@
             }
         }
 
+        // دالة استخراج الـ ID الخاص بيوتيوب وتحويل الرابط لـ Embed تلقائياً
+        function getYouTubeEmbedUrl(url) {
+            if (!url) return '';
+            let videoId = '';
+            if (url.includes('youtu.be/')) {
+                videoId = url.split('youtu.be/')[1]?.split('?')[0];
+            } else if (url.includes('watch?v=')) {
+                videoId = url.split('watch?v=')[1]?.split('&')[0];
+            } else if (url.includes('embed/')) {
+                return url; // لو الرابط متضمن جاهز
+            }
+            return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+        }
+
         async function fetchTermSubjects(studentGrade) {
             try {
                 const res = await fetch(`${FIREBASE_URL}/courses.json`);
@@ -232,8 +267,10 @@
 
                 keys.reverse().forEach(id => {
                     const c = courses[id];
-                    if (c.term === 'الترم الأول' && (c.grade === 'الجميع' || c.grade === studentGrade)) {
+                    if (c && c.term === 'الترم الأول' && (c.grade === 'الجميع' || c.grade === studentGrade)) {
                         foundCount++;
+                        const embedUrl = getYouTubeEmbedUrl(c.link);
+
                         container.innerHTML += `
                             <div class="subject-card">
                                 <div class="subject-head">
@@ -241,9 +278,16 @@
                                     <span class="subject-badge">الترم الأول</span>
                                 </div>
                                 <p class="subject-desc">${c.desc || 'محاضرات، ملخصات، واختبارات تفاعلية للمادة الدراسية.'}</p>
-                                <a href="subject.html?id=${id}&name=${encodeURIComponent(c.title)}" class="btn-view" onclick="logContentView('${c.title}')">عرض المحتوى الدراسي</a>
-                            </div>
+                                
+                                <div class="video-container">
+                                    <iframe src="${embedUrl}" title="${c.title}" allowfullscreen></iframe>
+                                </div>
+
+                                <a href="#" class="action-btn" style="display:none;"></a> </div>
                         `;
+                        
+                        // تسجيل المشاهدة بمجرد ظهور الكارت في الصفحة
+                        logContentView(c.title);
                     }
                 });
 
@@ -267,7 +311,6 @@
             }
         }
 
-        // تسجيل مشاهدة المادة أو المحتوى في سجلات الطالب بالفايربيس (للتقرير الشامل)
         async function logContentView(subjectTitle) {
             const studentName = localStorage.getItem('studentName') || 'طالب غير معروف';
             const now = new Date().toLocaleString('ar-EG');
