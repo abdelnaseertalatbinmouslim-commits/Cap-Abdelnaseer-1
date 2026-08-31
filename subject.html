@@ -118,34 +118,29 @@
         .lecture-desc {
             font-size: 0.85rem;
             color: var(--text-muted);
-            margin: 0 0 12px 0;
+            margin: 0 0 15px 0;
         }
 
-        .actions-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+        /* تصميم مشغل الفيديو الداخلي المطور */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* نسبة العرض للارتفاع 16:9 */
+            height: 0;
+            background-color: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            margin-top: 10px;
         }
 
-        .action-btn {
-            flex: 1;
-            min-width: 120px;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: var(--input-bg);
-            color: var(--text-color);
-            text-decoration: none;
-            text-align: center;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .action-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            box-shadow: 0 0 10px var(--primary-glow);
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
 
         .footer-credits {
@@ -169,7 +164,7 @@
 
         <div class="subject-header">
             <h1 class="subject-title" id="mainSubjectTitle">🎥 تفاصيل المادة الدراسية</h1>
-            <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;" id="mainSubjectDesc">يمكنك مشاهدة المحاضرات والمواد المتاحة للمقرر الدراسي مباشرة من الأزرار أدناه.</p>
+            <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;" id="mainSubjectDesc">يمكنك مشاهدة المحاضرات والمواد المتاحة للمقرر الدراسي مباشرة من داخل المنصة أدناه.</p>
         </div>
 
         <!-- قائمة المحاضرات الديناميكية -->
@@ -191,7 +186,6 @@
             const studentGrade = localStorage.getItem('studentGrade') || 'الجميع';
             document.getElementById('studentGradeBadge').innerText = studentGrade;
 
-            // استخراج معرف ورابط المادة من الـ URL
             const urlParams = new URLSearchParams(window.location.search);
             const subjectId = urlParams.get('id');
             const subjectName = urlParams.get('name');
@@ -204,7 +198,6 @@
             updateStudentActivity();
         });
 
-        // تحديث نشاط الطالب اللحظي
         async function updateStudentActivity() {
             const studentName = localStorage.getItem('studentName');
             if (!studentName) return;
@@ -232,6 +225,20 @@
             }
         }
 
+        // دالة استخراج الـ ID الخاص بيوتيوب وتحويل الرابط لـ Embed تلقائياً
+        function getYouTubeEmbedUrl(url) {
+            if (!url) return '';
+            let videoId = '';
+            if (url.includes('youtu.be/')) {
+                videoId = url.split('youtu.be/')[1]?.split('?')[0];
+            } else if (url.includes('watch?v=')) {
+                videoId = url.split('watch?v=')[1]?.split('&')[0];
+            } else if (url.includes('embed/')) {
+                return url; // لو الرابط متضمن جاهز
+            }
+            return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+        }
+
         async function fetchSubjectDetails(subjectId, subjectName) {
             try {
                 const res = await fetch(`${FIREBASE_URL}/courses.json`);
@@ -240,20 +247,21 @@
                 
                 container.innerHTML = '';
 
-                // لو مبعوث id محدد للمادة نقدر نجيبه مباشرة أو نعرض تفاصيله
                 if (subjectId && courses[subjectId]) {
                     const c = courses[subjectId];
+                    const embedUrl = getYouTubeEmbedUrl(c.link);
+                    logContentView(c.title);
+
                     container.innerHTML = `
                         <div class="lecture-card">
                             <h3 class="lecture-title">${c.title}</h3>
                             <p class="lecture-desc">${c.desc || 'شرح تفصيلي للمقرر الدراسي والمحاضرة المطلوبة.'}</p>
-                            <div class="actions-group">
-                                <a href="${c.link || '#'}" target="_blank" class="action-btn" onclick="logContentView('${c.title}')">▶ مشاهدة المحتوى</a>
+                            <div class="video-container">
+                                <iframe src="${embedUrl}" title="${c.title}" allowfullscreen></iframe>
                             </div>
                         </div>
                     `;
                 } else {
-                    // عرض بديل في حال لم يُحدد ID دقيق
                     let foundCount = 0;
                     const keys = Object.keys(courses);
                     
@@ -261,12 +269,14 @@
                         const c = courses[id];
                         if (subjectName && c.title.includes(decodeURIComponent(subjectName))) {
                             foundCount++;
+                            const embedUrl = getYouTubeEmbedUrl(c.link);
+                            
                             container.innerHTML += `
                                 <div class="lecture-card">
                                     <h3 class="lecture-title">${c.title}</h3>
                                     <p class="lecture-desc">${c.desc || 'شرح تفصيلي للمقرر الدراسي.'}</p>
-                                    <div class="actions-group">
-                                        <a href="${c.link || '#'}" target="_blank" class="action-btn" onclick="logContentView('${c.title}')">▶ مشاهدة المحتوى</a>
+                                    <div class="video-container">
+                                        <iframe src="${embedUrl}" title="${c.title}" allowfullscreen></iframe>
                                     </div>
                                 </div>
                             `;
@@ -276,7 +286,7 @@
                     if (foundCount === 0) {
                         container.innerHTML = `
                             <div class="lecture-card" style="text-align: center;">
-                                <h3 class="lecture-title" style="color: var لهذه المادة.">عذراً، لا يوجد محتوى مضاف لهذه المادة حالياً</h3>
+                                <h3 class="lecture-title" style="color: var(--accent-cyan);">عذراً، لا يوجد محتوى مضاف لهذه المادة حالياً</h3>
                                 <p class="lecture-desc">تابع لوحة الإشعارات لحين إرفاق المحاضرات.</p>
                             </div>
                         `;
@@ -294,7 +304,6 @@
             }
         }
 
-        // تسجيل تفاعل المشاهدة في قاعدة البيانات
         async function logContentView(title) {
             const studentName = localStorage.getItem('studentName') || 'طالب غير معروف';
             const now = new Date().toLocaleString('ar-EG');
