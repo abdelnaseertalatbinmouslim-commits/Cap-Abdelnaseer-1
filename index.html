@@ -1,603 +1,1875 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة الكوتش | El-Coach Platform</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#050811">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="منصة الكوتش">
+  <meta charset="UTF-8">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'media',
-            theme: {
-                extend: {
-                    colors: {
-                        bgDark: '#050811',
-                        primaryColor: '#3b82f6',
-                        accentCyan: '#06b6d4',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        :root {
-            --bg-dark: #050811;
-            --primary: #3b82f6;
-            --primary-glow: rgba(59, 130, 246, 0.4);
-            --accent-cyan: #06b6d4;
-            --glass-bg: rgba(15, 23, 42, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-input: rgba(2, 6, 23, 0.6);
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-        }
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
 
-        * {
-            box-sizing: border-box;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+  <meta name="theme-color" content="#080b12">
 
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            min-height: 100vh;
-            padding: 24px 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow-x: hidden;
-        }
+  <meta
+    name="description"
+    content="منصة الكوتش التعليمية"
+  >
 
-        /* خلفية الأشكال الضوئية الزجاجية */
-        body::before, body::after {
-            content: '';
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            filter: blur(90px);
-            z-index: -1;
-            opacity: 0.5;
-            animation: floatGlow 10s infinite alternate ease-in-out;
-        }
+  <title>منصة الكوتش</title>
 
-        body::before {
-            background: #2563eb;
-            top: -50px;
-            right: -50px;
-        }
+  <!-- صورة المنصة الموجودة في المشروع -->
+  <link
+    rel="icon"
+    type="image/jpeg"
+    href="1783950091830.jpg"
+  >
 
-        body::after {
-            background: #0891b2;
-            bottom: -50px;
-            left: -50px;
-            animation-delay: -5s;
-        }
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
 
-        @keyframes floatGlow {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(30px, 40px) scale(1.15); }
-        }
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
 
-        /* الكارت الرئيسي - الزجاجي */
-        .main-card {
-            width: 100%;
-            max-width: 480px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 32px;
-            padding: 32px 24px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 
-                        inset 0 1px 1px rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            position: relative;
-        }
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  >
 
-        /* شريط التنقل العلوي للتطبيق */
-        .app-header-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 18px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--glass-border);
-        }
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        .install-app-btn {
-            background: linear-gradient(135deg, #06b6d4, #2563eb);
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: none; /* يظهر تلقائياً لو الموبايل يدعم التثبيت */
-            align-items: center;
-            gap: 5px;
-            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
-        }
+    html {
+      min-height: 100%;
+      background: #070a10;
+    }
 
-        .install-app-btn:hover {
-            transform: scale(1.05);
-        }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Cairo", sans-serif;
+      color: #ffffff;
+      background: #070a10;
+      overflow-x: hidden;
+    }
 
-        /* الصورة العلوية الهولوجرامية */
-        .logo-container {
-            text-align: center;
-            margin-bottom: 16px;
-            position: relative;
-        }
+    button,
+    input,
+    select {
+      font-family: inherit;
+    }
 
-        .logo-img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 25px var(--primary-glow);
-            animation: pulseGlow 3s infinite ease-in-out;
-            margin: 0 auto;
-        }
+    button {
+      border: 0;
+    }
 
-        @keyframes pulseGlow {
-            0%, 100% {
-                box-shadow: 0 0 20px var(--primary-glow), 0 0 40px rgba(6, 182, 212, 0.2);
-                transform: scale(1);
-            }
-            50% {
-                box-shadow: 0 0 35px var(--primary-glow), 0 0 70px rgba(6, 182, 212, 0.5);
-                transform: scale(1.04);
-            }
-        }
+    .page {
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(
+          circle at 10% 10%,
+          rgba(255, 193, 7, 0.14),
+          transparent 27%
+        ),
+        radial-gradient(
+          circle at 90% 85%,
+          rgba(30, 64, 175, 0.17),
+          transparent 32%
+        ),
+        linear-gradient(
+          145deg,
+          #05070b 0%,
+          #0a0e17 48%,
+          #070a10 100%
+        );
+    }
 
-        .app-title {
-            text-align: center;
-            font-size: 1.75rem;
-            font-weight: 900;
-            margin: 8px 0 4px 0;
-            background: linear-gradient(135deg, #ffffff 0%, var(--accent-cyan) 50%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    .background-light {
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+      filter: blur(80px);
+      opacity: 0.55;
+    }
 
-        .app-subtitle {
-            text-align: center;
-            color: var(--text-sub);
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
+    .background-light.one {
+      width: 260px;
+      height: 260px;
+      top: -130px;
+      right: -80px;
+      background: rgba(255, 193, 7, 0.16);
+    }
 
-        /* قسم الفيديو الفخم */
-        .video-section {
-            margin-bottom: 20px;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid var(--glass-border);
-            background: #000;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-        }
+    .background-light.two {
+      width: 300px;
+      height: 300px;
+      bottom: -170px;
+      left: -100px;
+      background: rgba(37, 99, 235, 0.14);
+    }
 
-        .video-section video {
-            width: 100%;
-            display: block;
-            border-radius: 20px;
-            object-fit: cover;
-        }
+    .container {
+      width: min(1180px, calc(100% - 30px));
+      margin: auto;
+      position: relative;
+      z-index: 2;
+    }
 
-        /* تبويبات التنقل العصرية */
-        .tab-buttons {
-            display: flex;
-            background: var(--glass-input);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 4px;
-            margin-bottom: 20px;
-        }
+    .top-space {
+      padding-top: 35px;
+      padding-bottom: 35px;
+    }
 
-        .tab-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            background: transparent;
-            color: var(--text-sub);
-            font-weight: 700;
-            font-size: 0.85rem;
-            border-radius: 12px;
-            cursor: pointer;
-        }
+    .brand {
+      text-align: center;
+      margin-bottom: 28px;
+    }
 
-        .tab-btn.active {
-            background: linear-gradient(135deg, var(--primary), #2563eb);
-            color: #ffffff;
-            box-shadow: 0 4px 15px var(--primary-glow);
-        }
+    .brand-logo {
+      width: 86px;
+      height: 86px;
+      padding: 3px;
+      margin: 0 auto 15px;
+      border-radius: 25px;
+      background: linear-gradient(
+        135deg,
+        #ffe082,
+        #ffb300
+      );
+      box-shadow:
+        0 18px 50px rgba(255, 179, 0, 0.18);
+    }
 
-        /* عناصر النماذج */
-        .form-group {
-            margin-bottom: 16px;
-            text-align: right;
-        }
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 22px;
+      background: #11151f;
+    }
 
-        .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: var(--text-main);
-            padding-right: 4px;
-        }
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 50px);
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
 
-        .form-control {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 14px;
-            border: 1px solid var(--glass-border);
-            background: var(--glass-input);
-            color: var(--text-main);
-            font-size: 0.9rem;
-            outline: none;
-        }
+    .brand h1 span {
+      color: #ffc107;
+    }
 
-        .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px var(--primary-glow);
-            background: rgba(15, 23, 42, 0.85);
-        }
+    .brand p {
+      margin: 7px 0 0;
+      color: rgba(255,255,255,0.48);
+      font-size: 14px;
+    }
 
-        select.form-control option {
-            background-color: #0f172a;
-            color: #fff;
-        }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+      gap: 25px;
+      align-items: stretch;
+    }
 
-        /* صندوق الإخطار بالانضمام للقناة */
-        .whatsapp-notice {
-            background: rgba(37, 211, 102, 0.1);
-            border: 1px solid rgba(37, 211, 102, 0.3);
-            border-radius: 14px;
-            padding: 10px 12px;
-            margin-bottom: 16px;
-            font-size: 0.8rem;
-            color: #25D366;
-            text-align: center;
-            line-height: 1.5;
-        }
+    .glass {
+      background: rgba(14, 19, 29, 0.76);
+      border: 1px solid rgba(255,255,255,0.085);
+      box-shadow:
+        0 30px 90px rgba(0,0,0,0.42),
+        inset 0 1px 0 rgba(255,255,255,0.035);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
 
-        /* أزرار الإرسال الفخمة */
-        .submit-btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
-            color: #ffffff;
-            font-size: 1rem;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
-            margin-top: 6px;
-        }
+    .video-card {
+      min-height: 610px;
+      border-radius: 30px;
+      overflow: hidden;
+      position: relative;
+    }
 
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(6, 182, 212, 0.5);
-        }
+    .video-card video {
+      width: 100%;
+      height: 100%;
+      min-height: 610px;
+      display: block;
+      object-fit: cover;
+      background: #000;
+    }
 
-        /* أزرار التواصل والدعم */
-        .support-title {
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            margin: 22px 0 12px 0;
-            font-weight: 700;
-        }
+    .video-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 30px;
+      pointer-events: none;
+      background:
+        linear-gradient(
+          to top,
+          rgba(0,0,0,0.88),
+          rgba(0,0,0,0.15) 58%,
+          transparent 100%
+        );
+    }
 
-        .social-buttons {
-            display: flex;
-            gap: 8px;
-        }
+    .video-overlay .small {
+      color: #ffc107;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
 
-        .social-btn {
-            flex: 1;
-            padding: 10px 6px;
-            border-radius: 14px;
-            text-decoration: none;
-            text-align: center;
-            font-size: 0.8rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            border: 1px solid var(--glass-border);
-        }
+    .video-overlay h2 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 900;
+    }
 
-        .social-btn.wa { background: rgba(37, 211, 102, 0.12); color: #25D366; }
-        .social-btn.tg { background: rgba(0, 136, 204, 0.12); color: #38bdf8; }
-        .social-btn.fb { background: rgba(24, 119, 242, 0.12); color: #60a5fa; }
+    .video-overlay p {
+      margin: 7px 0 0;
+      color: rgba(255,255,255,0.68);
+      font-size: 14px;
+    }
 
-        .social-btn:hover { transform: translateY(-2px); }
+    .auth-card {
+      border-radius: 30px;
+      padding: 25px;
+      min-height: 610px;
+    }
 
-        /* التوقيع الرسمي للبشمهندس عبدالناصر */
-        .footer-credits {
-            text-align: center;
-            margin-top: 22px;
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            border-top: 1px solid var(--glass-border);
-            padding-top: 14px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-    </style>
+    .tabs {
+      display: flex;
+      gap: 7px;
+      padding: 6px;
+      border-radius: 17px;
+      background: rgba(255,255,255,0.045);
+      margin-bottom: 26px;
+    }
+
+    .tab {
+      flex: 1;
+      cursor: pointer;
+      padding: 12px;
+      border-radius: 13px;
+      color: rgba(255,255,255,0.45);
+      background: transparent;
+      font-weight: 800;
+      transition: 0.22s ease;
+    }
+
+    .tab.active {
+      color: #101010;
+      background: linear-gradient(
+        135deg,
+        #ffe082,
+        #ffb300
+      );
+    }
+
+    .panel-title {
+      margin-bottom: 22px;
+    }
+
+    .panel-title h2 {
+      margin: 0;
+      font-size: 25px;
+      font-weight: 900;
+    }
+
+    .panel-title p {
+      margin: 5px 0 0;
+      color: rgba(255,255,255,0.43);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 13px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.83);
+    }
+
+    .input {
+      width: 100%;
+      height: 51px;
+      padding: 0 15px;
+      border-radius: 15px;
+      outline: none;
+      border: 1px solid rgba(255,255,255,0.09);
+      color: #ffffff;
+      background: rgba(255,255,255,0.052);
+      transition: 0.22s ease;
+    }
+
+    .input:focus {
+      border-color: rgba(255,193,7,0.65);
+      background: rgba(255,255,255,0.075);
+      box-shadow:
+        0 0 0 4px rgba(255,193,7,0.07);
+    }
+
+    .input::placeholder {
+      color: rgba(255,255,255,0.28);
+    }
+
+    select.input {
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    select.input option {
+      color: #ffffff;
+      background: #10151f;
+    }
+
+    .password-row {
+      position: relative;
+    }
+
+    .password-row .input {
+      padding-left: 52px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      left: 9px;
+      top: 8px;
+      width: 35px;
+      height: 35px;
+      border-radius: 10px;
+      cursor: pointer;
+      color: rgba(255,255,255,0.55);
+      background: transparent;
+    }
+
+    .password-toggle:hover {
+      background: rgba(255,255,255,0.06);
+      color: #ffffff;
+    }
+
+    .main-button {
+      width: 100%;
+      min-height: 53px;
+      margin-top: 2px;
+      border-radius: 16px;
+      cursor: pointer;
+      color: #111111;
+      font-weight: 900;
+      font-size: 15px;
+      background: linear-gradient(
+        135deg,
+        #ffe082,
+        #ffb300
+      );
+      box-shadow:
+        0 13px 35px rgba(255,179,0,0.17);
+      transition: 0.22s ease;
+    }
+
+    .main-button:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 17px 42px rgba(255,179,0,0.26);
+    }
+
+    .main-button:active {
+      transform: scale(0.985);
+    }
+
+    .main-button:disabled {
+      opacity: 0.58;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .forgot {
+      width: 100%;
+      margin-top: 15px;
+      padding: 5px;
+      background: transparent;
+      color: #ffc107;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .message {
+      display: none;
+      padding: 12px 14px;
+      margin-bottom: 17px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.8;
+      white-space: pre-line;
+    }
+
+    .message.error {
+      display: block;
+      color: #fecaca;
+      border: 1px solid rgba(239,68,68,0.30);
+      background: rgba(239,68,68,0.09);
+    }
+
+    .message.success {
+      display: block;
+      color: #bbf7d0;
+      border: 1px solid rgba(34,197,94,0.30);
+      background: rgba(34,197,94,0.09);
+    }
+
+    .message.info {
+      display: block;
+      color: #bfdbfe;
+      border: 1px solid rgba(59,130,246,0.30);
+      background: rgba(59,130,246,0.09);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 25px 0 12px;
+      color: rgba(255,255,255,0.25);
+      font-size: 11px;
+    }
+
+    .security-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 18px;
+      color: rgba(255,255,255,0.28);
+      font-size: 11px;
+    }
+
+    .loader {
+      width: 19px;
+      height: 19px;
+      display: inline-block;
+      vertical-align: middle;
+      border-radius: 50%;
+      border: 3px solid rgba(0,0,0,0.20);
+      border-top-color: #111111;
+      animation: spin 0.75s linear infinite;
+      margin-left: 7px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .panel {
+      animation: panelIn 0.28s ease;
+    }
+
+    @keyframes panelIn {
+      from {
+        opacity: 0;
+        transform: translateY(7px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .video-card {
+        min-height: 390px;
+      }
+
+      .video-card video {
+        min-height: 390px;
+      }
+
+      .auth-card {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .container {
+        width: min(100% - 20px, 1180px);
+      }
+
+      .top-space {
+        padding-top: 20px;
+      }
+
+      .brand {
+        margin-bottom: 20px;
+      }
+
+      .brand-logo {
+        width: 72px;
+        height: 72px;
+        border-radius: 21px;
+      }
+
+      .brand-logo img {
+        border-radius: 18px;
+      }
+
+      .video-card {
+        min-height: 270px;
+        border-radius: 23px;
+      }
+
+      .video-card video {
+        min-height: 270px;
+      }
+
+      .video-overlay {
+        padding: 18px;
+      }
+
+      .video-overlay h2 {
+        font-size: 21px;
+      }
+
+      .video-overlay p {
+        font-size: 12px;
+      }
+
+      .auth-card {
+        padding: 18px;
+        border-radius: 23px;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-    <div class="main-card">
-        <div class="app-header-bar">
-            <span style="font-size: 0.75rem; color: var(--text-sub);">النسخة الاحترافية 2.6</span>
-            <button id="installBtn" class="install-app-btn" onclick="installApp()">
-                📲 تثبيت كـ تطبيق
-            </button>
+  <div class="page">
+
+    <div class="background-light one"></div>
+    <div class="background-light two"></div>
+
+    <main class="container top-space">
+
+      <!-- ================================================== -->
+      <!-- BRAND -->
+      <!-- ================================================== -->
+
+      <header class="brand">
+
+        <div class="brand-logo">
+          <img
+            src="1783950091830.jpg"
+            alt="شعار منصة الكوتش"
+          >
         </div>
 
-        <div class="logo-container">
-            <img src="1783950091830.jpg" alt="منصة الكوتش" class="logo-img" onerror="this.onerror=null; this.src='1783950091830';">
-        </div>
+        <h1>
+          منصة <span>الكوتش</span>
+        </h1>
 
-        <h1 class="app-title">منصة الكوتش</h1>
-        <p class="app-subtitle">
-            🥇 <b>الداعم الأول والمساعد الأكاديمي والرياضي</b> لكل كباتن ورجال علوم الرياضة على مستوى الجمهورية.
+        <p>
+          تعليم أقوى، متابعة أفضل، ومستقبل أحسن
         </p>
 
-        <div class="video-section">
-            <video autoplay muted loop playsinline poster="1783950091830.jpg">
-                <source src="bebo123.mp4" type="video/mp4">
-                متصفحك لا يدعم تشغيل الفيديو.
-            </video>
-        </div>
+      </header>
 
-        <div class="tab-buttons">
-            <button class="tab-btn active" onclick="switchTab('register')">طلب انضمام جديد</button>
-            <button class="tab-btn" onclick="switchTab('login')">تسجيل الدخول</button>
-        </div>
+      <!-- ================================================== -->
+      <!-- MAIN -->
+      <!-- ================================================== -->
 
-        <form id="registerForm" onsubmit="handleRegister(event)">
-            <div class="whatsapp-notice">
-                ⚠️ <b>شرط أساسي لاكتمال التسجيل:</b> يجب الانضمام لقناة الواتساب الرسمية لمتابعة حالة قبول حسابك.
+      <section class="layout">
+
+        <!-- ================================================= -->
+        <!-- VIDEO -->
+        <!-- ================================================= -->
+
+        <div class="glass video-card">
+
+          <video
+            src="bebo123.mp4"
+            poster="1783950091830.jpg"
+            controls
+            playsinline
+            preload="metadata"
+          ></video>
+
+          <div class="video-overlay">
+
+            <div class="small">
+              أهلاً بيك في
             </div>
 
-            <div class="form-group">
-                <label>الاسم الثلاثي / الخماسي</label>
-                <input type="text" id="regName" class="form-control" placeholder="أدخل اسمك بالكامل" required>
+            <h2>
+              منصة الكوتش 🎓
+            </h2>
+
+            <p>
+              كل اللي تحتاجه للتعلم والمتابعة في مكان واحد.
+            </p>
+
+          </div>
+
+        </div>
+
+        <!-- ================================================= -->
+        <!-- AUTH -->
+        <!-- ================================================= -->
+
+        <div class="glass auth-card">
+
+          <!-- Tabs -->
+
+          <div class="tabs">
+
+            <button
+              id="loginTab"
+              class="tab active"
+              type="button"
+            >
+              تسجيل الدخول
+            </button>
+
+            <button
+              id="registerTab"
+              class="tab"
+              type="button"
+            >
+              إنشاء حساب
+            </button>
+
+          </div>
+
+          <!-- Message -->
+
+          <div
+            id="message"
+            class="message"
+            role="alert"
+          ></div>
+
+          <!-- ================================================= -->
+          <!-- LOGIN PANEL -->
+          <!-- ================================================= -->
+
+          <section
+            id="loginPanel"
+            class="panel"
+          >
+
+            <div class="panel-title">
+
+              <h2>
+                أهلاً بيك 👋
+              </h2>
+
+              <p>
+                سجل دخولك للوصول إلى حسابك ومحتوى المنصة.
+              </p>
+
             </div>
-            <div class="form-group">
-                <label>الفرقة الدراسية</label>
-                <select id="regGrade" class="form-control" required>
-                    <option value="">اختر الفرقة الدراسية</option>
-                    <option value="الفرقة الأولى">الفرقة الأولى</option>
-                    <option value="الفرقة الثانية">الفرقة الثانية</option>
-                    <option value="الفرقة الثالثة">الفرقة الثالثة</option>
-                    <option value="الفرقة الرابعة">الفرقة الرابعة</option>
+
+            <form
+              id="loginForm"
+              class="form"
+              autocomplete="on"
+            >
+
+              <div class="field">
+
+                <label for="loginEmail">
+                  البريد الإلكتروني
+                </label>
+
+                <input
+                  id="loginEmail"
+                  class="input"
+                  type="email"
+                  inputmode="email"
+                  autocomplete="username"
+                  placeholder="example@email.com"
+                  maxlength="150"
+                  required
+                >
+
+              </div>
+
+              <div class="field">
+
+                <label for="loginPassword">
+                  كلمة المرور
+                </label>
+
+                <div class="password-row">
+
+                  <input
+                    id="loginPassword"
+                    class="input"
+                    type="password"
+                    autocomplete="current-password"
+                    placeholder="••••••••"
+                    maxlength="128"
+                    required
+                  >
+
+                  <button
+                    id="loginPasswordToggle"
+                    class="password-toggle"
+                    type="button"
+                    aria-label="إظهار كلمة المرور"
+                  >
+                    👁
+                  </button>
+
+                </div>
+
+              </div>
+
+              <button
+                id="loginButton"
+                class="main-button"
+                type="submit"
+              >
+                تسجيل الدخول
+              </button>
+
+            </form>
+
+            <button
+              id="forgotPassword"
+              class="forgot"
+              type="button"
+            >
+              نسيت كلمة المرور؟
+            </button>
+
+            <div class="security-note">
+              🔒 تسجيل الدخول محمي بواسطة Firebase Authentication
+            </div>
+
+          </section>
+
+          <!-- ================================================= -->
+          <!-- REGISTER PANEL -->
+          <!-- ================================================= -->
+
+          <section
+            id="registerPanel"
+            class="panel hidden"
+          >
+
+            <div class="panel-title">
+
+              <h2>
+                إنشاء حساب جديد ✨
+              </h2>
+
+              <p>
+                املأ البيانات التالية لإرسال طلب التسجيل للإدارة.
+              </p>
+
+            </div>
+
+            <form
+              id="registerForm"
+              class="form"
+              autocomplete="off"
+            >
+
+              <div class="field">
+
+                <label for="registerName">
+                  الاسم بالكامل
+                </label>
+
+                <input
+                  id="registerName"
+                  class="input"
+                  type="text"
+                  autocomplete="name"
+                  placeholder="اكتب اسمك بالكامل"
+                  maxlength="100"
+                  required
+                >
+
+              </div>
+
+              <div class="field">
+
+                <label for="registerPhone">
+                  رقم الهاتف
+                </label>
+
+                <input
+                  id="registerPhone"
+                  class="input"
+                  type="tel"
+                  inputmode="numeric"
+                  autocomplete="tel"
+                  placeholder="01xxxxxxxxx"
+                  maxlength="11"
+                  required
+                >
+
+              </div>
+
+              <div class="field">
+
+                <label for="registerEmail">
+                  البريد الإلكتروني
+                </label>
+
+                <input
+                  id="registerEmail"
+                  class="input"
+                  type="email"
+                  inputmode="email"
+                  autocomplete="email"
+                  placeholder="example@email.com"
+                  maxlength="150"
+                  required
+                >
+
+              </div>
+
+              <div class="field">
+
+                <label for="registerGrade">
+                  المرحلة الدراسية
+                </label>
+
+                <select
+                  id="registerGrade"
+                  class="input"
+                  required
+                >
+
+                  <option
+                    value=""
+                    selected
+                    disabled
+                  >
+                    اختر المرحلة الدراسية
+                  </option>
+
+                  <option value="الفرقة الأولى">
+                    الفرقة الأولى
+                  </option>
+
+                  <option value="الفرقة الثانية">
+                    الفرقة الثانية
+                  </option>
+
+                  <option value="الفرقة الثالثة">
+                    الفرقة الثالثة
+                  </option>
+
+                  <option value="الفرقة الرابعة">
+                    الفرقة الرابعة
+                  </option>
+
                 </select>
-            </div>
-            <div class="form-group">
-                <label>رقم الهاتف (واتساب)</label>
-                <input type="tel" id="regPhone" class="form-control" placeholder="01xxxxxxxxx" required>
-            </div>
-            <button type="submit" id="regSubmitBtn" class="submit-btn">إرسال طلب الانضمام والدخول للقناة</button>
-        </form>
 
-        <form id="loginForm" onsubmit="handleLogin(event)" style="display: none;">
-            <div class="form-group">
-                <label>رقم الهاتف / اسم المستخدم</label>
-                <input type="text" id="loginPhone" class="form-control" placeholder="01xxxxxxxxx أو admin" required>
-            </div>
-            <div class="form-group">
-                <label>كود المرور / PIN</label>
-                <input type="password" id="loginPin" class="form-control" placeholder="أدخل كود المرور" required>
-            </div>
-            <button type="submit" class="submit-btn">تسجيل الدخول</button>
-        </form>
+              </div>
 
-        <p class="support-title">أزرار الدعم والتواصل المباشر</p>
-        
-        <div class="social-buttons">
-            <a href="https://wa.me/201098227150" target="_blank" class="social-btn wa">واتساب</a>
-            <a href="https://t.me/CapAbdo1" target="_blank" class="social-btn tg">تليجرام</a>
-            <a href="https://www.facebook.com/cap.abdelnaseer.talat" target="_blank" class="social-btn fb">فيسبوك</a>
+              <div class="field">
+
+                <label for="registerPassword">
+                  كلمة المرور
+                </label>
+
+                <div class="password-row">
+
+                  <input
+                    id="registerPassword"
+                    class="input"
+                    type="password"
+                    autocomplete="new-password"
+                    placeholder="6 أحرف أو أكثر"
+                    minlength="6"
+                    maxlength="128"
+                    required
+                  >
+
+                  <button
+                    id="registerPasswordToggle"
+                    class="password-toggle"
+                    type="button"
+                    aria-label="إظهار كلمة المرور"
+                  >
+                    👁
+                  </button>
+
+                </div>
+
+              </div>
+
+              <div class="field">
+
+                <label for="registerPasswordConfirm">
+                  تأكيد كلمة المرور
+                </label>
+
+                <div class="password-row">
+
+                  <input
+                    id="registerPasswordConfirm"
+                    class="input"
+                    type="password"
+                    autocomplete="new-password"
+                    placeholder="أعد كتابة كلمة المرور"
+                    minlength="6"
+                    maxlength="128"
+                    required
+                  >
+
+                  <button
+                    id="registerConfirmToggle"
+                    class="password-toggle"
+                    type="button"
+                    aria-label="إظهار كلمة المرور"
+                  >
+                    👁
+                  </button>
+
+                </div>
+
+              </div>
+
+              <button
+                id="registerButton"
+                class="main-button"
+                type="submit"
+              >
+                إرسال طلب التسجيل
+              </button>
+
+            </form>
+
+            <div class="security-note">
+              🛡️ بياناتك تُحفظ في Firebase ولا يتم وضع كلمة المرور داخل قاعدة البيانات.
+            </div>
+
+          </section>
+
         </div>
 
-        <div class="footer-credits">
-            تطوير وبواسطة المهندس عبدالناصر © 2026
-        </div>
-    </div>
+      </section>
 
-    <script>
-        const FIREBASE_URL = "https://abodaa-default-rtdb.firebaseio.com";
-        const BOT_TOKEN = "8944171880:AAFmbtL7TjB72ZtWKl4z_wjqlShSQFXkZpA"; 
-        const CHAT_ID = "5926610601";
-        const WA_CHANNEL_URL = "https://whatsapp.com/channel/0029VbDGX1rJpe8ZM6H5h02T";
+      <footer class="footer">
+        © 2026 منصة الكوتش — جميع الحقوق محفوظة
+      </footer>
 
-        // ميزة تثبيت التطبيق (PWA Install Prompt)
-        let deferredPrompt;
-        const installBtn = document.getElementById('installBtn');
+    </main>
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.style.display = 'flex';
-        });
+  </div>
 
-        function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User accepted the install prompt');
-                    }
-                    deferredPrompt = null;
-                    installBtn.style.display = 'none';
-                });
-            }
+  <!-- ====================================================== -->
+  <!-- FIREBASE CONFIG -->
+  <!-- ====================================================== -->
+
+  <script
+    type="module"
+    src="firebase-config.js"
+  ></script>
+
+  <!-- ====================================================== -->
+  <!-- PAGE LOGIC -->
+  <!-- ====================================================== -->
+
+  <script type="module">
+
+    import {
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      sendPasswordResetEmail,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+    import {
+      ref,
+      get,
+      push,
+      set,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+    // --------------------------------------------------------
+    // Wait for shared Firebase configuration
+    // --------------------------------------------------------
+
+    async function waitForFirebase() {
+
+      for (let i = 0; i < 100; i++) {
+
+        if (
+          window.AbdelnaseerFirebase &&
+          window.AbdelnaseerFirebase.auth &&
+          window.AbdelnaseerFirebase.database
+        ) {
+          return window.AbdelnaseerFirebase;
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            checkRegistrationStatus();
-        });
+        await new Promise(
+          resolve => setTimeout(resolve, 50)
+        );
+      }
 
-        function checkRegistrationStatus() {
-            const hasRegistered = localStorage.getItem('elcoach_registered');
-            if (hasRegistered) {
-                const regForm = document.getElementById('registerForm');
-                regForm.innerHTML = `
-                    <div style="text-align: center; padding: 20px 10px;">
-                        <h3 style="color: #06b6d4; margin-bottom: 10px;">تم تسجيل طلبك بالفعل!</h3>
-                        <p style="color: var(--text-sub); font-size: 0.85rem; line-height: 1.6;">
-                            لقد قمت بإرسال طلب انضمام سابقاً لهذا الجهاز. يمكنك متابعة حالة القبول أو تسجيل الدخول فور التفعيل.
-                        </p>
-                        <a href="${WA_CHANNEL_URL}" target="_blank" class="submit-btn" style="display: block; text-decoration: none; margin-top: 15px;">
-                            الانضمام لقناة الواتساب الرسمية
-                        </a>
-                    </div>
-                `;
-            }
+      throw new Error(
+        "Firebase configuration failed to load."
+      );
+    }
+
+    const Firebase =
+      await waitForFirebase();
+
+    const auth =
+      Firebase.auth;
+
+    const database =
+      Firebase.database;
+
+    // --------------------------------------------------------
+    // Elements
+    // --------------------------------------------------------
+
+    const loginTab =
+      document.getElementById("loginTab");
+
+    const registerTab =
+      document.getElementById("registerTab");
+
+    const loginPanel =
+      document.getElementById("loginPanel");
+
+    const registerPanel =
+      document.getElementById("registerPanel");
+
+    const loginForm =
+      document.getElementById("loginForm");
+
+    const registerForm =
+      document.getElementById("registerForm");
+
+    const message =
+      document.getElementById("message");
+
+    const loginButton =
+      document.getElementById("loginButton");
+
+    const registerButton =
+      document.getElementById("registerButton");
+
+    const forgotPassword =
+      document.getElementById("forgotPassword");
+
+    // --------------------------------------------------------
+    // Message
+    // --------------------------------------------------------
+
+    function clearMessage() {
+
+      message.className =
+        "message";
+
+      message.textContent =
+        "";
+
+    }
+
+    function showMessage(
+      text,
+      type = "error"
+    ) {
+
+      message.className =
+        `message ${type}`;
+
+      message.textContent =
+        text;
+
+      message.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      });
+
+    }
+
+    // --------------------------------------------------------
+    // Loading
+    // --------------------------------------------------------
+
+    function setButtonLoading(
+      button,
+      loading,
+      normalText
+    ) {
+
+      button.disabled =
+        loading;
+
+      if (loading) {
+
+        button.innerHTML =
+          '<span class="loader"></span> جاري التنفيذ...';
+
+      } else {
+
+        button.textContent =
+          normalText;
+
+      }
+
+    }
+
+    // --------------------------------------------------------
+    // Password Visibility
+    // --------------------------------------------------------
+
+    function setupPasswordToggle(
+      buttonId,
+      inputId
+    ) {
+
+      const button =
+        document.getElementById(buttonId);
+
+      const input =
+        document.getElementById(inputId);
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          const isPassword =
+            input.type === "password";
+
+          input.type =
+            isPassword
+              ? "text"
+              : "password";
+
+          button.textContent =
+            isPassword
+              ? "🙈"
+              : "👁";
+
+        }
+      );
+
+    }
+
+    setupPasswordToggle(
+      "loginPasswordToggle",
+      "loginPassword"
+    );
+
+    setupPasswordToggle(
+      "registerPasswordToggle",
+      "registerPassword"
+    );
+
+    setupPasswordToggle(
+      "registerConfirmToggle",
+      "registerPasswordConfirm"
+    );
+
+    // --------------------------------------------------------
+    // Tabs
+    // --------------------------------------------------------
+
+    function openLogin() {
+
+      clearMessage();
+
+      loginTab.classList.add("active");
+      registerTab.classList.remove("active");
+
+      loginPanel.classList.remove("hidden");
+      registerPanel.classList.add("hidden");
+
+    }
+
+    function openRegister() {
+
+      clearMessage();
+
+      registerTab.classList.add("active");
+      loginTab.classList.remove("active");
+
+      registerPanel.classList.remove("hidden");
+      loginPanel.classList.add("hidden");
+
+    }
+
+    loginTab.addEventListener(
+      "click",
+      openLogin
+    );
+
+    registerTab.addEventListener(
+      "click",
+      openRegister
+    );
+
+    // --------------------------------------------------------
+    // Phone Normalization
+    // --------------------------------------------------------
+
+    function normalizePhone(value) {
+
+      return String(value || "")
+        .replace(/\s+/g, "")
+        .replace(/-/g, "")
+        .trim();
+
+    }
+
+    function isValidEgyptianPhone(phone) {
+
+      return /^01[0125][0-9]{8}$/.test(
+        phone
+      );
+
+    }
+
+    // --------------------------------------------------------
+    // Login
+    // --------------------------------------------------------
+
+    loginForm.addEventListener(
+      "submit",
+      async (event) => {
+
+        event.preventDefault();
+
+        clearMessage();
+
+        const email =
+          document
+            .getElementById("loginEmail")
+            .value
+            .trim()
+            .toLowerCase();
+
+        const password =
+          document
+            .getElementById("loginPassword")
+            .value;
+
+        if (!email) {
+
+          showMessage(
+            "اكتب البريد الإلكتروني."
+          );
+
+          return;
         }
 
-        function switchTab(tab) {
-            const regForm = document.getElementById('registerForm');
-            const loginForm = document.getElementById('loginForm');
-            const buttons = document.querySelectorAll('.tab-btn');
+        if (!password) {
 
-            if (tab === 'register') {
-                regForm.style.display = 'block';
-                loginForm.style.display = 'none';
-                buttons[0].classList.add('active');
-                buttons[1].classList.remove('active');
+          showMessage(
+            "اكتب كلمة المرور."
+          );
+
+          return;
+        }
+
+        setButtonLoading(
+          loginButton,
+          true,
+          "تسجيل الدخول"
+        );
+
+        try {
+
+          const credential =
+            await signInWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+
+          const user =
+            credential.user;
+
+          const studentRef =
+            ref(
+              database,
+              `students/${user.uid}`
+            );
+
+          const studentSnapshot =
+            await get(studentRef);
+
+          if (!studentSnapshot.exists()) {
+
+            await signOut(auth);
+
+            showMessage(
+              "تم تسجيل الدخول، لكن لم يتم العثور على ملف الطالب. تواصل مع الإدارة."
+            );
+
+            return;
+          }
+
+          const student =
+            studentSnapshot.val();
+
+          const status =
+            String(
+              student.status || "pending"
+            )
+              .trim()
+              .toLowerCase();
+
+          if (
+            status !== "approved" &&
+            status !== "active"
+          ) {
+
+            await signOut(auth);
+
+            if (status === "rejected") {
+
+              showMessage(
+                "تم رفض طلب التسجيل. تواصل مع الإدارة لمعرفة التفاصيل."
+              );
+
             } else {
-                regForm.style.display = 'none';
-                loginForm.style.display = 'block';
-                buttons[0].classList.remove('active');
-                buttons[1].classList.add('active');
+
+              showMessage(
+                "حسابك لسه في انتظار موافقة الإدارة. حاول الدخول بعد الموافقة."
+              );
+
             }
+
+            return;
+          }
+
+          showMessage(
+            "تم تسجيل الدخول بنجاح ✅\nجاري فتح المنصة...",
+            "success"
+          );
+
+          setTimeout(
+            () => {
+              window.location.href =
+                "courses.html";
+            },
+            700
+          );
+
+        } catch (error) {
+
+          console.error(
+            "Login error:",
+            error
+          );
+
+          let text =
+            "حدث خطأ أثناء تسجيل الدخول.";
+
+          switch (error.code) {
+
+            case "auth/invalid-credential":
+              text =
+                "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+              break;
+
+            case "auth/user-not-found":
+              text =
+                "لا يوجد حساب بهذا البريد الإلكتروني.";
+              break;
+
+            case "auth/wrong-password":
+              text =
+                "كلمة المرور غير صحيحة.";
+              break;
+
+            case "auth/invalid-email":
+              text =
+                "البريد الإلكتروني غير صحيح.";
+              break;
+
+            case "auth/too-many-requests":
+              text =
+                "تم إيقاف المحاولات مؤقتًا بسبب محاولات كثيرة. حاول لاحقًا.";
+              break;
+
+            case "auth/network-request-failed":
+              text =
+                "تعذر الاتصال بالخادم. تأكد من الإنترنت.";
+              break;
+
+            case "auth/user-disabled":
+              text =
+                "هذا الحساب تم تعطيله. تواصل مع الإدارة.";
+              break;
+
+          }
+
+          showMessage(text);
+
+        } finally {
+
+          setButtonLoading(
+            loginButton,
+            false,
+            "تسجيل الدخول"
+          );
+
         }
 
-        async function handleRegister(e) {
-            e.preventDefault();
-            if (localStorage.getItem('elcoach_registered')) {
-                alert("تم تسجيل طلبك مسبقاً من هذا الجهاز!");
-                return;
-            }
-            
-            const name = document.getElementById('regName').value.trim();
-            const grade = document.getElementById('regGrade').value;
-            const phone = document.getElementById('regPhone').value.trim();
+      }
+    );
 
-            const now = new Date();
-            const dateFormatted = now.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-            const timeFormatted = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', hour12: true });
-            const registrationTimestamp = `${dateFormatted} - ${timeFormatted}`;
+    // --------------------------------------------------------
+    // Registration
+    // --------------------------------------------------------
 
-            try {
-                const checkRes = await fetch(`${FIREBASE_URL}/students.json`);
-                const existingData = await checkRes.json();
+    registerForm.addEventListener(
+      "submit",
+      async (event) => {
 
-                if (existingData) {
-                    const isPhoneDuplicate = Object.values(existingData).some(student => student.phone === phone);
-                    if (isPhoneDuplicate) {
-                        alert("رقم الهاتف هذا مسجل بالفعل في المنصة!");
-                        return;
-                    }
-                }
+        event.preventDefault();
 
-                const studentData = {
-                    name, grade, phone, status: 'pending', createdAt: registrationTimestamp
-                };
+        clearMessage();
 
-                const res = await fetch(`${FIREBASE_URL}/students.json`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(studentData)
-                });
+        const name =
+          document
+            .getElementById("registerName")
+            .value
+            .trim();
 
-                if (!res.ok) throw new Error("تعذر حفظ الطلب");
+        const phone =
+          normalizePhone(
+            document
+              .getElementById("registerPhone")
+              .value
+          );
 
-                let formattedPhone = phone.startsWith('0') ? '2' + phone : phone;
-                const textMessage = `🔔 <b>طلب تسجيل جديد في منصة الكوتش</b>\n\n👤 <b>الاسم:</b> ${name}\n📚 <b>الفرقة:</b> ${grade}\n📱 <b>الهاتف:</b> ${phone}\n⏰ <b>الوقت:</b> ${registrationTimestamp}`;
+        const email =
+          document
+            .getElementById("registerEmail")
+            .value
+            .trim()
+            .toLowerCase();
 
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: textMessage,
-                        parse_mode: 'HTML',
-                        reply_markup: {
-                            inline_keyboard: [[
-                                { text: "📲 فتح واتساب الطالب", url: `https://wa.me/${formattedPhone}` },
-                                { text: "⚙️ لوحة التحكم", url: `https://cap-abdelnaseer-talat.github.io/Cap-Abdelnaseer-1/admin.html` }
-                            ]]
-                        }
-                    })
-                });
+        const grade =
+          document
+            .getElementById("registerGrade")
+            .value;
 
-                localStorage.setItem('elcoach_registered', 'true');
-                alert("تم إرسال طلبك بنجاح! سيتم تحويلك الآن لقناة الواتساب الرسمية.");
-                window.location.href = WA_CHANNEL_URL;
+        const password =
+          document
+            .getElementById("registerPassword")
+            .value;
 
-            } catch (err) {
-                console.error(err);
-                alert("حدث خطأ أثناء الاتصال بالخادم.");
-            }
+        const passwordConfirm =
+          document
+            .getElementById("registerPasswordConfirm")
+            .value;
+
+        // ----------------------------------------------------
+        // Validation
+        // ----------------------------------------------------
+
+        if (name.length < 3) {
+
+          showMessage(
+            "اكتب الاسم بالكامل بشكل صحيح."
+          );
+
+          return;
         }
 
-        async function handleLogin(e) {
-            e.preventDefault();
-            const phone = document.getElementById('loginPhone').value.trim();
-            const pin = document.getElementById('loginPin').value.trim();
+        if (!isValidEgyptianPhone(phone)) {
 
-            if ((phone === 'admin' || phone === '01000000000') && pin === 'admin2026') {
-                window.location.href = "admin.html";
-                return;
-            }
+          showMessage(
+            "اكتب رقم هاتف مصري صحيح مكوّن من 11 رقم."
+          );
 
-            try {
-                const res = await fetch(`${FIREBASE_URL}/students.json`);
-                const data = await res.json();
-                let foundUser = null;
-
-                if (data) {
-                    Object.keys(data).forEach(key => {
-                        const student = data[key];
-                        if (student.phone === phone && String(student.pin) === String(pin) && student.status === 'approved') {
-                            foundUser = { id: key, ...student };
-                        }
-                    });
-                }
-
-                if (foundUser) {
-                    localStorage.setItem('currentUser', JSON.stringify(foundUser));
-                    window.location.href = "courses.html";
-                } else {
-                    alert("رقم الهاتف أو كود المرور غير صحيح، أو لم يتم تفعيل حسابك بعد.");
-                }
-            } catch (err) {
-                console.error(err);
-                alert("حدث خطأ أثناء الاتصال بقاعدة البيانات.");
-            }
+          return;
         }
-    </script>
+
+        if (!email) {
+
+          showMessage(
+            "اكتب البريد الإلكتروني."
+          );
+
+          return;
+        }
+
+        if (!grade) {
+
+          showMessage(
+            "اختار المرحلة الدراسية."
+          );
+
+          return;
+        }
+
+        if (password.length < 6) {
+
+          showMessage(
+            "كلمة المرور يجب أن تكون 6 أحرف أو أكثر."
+          );
+
+          return;
+        }
+
+        if (password !== passwordConfirm) {
+
+          showMessage(
+            "تأكيد كلمة المرور غير مطابق."
+          );
+
+          return;
+        }
+
+        setButtonLoading(
+          registerButton,
+          true,
+          "إرسال طلب التسجيل"
+        );
+
+        try {
+
+          // --------------------------------------------------
+          // Create Firebase Authentication account
+          // --------------------------------------------------
+
+          const credential =
+            await createUserWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+
+          const user =
+            credential.user;
+
+          // --------------------------------------------------
+          // Create registration request
+          // --------------------------------------------------
+
+          const requestRef =
+            push(
+              ref(
+                database,
+                "registration_requests"
+              )
+            );
+
+          await set(
+            requestRef,
+            {
+              uid: user.uid,
+
+              name: name,
+
+              phone: phone,
+
+              email: email,
+
+              grade: grade,
+
+              status: "pending",
+
+              createdAt:
+                serverTimestamp(),
+
+              platform:
+                "منصة الكوتش"
+            }
+          );
+
+          // --------------------------------------------------
+          // Create pending student profile
+          // --------------------------------------------------
+
+          await set(
+            ref(
+              database,
+              `students/${user.uid}`
+            ),
+            {
+              uid: user.uid,
+
+              name: name,
+
+              phone: phone,
+
+              email: email,
+
+              grade: grade,
+
+              status: "pending",
+
+              createdAt:
+                serverTimestamp(),
+
+              platform:
+                "منصة الكوتش"
+            }
+          );
+
+          // --------------------------------------------------
+          // Sign out until admin approval
+          // --------------------------------------------------
+
+          await signOut(auth);
+
+          registerForm.reset();
+
+          showMessage(
+            "تم إرسال طلب التسجيل بنجاح ✅\n\nحسابك الآن في انتظار موافقة الإدارة. بعد الموافقة تقدر تسجل دخولك بالبريد وكلمة المرور.",
+            "success"
+          );
+
+          setTimeout(
+            () => {
+              openLogin();
+            },
+            2500
+          );
+
+        } catch (error) {
+
+          console.error(
+            "Registration error:",
+            error
+          );
+
+          let text =
+            "حدث خطأ أثناء إنشاء الحساب.";
+
+          switch (error.code) {
+
+            case "auth/email-already-in-use":
+              text =
+                "البريد الإلكتروني مستخدم بالفعل.";
+              break;
+
+            case "auth/invalid-email":
+              text =
+                "البريد الإلكتروني غير صحيح.";
+              break;
+
+            case "auth/weak-password":
+              text =
+                "كلمة المرور ضعيفة. استخدم 6 أحرف أو أكثر.";
+              break;
+
+            case "auth/network-request-failed":
+              text =
+                "تعذر الاتصال بالخادم. تأكد من الإنترنت.";
+              break;
+
+            case "auth/operation-not-allowed":
+              text =
+                "طريقة تسجيل الحساب غير مفعلة في Firebase حتى الآن.";
+              break;
+
+          }
+
+          showMessage(text);
+
+        } finally {
+
+          setButtonLoading(
+            registerButton,
+            false,
+            "إرسال طلب التسجيل"
+          );
+
+        }
+
+      }
+    );
+
+    // --------------------------------------------------------
+    // Password Reset
+    // --------------------------------------------------------
+
+    forgotPassword.addEventListener(
+      "click",
+      async () => {
+
+        clearMessage();
+
+        const email =
+          document
+            .getElementById("loginEmail")
+            .value
+            .trim()
+            .toLowerCase();
+
+        if (!email) {
+
+          showMessage(
+            "اكتب البريد الإلكتروني الأول، وبعدها اضغط نسيت كلمة المرور."
+          );
+
+          return;
+        }
+
+        try {
+
+          await sendPasswordResetEmail(
+            auth,
+            email
+          );
+
+          showMessage(
+            "تم إرسال رابط إعادة تعيين كلمة المرور إلى البريد الإلكتروني.",
+            "success"
+          );
+
+        } catch (error) {
+
+          console.error(
+            "Password reset error:",
+            error
+          );
+
+          let text =
+            "لم نتمكن من إرسال رابط إعادة تعيين كلمة المرور.";
+
+          if (
+            error.code ===
+            "auth/invalid-email"
+          ) {
+
+            text =
+              "البريد الإلكتروني غير صحيح.";
+
+          } else if (
+            error.code ===
+            "auth/user-not-found"
+          ) {
+
+            text =
+              "لا يوجد حساب بهذا البريد الإلكتروني.";
+
+          }
+
+          showMessage(text);
+
+        }
+
+      }
+    );
+
+    // --------------------------------------------------------
+    // Phone Input
+    // --------------------------------------------------------
+
+    document
+      .getElementById("registerPhone")
+      .addEventListener(
+        "input",
+        (event) => {
+
+          event.target.value =
+            event.target.value
+              .replace(/\D/g, "")
+              .slice(0, 11);
+
+        }
+      );
+
+    // --------------------------------------------------------
+    // Prevent already-approved user from staying on login
+    // --------------------------------------------------------
+
+    onAuthStateChanged(
+      auth,
+      async (user) => {
+
+        if (!user) {
+          return;
+        }
+
+        try {
+
+          const snapshot =
+            await get(
+              ref(
+                database,
+                `students/${user.uid}`
+              )
+            );
+
+          if (!snapshot.exists()) {
+            return;
+          }
+
+          const student =
+            snapshot.val();
+
+          const status =
+            String(
+              student.status || "pending"
+            )
+              .trim()
+              .toLowerCase();
+
+          if (
+            status === "approved" ||
+            status === "active"
+          ) {
+
+            window.location.href =
+              "courses.html";
+
+          }
+
+        } catch (error) {
+
+          console.error(
+            "Auth state error:",
+            error
+          );
+
+        }
+
+      }
+    );
+
+  </script>
+
 </body>
-</html>
+                                          </html>
