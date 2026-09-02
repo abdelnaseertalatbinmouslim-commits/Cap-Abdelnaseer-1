@@ -1,0 +1,1351 @@
+here<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#07111f">
+    <meta name="description" content="لوحة الإدارة - منصة الكوتش">
+
+    <title>لوحة الإدارة | منصة الكوتش</title>
+
+    <!--
+        ============================================================
+        منصة الكوتش
+        ملف: admin.html
+        الجزء: 1 / 3
+        ============================================================
+    -->
+
+    <!-- Excel -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js">
+    </script>
+
+    <!-- Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+    <!-- =========================================================
+         شاشة التحميل
+    ========================================================== -->
+
+    <div id="loadingScreen" class="screen-overlay">
+        <div class="loading-card">
+            <div class="loading-logo">
+                <img
+                    src="1783950091830.jpg"
+                    alt="منصة الكوتش"
+                    onerror="this.style.display='none'">
+            </div>
+
+            <div class="loading-spinner"></div>
+
+            <h2>منصة الكوتش</h2>
+
+            <p id="loadingMessage">
+                جاري التحقق من صلاحيات الإدارة...
+            </p>
+        </div>
+    </div>
+
+
+    <!-- =========================================================
+         شاشة رفض الوصول
+    ========================================================== -->
+
+    <div id="deniedScreen" class="screen-overlay hidden">
+
+        <div class="denied-card">
+
+            <div class="denied-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <h1>غير مصرح بالدخول</h1>
+
+            <p>
+                هذا القسم مخصص للمشرفين فقط.
+            </p>
+
+            <p class="small-text">
+                تأكد من تسجيل الدخول بالحساب الإداري الصحيح.
+            </p>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="deniedLoginBtn">
+
+                <i class="fa-solid fa-right-to-bracket"></i>
+
+                تسجيل الدخول
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-danger"
+                id="deniedLogoutBtn">
+
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+
+                تسجيل الخروج
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         التطبيق الرئيسي
+    ========================================================== -->
+
+    <main id="app" class="app-shell hidden">
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside id="sidebar" class="sidebar">
+
+            <div class="sidebar-top">
+
+                <div class="brand">
+
+                    <div class="brand-image">
+                        <img
+                            src="1783950091830.jpg"
+                            alt="منصة الكوتش"
+                            onerror="this.style.display='none'">
+                    </div>
+
+                    <div class="brand-info">
+                        <strong>منصة الكوتش</strong>
+                        <span>لوحة الإدارة</span>
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="sidebar-close"
+                    id="sidebarCloseBtn"
+                    aria-label="إغلاق القائمة">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+
+            <!-- معلومات الأدمن -->
+
+            <div class="admin-profile">
+
+                <div class="admin-avatar">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+
+                <div class="admin-profile-info">
+
+                    <strong id="adminDisplayName">
+                        المدير
+                    </strong>
+
+                    <span id="adminEmail">
+                        جاري التحميل...
+                    </span>
+
+                </div>
+
+                <span class="online-dot"></span>
+
+            </div>
+
+
+            <!-- القائمة -->
+
+            <nav class="sidebar-nav">
+
+                <button
+                    type="button"
+                    class="side-nav-btn active"
+                    data-tab="dashboard">
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </span>
+
+                    <span>الرئيسية</span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="side-nav-btn"
+                    data-tab="requests">
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </span>
+
+                    <span>طلبات الانضمام</span>
+
+                    <span
+                        id="pendingBadge"
+                        class="nav-badge hidden">
+                        0
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="side-nav-btn"
+                    data-tab="students">
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </span>
+
+                    <span>الطلاب</span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="side-nav-btn"
+                    data-tab="courses">
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-book-open"></i>
+                    </span>
+
+                    <span>المحتوى والكورسات</span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="side-nav-btn"
+                    data-tab="quizzes">
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-file-pen"></i>
+                    </span>
+
+                    <span>الاختبارات</span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="side-nav-btn"
+                    data-tab="results">
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-square-poll-vertical"></i>
+                    </span>
+
+                    <span>النتائج</span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="side-nav-btn"
+                    data-tab="notifications">
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-bell"></i>
+                    </span>
+
+                    <span>الإشعارات</span>
+
+                    <span
+                        id="notificationsBadge"
+                        class="nav-badge hidden">
+                        0
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="side-nav-btn"
+                    data-tab="activity">
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </span>
+
+                    <span>النشاطات</span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="side-nav-btn"
+                    data-tab="settings">
+
+                    <span class="nav-icon">
+                        <i class="fa-solid fa-sliders"></i>
+                    </span>
+
+                    <span>الإعدادات</span>
+
+                </button>
+
+            </nav>
+
+
+            <!-- أسفل القائمة -->
+
+            <div class="sidebar-bottom">
+
+                <div class="security-note">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <div>
+                        <strong>وضع آمن</strong>
+                        <span>Firebase Authentication</span>
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="logout-btn"
+                    id="logoutBtn">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>تسجيل الخروج</span>
+
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+             Overlay للموبايل
+        ====================================================== -->
+
+        <div
+            id="sidebarOverlay"
+            class="sidebar-overlay">
+        </div>
+
+
+        <!-- =====================================================
+             المحتوى الرئيسي
+        ====================================================== -->
+
+        <section class="main-content">
+
+            <!-- =================================================
+                 TOP BAR
+            ================================================== -->
+
+            <header class="topbar">
+
+                <div class="topbar-right">
+
+                    <button
+                        type="button"
+                        id="mobileMenuBtn"
+                        class="icon-btn"
+                        aria-label="فتح القائمة">
+
+                        <i class="fa-solid fa-bars"></i>
+
+                    </button>
+
+                    <div>
+
+                        <div class="page-kicker">
+                            منصة الكوتش
+                        </div>
+
+                        <h1 id="pageTitle">
+                            لوحة التحكم
+                        </h1>
+
+                    </div>
+
+                </div>
+
+
+                <div class="topbar-left">
+
+                    <button
+                        type="button"
+                        class="icon-btn"
+                        id="refreshAllBtn"
+                        title="تحديث البيانات">
+
+                        <i class="fa-solid fa-arrows-rotate"></i>
+
+                    </button>
+
+
+                    <div class="topbar-admin">
+
+                        <div class="topbar-avatar">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </div>
+
+                        <div>
+
+                            <strong id="topbarAdminName">
+                                المدير
+                            </strong>
+
+                            <span>
+                                مدير المنصة
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- =================================================
+                 GLOBAL ALERT
+            ================================================== -->
+
+            <div
+                id="globalAlert"
+                class="global-alert hidden">
+
+                <div class="alert-icon">
+                    <i class="fa-solid fa-circle-info"></i>
+                </div>
+
+                <div class="alert-content">
+
+                    <strong id="alertTitle">
+                        تنبيه
+                    </strong>
+
+                    <span id="alertMessage">
+                        -
+                    </span>
+
+                </div>
+
+                <button
+                    type="button"
+                    id="closeAlertBtn"
+                    class="alert-close">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 TAB: DASHBOARD
+            ================================================== -->
+
+            <section
+                id="tab-dashboard"
+                class="admin-tab active">
+
+                <div class="welcome-card">
+
+                    <div class="welcome-content">
+
+                        <span class="welcome-label">
+                            لوحة الإدارة
+                        </span>
+
+                        <h2>
+                            أهلاً بك في لوحة تحكم منصة الكوتش 👋
+                        </h2>
+
+                        <p>
+                            من هنا تقدر تدير الطلاب والمحتوى
+                            والاختبارات والنتائج والإشعارات
+                            وإعدادات المنصة من مكان واحد.
+                        </p>
+
+                    </div>
+
+                    <div class="welcome-decoration">
+
+                        <i class="fa-solid fa-shield-halved"></i>
+
+                    </div>
+
+                </div>
+
+
+                <!-- الإحصائيات -->
+
+                <div class="stats-grid">
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-icon students">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+
+                        <div class="stat-card-content">
+
+                            <span>
+                                إجمالي الطلاب
+                            </span>
+
+                            <strong id="statStudents">
+                                0
+                            </strong>
+
+                            <small>
+                                جميع الحسابات
+                            </small>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-icon approved">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+
+                        <div class="stat-card-content">
+
+                            <span>
+                                الطلاب المفعلون
+                            </span>
+
+                            <strong id="statApproved">
+                                0
+                            </strong>
+
+                            <small>
+                                حسابات نشطة
+                            </small>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-icon pending">
+                            <i class="fa-solid fa-user-clock"></i>
+                        </div>
+
+                        <div class="stat-card-content">
+
+                            <span>
+                                طلبات معلقة
+                            </span>
+
+                            <strong id="statPending">
+                                0
+                            </strong>
+
+                            <small>
+                                تحتاج مراجعة
+                            </small>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-icon courses">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+
+                        <div class="stat-card-content">
+
+                            <span>
+                                المحتوى
+                            </span>
+
+                            <strong id="statCourses">
+                                0
+                            </strong>
+
+                            <small>
+                                دروس ومحاضرات
+                            </small>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-icon quizzes">
+                            <i class="fa-solid fa-file-pen"></i>
+                        </div>
+
+                        <div class="stat-card-content">
+
+                            <span>
+                                الاختبارات
+                            </span>
+
+                            <strong id="statQuizzes">
+                                0
+                            </strong>
+
+                            <small>
+                                اختبارات منشورة
+                            </small>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-icon results">
+                            <i class="fa-solid fa-chart-column"></i>
+                        </div>
+
+                        <div class="stat-card-content">
+
+                            <span>
+                                النتائج
+                            </span>
+
+                            <strong id="statResults">
+                                0
+                            </strong>
+
+                            <small>
+                                سجلات النتائج
+                            </small>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+
+                <!-- المتابعة السريعة -->
+
+                <div class="dashboard-grid">
+
+                    <div class="panel-card">
+
+                        <div class="panel-header">
+
+                            <div>
+
+                                <span class="panel-kicker">
+                                    متابعة
+                                </span>
+
+                                <h3>
+                                    آخر طلبات الانضمام
+                                </h3>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                class="text-btn"
+                                data-tab-target="requests">
+
+                                عرض الكل
+                                <i class="fa-solid fa-arrow-left"></i>
+
+                            </button>
+
+                        </div>
+
+                        <div
+                            id="dashboardRequests"
+                            class="mini-list">
+
+                            <div class="empty-state">
+                                <i class="fa-solid fa-inbox"></i>
+                                <span>جاري تحميل الطلبات...</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="panel-card">
+
+                        <div class="panel-header">
+
+                            <div>
+
+                                <span class="panel-kicker">
+                                    نتائج
+                                </span>
+
+                                <h3>
+                                    آخر نتائج الاختبارات
+                                </h3>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                class="text-btn"
+                                data-tab-target="results">
+
+                                عرض الكل
+                                <i class="fa-solid fa-arrow-left"></i>
+
+                            </button>
+
+                        </div>
+
+                        <div
+                            id="dashboardResults"
+                            class="mini-list">
+
+                            <div class="empty-state">
+                                <i class="fa-solid fa-chart-line"></i>
+                                <span>جاري تحميل النتائج...</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- إحصائيات الامتحانات -->
+
+                <div class="panel-card">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <span class="panel-kicker">
+                                Live
+                            </span>
+
+                            <h3>
+                                متابعة الاختبارات
+                            </h3>
+
+                        </div>
+
+                        <span class="live-status">
+                            <span></span>
+                            مباشر
+                        </span>
+
+                    </div>
+
+
+                    <div class="live-stats-grid">
+
+                        <div class="live-stat">
+
+                            <span class="live-stat-icon">
+                                <i class="fa-solid fa-door-open"></i>
+                            </span>
+
+                            <div>
+
+                                <small>
+                                    دخلوا الامتحانات
+                                </small>
+
+                                <strong id="liveEntered">
+                                    0
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="live-stat">
+
+                            <span class="live-stat-icon">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </span>
+
+                            <div>
+
+                                <small>
+                                    قاموا بالتسليم
+                                </small>
+
+                                <strong id="liveSubmitted">
+                                    0
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="live-stat">
+
+                            <span class="live-stat-icon">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </span>
+
+                            <div>
+
+                                <small>
+                                    أتموا الحل
+                                </small>
+
+                                <strong id="liveCompleted">
+                                    0
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="live-stat">
+
+                            <span class="live-stat-icon">
+                                <i class="fa-solid fa-eye"></i>
+                            </span>
+
+                            <div>
+
+                                <small>
+                                    مشاهدات المحتوى
+                                </small>
+
+                                <strong id="statViews">
+                                    0
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 TAB: REQUESTS
+            ================================================== -->
+
+            <section
+                id="tab-requests"
+                class="admin-tab">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            المستخدمون
+                        </span>
+
+                        <h2>
+                            طلبات الانضمام
+                        </h2>
+
+                        <p>
+                            مراجعة طلبات التسجيل وقبول أو رفض الحسابات.
+                        </p>
+
+                    </div>
+
+                    <div class="section-actions">
+
+                        <button
+                            type="button"
+                            class="btn btn-warning"
+                            id="approveAllBtn">
+
+                            <i class="fa-solid fa-check-double"></i>
+
+                            قبول الكل
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- استيراد الطلاب -->
+
+                <div class="upload-card">
+
+                    <div class="upload-card-icon">
+                        <i class="fa-solid fa-file-excel"></i>
+                    </div>
+
+                    <div class="upload-card-content">
+
+                        <h3>
+                            استيراد الطلاب من Excel
+                        </h3>
+
+                        <p>
+                            تقدر تضيف مجموعة من الطلاب دفعة واحدة.
+                        </p>
+
+                        <div class="upload-hint">
+                            الأعمدة المقترحة:
+                            <b>name</b>،
+                            <b>phone</b>،
+                            <b>email</b>،
+                            <b>grade</b>
+                        </div>
+
+                    </div>
+
+                    <div class="upload-card-actions">
+
+                        <label
+                            for="excelStudentsFile"
+                            class="file-picker">
+
+                            <i class="fa-solid fa-file-arrow-up"></i>
+
+                            اختيار الملف
+
+                        </label>
+
+                        <input
+                            type="file"
+                            id="excelStudentsFile"
+                            accept=".xlsx,.xls,.csv"
+                            hidden>
+
+                        <button
+                            type="button"
+                            class="btn btn-success"
+                            id="importStudentsBtn">
+
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                            استيراد واعتماد
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- جدول الطلبات -->
+
+                <div class="panel-card">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <span class="panel-kicker">
+                                Pending
+                            </span>
+
+                            <h3>
+                                الطلبات المعلقة
+                            </h3>
+
+                        </div>
+
+                        <div class="panel-tools">
+
+                            <div class="search-control">
+
+                                <i class="fa-solid fa-magnifying-glass"></i>
+
+                                <input
+                                    type="search"
+                                    id="requestSearch"
+                                    placeholder="بحث في الطلبات...">
+
+                            </div>
+
+                            <button
+                                type="button"
+                                class="icon-btn"
+                                id="refreshRequestsBtn"
+                                title="تحديث">
+
+                                <i class="fa-solid fa-arrows-rotate"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="table-wrapper">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>الطالب</th>
+                                    <th>الهاتف</th>
+                                    <th>البريد</th>
+                                    <th>الفئة</th>
+                                    <th>التاريخ</th>
+                                    <th>الحالة</th>
+                                    <th>الإجراءات</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="pendingRequestsTable">
+
+                                <tr>
+
+                                    <td
+                                        colspan="7"
+                                        class="table-loading">
+
+                                        <div class="table-spinner"></div>
+
+                                        جاري تحميل الطلبات...
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    <div
+                        id="requestsEmpty"
+                        class="empty-state hidden">
+
+                        <i class="fa-solid fa-user-plus"></i>
+
+                        <h3>
+                            لا توجد طلبات معلقة
+                        </h3>
+
+                        <p>
+                            جميع طلبات الانضمام تمت مراجعتها.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 TAB: STUDENTS
+            ================================================== -->
+
+            <section
+                id="tab-students"
+                class="admin-tab">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            المستخدمون
+                        </span>
+
+                        <h2>
+                            الطلاب والتقارير
+                        </h2>
+
+                        <p>
+                            إدارة الطلاب ومراجعة بياناتهم وتقاريرهم.
+                        </p>
+
+                    </div>
+
+                    <div class="section-actions">
+
+                        <button
+                            type="button"
+                            class="btn btn-success"
+                            id="exportStudentsBtn">
+
+                            <i class="fa-solid fa-file-excel"></i>
+
+                            تصدير Excel
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="toolbar-card">
+
+                    <div class="search-control large">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        <input
+                            type="search"
+                            id="studentSearch"
+                            placeholder="ابحث بالاسم أو الهاتف أو البريد...">
+
+                    </div>
+
+
+                    <select
+                        id="studentStatusFilter"
+                        class="select-control">
+
+                        <option value="all">
+                            كل الحالات
+                        </option>
+
+                        <option value="approved">
+                            مفعل
+                        </option>
+
+                        <option value="pending">
+                            معلق
+                        </option>
+
+                        <option value="rejected">
+                            مرفوض
+                        </option>
+
+                        <option value="disabled">
+                            متوقف
+                        </option>
+
+                    </select>
+
+
+                    <select
+                        id="studentGradeFilter"
+                        class="select-control">
+
+                        <option value="all">
+                            كل الفئات
+                        </option>
+
+                        <option value="الفئة الأولى">
+                            الفئة الأولى
+                        </option>
+
+                        <option value="الفئة الثانية">
+                            الفئة الثانية
+                        </option>
+
+                        <option value="الفئة الثالثة">
+                            الفئة الثالثة
+                        </option>
+
+                        <option value="الفئة الرابعة">
+                            الفئة الرابعة
+                        </option>
+
+                    </select>
+
+
+                    <button
+                        type="button"
+                        class="icon-btn"
+                        id="refreshStudentsBtn"
+                        title="تحديث الطلاب">
+
+                        <i class="fa-solid fa-arrows-rotate"></i>
+
+                    </button>
+
+                </div>
+
+
+                <div class="panel-card">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <span class="panel-kicker">
+                                Students
+                            </span>
+
+                            <h3>
+                                قائمة الطلاب
+                            </h3>
+
+                        </div>
+
+                        <span
+                            id="studentsCountLabel"
+                            class="count-label">
+
+                            0 طالب
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="table-wrapper">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>الطالب</th>
+                                    <th>البريد الإلكتروني</th>
+                                    <th>الهاتف</th>
+                                    <th>الفئة</th>
+                                    <th>الحالة</th>
+                                    <th>تاريخ التسجيل</th>
+                                    <th>الإجراءات</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="approvedStudentsTable">
+
+                                <tr>
+
+                                    <td
+                                        colspan="7"
+                                        class="table-loading">
+
+                                        <div class="table-spinner"></div>
+
+                                        جاري تحميل الطلاب...
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 STUDENT REPORT MODAL
+            ================================================== -->
+
+            <div
+                id="studentReportModal"
+                class="modal-overlay hidden">
+
+                <div class="modal-card modal-large">
+
+                    <div class="modal-header">
+
+                        <div>
+
+                            <span class="modal-kicker">
+                                Student Report
+                            </span>
+
+                            <h2>
+                                تقرير الطالب
+                            </h2>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="modal-close"
+                            data-close-modal="studentReportModal">
+
+                            <i class="fa-solid fa-xmark"></i>
+
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="studentReportContent"
+                        class="modal-body">
+
+                        <div class="modal-loading">
+
+                            <div class="table-spinner"></div>
+
+                            جاري تحميل التقرير...
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 الجزء التالي:
+                 COURSES + QUIZZES + RESULTS
+                 =================================================
+            -->
+
+```2
