@@ -1,1042 +1,1646 @@
-here"use strict";
+hereconst App = (() => {
+  "use strict";
 
-const $ = (selector, parent = document) => parent.querySelector(selector);
-const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
+  const state = {
+    loginMethod: "phone",
+    activeModal: null,
+    menuOpen: false,
+    revealObserver: null,
+    support: {
+      whatsapp: "#",
+      telegram: "#",
+      facebook: "#"
+    }
+  };
 
-const state = {
-  loginMode: "phone",
-  registerMode: "phone",
-  isLoading: false,
-  support: {
-    whatsapp: "",
-    telegram: "",
-    facebook: "",
-    whatsappChannel: "",
-    phone: ""
-  }
-};
+  const $ = (selector, root = document) =>
+    root.querySelector(selector);
 
-const selectors = {
-  body: document.body,
-  menuToggle: $("#menuToggle"),
-  mobileMenu: $("#mobileMenu"),
-  overlay: $("#pageOverlay"),
-  loginModal: $("#loginModal"),
-  registerModal: $("#registerModal"),
-  forgotModal: $("#forgotModal"),
-  supportModal: $("#supportModal"),
-  loginForm: $("#loginForm"),
-  registerForm: $("#registerForm"),
-  forgotForm: $("#forgotForm"),
-  closeButtons: $$("[data-close-modal]"),
-  loginButtons: $$("[data-open-login]"),
-  registerButtons: $$("[data-open-register]"),
-  supportButtons: $$("[data-open-support]"),
-  logoutButtons: $$("[data-logout]"),
-  loginPhone: $("#loginPhone"),
-  loginEmail: $("#loginEmail"),
-  loginPassword: $("#loginPassword"),
-  registerName: $("#registerName"),
-  registerPhone: $("#registerPhone"),
-  registerEmail: $("#registerEmail"),
-  registerPassword: $("#registerPassword"),
-  registerGrade: $("#registerGrade"),
-  forgotEmail: $("#forgotEmail"),
-  forgotPhone: $("#forgotPhone"),
-  toast: $("#toast"),
-  toastMessage: $("#toastMessage"),
-  loadingScreen: $("#loadingScreen"),
-  passwordToggles: $$("[data-password-toggle]"),
-  authSwitches: $$("[data-auth-switch]"),
-  faqItems: $$("[data-faq]")
-};
+  const $$ = (selector, root = document) =>
+    [...root.querySelectorAll(selector)];
 
-document.addEventListener("DOMContentLoaded", init);
-
-async function init() {
-  setupNavigation();
-  setupModals();
-  setupForms();
-  setupPasswordToggles();
-  setupAuthSwitches();
-  setupFaq();
-  setupSupport();
-  setupGlobalClicks();
-  loadSupportSettings();
-  restoreSession();
-}
-
-function setupNavigation() {
-  if (selectors.menuToggle) {
-    selectors.menuToggle.addEventListener("click", () => {
-      const opened = selectors.mobileMenu?.classList.toggle("active");
-
-      selectors.menuToggle.classList.toggle("active", opened);
-
-      if (selectors.overlay) {
-        selectors.overlay.classList.toggle("active", opened);
+  const storage = {
+    get(key, fallback = null) {
+      try {
+        const value = localStorage.getItem(key);
+        return value === null ? fallback : JSON.parse(value);
+      } catch {
+        return fallback;
       }
+    },
 
-      document.body.classList.toggle("menu-open", opened);
-    });
+    set(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch {}
+    },
+
+    remove(key) {
+      try {
+        localStorage.removeItem(key);
+      } catch {}
+    }
+  };
+
+
+  function init() {
+    setupYear();
+    setupHeader();
+    setupNavigation();
+    setupMobileMenu();
+    setupModals();
+    setupLoginForm();
+    setupRegisterForm();
+    setupForgotForm();
+    setupReportForm();
+    setupPasswordToggles();
+    setupCharacterCounter();
+    setupRevealAnimations();
+    setupHeroVideo();
+    setupSupportLinks();
+    setupStatistics();
+    setupEscapeKey();
+    restoreRememberedLogin();
   }
 
-  if (selectors.overlay) {
-    selectors.overlay.addEventListener("click", closeMobileMenu);
+
+  /* =========================================================
+     BASIC
+  ========================================================== */
+
+  function setupYear() {
+    const year = $("#currentYear");
+
+    if (year) {
+      year.textContent = new Date().getFullYear();
+    }
   }
 
-  $$(".mobileMenu a, .mobile-menu a, [data-menu-link]").forEach(link => {
-    link.addEventListener("click", closeMobileMenu);
-  });
 
-  $$('a[href^="#"]').forEach(link => {
-    link.addEventListener("click", event => {
-      const targetId = link.getAttribute("href");
+  /* =========================================================
+     HEADER
+  ========================================================== */
 
-      if (!targetId || targetId === "#") {
-        return;
-      }
+  function setupHeader() {
+    const header = $("#mainHeader");
 
-      const target = document.querySelector(targetId);
-
-      if (!target) {
-        return;
-      }
-
-      event.preventDefault();
-
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-
-      closeMobileMenu();
-    });
-  });
-}
-
-function closeMobileMenu() {
-  selectors.mobileMenu?.classList.remove("active");
-  selectors.menuToggle?.classList.remove("active");
-  selectors.overlay?.classList.remove("active");
-  document.body.classList.remove("menu-open");
-}
-
-function setupModals() {
-  selectors.loginButtons.forEach(button => {
-    button.addEventListener("click", event => {
-      event.preventDefault();
-      closeMobileMenu();
-      openModal(selectors.loginModal);
-    });
-  });
-
-  selectors.registerButtons.forEach(button => {
-    button.addEventListener("click", event => {
-      event.preventDefault();
-      closeMobileMenu();
-      openModal(selectors.registerModal);
-    });
-  });
-
-  selectors.supportButtons.forEach(button => {
-    button.addEventListener("click", event => {
-      event.preventDefault();
-      closeMobileMenu();
-      openModal(selectors.supportModal);
-    });
-  });
-
-  $$("[data-open-forgot]").forEach(button => {
-    button.addEventListener("click", event => {
-      event.preventDefault();
-      closeModal(selectors.loginModal);
-      openModal(selectors.forgotModal);
-    });
-  });
-
-  selectors.closeButtons.forEach(button => {
-    button.addEventListener("click", () => {
-      const modal = button.closest(".modal, .modal-wrapper, [role='dialog']");
-
-      if (modal) {
-        closeModal(modal);
-      }
-    });
-  });
-
-  $$(".modal, .modal-wrapper, [role='dialog']").forEach(modal => {
-    modal.addEventListener("click", event => {
-      if (event.target === modal) {
-        closeModal(modal);
-      }
-    });
-  });
-
-  document.addEventListener("keydown", event => {
-    if (event.key !== "Escape") {
+    if (!header) {
       return;
     }
 
-    $$(".modal.active, .modal.open, .modal.show").forEach(closeModal);
-    closeMobileMenu();
-  });
-}
-
-function openModal(modal) {
-  if (!modal) {
-    return;
-  }
-
-  modal.classList.add("active");
-  modal.classList.add("open");
-  modal.classList.add("show");
-  modal.setAttribute("aria-hidden", "false");
-
-  document.body.classList.add("modal-open");
-
-  const firstInput = modal.querySelector(
-    "input:not([type='hidden']), select, textarea, button"
-  );
-
-  if (firstInput) {
-    setTimeout(() => firstInput.focus(), 100);
-  }
-}
-
-function closeModal(modal) {
-  if (!modal) {
-    return;
-  }
-
-  modal.classList.remove("active");
-  modal.classList.remove("open");
-  modal.classList.remove("show");
-  modal.setAttribute("aria-hidden", "true");
-
-  if (!$$(".modal.active, .modal.open, .modal.show").length) {
-    document.body.classList.remove("modal-open");
-  }
-}
-
-function closeAllModals() {
-  $$(".modal.active, .modal.open, .modal.show").forEach(closeModal);
-}
-
-function setupForms() {
-  if (selectors.loginForm) {
-    selectors.loginForm.addEventListener("submit", handleLogin);
-  }
-
-  if (selectors.registerForm) {
-    selectors.registerForm.addEventListener("submit", handleRegister);
-  }
-
-  if (selectors.forgotForm) {
-    selectors.forgotForm.addEventListener("submit", handleForgotPassword);
-  }
-}
-
-async function handleLogin(event) {
-  event.preventDefault();
-
-  if (state.isLoading) {
-    return;
-  }
-
-  const identifier =
-    getValue(selectors.loginPhone) ||
-    getValue(selectors.loginEmail) ||
-    getValue($("#loginIdentifier"));
-
-  const password = getValue(selectors.loginPassword);
-
-  if (!identifier) {
-    showToast("Enter your phone number or email.", "error");
-    return;
-  }
-
-  if (!password) {
-    showToast("Enter your password.", "error");
-    return;
-  }
-
-  if (password.length < 4) {
-    showToast("Password is too short.", "error");
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const firebaseApi = getFirebaseApi();
-
-    if (!firebaseApi) {
-      showToast("Authentication service is not ready yet.", "error");
-      return;
-    }
-
-    let result = null;
-
-    if (typeof firebaseApi.login === "function") {
-      result = await firebaseApi.login({
-        identifier,
-        password,
-        mode: detectIdentifierType(identifier)
-      });
-    } else if (typeof firebaseApi.loginUser === "function") {
-      result = await firebaseApi.loginUser(identifier, password);
-    } else if (typeof firebaseApi.signIn === "function") {
-      result = await firebaseApi.signIn(identifier, password);
-    } else {
-      showToast("Authentication service is not configured.", "error");
-      return;
-    }
-
-    if (!result) {
-      showToast("Login failed.", "error");
-      return;
-    }
-
-    if (result.success === false) {
-      showToast(result.message || "Invalid login information.", "error");
-      return;
-    }
-
-    const user = result.user || result;
-
-    if (user && typeof user === "object") {
-      saveSession(user);
-    }
-
-    showToast("Login successful.", "success");
-
-    setTimeout(() => {
-      closeAllModals();
-      redirectAfterLogin(user);
-    }, 500);
-  } catch (error) {
-    console.error("Login error:", error);
-    showToast(getFriendlyAuthError(error), "error");
-  } finally {
-    setLoading(false);
-  }
-}
-
-async function handleRegister(event) {
-  event.preventDefault();
-
-  if (state.isLoading) {
-    return;
-  }
-
-  const name = getValue(selectors.registerName);
-  const phone = getValue(selectors.registerPhone);
-  const email = getValue(selectors.registerEmail);
-  const password = getValue(selectors.registerPassword);
-  const grade = getValue(selectors.registerGrade);
-
-  if (!name) {
-    showToast("Enter your full name.", "error");
-    return;
-  }
-
-  if (!phone && !email) {
-    showToast("Enter a phone number or email.", "error");
-    return;
-  }
-
-  if (phone && !isValidPhone(phone)) {
-    showToast("Enter a valid phone number.", "error");
-    return;
-  }
-
-  if (email && !isValidEmail(email)) {
-    showToast("Enter a valid email address.", "error");
-    return;
-  }
-
-  if (!password) {
-    showToast("Create a password.", "error");
-    return;
-  }
-
-  if (password.length < 6) {
-    showToast("Password must be at least 6 characters.", "error");
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const firebaseApi = getFirebaseApi();
-
-    if (!firebaseApi) {
-      showToast("Authentication service is not ready yet.", "error");
-      return;
-    }
-
-    const payload = {
-      name,
-      phone,
-      email,
-      password,
-      grade
+    const updateHeader = () => {
+      header.classList.toggle(
+        "scrolled",
+        window.scrollY > 35
+      );
     };
 
-    let result = null;
+    updateHeader();
 
-    if (typeof firebaseApi.register === "function") {
-      result = await firebaseApi.register(payload);
-    } else if (typeof firebaseApi.registerUser === "function") {
-      result = await firebaseApi.registerUser(payload);
-    } else if (typeof firebaseApi.createAccount === "function") {
-      result = await firebaseApi.createAccount(payload);
-    } else {
-      showToast("Registration service is not configured.", "error");
-      return;
-    }
+    window.addEventListener(
+      "scroll",
+      updateHeader,
+      { passive: true }
+    );
+  }
 
-    if (!result) {
-      showToast("Registration failed.", "error");
-      return;
-    }
 
-    if (result.success === false) {
-      showToast(result.message || "Registration failed.", "error");
-      return;
-    }
+  /* =========================================================
+     NAVIGATION
+  ========================================================== */
 
-    const user = result.user || result;
-
-    if (user && user.uid) {
-      saveSession(user);
-    }
-
-    showToast(
-      result.message || "Registration completed successfully.",
-      "success"
+  function setupNavigation() {
+    const sectionLinks = $$(
+      "[data-section-link]"
     );
 
-    setTimeout(() => {
-      closeAllModals();
-
-      if (user && user.uid) {
-        redirectAfterLogin(user);
-      }
-    }, 800);
-  } catch (error) {
-    console.error("Registration error:", error);
-    showToast(getFriendlyAuthError(error), "error");
-  } finally {
-    setLoading(false);
-  }
-}
-
-async function handleForgotPassword(event) {
-  event.preventDefault();
-
-  if (state.isLoading) {
-    return;
-  }
-
-  const identifier =
-    getValue(selectors.forgotEmail) ||
-    getValue(selectors.forgotPhone) ||
-    getValue($("#forgotIdentifier"));
-
-  if (!identifier) {
-    showToast("Enter your email or phone number.", "error");
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const firebaseApi = getFirebaseApi();
-
-    if (!firebaseApi) {
-      showToast("Authentication service is not ready yet.", "error");
-      return;
-    }
-
-    let result = null;
-
-    if (typeof firebaseApi.resetPassword === "function") {
-      result = await firebaseApi.resetPassword(identifier);
-    } else if (typeof firebaseApi.forgotPassword === "function") {
-      result = await firebaseApi.forgotPassword(identifier);
-    } else if (typeof firebaseApi.sendPasswordReset === "function") {
-      result = await firebaseApi.sendPasswordReset(identifier);
-    } else {
-      showToast("Password recovery is not configured.", "error");
-      return;
-    }
-
-    if (result?.success === false) {
-      showToast(result.message || "Password recovery failed.", "error");
-      return;
-    }
-
-    showToast(
-      result?.message || "If the account exists, recovery instructions were sent.",
-      "success"
+    const scrollTargets = $$(
+      "[data-scroll-target]"
     );
 
-    setTimeout(() => {
-      closeModal(selectors.forgotModal);
-    }, 1000);
-  } catch (error) {
-    console.error("Password recovery error:", error);
-    showToast(getFriendlyAuthError(error), "error");
-  } finally {
-    setLoading(false);
-  }
-}
+    sectionLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        closeMobileMenu();
+      });
+    });
 
-function setupAuthSwitches() {
-  selectors.authSwitches.forEach(button => {
+    scrollTargets.forEach((button) => {
+      button.addEventListener("click", () => {
+        const targetId =
+          button.dataset.scrollTarget;
+
+        scrollToSection(targetId);
+      });
+    });
+
+    const sections = $$(
+      "[data-section]"
+    );
+
+    if (
+      "IntersectionObserver" in window &&
+      sections.length
+    ) {
+      const observer =
+        new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) {
+                return;
+              }
+
+              const id =
+                entry.target.dataset.section;
+
+              sectionLinks.forEach((link) => {
+                link.classList.toggle(
+                  "active",
+                  link.dataset.sectionLink === id
+                );
+              });
+            });
+          },
+          {
+            rootMargin: "-30% 0px -60% 0px"
+          }
+        );
+
+      sections.forEach((section) =>
+        observer.observe(section)
+      );
+    }
+  }
+
+
+  function scrollToSection(id) {
+    const element = document.getElementById(id);
+
+    if (!element) {
+      return;
+    }
+
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+
+  /* =========================================================
+     MOBILE MENU
+  ========================================================== */
+
+  function setupMobileMenu() {
+    const button = $("#menuButton");
+    const menu = $("#mobileNavigation");
+
+    if (!button || !menu) {
+      return;
+    }
+
     button.addEventListener("click", () => {
-      const mode = button.dataset.authSwitch;
+      state.menuOpen = !state.menuOpen;
 
-      if (!mode) {
-        return;
+      button.classList.toggle(
+        "active",
+        state.menuOpen
+      );
+
+      button.setAttribute(
+        "aria-expanded",
+        String(state.menuOpen)
+      );
+
+      menu.classList.toggle(
+        "active",
+        state.menuOpen
+      );
+
+      menu.setAttribute(
+        "aria-hidden",
+        String(!state.menuOpen)
+      );
+
+      document.body.classList.toggle(
+        "menu-open",
+        state.menuOpen
+      );
+    });
+
+    $$(
+      "[data-mobile-nav-link]",
+      menu
+    ).forEach((link) => {
+      link.addEventListener(
+        "click",
+        closeMobileMenu
+      );
+    });
+  }
+
+
+  function closeMobileMenu() {
+    const button = $("#menuButton");
+    const menu = $("#mobileNavigation");
+
+    state.menuOpen = false;
+
+    button?.classList.remove("active");
+
+    button?.setAttribute(
+      "aria-expanded",
+      "false"
+    );
+
+    menu?.classList.remove("active");
+
+    menu?.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    document.body.classList.remove(
+      "menu-open"
+    );
+  }
+
+
+  /* =========================================================
+     MODALS
+  ========================================================== */
+
+  function setupModals() {
+    $$("[data-open-login]").forEach((button) => {
+      button.addEventListener("click", () => {
+        closeMobileMenu();
+        openModal("loginModal");
+      });
+    });
+
+    $$("[data-open-report]").forEach((button) => {
+      button.addEventListener("click", () => {
+        closeMobileMenu();
+        openModal("reportModal");
+      });
+    });
+
+    $$("[data-close-modal]").forEach((button) => {
+      button.addEventListener("click", () => {
+        closeActiveModal();
+      });
+    });
+
+    $("#openRegisterButton")
+      ?.addEventListener(
+        "click",
+        () => {
+          closeModal("loginModal");
+          openModal("registerModal");
+        }
+      );
+
+    $("#openLoginFromRegister")
+      ?.addEventListener(
+        "click",
+        () => {
+          closeModal("registerModal");
+          openModal("loginModal");
+        }
+      );
+
+    $("#forgotPasswordButton")
+      ?.addEventListener(
+        "click",
+        () => {
+          closeModal("loginModal");
+          openModal("forgotModal");
+        }
+      );
+
+    $("#closeLoginModal")
+      ?.addEventListener(
+        "click",
+        () => closeModal("loginModal")
+      );
+
+    $("#closeRegisterModal")
+      ?.addEventListener(
+        "click",
+        () => closeModal("registerModal")
+      );
+
+    $("#closeForgotModal")
+      ?.addEventListener(
+        "click",
+        () => closeModal("forgotModal")
+      );
+
+    $("#closeReportModal")
+      ?.addEventListener(
+        "click",
+        () => closeModal("reportModal")
+      );
+  }
+
+
+  function openModal(id) {
+    const modal = document.getElementById(id);
+
+    if (!modal) {
+      return;
+    }
+
+    closeActiveModal();
+
+    state.activeModal = id;
+
+    modal.classList.add("active");
+
+    modal.setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+    document.body.classList.add(
+      "modal-open"
+    );
+
+    const firstInput = $(
+      "input, select, textarea, button",
+      modal
+    );
+
+    setTimeout(() => {
+      firstInput?.focus();
+    }, 120);
+  }
+
+
+  function closeModal(id) {
+    const modal = document.getElementById(id);
+
+    if (!modal) {
+      return;
+    }
+
+    modal.classList.remove("active");
+
+    modal.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    if (state.activeModal === id) {
+      state.activeModal = null;
+    }
+
+    if (!state.activeModal) {
+      document.body.classList.remove(
+        "modal-open"
+      );
+    }
+  }
+
+
+  function closeActiveModal() {
+    if (!state.activeModal) {
+      return;
+    }
+
+    closeModal(state.activeModal);
+  }
+
+
+  function setupEscapeKey() {
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (
+          event.key === "Escape"
+        ) {
+          closeActiveModal();
+          closeMobileMenu();
+        }
       }
+    );
+  }
 
-      const target = button.closest(".auth-modal, .modal, form") || document;
 
-      $$("[data-auth-switch]", target).forEach(item => {
-        item.classList.toggle(
+  /* =========================================================
+     LOGIN METHOD
+  ========================================================== */
+
+  function setupLoginForm() {
+    const methods =
+      $$("[data-login-method]");
+
+    methods.forEach((button) => {
+      button.addEventListener(
+        "click",
+        () => {
+          setLoginMethod(
+            button.dataset.loginMethod
+          );
+        }
+      );
+    });
+
+    const form = $("#loginForm");
+
+    form?.addEventListener(
+      "submit",
+      handleLoginSubmit
+    );
+  }
+
+
+  function setLoginMethod(method) {
+    state.loginMethod =
+      method === "email"
+        ? "email"
+        : "phone";
+
+    $$("[data-login-method]")
+      .forEach((button) => {
+        button.classList.toggle(
           "active",
-          item.dataset.authSwitch === mode
+          button.dataset.loginMethod ===
+            state.loginMethod
         );
       });
 
-      if (mode === "phone") {
-        state.loginMode = "phone";
-        state.registerMode = "phone";
-      }
+    const phoneGroup =
+      $("#loginPhoneGroup");
 
-      if (mode === "email") {
-        state.loginMode = "email";
-        state.registerMode = "email";
-      }
+    const emailGroup =
+      $("#loginEmailGroup");
 
-      updateAuthFields(target, mode);
-    });
-  });
-}
+    const phoneInput =
+      $("#loginPhone");
 
-function updateAuthFields(parent, mode) {
-  const phoneFields = $$("[data-auth-phone]", parent);
-  const emailFields = $$("[data-auth-email]", parent);
+    const emailInput =
+      $("#loginEmail");
 
-  phoneFields.forEach(field => {
-    const visible = mode === "phone";
+    const isEmail =
+      state.loginMethod === "email";
 
-    field.classList.toggle("active", visible);
-    field.hidden = !visible;
+    phoneGroup?.classList.toggle(
+      "hidden",
+      isEmail
+    );
 
-    const input = field.querySelector("input");
+    emailGroup?.classList.toggle(
+      "hidden",
+      !isEmail
+    );
 
-    if (input) {
-      input.disabled = !visible;
+    if (isEmail) {
+      emailInput?.focus();
+    } else {
+      phoneInput?.focus();
     }
-  });
 
-  emailFields.forEach(field => {
-    const visible = mode === "email";
+    clearFieldError(
+      $("#loginPhoneError")
+    );
 
-    field.classList.toggle("active", visible);
-    field.hidden = !visible;
+    clearFieldError(
+      $("#loginEmailError")
+    );
+  }
 
-    const input = field.querySelector("input");
 
-    if (input) {
-      input.disabled = !visible;
+  async function handleLoginSubmit(event) {
+    event.preventDefault();
+
+    const phone =
+      $("#loginPhone")?.value.trim() || "";
+
+    const email =
+      $("#loginEmail")?.value.trim() || "";
+
+    const password =
+      $("#loginPassword")?.value || "";
+
+    const remember =
+      $("#rememberLogin")?.checked ?? true;
+
+    clearFormErrors(
+      "#loginForm"
+    );
+
+    let valid = true;
+
+    if (state.loginMethod === "phone") {
+      if (!isValidPhone(phone)) {
+        showFieldError(
+          "#loginPhoneError",
+          "اكتب رقم هاتف صحيح."
+        );
+
+        valid = false;
+      }
     }
-  });
-}
 
-function setupPasswordToggles() {
-  selectors.passwordToggles.forEach(toggle => {
-    toggle.addEventListener("click", () => {
-      const targetSelector =
-        toggle.dataset.passwordToggle ||
-        toggle.getAttribute("aria-controls");
+    if (state.loginMethod === "email") {
+      if (!isValidEmail(email)) {
+        showFieldError(
+          "#loginEmailError",
+          "اكتب بريد إلكتروني صحيح."
+        );
 
-      if (!targetSelector) {
-        return;
+        valid = false;
       }
+    }
 
-      let input = document.getElementById(targetSelector);
+    if (!password) {
+      showFieldError(
+        "#loginPasswordError",
+        "اكتب كلمة المرور."
+      );
 
-      if (!input && targetSelector.startsWith("#")) {
-        input = $(targetSelector);
+      valid = false;
+    }
+
+    if (!valid) {
+      return;
+    }
+
+    const submit =
+      $("#loginSubmit");
+
+    setButtonLoading(
+      submit,
+      true
+    );
+
+    clearMessage(
+      $("#loginMessage")
+    );
+
+    try {
+      /*
+       * Firebase authentication will be connected here later.
+       * The current UI layer only validates and prepares the data.
+       */
+
+      const credentials = {
+        method: state.loginMethod,
+        phone:
+          state.loginMethod === "phone"
+            ? phone
+            : null,
+        email:
+          state.loginMethod === "email"
+            ? email
+            : null,
+        password,
+        remember
+      };
+
+      storage.set(
+        "pendingLogin",
+        {
+          method: credentials.method,
+          phone: credentials.phone,
+          email: credentials.email,
+          remember: credentials.remember
+        }
+      );
+
+      await wait(450);
+
+      showMessage(
+        $("#loginMessage"),
+        "واجهة تسجيل الدخول جاهزة للربط بالنظام.",
+        "info"
+      );
+
+      showToast(
+        "تم تجهيز بيانات تسجيل الدخول.",
+        "success"
+      );
+    } catch (error) {
+      console.error(error);
+
+      showMessage(
+        $("#loginMessage"),
+        "حصلت مشكلة أثناء تجهيز تسجيل الدخول.",
+        "error"
+      );
+    } finally {
+      setButtonLoading(
+        submit,
+        false
+      );
+    }
+  }
+
+
+  /* =========================================================
+     REGISTER
+  ========================================================== */
+
+  function setupRegisterForm() {
+    const form =
+      $("#registerForm");
+
+    form?.addEventListener(
+      "submit",
+      handleRegisterSubmit
+    );
+  }
+
+
+  async function handleRegisterSubmit(event) {
+    event.preventDefault();
+
+    const name =
+      $("#registerName")?.value.trim() || "";
+
+    const grade =
+      $("#registerGrade")?.value || "";
+
+    const phone =
+      $("#registerPhone")?.value.trim() || "";
+
+    const email =
+      $("#registerEmail")?.value.trim() || "";
+
+    const password =
+      $("#registerPassword")?.value || "";
+
+    const confirmPassword =
+      $("#registerPasswordConfirm")?.value || "";
+
+    const terms =
+      $("#registerTerms")?.checked || false;
+
+    clearFormErrors(
+      "#registerForm"
+    );
+
+    let valid = true;
+
+    if (name.length < 3) {
+      showFieldError(
+        "#registerNameError",
+        "اكتب الاسم بالكامل."
+      );
+
+      valid = false;
+    }
+
+    if (!grade) {
+      showFieldError(
+        "#registerGradeError",
+        "اختار الفرقة."
+      );
+
+      valid = false;
+    }
+
+    if (!isValidPhone(phone)) {
+      showFieldError(
+        "#registerPhoneError",
+        "اكتب رقم هاتف صحيح."
+      );
+
+      valid = false;
+    }
+
+    if (
+      email &&
+      !isValidEmail(email)
+    ) {
+      showFieldError(
+        "#registerEmailError",
+        "اكتب بريد إلكتروني صحيح."
+      );
+
+      valid = false;
+    }
+
+    if (password.length < 6) {
+      showFieldError(
+        "#registerPasswordError",
+        "كلمة المرور يجب ألا تقل عن 6 أحرف."
+      );
+
+      valid = false;
+    }
+
+    if (
+      password !==
+      confirmPassword
+    ) {
+      showFieldError(
+        "#registerPasswordConfirmError",
+        "كلمتا المرور غير متطابقتين."
+      );
+
+      valid = false;
+    }
+
+    if (!terms) {
+      showFieldError(
+        "#registerTermsError",
+        "يجب الموافقة على الشروط."
+      );
+
+      valid = false;
+    }
+
+    if (!valid) {
+      return;
+    }
+
+    const submit =
+      $("#registerSubmit");
+
+    setButtonLoading(
+      submit,
+      true
+    );
+
+    clearMessage(
+      $("#registerMessage")
+    );
+
+    try {
+      const registrationData = {
+        name,
+        grade,
+        phone,
+        email: email || null
+      };
+
+      storage.set(
+        "pendingRegistration",
+        registrationData
+      );
+
+      await wait(500);
+
+      showMessage(
+        $("#registerMessage"),
+        "واجهة التسجيل جاهزة للربط بالنظام.",
+        "info"
+      );
+
+      showToast(
+        "تم تجهيز بيانات التسجيل.",
+        "success"
+      );
+    } catch (error) {
+      console.error(error);
+
+      showMessage(
+        $("#registerMessage"),
+        "حصلت مشكلة أثناء تجهيز التسجيل.",
+        "error"
+      );
+    } finally {
+      setButtonLoading(
+        submit,
+        false
+      );
+    }
+  }
+
+
+  /* =========================================================
+     FORGOT PASSWORD
+  ========================================================== */
+
+  function setupForgotForm() {
+    const form =
+      $("#forgotForm");
+
+    form?.addEventListener(
+      "submit",
+      handleForgotSubmit
+    );
+  }
+
+
+  async function handleForgotSubmit(event) {
+    event.preventDefault();
+
+    const email =
+      $("#forgotEmail")?.value.trim() || "";
+
+    clearFormErrors(
+      "#forgotForm"
+    );
+
+    if (!isValidEmail(email)) {
+      showFieldError(
+        "#forgotEmailError",
+        "اكتب بريد إلكتروني صحيح."
+      );
+
+      return;
+    }
+
+    const submit =
+      $("#forgotSubmit");
+
+    setButtonLoading(
+      submit,
+      true
+    );
+
+    clearMessage(
+      $("#forgotMessage")
+    );
+
+    try {
+      await wait(450);
+
+      showMessage(
+        $("#forgotMessage"),
+        "واجهة استعادة كلمة المرور جاهزة للربط بـ Firebase.",
+        "info"
+      );
+    } catch (error) {
+      console.error(error);
+
+      showMessage(
+        $("#forgotMessage"),
+        "حصلت مشكلة.",
+        "error"
+      );
+    } finally {
+      setButtonLoading(
+        submit,
+        false
+      );
+    }
+  }
+
+
+  /* =========================================================
+     REPORT
+  ========================================================== */
+
+  function setupReportForm() {
+    const form =
+      $("#reportForm");
+
+    form?.addEventListener(
+      "submit",
+      handleReportSubmit
+    );
+  }
+
+
+  async function handleReportSubmit(event) {
+    event.preventDefault();
+
+    const name =
+      $("#reportName")?.value.trim() || "";
+
+    const contact =
+      $("#reportContact")?.value.trim() || "";
+
+    const type =
+      $("#reportType")?.value || "";
+
+    const description =
+      $("#reportDescription")?.value.trim() || "";
+
+    if (!description) {
+      showMessage(
+        $("#reportMessage"),
+        "اكتب وصف المشكلة.",
+        "error"
+      );
+
+      return;
+    }
+
+    const submit =
+      $("#reportSubmit");
+
+    setButtonLoading(
+      submit,
+      true
+    );
+
+    clearMessage(
+      $("#reportMessage")
+    );
+
+    try {
+      const report = {
+        name,
+        contact,
+        type,
+        description,
+        createdAt:
+          new Date().toISOString()
+      };
+
+      storage.set(
+        "pendingReport",
+        report
+      );
+
+      await wait(500);
+
+      showMessage(
+        $("#reportMessage"),
+        "تم تجهيز البلاغ وسيتم ربط الإرسال بالنظام لاحقًا.",
+        "info"
+      );
+
+      showToast(
+        "تم تجهيز البلاغ.",
+        "success"
+      );
+
+      $("#reportDescription").value = "";
+
+      updateCharacterCount();
+
+    } catch (error) {
+      console.error(error);
+
+      showMessage(
+        $("#reportMessage"),
+        "حصلت مشكلة أثناء تجهيز البلاغ.",
+        "error"
+      );
+    } finally {
+      setButtonLoading(
+        submit,
+        false
+      );
+    }
+  }
+
+
+  /* =========================================================
+     PASSWORD TOGGLES
+  ========================================================== */
+
+  function setupPasswordToggles() {
+    setupPasswordToggle(
+      "#toggleLoginPassword",
+      "#loginPassword"
+    );
+
+    setupPasswordToggle(
+      "#toggleRegisterPassword",
+      "#registerPassword"
+    );
+
+    setupPasswordToggle(
+      "#toggleRegisterConfirm",
+      "#registerPasswordConfirm"
+    );
+  }
+
+
+  function setupPasswordToggle(
+    buttonSelector,
+    inputSelector
+  ) {
+    const button =
+      $(buttonSelector);
+
+    const input =
+      $(inputSelector);
+
+    if (!button || !input) {
+      return;
+    }
+
+    button.addEventListener(
+      "click",
+      () => {
+        const show =
+          input.type === "password";
+
+        input.type =
+          show ? "text" : "password";
+
+        button.setAttribute(
+          "aria-pressed",
+          String(show)
+        );
+
+        button.setAttribute(
+          "aria-label",
+          show
+            ? "إخفاء كلمة المرور"
+            : "إظهار كلمة المرور"
+        );
       }
+    );
+  }
 
-      if (!input) {
-        return;
-      }
 
-      const showPassword = input.type === "password";
+  /* =========================================================
+     CHARACTER COUNTER
+  ========================================================== */
 
-      input.type = showPassword ? "text" : "password";
+  function setupCharacterCounter() {
+    const textarea =
+      $("#reportDescription");
 
-      toggle.classList.toggle("active", showPassword);
-      toggle.setAttribute(
-        "aria-label",
-        showPassword ? "Hide password" : "Show password"
+    if (!textarea) {
+      return;
+    }
+
+    textarea.addEventListener(
+      "input",
+      updateCharacterCount
+    );
+
+    updateCharacterCount();
+  }
+
+
+  function updateCharacterCount() {
+    const textarea =
+      $("#reportDescription");
+
+    const counter =
+      $("#reportCharacterCount");
+
+    if (!textarea || !counter) {
+      return;
+    }
+
+    counter.textContent =
+      textarea.value.length;
+  }
+
+
+  /* =========================================================
+     REVEAL ANIMATIONS
+  ========================================================== */
+
+  function setupRevealAnimations() {
+    const elements =
+      $$(".reveal");
+
+    if (!elements.length) {
+      return;
+    }
+
+    if (
+      !("IntersectionObserver" in window)
+    ) {
+      elements.forEach((element) =>
+        element.classList.add("visible")
+      );
+
+      return;
+    }
+
+    state.revealObserver =
+      new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) {
+              return;
+            }
+
+            entry.target.classList.add(
+              "visible"
+            );
+
+            observer.unobserve(
+              entry.target
+            );
+          });
+        },
+        {
+          threshold: 0.12
+        }
+      );
+
+    elements.forEach((element) => {
+      state.revealObserver.observe(
+        element
       );
     });
-  });
-}
+  }
 
-function setupFaq() {
-  selectors.faqItems.forEach(item => {
-    const question =
-      item.querySelector("[data-faq-question]") ||
-      item.querySelector(".faq-question") ||
-      item.querySelector("button");
 
-    if (!question) {
+  /* =========================================================
+     VIDEO
+  ========================================================== */
+
+  function setupHeroVideo() {
+    const video =
+      $("#heroVideo");
+
+    if (!video) {
       return;
     }
 
-    question.addEventListener("click", () => {
-      const currentlyOpen = item.classList.contains("active");
+    video.muted = true;
 
-      selectors.faqItems.forEach(other => {
-        other.classList.remove("active");
-      });
+    const playVideo = () => {
+      const result =
+        video.play();
 
-      if (!currentlyOpen) {
-        item.classList.add("active");
+      if (
+        result &&
+        typeof result.catch ===
+          "function"
+      ) {
+        result.catch(() => {});
       }
-    });
-  });
-}
+    };
 
-function setupSupport() {
-  $$("[data-support-action]").forEach(button => {
-    button.addEventListener("click", () => {
-      const action = button.dataset.supportAction;
+    playVideo();
 
-      if (!action) {
+    document.addEventListener(
+      "visibilitychange",
+      () => {
+        if (
+          document.hidden
+        ) {
+          video.pause();
+        } else {
+          playVideo();
+        }
+      }
+    );
+
+    video.addEventListener(
+      "error",
+      () => {
+        video.style.display =
+          "none";
+      }
+    );
+  }
+
+
+  /* =========================================================
+     SUPPORT
+  ========================================================== */
+
+  function setupSupportLinks() {
+    const saved =
+      storage.get(
+        "platformSupport",
+        null
+      );
+
+    if (
+      saved &&
+      typeof saved === "object"
+    ) {
+      state.support = {
+        ...state.support,
+        ...saved
+      };
+    }
+
+    applySupportLinks();
+  }
+
+
+  function applySupportLinks() {
+    const mappings = [
+      [
+        "[data-support-link='whatsapp']",
+        state.support.whatsapp
+      ],
+      [
+        "[data-support-link='telegram']",
+        state.support.telegram
+      ],
+      [
+        "[data-support-link='facebook']",
+        state.support.facebook
+      ]
+    ];
+
+    mappings.forEach(
+      ([selector, url]) => {
+        $$(selector).forEach(
+          (element) => {
+            element.href =
+              url || "#";
+
+            if (
+              !url ||
+              url === "#"
+            ) {
+              element.addEventListener(
+                "click",
+                handleUnavailableSupport,
+                {
+                  once: true
+                }
+              );
+            }
+          }
+        );
+      }
+    );
+  }
+
+
+  function handleUnavailableSupport(event) {
+    event.preventDefault();
+
+    showToast(
+      "بيانات الدعم سيتم التحكم فيها من الإدارة.",
+      "info"
+    );
+  }
+
+
+  /* =========================================================
+     STATISTICS
+  ========================================================== */
+
+  function setupStatistics() {
+    /*
+     * These values are temporary UI placeholders.
+     * Real Firebase values will be loaded later.
+     */
+
+    animateStatistic(
+      "[data-stat='students']",
+      0
+    );
+
+    animateStatistic(
+      "[data-stat='content']",
+      0
+    );
+
+    animateStatistic(
+      "[data-stat='exams']",
+      0
+    );
+  }
+
+
+  function animateStatistic(
+    selector,
+    target
+  ) {
+    const element =
+      $(selector);
+
+    if (!element) {
+      return;
+    }
+
+    element.textContent =
+      formatNumber(target);
+  }
+
+
+  function formatNumber(number) {
+    return new Intl.NumberFormat(
+      "ar-EG"
+    ).format(number);
+  }
+
+
+  /* =========================================================
+     REMEMBER LOGIN
+  ========================================================== */
+
+  function restoreRememberedLogin() {
+    const saved =
+      storage.get(
+        "pendingLogin",
+        null
+      );
+
+    if (!saved) {
+      return;
+    }
+
+    if (
+      saved.method === "email" &&
+      saved.email
+    ) {
+      setLoginMethod("email");
+
+      const email =
+        $("#loginEmail");
+
+      if (email) {
+        email.value =
+          saved.email;
+      }
+    }
+
+    if (
+      saved.method === "phone" &&
+      saved.phone
+    ) {
+      setLoginMethod("phone");
+
+      const phone =
+        $("#loginPhone");
+
+      if (phone) {
+        phone.value =
+          saved.phone;
+      }
+    }
+
+    const remember =
+      $("#rememberLogin");
+
+    if (remember) {
+      remember.checked =
+        saved.remember !== false;
+    }
+  }
+
+
+  /* =========================================================
+     VALIDATION
+  ========================================================== */
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      .test(email);
+  }
+
+
+  function isValidPhone(phone) {
+    const normalized =
+      normalizePhone(phone);
+
+    return /^01[0125][0-9]{8}$/
+      .test(normalized);
+  }
+
+
+  function normalizePhone(phone) {
+    return String(phone || "")
+      .replace(/\s+/g, "")
+      .replace(/[-()]/g, "")
+      .replace(/^(\+20|0020)/, "0");
+  }
+
+
+  function clearFormErrors(
+    formSelector
+  ) {
+    const form =
+      $(formSelector);
+
+    if (!form) {
+      return;
+    }
+
+    $$(".field-error", form)
+      .forEach((element) => {
+        clearFieldError(element);
+      });
+  }
+
+
+  function clearFieldError(element) {
+    if (!element) {
+      return;
+    }
+
+    element.textContent = "";
+  }
+
+
+  function showFieldError(
+    selector,
+    message
+  ) {
+    const element =
+      typeof selector === "string"
+        ? $(selector)
+        : selector;
+
+    if (!element) {
+      return;
+    }
+
+    element.textContent =
+      message;
+  }
+
+
+  /* =========================================================
+     MESSAGES
+  ========================================================== */
+
+  function showMessage(
+    element,
+    message,
+    type = "info"
+  ) {
+    if (!element) {
+      return;
+    }
+
+    element.textContent =
+      message;
+
+    element.className =
+      `form-message ${type}`;
+  }
+
+
+  function clearMessage(element) {
+    if (!element) {
+      return;
+    }
+
+    element.textContent = "";
+    element.className =
+      "form-message";
+  }
+
+
+  /* =========================================================
+     TOAST
+  ========================================================== */
+
+  function showToast(
+    message,
+    type = "info",
+    duration = 3500
+  ) {
+    const container =
+      $("#toastContainer");
+
+    if (!container) {
+      return;
+    }
+
+    const toast =
+      document.createElement("div");
+
+    toast.className =
+      `toast ${type}`;
+
+    const icon =
+      document.createElement("span");
+
+    icon.className =
+      "toast-icon";
+
+    icon.textContent =
+      type === "success"
+        ? "✓"
+        : type === "error"
+        ? "!"
+        : "i";
+
+    const text =
+      document.createElement("div");
+
+    text.className =
+      "toast-text";
+
+    text.textContent =
+      message;
+
+    const close =
+      document.createElement("button");
+
+    close.className =
+      "toast-close";
+
+    close.type =
+      "button";
+
+    close.setAttribute(
+      "aria-label",
+      "إغلاق"
+    );
+
+    close.textContent =
+      "×";
+
+    toast.append(
+      icon,
+      text,
+      close
+    );
+
+    container.appendChild(
+      toast
+    );
+
+    const removeToast = () => {
+      if (
+        !toast.isConnected
+      ) {
         return;
       }
 
-      handleSupportAction(action);
-    });
-  });
-}
+      toast.classList.add(
+        "removing"
+      );
 
-function handleSupportAction(action) {
-  const links = {
-    whatsapp: state.support.whatsapp,
-    telegram: state.support.telegram,
-    facebook: state.support.facebook,
-    whatsappChannel: state.support.whatsappChannel,
-    phone: state.support.phone
-  };
-
-  const value = links[action];
-
-  if (!value) {
-    showToast("This support option is not available right now.", "error");
-    return;
-  }
-
-  if (action === "phone") {
-    window.location.href = `tel:${normalizePhone(value)}`;
-    return;
-  }
-
-  window.open(value, "_blank", "noopener,noreferrer");
-}
-
-async function loadSupportSettings() {
-  try {
-    const firebaseApi = getFirebaseApi();
-
-    if (!firebaseApi) {
-      return;
-    }
-
-    let settings = null;
-
-    if (typeof firebaseApi.getPublicSettings === "function") {
-      settings = await firebaseApi.getPublicSettings();
-    } else if (typeof firebaseApi.getSettings === "function") {
-      settings = await firebaseApi.getSettings();
-    }
-
-    if (!settings || typeof settings !== "object") {
-      return;
-    }
-
-    const support = settings.support || settings;
-
-    state.support.whatsapp = support.whatsapp || support.whatsappUrl || "";
-    state.support.telegram = support.telegram || support.telegramUrl || "";
-    state.support.facebook = support.facebook || support.facebookUrl || "";
-    state.support.whatsappChannel =
-      support.whatsappChannel ||
-      support.whatsappChannelUrl ||
-      "";
-
-    state.support.phone =
-      support.phone ||
-      support.phoneNumber ||
-      "";
-
-    applySupportSettings();
-  } catch (error) {
-    console.error("Support settings error:", error);
-  }
-}
-
-function applySupportSettings() {
-  $$("[data-support-link]").forEach(element => {
-    const key = element.dataset.supportLink;
-
-    if (!key) {
-      return;
-    }
-
-    const value = state.support[key];
-
-    if (!value) {
-      element.hidden = true;
-      return;
-    }
-
-    element.hidden = false;
-
-    if (element.tagName === "A") {
-      element.href = value;
-
-      if (!value.startsWith("tel:")) {
-        element.target = "_blank";
-        element.rel = "noopener noreferrer";
-      }
-    }
-  });
-
-  $$("[data-support-text]").forEach(element => {
-    const key = element.dataset.supportText;
-
-    if (key && state.support[key]) {
-      element.textContent = state.support[key];
-    }
-  });
-}
-
-function setupGlobalClicks() {
-  document.addEventListener("click", event => {
-    const logoutButton = event.target.closest("[data-logout]");
-
-    if (logoutButton) {
-      event.preventDefault();
-      logout();
-      return;
-    }
-
-    const loginButton = event.target.closest("[data-open-login]");
-
-    if (loginButton) {
-      event.preventDefault();
-      openModal(selectors.loginModal);
-      return;
-    }
-
-    const registerButton = event.target.closest("[data-open-register]");
-
-    if (registerButton) {
-      event.preventDefault();
-      openModal(selectors.registerModal);
-      return;
-    }
-
-    const supportButton = event.target.closest("[data-open-support]");
-
-    if (supportButton) {
-      event.preventDefault();
-      openModal(selectors.supportModal);
-    }
-  });
-}
-
-async function logout() {
-  try {
-    const firebaseApi = getFirebaseApi();
-
-    if (firebaseApi) {
-      if (typeof firebaseApi.logout === "function") {
-        await firebaseApi.logout();
-      } else if (typeof firebaseApi.logoutUser === "function") {
-        await firebaseApi.logoutUser();
-      } else if (typeof firebaseApi.signOutUser === "function") {
-        await firebaseApi.signOutUser();
-      }
-    }
-  } catch (error) {
-    console.error("Logout error:", error);
-  }
-
-  clearSession();
-
-  window.location.href = "index.html";
-}
-
-async function restoreSession() {
-  try {
-    const firebaseApi = getFirebaseApi();
-
-    if (!firebaseApi) {
-      return;
-    }
-
-    let user = null;
-
-    if (typeof firebaseApi.getCurrentUser === "function") {
-      user = firebaseApi.getCurrentUser();
-    } else if (firebaseApi.auth?.currentUser) {
-      user = firebaseApi.auth.currentUser;
-    }
-
-    if (!user && typeof firebaseApi.waitForAuth === "function") {
-      user = await firebaseApi.waitForAuth();
-    }
-
-    if (user) {
-      saveSession(user);
-      updateLoggedInUI(user);
-      return;
-    }
-
-    const saved = getSavedSession();
-
-    if (saved) {
-      updateLoggedInUI(saved);
-    }
-  } catch (error) {
-    console.error("Session restore error:", error);
-  }
-}
-
-function updateLoggedInUI(user) {
-  if (!user) {
-    return;
-  }
-
-  const displayName =
-    user.displayName ||
-    user.name ||
-    user.studentName ||
-    "Student";
-
-  $$("[data-user-name]").forEach(element => {
-    element.textContent = displayName;
-  });
-
-  $$("[data-user-email]").forEach(element => {
-    element.textContent = user.email || "";
-  });
-
-  $$("[data-user-phone]").forEach(element => {
-    element.textContent = user.phone || "";
-  });
-
-  $$("[data-authenticated]").forEach(element => {
-    element.hidden = false;
-  });
-
-  $$("[data-guest-only]").forEach(element => {
-    element.hidden = true;
-  });
-}
-
-function redirectAfterLogin(user) {
-  const destination =
-    user?.redirect ||
-    sessionStorage.getItem("afterLogin") ||
-    "courses.html";
-
-  sessionStorage.removeItem("afterLogin");
-
-  window.location.href = destination;
-}
-
-function saveSession(user) {
-  if (!user || typeof user !== "object") {
-    return;
-  }
-
-  try {
-    const safeUser = {
-      uid: user.uid || "",
-      name: user.name || user.displayName || "",
-      displayName: user.displayName || user.name || "",
-      email: user.email || "",
-      phone: user.phone || "",
-      grade: user.grade || "",
-      status: user.status || "",
-      role: user.role || "student"
+      setTimeout(() => {
+        toast.remove();
+      }, 250);
     };
 
-    localStorage.setItem(
-      "coach_session",
-      JSON.stringify(safeUser)
+    close.addEventListener(
+      "click",
+      removeToast
     );
-  } catch (error) {
-    console.error("Session save error:", error);
-  }
-}
 
-function getSavedSession() {
-  try {
-    const raw = localStorage.getItem("coach_session");
-
-    if (!raw) {
-      return null;
-    }
-
-    return JSON.parse(raw);
-  } catch (error) {
-    console.error("Session read error:", error);
-    return null;
-  }
-}
-
-function clearSession() {
-  localStorage.removeItem("coach_session");
-  localStorage.removeItem("currentUser");
-}
-
-function getFirebaseApi() {
-  return (
-    window.CoachFirebase ||
-    window.AbdelnaseerFirebase ||
-    window.PlatformFirebase ||
-    null
-  );
-}
-
-function detectIdentifierType(value) {
-  return isValidEmail(value) ? "email" : "phone";
-}
-
-function isValidEmail(value) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value).trim());
-}
-
-function isValidPhone(value) {
-  const normalized = normalizePhone(value);
-
-  return /^\+?\d{10,15}$/.test(normalized);
-}
-
-function normalizePhone(value) {
-  return String(value || "")
-    .trim()
-    .replace(/[^\d+]/g, "");
-}
-
-function getValue(element) {
-  return element ? String(element.value || "").trim() : "";
-}
-
-function setLoading(loading) {
-  state.isLoading = loading;
-
-  document.body.classList.toggle("is-loading", loading);
-
-  if (selectors.loadingScreen) {
-    selectors.loadingScreen.classList.toggle("active", loading);
-    selectors.loadingScreen.setAttribute(
-      "aria-hidden",
-      String(!loading)
+    setTimeout(
+      removeToast,
+      duration
     );
   }
 
-  $$(
-    "#loginForm button[type='submit'], #registerForm button[type='submit'], #forgotForm button[type='submit'], [data-auth-submit]"
-  ).forEach(button => {
-    button.disabled = loading;
 
-    if (loading) {
-      button.dataset.originalText ||= button.textContent;
-      button.textContent = "Please wait...";
-    } else if (button.dataset.originalText) {
-      button.textContent = button.dataset.originalText;
+  /* =========================================================
+     BUTTON LOADING
+  ========================================================== */
+
+  function setButtonLoading(
+    button,
+    loading
+  ) {
+    if (!button) {
+      return;
     }
-  });
-}
 
-function showToast(message, type = "info") {
-  if (!selectors.toast) {
-    return;
+    button.disabled =
+      loading;
+
+    button.classList.toggle(
+      "loading",
+      loading
+    );
   }
 
-  if (selectors.toastMessage) {
-    selectors.toastMessage.textContent = message;
-  } else {
-    selectors.toast.textContent = message;
+
+  /* =========================================================
+     UTILITIES
+  ========================================================== */
+
+  function wait(ms) {
+    return new Promise(
+      (resolve) =>
+        setTimeout(
+          resolve,
+          ms
+        )
+    );
   }
 
-  selectors.toast.classList.remove(
-    "success",
-    "error",
-    "warning",
-    "info",
-    "active",
-    "show"
-  );
 
-  selectors.toast.classList.add(type);
-  selectors.toast.classList.add("active");
-  selectors.toast.classList.add("show");
+  /* =========================================================
+     PUBLIC API
+  ========================================================== */
 
-  clearTimeout(showToast.timer);
-
-  showToast.timer = setTimeout(() => {
-    selectors.toast?.classList.remove("active", "show");
-  }, 3500);
-}
-
-function getFriendlyAuthError(error) {
-  const code = error?.code || "";
-
-  const messages = {
-    "auth/invalid-email": "Enter a valid email address.",
-    "auth/user-not-found": "No account was found with these details.",
-    "auth/wrong-password": "Incorrect password.",
-    "auth/invalid-credential": "Incorrect login information.",
-    "auth/email-already-in-use": "This email is already registered.",
-    "auth/weak-password": "Password is too weak.",
-    "auth/too-many-requests": "Too many attempts. Try again later.",
-    "auth/network-request-failed": "Network error. Check your connection.",
-    "auth/user-disabled": "This account has been disabled."
+  return {
+    init,
+    openModal,
+    closeModal,
+    closeActiveModal,
+    showToast,
+    showMessage,
+    setLoginMethod,
+    applySupportLinks
   };
+})();
 
-  return (
-    messages[code] ||
-    error?.message ||
-    "Something went wrong. Please try again."
+
+/* =========================================================
+   START
+========================================================= */
+
+if (
+  document.readyState ===
+  "loading"
+) {
+  document.addEventListener(
+    "DOMContentLoaded",
+    App.init,
+    { once: true }
   );
+} else {
+  App.init();
 }
 
-window.CoachIndex = {
-  state,
-  openModal,
-  closeModal,
-  closeAllModals,
-  showToast,
-  getSavedSession,
-  saveSession,
-  clearSession,
-  logout,
-  loadSupportSettings,
-  applySupportSettings
-};
+
+/* =========================================================
+   OPTIONAL GLOBAL ACCESS
+========================================================= */
+
+window.CoachPlatform = App;
