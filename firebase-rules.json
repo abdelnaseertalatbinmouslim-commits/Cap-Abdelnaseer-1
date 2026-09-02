@@ -1,0 +1,57 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "students": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+
+      "$studentId": {
+        ".read": "auth != null && (auth.uid === $studentId || root.child('admins').child(auth.uid).val() === true)",
+
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+      }
+    },
+
+    "courses": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+    },
+
+    "quizzes": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+    },
+
+    "quiz_results": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+
+      "$resultId": {
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+      }
+    },
+
+    "content_views": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+
+      "$viewId": {
+        ".write": "auth != null"
+      }
+    },
+
+    "notifications": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+    },
+
+    "settings": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+    },
+
+    "admins": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      ".write": false
+    }
+  }
+}
