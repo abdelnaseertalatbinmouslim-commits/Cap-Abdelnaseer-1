@@ -2,1337 +2,1775 @@ here<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
 
     <meta name="theme-color" content="#07111f">
-    <meta name="description" content="لوحة الإدارة - منصة الكوتش">
+    <meta
+        name="description"
+        content="لوحة الإدارة الاحترافية - منصة الكوتش"
+    >
 
     <title>لوحة الإدارة | منصة الكوتش</title>
 
-    <!--
-        ============================================================
-        منصة الكوتش
-        ملف: admin.html
-        الجزء: 1 / 3
-        ============================================================
-    -->
+    <!-- =========================================================
+         منصة الكوتش
+         الملف: admin.html
+         النسخة: Admin Dashboard V2
+         ========================================================= -->
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <!-- Main Admin CSS -->
+    <link rel="stylesheet" href="admin.css">
+
+    <!-- Firebase -->
+    <script type="module" src="firebase-config.js"></script>
 
     <!-- Excel -->
     <script
         src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js">
     </script>
-
-    <!-- Icons -->
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="admin.css">
 </head>
 
 <body>
 
-    <!-- =========================================================
-         شاشة التحميل
-    ========================================================== -->
+<!-- =========================================================
+     GLOBAL LOADING
+     ========================================================= -->
 
-    <div id="loadingScreen" class="screen-overlay">
-        <div class="loading-card">
-            <div class="loading-logo">
+<div id="pageLoader" class="page-loader">
+    <div class="loader-box">
+        <div class="loader-logo">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+
+        <div class="loader-spinner"></div>
+
+        <h2>منصة الكوتش</h2>
+        <p>جاري تجهيز لوحة الإدارة...</p>
+    </div>
+</div>
+
+
+<!-- =========================================================
+     ACCESS DENIED
+     ========================================================= -->
+
+<div id="accessDenied" class="access-denied hidden">
+
+    <div class="denied-card">
+
+        <div class="denied-icon">
+            <i class="fa-solid fa-lock"></i>
+        </div>
+
+        <h1>غير مصرح بالدخول</h1>
+
+        <p>
+            هذا القسم مخصص للإدارة فقط.
+            تأكد من تسجيل الدخول بحساب إداري مصرح له.
+        </p>
+
+        <button
+            id="deniedLoginBtn"
+            class="primary-btn"
+            type="button"
+        >
+            <i class="fa-solid fa-right-to-bracket"></i>
+            العودة لتسجيل الدخول
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     ADMIN APPLICATION
+     ========================================================= -->
+
+<div id="adminApp" class="admin-app hidden">
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside id="sidebar" class="sidebar">
+
+        <div class="sidebar-header">
+
+            <div class="brand-logo">
                 <img
                     src="1783950091830.jpg"
                     alt="منصة الكوتش"
-                    onerror="this.style.display='none'">
+                    onerror="this.style.display='none'"
+                >
+
+                <div class="brand-fallback">
+                    <i class="fa-solid fa-dumbbell"></i>
+                </div>
             </div>
 
-            <div class="loading-spinner"></div>
-
-            <h2>منصة الكوتش</h2>
-
-            <p id="loadingMessage">
-                جاري التحقق من صلاحيات الإدارة...
-            </p>
-        </div>
-    </div>
-
-
-    <!-- =========================================================
-         شاشة رفض الوصول
-    ========================================================== -->
-
-    <div id="deniedScreen" class="screen-overlay hidden">
-
-        <div class="denied-card">
-
-            <div class="denied-icon">
-                <i class="fa-solid fa-shield-halved"></i>
+            <div class="brand-text">
+                <strong>الكوتش</strong>
+                <span>لوحة الإدارة</span>
             </div>
 
-            <h1>غير مصرح بالدخول</h1>
-
-            <p>
-                هذا القسم مخصص للمشرفين فقط.
-            </p>
-
-            <p class="small-text">
-                تأكد من تسجيل الدخول بالحساب الإداري الصحيح.
-            </p>
-
             <button
+                id="sidebarCloseBtn"
+                class="icon-btn mobile-only"
                 type="button"
-                class="btn btn-primary"
-                id="deniedLoginBtn">
-
-                <i class="fa-solid fa-right-to-bracket"></i>
-
-                تسجيل الدخول
-            </button>
-
-            <button
-                type="button"
-                class="btn btn-danger"
-                id="deniedLogoutBtn">
-
-                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-
-                تسجيل الخروج
+                aria-label="إغلاق القائمة"
+            >
+                <i class="fa-solid fa-xmark"></i>
             </button>
 
         </div>
 
-    </div>
+
+        <div class="admin-mini-profile">
+
+            <div class="admin-avatar">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+
+            <div>
+                <strong id="sidebarAdminName">المدير</strong>
+                <span id="sidebarAdminEmail">...</span>
+            </div>
+
+        </div>
 
 
-    <!-- =========================================================
-         التطبيق الرئيسي
-    ========================================================== -->
+        <nav class="sidebar-nav">
 
-    <main id="app" class="app-shell hidden">
+            <div class="nav-title">الرئيسية</div>
 
-        <!-- =====================================================
-             SIDEBAR
-        ====================================================== -->
+            <button
+                class="nav-item active"
+                data-section="dashboard"
+                type="button"
+            >
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>لوحة التحكم</span>
+            </button>
 
-        <aside id="sidebar" class="sidebar">
 
-            <div class="sidebar-top">
+            <div class="nav-title">إدارة المنصة</div>
 
-                <div class="brand">
+            <button
+                class="nav-item"
+                data-section="requests"
+                type="button"
+            >
+                <i class="fa-solid fa-user-clock"></i>
+                <span>طلبات التسجيل</span>
+                <b id="requestsBadge" class="nav-badge">0</b>
+            </button>
 
-                    <div class="brand-image">
-                        <img
-                            src="1783950091830.jpg"
-                            alt="منصة الكوتش"
-                            onerror="this.style.display='none'">
+            <button
+                class="nav-item"
+                data-section="students"
+                type="button"
+            >
+                <i class="fa-solid fa-users"></i>
+                <span>الطلاب</span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-section="courses"
+                type="button"
+            >
+                <i class="fa-solid fa-book-open"></i>
+                <span>الكورسات والمحتوى</span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-section="quizzes"
+                type="button"
+            >
+                <i class="fa-solid fa-clipboard-question"></i>
+                <span>الاختبارات</span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-section="results"
+                type="button"
+            >
+                <i class="fa-solid fa-square-poll-vertical"></i>
+                <span>النتائج</span>
+            </button>
+
+
+            <div class="nav-title">التواصل والمتابعة</div>
+
+            <button
+                class="nav-item"
+                data-section="notifications"
+                type="button"
+            >
+                <i class="fa-solid fa-bell"></i>
+                <span>الإشعارات</span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-section="activity"
+                type="button"
+            >
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>سجل النشاط</span>
+            </button>
+
+
+            <div class="nav-title">النظام</div>
+
+            <button
+                class="nav-item"
+                data-section="settings"
+                type="button"
+            >
+                <i class="fa-solid fa-sliders"></i>
+                <span>الإعدادات</span>
+            </button>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <button
+                id="adminLogoutBtn"
+                class="logout-btn"
+                type="button"
+            >
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>تسجيل الخروج</span>
+            </button>
+
+            <div class="security-status">
+                <span class="status-dot"></span>
+                <span>النظام محمي</span>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         OVERLAY
+         ===================================================== -->
+
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="main-content">
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div class="topbar-right">
+
+                <button
+                    id="sidebarOpenBtn"
+                    class="icon-btn mobile-only"
+                    type="button"
+                    aria-label="فتح القائمة"
+                >
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div>
+                    <span class="breadcrumb-small">
+                        منصة الكوتش
+                    </span>
+
+                    <h1 id="pageTitle">
+                        لوحة التحكم
+                    </h1>
+                </div>
+
+            </div>
+
+
+            <div class="topbar-left">
+
+                <button
+                    id="refreshBtn"
+                    class="topbar-btn"
+                    type="button"
+                    title="تحديث البيانات"
+                >
+                    <i class="fa-solid fa-rotate"></i>
+                </button>
+
+                <button
+                    id="notificationsBtn"
+                    class="topbar-btn notification-top-btn"
+                    type="button"
+                    title="الإشعارات"
+                >
+                    <i class="fa-solid fa-bell"></i>
+                    <span id="topNotificationBadge" class="notification-dot hidden"></span>
+                </button>
+
+                <div class="top-admin">
+
+                    <div class="top-admin-avatar">
+                        <i class="fa-solid fa-user-shield"></i>
                     </div>
 
-                    <div class="brand-info">
-                        <strong>منصة الكوتش</strong>
-                        <span>لوحة الإدارة</span>
+                    <div>
+                        <strong id="topAdminName">المدير</strong>
+                        <span>Administrator</span>
                     </div>
 
                 </div>
 
+            </div>
+
+        </header>
+
+
+        <!-- GLOBAL ALERT -->
+
+        <div id="globalAlert" class="global-alert hidden">
+            <i id="globalAlertIcon" class="fa-solid fa-circle-info"></i>
+            <span id="globalAlertText"></span>
+            <button id="globalAlertClose" type="button">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+
+        <!-- =================================================
+             DASHBOARD
+             ================================================= -->
+
+        <section
+            id="section-dashboard"
+            class="admin-section active"
+        >
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-kicker">OVERVIEW</span>
+                    <h2>نظرة عامة</h2>
+                    <p>
+                        تابع أداء منصة الكوتش وكل البيانات المهمة من مكان واحد.
+                    </p>
+                </div>
+
                 <button
+                    id="dashboardRefreshBtn"
+                    class="secondary-btn"
                     type="button"
-                    class="sidebar-close"
-                    id="sidebarCloseBtn"
-                    aria-label="إغلاق القائمة">
-
-                    <i class="fa-solid fa-xmark"></i>
-
+                >
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    تحديث
                 </button>
 
             </div>
 
 
-            <!-- معلومات الأدمن -->
+            <div class="welcome-card">
 
-            <div class="admin-profile">
+                <div class="welcome-content">
 
-                <div class="admin-avatar">
-                    <i class="fa-solid fa-user-shield"></i>
-                </div>
-
-                <div class="admin-profile-info">
-
-                    <strong id="adminDisplayName">
-                        المدير
-                    </strong>
-
-                    <span id="adminEmail">
-                        جاري التحميل...
+                    <span class="welcome-label">
+                        لوحة الإدارة
                     </span>
 
+                    <h2>
+                        أهلاً بيك في منصة الكوتش 👋
+                    </h2>
+
+                    <p>
+                        من هنا تقدر تدير الطلاب والكورسات والاختبارات
+                        والنتائج والإشعارات وإعدادات المنصة.
+                    </p>
+
                 </div>
 
-                <span class="online-dot"></span>
+                <div class="welcome-icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
 
             </div>
 
 
-            <!-- القائمة -->
+            <div class="stats-grid">
 
-            <nav class="sidebar-nav">
-
-                <button
-                    type="button"
-                    class="side-nav-btn active"
-                    data-tab="dashboard">
-
-                    <span class="nav-icon">
-                        <i class="fa-solid fa-chart-pie"></i>
-                    </span>
-
-                    <span>الرئيسية</span>
-
-                </button>
-
-
-                <button
-                    type="button"
-                    class="side-nav-btn"
-                    data-tab="requests">
-
-                    <span class="nav-icon">
-                        <i class="fa-solid fa-user-plus"></i>
-                    </span>
-
-                    <span>طلبات الانضمام</span>
-
-                    <span
-                        id="pendingBadge"
-                        class="nav-badge hidden">
-                        0
-                    </span>
-
-                </button>
-
-
-                <button
-                    type="button"
-                    class="side-nav-btn"
-                    data-tab="students">
-
-                    <span class="nav-icon">
+                <div class="stat-card">
+                    <div class="stat-icon students">
                         <i class="fa-solid fa-users"></i>
-                    </span>
+                    </div>
 
-                    <span>الطلاب</span>
+                    <div class="stat-content">
+                        <span>إجمالي الطلاب</span>
+                        <strong id="statStudents">0</strong>
+                        <small id="statStudentsMeta">--</small>
+                    </div>
+                </div>
 
-                </button>
+
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fa-solid fa-user-clock"></i>
+                    </div>
+
+                    <div class="stat-content">
+                        <span>طلبات معلقة</span>
+                        <strong id="statRequests">0</strong>
+                        <small>تحتاج مراجعة</small>
+                    </div>
+                </div>
 
 
-                <button
-                    type="button"
-                    class="side-nav-btn"
-                    data-tab="courses">
-
-                    <span class="nav-icon">
+                <div class="stat-card">
+                    <div class="stat-icon courses">
                         <i class="fa-solid fa-book-open"></i>
-                    </span>
+                    </div>
 
-                    <span>المحتوى والكورسات</span>
-
-                </button>
-
-
-                <button
-                    type="button"
-                    class="side-nav-btn"
-                    data-tab="quizzes">
-
-                    <span class="nav-icon">
-                        <i class="fa-solid fa-file-pen"></i>
-                    </span>
-
-                    <span>الاختبارات</span>
-
-                </button>
+                    <div class="stat-content">
+                        <span>الكورسات</span>
+                        <strong id="statCourses">0</strong>
+                        <small>محتوى تعليمي</small>
+                    </div>
+                </div>
 
 
-                <button
-                    type="button"
-                    class="side-nav-btn"
-                    data-tab="results">
+                <div class="stat-card">
+                    <div class="stat-icon quizzes">
+                        <i class="fa-solid fa-clipboard-question"></i>
+                    </div>
 
-                    <span class="nav-icon">
+                    <div class="stat-content">
+                        <span>الاختبارات</span>
+                        <strong id="statQuizzes">0</strong>
+                        <small>اختبارات منشورة</small>
+                    </div>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon results">
                         <i class="fa-solid fa-square-poll-vertical"></i>
-                    </span>
-
-                    <span>النتائج</span>
-
-                </button>
-
-
-                <button
-                    type="button"
-                    class="side-nav-btn"
-                    data-tab="notifications">
-
-                    <span class="nav-icon">
-                        <i class="fa-solid fa-bell"></i>
-                    </span>
-
-                    <span>الإشعارات</span>
-
-                    <span
-                        id="notificationsBadge"
-                        class="nav-badge hidden">
-                        0
-                    </span>
-
-                </button>
-
-
-                <button
-                    type="button"
-                    class="side-nav-btn"
-                    data-tab="activity">
-
-                    <span class="nav-icon">
-                        <i class="fa-solid fa-clock-rotate-left"></i>
-                    </span>
-
-                    <span>النشاطات</span>
-
-                </button>
-
-
-                <button
-                    type="button"
-                    class="side-nav-btn"
-                    data-tab="settings">
-
-                    <span class="nav-icon">
-                        <i class="fa-solid fa-sliders"></i>
-                    </span>
-
-                    <span>الإعدادات</span>
-
-                </button>
-
-            </nav>
-
-
-            <!-- أسفل القائمة -->
-
-            <div class="sidebar-bottom">
-
-                <div class="security-note">
-
-                    <i class="fa-solid fa-lock"></i>
-
-                    <div>
-                        <strong>وضع آمن</strong>
-                        <span>Firebase Authentication</span>
                     </div>
 
+                    <div class="stat-content">
+                        <span>النتائج</span>
+                        <strong id="statResults">0</strong>
+                        <small>محاولات مسجلة</small>
+                    </div>
                 </div>
 
 
-                <button
-                    type="button"
-                    class="logout-btn"
-                    id="logoutBtn">
-
-                    <i class="fa-solid fa-right-from-bracket"></i>
-
-                    <span>تسجيل الخروج</span>
-
-                </button>
-
-            </div>
-
-        </aside>
-
-
-        <!-- =====================================================
-             Overlay للموبايل
-        ====================================================== -->
-
-        <div
-            id="sidebarOverlay"
-            class="sidebar-overlay">
-        </div>
-
-
-        <!-- =====================================================
-             المحتوى الرئيسي
-        ====================================================== -->
-
-        <section class="main-content">
-
-            <!-- =================================================
-                 TOP BAR
-            ================================================== -->
-
-            <header class="topbar">
-
-                <div class="topbar-right">
-
-                    <button
-                        type="button"
-                        id="mobileMenuBtn"
-                        class="icon-btn"
-                        aria-label="فتح القائمة">
-
-                        <i class="fa-solid fa-bars"></i>
-
-                    </button>
-
-                    <div>
-
-                        <div class="page-kicker">
-                            منصة الكوتش
-                        </div>
-
-                        <h1 id="pageTitle">
-                            لوحة التحكم
-                        </h1>
-
+                <div class="stat-card">
+                    <div class="stat-icon views">
+                        <i class="fa-solid fa-eye"></i>
                     </div>
 
-                </div>
-
-
-                <div class="topbar-left">
-
-                    <button
-                        type="button"
-                        class="icon-btn"
-                        id="refreshAllBtn"
-                        title="تحديث البيانات">
-
-                        <i class="fa-solid fa-arrows-rotate"></i>
-
-                    </button>
-
-
-                    <div class="topbar-admin">
-
-                        <div class="topbar-avatar">
-                            <i class="fa-solid fa-user-shield"></i>
-                        </div>
-
-                        <div>
-
-                            <strong id="topbarAdminName">
-                                المدير
-                            </strong>
-
-                            <span>
-                                مدير المنصة
-                            </span>
-
-                        </div>
-
+                    <div class="stat-content">
+                        <span>المشاهدات</span>
+                        <strong id="statViews">0</strong>
+                        <small>مشاهدة للمحتوى</small>
                     </div>
-
                 </div>
-
-            </header>
-
-
-            <!-- =================================================
-                 GLOBAL ALERT
-            ================================================== -->
-
-            <div
-                id="globalAlert"
-                class="global-alert hidden">
-
-                <div class="alert-icon">
-                    <i class="fa-solid fa-circle-info"></i>
-                </div>
-
-                <div class="alert-content">
-
-                    <strong id="alertTitle">
-                        تنبيه
-                    </strong>
-
-                    <span id="alertMessage">
-                        -
-                    </span>
-
-                </div>
-
-                <button
-                    type="button"
-                    id="closeAlertBtn"
-                    class="alert-close">
-
-                    <i class="fa-solid fa-xmark"></i>
-
-                </button>
 
             </div>
 
 
-            <!-- =================================================
-                 TAB: DASHBOARD
-            ================================================== -->
-
-            <section
-                id="tab-dashboard"
-                class="admin-tab active">
-
-                <div class="welcome-card">
-
-                    <div class="welcome-content">
-
-                        <span class="welcome-label">
-                            لوحة الإدارة
-                        </span>
-
-                        <h2>
-                            أهلاً بك في لوحة تحكم منصة الكوتش 👋
-                        </h2>
-
-                        <p>
-                            من هنا تقدر تدير الطلاب والمحتوى
-                            والاختبارات والنتائج والإشعارات
-                            وإعدادات المنصة من مكان واحد.
-                        </p>
-
-                    </div>
-
-                    <div class="welcome-decoration">
-
-                        <i class="fa-solid fa-shield-halved"></i>
-
-                    </div>
-
-                </div>
-
-
-                <!-- الإحصائيات -->
-
-                <div class="stats-grid">
-
-                    <article class="stat-card">
-
-                        <div class="stat-card-icon students">
-                            <i class="fa-solid fa-users"></i>
-                        </div>
-
-                        <div class="stat-card-content">
-
-                            <span>
-                                إجمالي الطلاب
-                            </span>
-
-                            <strong id="statStudents">
-                                0
-                            </strong>
-
-                            <small>
-                                جميع الحسابات
-                            </small>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="stat-card">
-
-                        <div class="stat-card-icon approved">
-                            <i class="fa-solid fa-user-check"></i>
-                        </div>
-
-                        <div class="stat-card-content">
-
-                            <span>
-                                الطلاب المفعلون
-                            </span>
-
-                            <strong id="statApproved">
-                                0
-                            </strong>
-
-                            <small>
-                                حسابات نشطة
-                            </small>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="stat-card">
-
-                        <div class="stat-card-icon pending">
-                            <i class="fa-solid fa-user-clock"></i>
-                        </div>
-
-                        <div class="stat-card-content">
-
-                            <span>
-                                طلبات معلقة
-                            </span>
-
-                            <strong id="statPending">
-                                0
-                            </strong>
-
-                            <small>
-                                تحتاج مراجعة
-                            </small>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="stat-card">
-
-                        <div class="stat-card-icon courses">
-                            <i class="fa-solid fa-book-open"></i>
-                        </div>
-
-                        <div class="stat-card-content">
-
-                            <span>
-                                المحتوى
-                            </span>
-
-                            <strong id="statCourses">
-                                0
-                            </strong>
-
-                            <small>
-                                دروس ومحاضرات
-                            </small>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="stat-card">
-
-                        <div class="stat-card-icon quizzes">
-                            <i class="fa-solid fa-file-pen"></i>
-                        </div>
-
-                        <div class="stat-card-content">
-
-                            <span>
-                                الاختبارات
-                            </span>
-
-                            <strong id="statQuizzes">
-                                0
-                            </strong>
-
-                            <small>
-                                اختبارات منشورة
-                            </small>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="stat-card">
-
-                        <div class="stat-card-icon results">
-                            <i class="fa-solid fa-chart-column"></i>
-                        </div>
-
-                        <div class="stat-card-content">
-
-                            <span>
-                                النتائج
-                            </span>
-
-                            <strong id="statResults">
-                                0
-                            </strong>
-
-                            <small>
-                                سجلات النتائج
-                            </small>
-
-                        </div>
-
-                    </article>
-
-                </div>
-
-
-                <!-- المتابعة السريعة -->
-
-                <div class="dashboard-grid">
-
-                    <div class="panel-card">
-
-                        <div class="panel-header">
-
-                            <div>
-
-                                <span class="panel-kicker">
-                                    متابعة
-                                </span>
-
-                                <h3>
-                                    آخر طلبات الانضمام
-                                </h3>
-
-                            </div>
-
-                            <button
-                                type="button"
-                                class="text-btn"
-                                data-tab-target="requests">
-
-                                عرض الكل
-                                <i class="fa-solid fa-arrow-left"></i>
-
-                            </button>
-
-                        </div>
-
-                        <div
-                            id="dashboardRequests"
-                            class="mini-list">
-
-                            <div class="empty-state">
-                                <i class="fa-solid fa-inbox"></i>
-                                <span>جاري تحميل الطلبات...</span>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="panel-card">
-
-                        <div class="panel-header">
-
-                            <div>
-
-                                <span class="panel-kicker">
-                                    نتائج
-                                </span>
-
-                                <h3>
-                                    آخر نتائج الاختبارات
-                                </h3>
-
-                            </div>
-
-                            <button
-                                type="button"
-                                class="text-btn"
-                                data-tab-target="results">
-
-                                عرض الكل
-                                <i class="fa-solid fa-arrow-left"></i>
-
-                            </button>
-
-                        </div>
-
-                        <div
-                            id="dashboardResults"
-                            class="mini-list">
-
-                            <div class="empty-state">
-                                <i class="fa-solid fa-chart-line"></i>
-                                <span>جاري تحميل النتائج...</span>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- إحصائيات الامتحانات -->
+            <div class="dashboard-grid">
 
                 <div class="panel-card">
 
                     <div class="panel-header">
-
                         <div>
-
-                            <span class="panel-kicker">
-                                Live
-                            </span>
-
-                            <h3>
-                                متابعة الاختبارات
-                            </h3>
-
+                            <h3>آخر طلبات التسجيل</h3>
+                            <p>آخر الطلاب الذين طلبوا الانضمام.</p>
                         </div>
-
-                        <span class="live-status">
-                            <span></span>
-                            مباشر
-                        </span>
-
-                    </div>
-
-
-                    <div class="live-stats-grid">
-
-                        <div class="live-stat">
-
-                            <span class="live-stat-icon">
-                                <i class="fa-solid fa-door-open"></i>
-                            </span>
-
-                            <div>
-
-                                <small>
-                                    دخلوا الامتحانات
-                                </small>
-
-                                <strong id="liveEntered">
-                                    0
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="live-stat">
-
-                            <span class="live-stat-icon">
-                                <i class="fa-solid fa-paper-plane"></i>
-                            </span>
-
-                            <div>
-
-                                <small>
-                                    قاموا بالتسليم
-                                </small>
-
-                                <strong id="liveSubmitted">
-                                    0
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="live-stat">
-
-                            <span class="live-stat-icon">
-                                <i class="fa-solid fa-circle-check"></i>
-                            </span>
-
-                            <div>
-
-                                <small>
-                                    أتموا الحل
-                                </small>
-
-                                <strong id="liveCompleted">
-                                    0
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="live-stat">
-
-                            <span class="live-stat-icon">
-                                <i class="fa-solid fa-eye"></i>
-                            </span>
-
-                            <div>
-
-                                <small>
-                                    مشاهدات المحتوى
-                                </small>
-
-                                <strong id="statViews">
-                                    0
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 TAB: REQUESTS
-            ================================================== -->
-
-            <section
-                id="tab-requests"
-                class="admin-tab">
-
-                <div class="section-heading">
-
-                    <div>
-
-                        <span class="section-kicker">
-                            المستخدمون
-                        </span>
-
-                        <h2>
-                            طلبات الانضمام
-                        </h2>
-
-                        <p>
-                            مراجعة طلبات التسجيل وقبول أو رفض الحسابات.
-                        </p>
-
-                    </div>
-
-                    <div class="section-actions">
 
                         <button
+                            class="text-btn"
+                            data-section-link="requests"
                             type="button"
-                            class="btn btn-warning"
-                            id="approveAllBtn">
-
-                            <i class="fa-solid fa-check-double"></i>
-
-                            قبول الكل
-
+                        >
+                            عرض الكل
                         </button>
+                    </div>
+
+                    <div
+                        id="dashboardRequests"
+                        class="mini-list"
+                    ></div>
+
+                </div>
+
+
+                <div class="panel-card">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>آخر النتائج</h3>
+                            <p>آخر الاختبارات التي تم تسجيلها.</p>
+                        </div>
+
+                        <button
+                            class="text-btn"
+                            data-section-link="results"
+                            type="button"
+                        >
+                            عرض الكل
+                        </button>
+                    </div>
+
+                    <div
+                        id="dashboardResults"
+                        class="mini-list"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel-card">
+
+                <div class="panel-header">
+                    <div>
+                        <h3>إحصائيات سريعة</h3>
+                        <p>ملخص حالة المنصة الحالية.</p>
+                    </div>
+                </div>
+
+                <div class="quick-stats">
+
+                    <div>
+                        <span>طلاب نشطون</span>
+                        <strong id="quickActiveStudents">0</strong>
+                    </div>
+
+                    <div>
+                        <span>طلاب موقوفون</span>
+                        <strong id="quickBlockedStudents">0</strong>
+                    </div>
+
+                    <div>
+                        <span>اختبارات منشورة</span>
+                        <strong id="quickPublishedQuizzes">0</strong>
+                    </div>
+
+                    <div>
+                        <span>إشعارات</span>
+                        <strong id="quickNotifications">0</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             REQUESTS
+             ================================================= -->
+
+        <section
+            id="section-requests"
+            class="admin-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-kicker">REGISTRATION</span>
+                    <h2>طلبات التسجيل</h2>
+                    <p>
+                        راجع طلبات الطلاب ووافق عليها أو ارفضها.
+                    </p>
+                </div>
+
+                <div class="heading-actions">
+
+                    <button
+                        id="exportRequestsBtn"
+                        class="secondary-btn"
+                        type="button"
+                    >
+                        <i class="fa-solid fa-file-export"></i>
+                        تصدير
+                    </button>
+
+                    <label class="primary-btn upload-btn">
+                        <i class="fa-solid fa-file-import"></i>
+                        استيراد Excel
+                        <input
+                            id="importStudentsInput"
+                            type="file"
+                            accept=".xlsx,.xls,.csv"
+                            hidden
+                        >
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <div class="filter-bar">
+
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input
+                        id="requestsSearch"
+                        type="search"
+                        placeholder="ابحث بالاسم أو البريد أو الهاتف..."
+                    >
+                </div>
+
+                <select id="requestsStatusFilter">
+                    <option value="all">كل الحالات</option>
+                    <option value="pending">معلقة</option>
+                    <option value="approved">مقبولة</option>
+                    <option value="rejected">مرفوضة</option>
+                </select>
+
+                <button
+                    id="clearRequestsFilters"
+                    class="filter-clear"
+                    type="button"
+                >
+                    <i class="fa-solid fa-filter-circle-xmark"></i>
+                    مسح
+                </button>
+
+            </div>
+
+
+            <div class="panel-card table-card">
+
+                <div class="table-header">
+                    <div>
+                        <h3>طلبات التسجيل</h3>
+                        <span id="requestsCountLabel">0 طلب</span>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>الطالب</th>
+                                <th>البريد</th>
+                                <th>الهاتف</th>
+                                <th>الفرقة</th>
+                                <th>التاريخ</th>
+                                <th>الحالة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="requestsTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+                <div
+                    id="requestsEmpty"
+                    class="empty-state hidden"
+                >
+                    <i class="fa-solid fa-inbox"></i>
+                    <h3>لا توجد طلبات</h3>
+                    <p>لا توجد بيانات مطابقة للبحث الحالي.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             STUDENTS
+             ================================================= -->
+
+        <section
+            id="section-students"
+            class="admin-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-kicker">STUDENTS</span>
+                    <h2>إدارة الطلاب</h2>
+                    <p>
+                        إدارة بيانات الطلاب وحالات الحساب والتقارير.
+                    </p>
+                </div>
+
+                <div class="heading-actions">
+
+                    <button
+                        id="exportStudentsBtn"
+                        class="secondary-btn"
+                        type="button"
+                    >
+                        <i class="fa-solid fa-file-excel"></i>
+                        تصدير Excel
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="filter-bar">
+
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input
+                        id="studentsSearch"
+                        type="search"
+                        placeholder="ابحث باسم الطالب أو البريد أو الهاتف..."
+                    >
+                </div>
+
+                <select id="studentsGradeFilter">
+                    <option value="all">كل الفرق</option>
+                    <option value="الفرقة الأولى">الفرقة الأولى</option>
+                    <option value="الفرقة الثانية">الفرقة الثانية</option>
+                    <option value="الفرقة الثالثة">الفرقة الثالثة</option>
+                    <option value="الفرقة الرابعة">الفرقة الرابعة</option>
+                </select>
+
+                <select id="studentsStatusFilter">
+                    <option value="all">كل الحالات</option>
+                    <option value="approved">نشط</option>
+                    <option value="active">نشط</option>
+                    <option value="pending">معلق</option>
+                    <option value="blocked">موقوف</option>
+                    <option value="rejected">مرفوض</option>
+                </select>
+
+                <button
+                    id="clearStudentsFilters"
+                    class="filter-clear"
+                    type="button"
+                >
+                    <i class="fa-solid fa-filter-circle-xmark"></i>
+                    مسح
+                </button>
+
+            </div>
+
+
+            <div class="panel-card table-card">
+
+                <div class="table-header">
+
+                    <div>
+                        <h3>قائمة الطلاب</h3>
+                        <span id="studentsCountLabel">0 طالب</span>
+                    </div>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>الطالب</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>الهاتف</th>
+                                <th>الفرقة</th>
+                                <th>الحالة</th>
+                                <th>التسجيل</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="studentsTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+                <div
+                    id="studentsEmpty"
+                    class="empty-state hidden"
+                >
+                    <i class="fa-solid fa-users-slash"></i>
+                    <h3>لا يوجد طلاب</h3>
+                    <p>لم يتم العثور على طلاب مطابقين.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             COURSES
+             ================================================= -->
+
+        <section
+            id="section-courses"
+            class="admin-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-kicker">CONTENT</span>
+                    <h2>الكورسات والمحتوى</h2>
+                    <p>
+                        إدارة المواد والمحتوى التعليمي داخل المنصة.
+                    </p>
+                </div>
+
+                <button
+                    id="addCourseBtn"
+                    class="primary-btn"
+                    type="button"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                    إضافة محتوى
+                </button>
+
+            </div>
+
+
+            <div class="content-summary-grid">
+
+                <div class="summary-card">
+                    <i class="fa-solid fa-book"></i>
+                    <div>
+                        <span>إجمالي المحتوى</span>
+                        <strong id="contentTotal">0</strong>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <div>
+                        <span>الترم الأول</span>
+                        <strong id="contentTerm1">0</strong>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <div>
+                        <span>الترم الثاني</span>
+                        <strong id="contentTerm2">0</strong>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <i class="fa-solid fa-eye"></i>
+                    <div>
+                        <span>إجمالي المشاهدات</span>
+                        <strong id="contentViews">0</strong>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="filter-bar">
+
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input
+                        id="coursesSearch"
+                        type="search"
+                        placeholder="ابحث في المحتوى..."
+                    >
+                </div>
+
+                <select id="coursesTermFilter">
+                    <option value="all">كل الترمات</option>
+                    <option value="term1">الترم الأول</option>
+                    <option value="term2">الترم الثاني</option>
+                </select>
+
+                <select id="coursesTypeFilter">
+                    <option value="all">كل الأنواع</option>
+                    <option value="video">فيديو</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="pdf">PDF</option>
+                    <option value="link">رابط</option>
+                    <option value="text">نص</option>
+                </select>
+
+            </div>
+
+
+            <div
+                id="coursesGrid"
+                class="courses-grid"
+            ></div>
+
+
+            <div
+                id="coursesEmpty"
+                class="empty-state hidden"
+            >
+                <i class="fa-solid fa-folder-open"></i>
+                <h3>لا يوجد محتوى</h3>
+                <p>ابدأ بإضافة أول محتوى تعليمي.</p>
+
+                <button
+                    class="primary-btn"
+                    data-action="add-course"
+                    type="button"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                    إضافة محتوى
+                </button>
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             QUIZZES
+             ================================================= -->
+
+        <section
+            id="section-quizzes"
+            class="admin-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-kicker">EXAMS</span>
+                    <h2>الاختبارات</h2>
+                    <p>
+                        إنشاء وإدارة الاختبارات والأسئلة والحد الأقصى للمشاركين.
+                    </p>
+                </div>
+
+                <button
+                    id="addQuizBtn"
+                    class="primary-btn"
+                    type="button"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                    إنشاء اختبار
+                </button>
+
+            </div>
+
+
+            <div class="stats-grid compact">
+
+                <div class="stat-card">
+                    <div class="stat-icon quizzes">
+                        <i class="fa-solid fa-clipboard-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>كل الاختبارات</span>
+                        <strong id="quizTotal">0</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon courses">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>منشورة</span>
+                        <strong id="quizPublished">0</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>غير منشورة</span>
+                        <strong id="quizDrafts">0</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon results">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>المشاركات</span>
+                        <strong id="quizParticipants">0</strong>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="filter-bar">
+
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input
+                        id="quizzesSearch"
+                        type="search"
+                        placeholder="ابحث عن اختبار..."
+                    >
+                </div>
+
+                <select id="quizzesTermFilter">
+                    <option value="all">كل الترمات</option>
+                    <option value="term1">الترم الأول</option>
+                    <option value="term2">الترم الثاني</option>
+                </select>
+
+                <select id="quizzesStatusFilter">
+                    <option value="all">كل الحالات</option>
+                    <option value="published">منشور</option>
+                    <option value="draft">مسودة</option>
+                </select>
+
+            </div>
+
+
+            <div
+                id="quizzesGrid"
+                class="quizzes-grid"
+            ></div>
+
+
+            <div
+                id="quizzesEmpty"
+                class="empty-state hidden"
+            >
+                <i class="fa-solid fa-clipboard-question"></i>
+                <h3>لا توجد اختبارات</h3>
+                <p>أنشئ أول اختبار من الزر بالأعلى.</p>
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             RESULTS
+             ================================================= -->
+
+        <section
+            id="section-results"
+            class="admin-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-kicker">RESULTS</span>
+                    <h2>النتائج</h2>
+                    <p>
+                        متابعة نتائج الاختبارات وتقارير الطلاب.
+                    </p>
+                </div>
+
+                <button
+                    id="exportResultsBtn"
+                    class="secondary-btn"
+                    type="button"
+                >
+                    <i class="fa-solid fa-file-export"></i>
+                    تصدير Excel
+                </button>
+
+            </div>
+
+
+            <div class="stats-grid compact">
+
+                <div class="stat-card">
+                    <div class="stat-icon results">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+
+                    <div class="stat-content">
+                        <span>إجمالي النتائج</span>
+                        <strong id="resultsTotal">0</strong>
+                    </div>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon courses">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+
+                    <div class="stat-content">
+                        <span>ناجحون</span>
+                        <strong id="resultsPassed">0</strong>
+                    </div>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+
+                    <div class="stat-content">
+                        <span>غير ناجحين</span>
+                        <strong id="resultsFailed">0</strong>
+                    </div>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon views">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+
+                    <div class="stat-content">
+                        <span>متوسط الدرجات</span>
+                        <strong id="resultsAverage">0%</strong>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="filter-bar">
+
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input
+                        id="resultsSearch"
+                        type="search"
+                        placeholder="ابحث باسم الطالب أو الاختبار..."
+                    >
+                </div>
+
+                <select id="resultsQuizFilter">
+                    <option value="all">كل الاختبارات</option>
+                </select>
+
+                <select id="resultsStatusFilter">
+                    <option value="all">كل النتائج</option>
+                    <option value="passed">ناجح</option>
+                    <option value="failed">غير ناجح</option>
+                </select>
+
+            </div>
+
+
+            <div class="panel-card table-card">
+
+                <div class="table-header">
+                    <div>
+                        <h3>نتائج الطلاب</h3>
+                        <span id="resultsCountLabel">0 نتيجة</span>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>الطالب</th>
+                                <th>الاختبار</th>
+                                <th>الدرجة</th>
+                                <th>النسبة</th>
+                                <th>الحالة</th>
+                                <th>التاريخ</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="resultsTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+                <div
+                    id="resultsEmpty"
+                    class="empty-state hidden"
+                >
+                    <i class="fa-solid fa-chart-column"></i>
+                    <h3>لا توجد نتائج</h3>
+                    <p>لم يتم تسجيل نتائج حتى الآن.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             NOTIFICATIONS
+             ================================================= -->
+
+        <section
+            id="section-notifications"
+            class="admin-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-kicker">COMMUNICATION</span>
+                    <h2>الإشعارات</h2>
+                    <p>
+                        إرسال وإدارة الإشعارات الخاصة بالطلاب.
+                    </p>
+                </div>
+
+                <button
+                    id="addNotificationBtn"
+                    class="primary-btn"
+                    type="button"
+                >
+                    <i class="fa-solid fa-bell"></i>
+                    إشعار جديد
+                </button>
+
+            </div>
+
+
+            <div class="notification-compose-card">
+
+                <div class="compose-icon">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </div>
+
+                <div class="compose-content">
+
+                    <h3>إرسال إشعار سريع</h3>
+
+                    <p>
+                        أرسل رسالة مباشرة لكل الطلاب أو لمجموعة محددة.
+                    </p>
+
+                    <div class="quick-notification-form">
+
+                        <input
+                            id="quickNotificationTitle"
+                            type="text"
+                            maxlength="120"
+                            placeholder="عنوان الإشعار"
+                        >
+
+                        <textarea
+                            id="quickNotificationMessage"
+                            rows="3"
+                            maxlength="1000"
+                            placeholder="اكتب الرسالة..."
+                        ></textarea>
+
+                        <div class="compose-actions">
+
+                            <select id="quickNotificationTarget">
+                                <option value="all">كل الطلاب</option>
+                                <option value="active">الطلاب النشطون</option>
+                            </select>
+
+                            <button
+                                id="sendQuickNotificationBtn"
+                                class="primary-btn"
+                                type="button"
+                            >
+                                <i class="fa-solid fa-paper-plane"></i>
+                                إرسال
+                            </button>
+
+                        </div>
 
                     </div>
 
                 </div>
 
+            </div>
 
-                <!-- استيراد الطلاب -->
 
-                <div class="upload-card">
+            <div class="panel-card table-card">
 
-                    <div class="upload-card-icon">
-                        <i class="fa-solid fa-file-excel"></i>
+                <div class="table-header">
+                    <div>
+                        <h3>سجل الإشعارات</h3>
+                        <span id="notificationsCountLabel">0 إشعار</span>
                     </div>
+                </div>
 
-                    <div class="upload-card-content">
+                <div
+                    id="notificationsList"
+                    class="notifications-list"
+                ></div>
 
-                        <h3>
-                            استيراد الطلاب من Excel
-                        </h3>
+                <div
+                    id="notificationsEmpty"
+                    class="empty-state hidden"
+                >
+                    <i class="fa-regular fa-bell-slash"></i>
+                    <h3>لا توجد إشعارات</h3>
+                    <p>لم يتم إرسال إشعارات حتى الآن.</p>
+                </div>
 
-                        <p>
-                            تقدر تضيف مجموعة من الطلاب دفعة واحدة.
-                        </p>
+            </div>
 
-                        <div class="upload-hint">
-                            الأعمدة المقترحة:
-                            <b>name</b>،
-                            <b>phone</b>،
-                            <b>email</b>،
-                            <b>grade</b>
+        </section>
+
+
+        <!-- =================================================
+             ACTIVITY
+             ================================================= -->
+
+        <section
+            id="section-activity"
+            class="admin-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-kicker">AUDIT LOG</span>
+                    <h2>سجل النشاط</h2>
+                    <p>
+                        متابعة العمليات المهمة التي تمت داخل لوحة الإدارة.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="filter-bar">
+
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input
+                        id="activitySearch"
+                        type="search"
+                        placeholder="ابحث في النشاط..."
+                    >
+                </div>
+
+                <select id="activityTypeFilter">
+                    <option value="all">كل الأنشطة</option>
+                    <option value="student">طلاب</option>
+                    <option value="course">محتوى</option>
+                    <option value="quiz">اختبارات</option>
+                    <option value="result">نتائج</option>
+                    <option value="notification">إشعارات</option>
+                    <option value="system">النظام</option>
+                </select>
+
+            </div>
+
+
+            <div class="panel-card">
+
+                <div
+                    id="activityTimeline"
+                    class="activity-timeline"
+                ></div>
+
+                <div
+                    id="activityEmpty"
+                    class="empty-state hidden"
+                >
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <h3>لا يوجد نشاط</h3>
+                    <p>سيظهر سجل العمليات هنا.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SETTINGS
+             ================================================= -->
+
+        <section
+            id="section-settings"
+            class="admin-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-kicker">SYSTEM</span>
+                    <h2>إعدادات المنصة</h2>
+                    <p>
+                        التحكم في إعدادات منصة الكوتش.
+                    </p>
+                </div>
+
+                <button
+                    id="saveAllSettingsBtn"
+                    class="primary-btn"
+                    type="button"
+                >
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    حفظ الإعدادات
+                </button>
+
+            </div>
+
+
+            <div class="settings-grid">
+
+                <!-- GENERAL -->
+
+                <div class="settings-card">
+
+                    <div class="settings-card-header">
+
+                        <div class="settings-icon">
+                            <i class="fa-solid fa-gear"></i>
+                        </div>
+
+                        <div>
+                            <h3>الإعدادات العامة</h3>
+                            <p>بيانات المنصة الأساسية.</p>
                         </div>
 
                     </div>
 
-                    <div class="upload-card-actions">
 
-                        <label
-                            for="excelStudentsFile"
-                            class="file-picker">
+                    <div class="form-grid">
 
-                            <i class="fa-solid fa-file-arrow-up"></i>
-
-                            اختيار الملف
-
+                        <label class="form-field">
+                            <span>اسم المنصة</span>
+                            <input
+                                id="settingPlatformName"
+                                type="text"
+                                value="منصة الكوتش"
+                            >
                         </label>
 
-                        <input
-                            type="file"
-                            id="excelStudentsFile"
-                            accept=".xlsx,.xls,.csv"
-                            hidden>
+                        <label class="form-field">
+                            <span>وصف المنصة</span>
+                            <input
+                                id="settingPlatformDescription"
+                                type="text"
+                                value="منصة تعليمية رياضية"
+                            >
+                        </label>
 
-                        <button
-                            type="button"
-                            class="btn btn-success"
-                            id="importStudentsBtn">
-
-                            <i class="fa-solid fa-cloud-arrow-up"></i>
-
-                            استيراد واعتماد
-
-                        </button>
+                        <label class="form-field full">
+                            <span>رسالة الترحيب</span>
+                            <textarea
+                                id="settingWelcomeMessage"
+                                rows="3"
+                            ></textarea>
+                        </label>
 
                     </div>
 
                 </div>
 
 
-                <!-- جدول الطلبات -->
+                <!-- REGISTRATION -->
 
-                <div class="panel-card">
+                <div class="settings-card">
 
-                    <div class="panel-header">
+                    <div class="settings-card-header">
 
-                        <div>
-
-                            <span class="panel-kicker">
-                                Pending
-                            </span>
-
-                            <h3>
-                                الطلبات المعلقة
-                            </h3>
-
+                        <div class="settings-icon">
+                            <i class="fa-solid fa-user-plus"></i>
                         </div>
 
-                        <div class="panel-tools">
+                        <div>
+                            <h3>التسجيل</h3>
+                            <p>التحكم في استقبال الطلاب.</p>
+                        </div>
 
-                            <div class="search-control">
+                    </div>
 
-                                <i class="fa-solid fa-magnifying-glass"></i>
 
-                                <input
-                                    type="search"
-                                    id="requestSearch"
-                                    placeholder="بحث في الطلبات...">
+                    <div class="settings-options">
 
+                        <label class="toggle-row">
+                            <div>
+                                <strong>السماح بالتسجيل</strong>
+                                <span>السماح للطلاب بإنشاء حسابات جديدة.</span>
                             </div>
 
-                            <button
-                                type="button"
-                                class="icon-btn"
-                                id="refreshRequestsBtn"
-                                title="تحديث">
+                            <input
+                                id="settingRegistrationEnabled"
+                                type="checkbox"
+                                checked
+                            >
 
-                                <i class="fa-solid fa-arrows-rotate"></i>
+                            <span class="toggle-ui"></span>
+                        </label>
 
-                            </button>
 
+                        <label class="toggle-row">
+                            <div>
+                                <strong>موافقة الإدارة مطلوبة</strong>
+                                <span>
+                                    الحساب لا يصبح نشطًا قبل موافقة الإدارة.
+                                </span>
+                            </div>
+
+                            <input
+                                id="settingApprovalRequired"
+                                type="checkbox"
+                                checked
+                            >
+
+                            <span class="toggle-ui"></span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONTENT -->
+
+                <div class="settings-card">
+
+                    <div class="settings-card-header">
+
+                        <div class="settings-icon">
+                            <i class="fa-solid fa-video"></i>
                         </div>
-
-                    </div>
-
-
-                    <div class="table-wrapper">
-
-                        <table class="data-table">
-
-                            <thead>
-
-                                <tr>
-
-                                    <th>الطالب</th>
-                                    <th>الهاتف</th>
-                                    <th>البريد</th>
-                                    <th>الفئة</th>
-                                    <th>التاريخ</th>
-                                    <th>الحالة</th>
-                                    <th>الإجراءات</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody id="pendingRequestsTable">
-
-                                <tr>
-
-                                    <td
-                                        colspan="7"
-                                        class="table-loading">
-
-                                        <div class="table-spinner"></div>
-
-                                        جاري تحميل الطلبات...
-
-                                    </td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-
-                    <div
-                        id="requestsEmpty"
-                        class="empty-state hidden">
-
-                        <i class="fa-solid fa-user-plus"></i>
-
-                        <h3>
-                            لا توجد طلبات معلقة
-                        </h3>
-
-                        <p>
-                            جميع طلبات الانضمام تمت مراجعتها.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 TAB: STUDENTS
-            ================================================== -->
-
-            <section
-                id="tab-students"
-                class="admin-tab">
-
-                <div class="section-heading">
-
-                    <div>
-
-                        <span class="section-kicker">
-                            المستخدمون
-                        </span>
-
-                        <h2>
-                            الطلاب والتقارير
-                        </h2>
-
-                        <p>
-                            إدارة الطلاب ومراجعة بياناتهم وتقاريرهم.
-                        </p>
-
-                    </div>
-
-                    <div class="section-actions">
-
-                        <button
-                            type="button"
-                            class="btn btn-success"
-                            id="exportStudentsBtn">
-
-                            <i class="fa-solid fa-file-excel"></i>
-
-                            تصدير Excel
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <div class="toolbar-card">
-
-                    <div class="search-control large">
-
-                        <i class="fa-solid fa-magnifying-glass"></i>
-
-                        <input
-                            type="search"
-                            id="studentSearch"
-                            placeholder="ابحث بالاسم أو الهاتف أو البريد...">
-
-                    </div>
-
-
-                    <select
-                        id="studentStatusFilter"
-                        class="select-control">
-
-                        <option value="all">
-                            كل الحالات
-                        </option>
-
-                        <option value="approved">
-                            مفعل
-                        </option>
-
-                        <option value="pending">
-                            معلق
-                        </option>
-
-                        <option value="rejected">
-                            مرفوض
-                        </option>
-
-                        <option value="disabled">
-                            متوقف
-                        </option>
-
-                    </select>
-
-
-                    <select
-                        id="studentGradeFilter"
-                        class="select-control">
-
-                        <option value="all">
-                            كل الفئات
-                        </option>
-
-                        <option value="الفئة الأولى">
-                            الفئة الأولى
-                        </option>
-
-                        <option value="الفئة الثانية">
-                            الفئة الثانية
-                        </option>
-
-                        <option value="الفئة الثالثة">
-                            الفئة الثالثة
-                        </option>
-
-                        <option value="الفئة الرابعة">
-                            الفئة الرابعة
-                        </option>
-
-                    </select>
-
-
-                    <button
-                        type="button"
-                        class="icon-btn"
-                        id="refreshStudentsBtn"
-                        title="تحديث الطلاب">
-
-                        <i class="fa-solid fa-arrows-rotate"></i>
-
-                    </button>
-
-                </div>
-
-
-                <div class="panel-card">
-
-                    <div class="panel-header">
 
                         <div>
-
-                            <span class="panel-kicker">
-                                Students
-                            </span>
-
-                            <h3>
-                                قائمة الطلاب
-                            </h3>
-
+                            <h3>المحتوى</h3>
+                            <p>إعدادات عرض المحتوى.</p>
                         </div>
-
-                        <span
-                            id="studentsCountLabel"
-                            class="count-label">
-
-                            0 طالب
-
-                        </span>
 
                     </div>
 
 
-                    <div class="table-wrapper">
+                    <div class="settings-options">
 
-                        <table class="data-table">
+                        <label class="toggle-row">
+                            <div>
+                                <strong>تسجيل مشاهدات المحتوى</strong>
+                                <span>حفظ إحصائيات مشاهدة الطلاب.</span>
+                            </div>
 
-                            <thead>
+                            <input
+                                id="settingTrackViews"
+                                type="checkbox"
+                                checked
+                            >
 
-                                <tr>
+                            <span class="toggle-ui"></span>
+                        </label>
 
-                                    <th>الطالب</th>
-                                    <th>البريد الإلكتروني</th>
-                                    <th>الهاتف</th>
-                                    <th>الفئة</th>
-                                    <th>الحالة</th>
-                                    <th>تاريخ التسجيل</th>
-                                    <th>الإجراءات</th>
 
-                                </tr>
+                        <label class="toggle-row">
+                            <div>
+                                <strong>إظهار الترم الثاني</strong>
+                                <span>السماح بعرض محتوى الترم الثاني.</span>
+                            </div>
 
-                            </thead>
+                            <input
+                                id="settingTerm2Enabled"
+                                type="checkbox"
+                                checked
+                            >
 
-                            <tbody id="approvedStudentsTable">
-
-                                <tr>
-
-                                    <td
-                                        colspan="7"
-                                        class="table-loading">
-
-                                        <div class="table-spinner"></div>
-
-                                        جاري تحميل الطلاب...
-
-                                    </td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
+                            <span class="toggle-ui"></span>
+                        </label>
 
                     </div>
 
                 </div>
 
-            </section>
 
+                <!-- EXAMS -->
 
-            <!-- =================================================
-                 STUDENT REPORT MODAL
-            ================================================== -->
+                <div class="settings-card">
 
-            <div
-                id="studentReportModal"
-                class="modal-overlay hidden">
+                    <div class="settings-card-header">
 
-                <div class="modal-card modal-large">
-
-                    <div class="modal-header">
-
-                        <div>
-
-                            <span class="modal-kicker">
-                                Student Report
-                            </span>
-
-                            <h2>
-                                تقرير الطالب
-                            </h2>
-
+                        <div class="settings-icon">
+                            <i class="fa-solid fa-clipboard-check"></i>
                         </div>
 
-                        <button
-                            type="button"
-                            class="modal-close"
-                            data-close-modal="studentReportModal">
-
-                            <i class="fa-solid fa-xmark"></i>
-
-                        </button>
+                        <div>
+                            <h3>الاختبارات</h3>
+                            <p>إعدادات نظام الاختبارات.</p>
+                        </div>
 
                     </div>
 
 
-                    <div
-                        id="studentReportContent"
-                        class="modal-body">
+                    <div class="form-grid">
 
-                        <div class="modal-loading">
+                        <label class="form-field">
+                            <span>الدرجة الافتراضية للنجاح %</span>
+                            <input
+                                id="settingPassingScore"
+                                type="number"
+                                min="0"
+                                max="100"
+                                value="50"
+                            >
+                        </label>
 
-                            <div class="table-spinner"></div>
+                        <label class="form-field">
+                            <span>الحد الأقصى الافتراضي للمشاركين</span>
+                            <input
+                                id="settingMaxParticipants"
+                                type="number"
+                                min="1"
+                                value="100"
+                            >
+                        </label>
 
-                            جاري تحميل التقرير...
+                    </div>
 
+
+                    <div class="settings-options">
+
+                        <label class="toggle-row">
+                            <div>
+                                <strong>إظهار النتائج للطالب</strong>
+                                <span>
+                                    السماح للطالب برؤية نتيجته بعد الاختبار.
+                                </span>
+                            </div>
+
+                            <input
+                                id="settingShowResults"
+                                type="checkbox"
+                                checked
+                            >
+
+                            <span class="toggle-ui"></span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- NOTIFICATIONS -->
+
+                <div class="settings-card">
+
+                    <div class="settings-card-header">
+
+                        <div class="settings-icon">
+                            <i class="fa-solid fa-bell"></i>
+                        </div>
+
+                        <div>
+                            <h3>الإشعارات</h3>
+                            <p>إعدادات التواصل مع الطلاب.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="settings-options">
+
+                        <label class="toggle-row">
+                            <div>
+                                <strong>الإشعارات داخل المنصة</strong>
+                                <span>تفعيل نظام الإشعارات.</span>
+                            </div>
+
+                            <input
+                                id="settingNotificationsEnabled"
+                                type="checkbox"
+                                checked
+                            >
+
+                            <span class="toggle-ui"></span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SECURITY -->
+
+                <div class="settings-card security-card">
+
+                    <div class="settings-card-header">
+
+                        <div class="settings-icon security">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+
+                        <div>
+                            <h3>الأمان</h3>
+                            <p>حالة حماية لوحة الإدارة.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="security-info-list">
+
+                        <div class="security-info">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <div>
+                                <strong>Firebase Authentication</strong>
+                                <span>تسجيل الدخول يعتمد على Firebase Auth.</span>
+                            </div>
+                        </div>
+
+                        <div class="security-info">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <div>
+                                <strong>UID Based Access</strong>
+                                <span>صلاحيات الإدارة مرتبطة بحساب المستخدم.</span>
+                            </div>
+                        </div>
+
+                        <div class="security-info">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <div>
+                                <strong>لا توجد كلمة مرور داخل الواجهة</strong>
+                                <span>
+                                    كلمة مرور Firebase لا يتم عرضها للإدارة.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="security-info warning">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <div>
+                                <strong>الخدمات الحساسة</strong>
+                                <span>
+                                    أي مفاتيح سرية أو Bot Tokens يجب أن تبقى في Backend.
+                                </span>
+                            </div>
                         </div>
 
                     </div>
@@ -1341,11 +1779,759 @@ here<!DOCTYPE html>
 
             </div>
 
+        </section>
 
-            <!-- =================================================
-                 الجزء التالي:
-                 COURSES + QUIZZES + RESULTS
-                 =================================================
-            -->
+    </main>
 
-```2
+</div>
+
+
+<!-- =========================================================
+     STUDENT REPORT MODAL
+     ========================================================= -->
+
+<div
+    id="studentReportModal"
+    class="modal hidden"
+    role="dialog"
+    aria-modal="true"
+>
+
+    <div class="modal-backdrop" data-close-modal></div>
+
+    <div class="modal-container large">
+
+        <div class="modal-header">
+
+            <div>
+                <span class="modal-kicker">STUDENT REPORT</span>
+                <h2>تقرير الطالب</h2>
+            </div>
+
+            <button
+                class="modal-close"
+                data-close-modal
+                type="button"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div class="student-report-head">
+
+            <div
+                id="reportStudentAvatar"
+                class="report-avatar"
+            >
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <div>
+
+                <h3 id="reportStudentName">---</h3>
+
+                <p id="reportStudentEmail">---</p>
+
+                <div class="report-tags">
+                    <span id="reportStudentGrade">---</span>
+                    <span id="reportStudentStatus">---</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="report-stats">
+
+            <div>
+                <span>الاختبارات</span>
+                <strong id="reportQuizCount">0</strong>
+            </div>
+
+            <div>
+                <span>متوسط الدرجات</span>
+                <strong id="reportAverage">0%</strong>
+            </div>
+
+            <div>
+                <span>المحتوى المشاهد</span>
+                <strong id="reportViews">0</strong>
+            </div>
+
+        </div>
+
+
+        <div class="report-section">
+
+            <h3>نتائج الاختبارات</h3>
+
+            <div
+                id="studentReportResults"
+                class="report-results"
+            ></div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="secondary-btn"
+                data-close-modal
+                type="button"
+            >
+                إغلاق
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     COURSE MODAL
+     ========================================================= -->
+
+<div
+    id="courseModal"
+    class="modal hidden"
+    role="dialog"
+    aria-modal="true"
+>
+
+    <div class="modal-backdrop" data-close-modal></div>
+
+    <div class="modal-container">
+
+        <div class="modal-header">
+
+            <div>
+                <span class="modal-kicker">CONTENT</span>
+                <h2 id="courseModalTitle">إضافة محتوى</h2>
+            </div>
+
+            <button
+                class="modal-close"
+                data-close-modal
+                type="button"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <form id="courseForm">
+
+            <input
+                id="courseId"
+                type="hidden"
+            >
+
+            <div class="form-grid">
+
+                <label class="form-field full">
+                    <span>عنوان المحتوى *</span>
+                    <input
+                        id="courseTitle"
+                        type="text"
+                        maxlength="150"
+                        required
+                        placeholder="مثال: شرح المحاضرة الأولى"
+                    >
+                </label>
+
+
+                <label class="form-field">
+                    <span>المادة *</span>
+                    <input
+                        id="courseSubject"
+                        type="text"
+                        maxlength="100"
+                        required
+                        placeholder="اسم المادة"
+                    >
+                </label>
+
+
+                <label class="form-field">
+                    <span>الترم *</span>
+                    <select id="courseTerm" required>
+                        <option value="term1">الترم الأول</option>
+                        <option value="term2">الترم الثاني</option>
+                    </select>
+                </label>
+
+
+                <label class="form-field">
+                    <span>نوع المحتوى *</span>
+                    <select id="courseType" required>
+                        <option value="video">فيديو</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="pdf">PDF</option>
+                        <option value="link">رابط</option>
+                        <option value="text">نص</option>
+                    </select>
+                </label>
+
+
+                <label class="form-field">
+                    <span>الرابط</span>
+                    <input
+                        id="courseUrl"
+                        type="url"
+                        placeholder="https://..."
+                    >
+                </label>
+
+
+                <label class="form-field full">
+                    <span>وصف المحتوى</span>
+                    <textarea
+                        id="courseDescription"
+                        rows="4"
+                        maxlength="1000"
+                        placeholder="وصف مختصر..."
+                    ></textarea>
+                </label>
+
+
+                <label class="toggle-row full">
+                    <div>
+                        <strong>نشر المحتوى</strong>
+                        <span>إظهار المحتوى للطلاب.</span>
+                    </div>
+
+                    <input
+                        id="coursePublished"
+                        type="checkbox"
+                        checked
+                    >
+
+                    <span class="toggle-ui"></span>
+                </label>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    class="secondary-btn"
+                    data-close-modal
+                    type="button"
+                >
+                    إلغاء
+                </button>
+
+                <button
+                    id="saveCourseBtn"
+                    class="primary-btn"
+                    type="submit"
+                >
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    حفظ المحتوى
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     QUIZ MODAL
+     ========================================================= -->
+
+<div
+    id="quizModal"
+    class="modal hidden"
+    role="dialog"
+    aria-modal="true"
+>
+
+    <div class="modal-backdrop" data-close-modal></div>
+
+    <div class="modal-container extra-large">
+
+        <div class="modal-header">
+
+            <div>
+                <span class="modal-kicker">EXAM BUILDER</span>
+                <h2 id="quizModalTitle">إنشاء اختبار</h2>
+            </div>
+
+            <button
+                class="modal-close"
+                data-close-modal
+                type="button"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <form id="quizForm">
+
+            <input
+                id="quizId"
+                type="hidden"
+            >
+
+            <div class="form-grid">
+
+                <label class="form-field full">
+                    <span>عنوان الاختبار *</span>
+                    <input
+                        id="quizTitle"
+                        type="text"
+                        maxlength="150"
+                        required
+                        placeholder="مثال: اختبار المحاضرة الأولى"
+                    >
+                </label>
+
+
+                <label class="form-field">
+                    <span>المادة *</span>
+                    <input
+                        id="quizSubject"
+                        type="text"
+                        maxlength="100"
+                        required
+                    >
+                </label>
+
+
+                <label class="form-field">
+                    <span>الترم *</span>
+                    <select id="quizTerm" required>
+                        <option value="term1">الترم الأول</option>
+                        <option value="term2">الترم الثاني</option>
+                    </select>
+                </label>
+
+
+                <label class="form-field">
+                    <span>مدة الاختبار بالدقائق</span>
+                    <input
+                        id="quizDuration"
+                        type="number"
+                        min="1"
+                        max="300"
+                        value="30"
+                    >
+                </label>
+
+
+                <label class="form-field">
+                    <span>الحد الأقصى للمشاركين</span>
+                    <input
+                        id="quizMaxParticipants"
+                        type="number"
+                        min="1"
+                        value="100"
+                    >
+                </label>
+
+
+                <label class="form-field">
+                    <span>درجة النجاح %</span>
+                    <input
+                        id="quizPassingScore"
+                        type="number"
+                        min="0"
+                        max="100"
+                        value="50"
+                    >
+                </label>
+
+
+                <label class="form-field full">
+                    <span>الوصف</span>
+                    <textarea
+                        id="quizDescription"
+                        rows="3"
+                        maxlength="1000"
+                        placeholder="وصف الاختبار..."
+                    ></textarea>
+                </label>
+
+
+                <label class="toggle-row full">
+                    <div>
+                        <strong>نشر الاختبار</strong>
+                        <span>
+                            الاختبار المنشور يظهر للطلاب حسب الصلاحيات.
+                        </span>
+                    </div>
+
+                    <input
+                        id="quizPublished"
+                        type="checkbox"
+                    >
+
+                    <span class="toggle-ui"></span>
+                </label>
+
+            </div>
+
+
+            <div class="questions-builder">
+
+                <div class="questions-builder-header">
+
+                    <div>
+                        <h3>أسئلة الاختبار</h3>
+                        <p>
+                            أضف الأسئلة والاختيارات وحدد الإجابة الصحيحة.
+                        </p>
+                    </div>
+
+                    <button
+                        id="addQuestionBtn"
+                        class="secondary-btn"
+                        type="button"
+                    >
+                        <i class="fa-solid fa-plus"></i>
+                        إضافة سؤال
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="quizQuestionsContainer"
+                    class="quiz-questions-container"
+                ></div>
+
+
+                <div
+                    id="quizQuestionsEmpty"
+                    class="questions-empty"
+                >
+                    <i class="fa-solid fa-circle-question"></i>
+                    <p>لم تتم إضافة أسئلة بعد.</p>
+
+                    <button
+                        id="addFirstQuestionBtn"
+                        class="secondary-btn"
+                        type="button"
+                    >
+                        <i class="fa-solid fa-plus"></i>
+                        إضافة أول سؤال
+                    </button>
+                </div>
+
+            </div>
+
+
+            <div class="security-warning">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+                <div>
+                    <strong>تنبيه أمني</strong>
+
+                    <p>
+                        البيانات الحساسة الخاصة بالتصحيح والتحقق النهائي
+                        يجب ألا تعتمد على واجهة الطالب وحدها.
+                        سيتم الاعتماد على قواعد Firebase والـ Backend
+                        في الحماية النهائية.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    class="secondary-btn"
+                    data-close-modal
+                    type="button"
+                >
+                    إلغاء
+                </button>
+
+                <button
+                    id="saveQuizBtn"
+                    class="primary-btn"
+                    type="submit"
+                >
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    حفظ الاختبار
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     RESULT DETAILS MODAL
+     ========================================================= -->
+
+<div
+    id="resultDetailsModal"
+    class="modal hidden"
+    role="dialog"
+    aria-modal="true"
+>
+
+    <div class="modal-backdrop" data-close-modal></div>
+
+    <div class="modal-container large">
+
+        <div class="modal-header">
+
+            <div>
+                <span class="modal-kicker">RESULT</span>
+                <h2>تفاصيل النتيجة</h2>
+            </div>
+
+            <button
+                class="modal-close"
+                data-close-modal
+                type="button"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div
+            id="resultDetailsContent"
+            class="result-details"
+        ></div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="secondary-btn"
+                data-close-modal
+                type="button"
+            >
+                إغلاق
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     NOTIFICATION MODAL
+     ========================================================= -->
+
+<div
+    id="notificationModal"
+    class="modal hidden"
+    role="dialog"
+    aria-modal="true"
+>
+
+    <div class="modal-backdrop" data-close-modal></div>
+
+    <div class="modal-container">
+
+        <div class="modal-header">
+
+            <div>
+                <span class="modal-kicker">NOTIFICATION</span>
+                <h2>إشعار جديد</h2>
+            </div>
+
+            <button
+                class="modal-close"
+                data-close-modal
+                type="button"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <form id="notificationForm">
+
+            <label class="form-field">
+                <span>العنوان *</span>
+                <input
+                    id="notificationTitle"
+                    type="text"
+                    maxlength="120"
+                    required
+                    placeholder="عنوان الإشعار"
+                >
+            </label>
+
+
+            <label class="form-field">
+                <span>الرسالة *</span>
+                <textarea
+                    id="notificationMessage"
+                    rows="6"
+                    maxlength="1500"
+                    required
+                    placeholder="اكتب محتوى الإشعار..."
+                ></textarea>
+            </label>
+
+
+            <label class="form-field">
+                <span>المستهدفون</span>
+                <select id="notificationTarget">
+                    <option value="all">كل الطلاب</option>
+                    <option value="active">الطلاب النشطون</option>
+                </select>
+            </label>
+
+
+            <div class="modal-footer">
+
+                <button
+                    class="secondary-btn"
+                    data-close-modal
+                    type="button"
+                >
+                    إلغاء
+                </button>
+
+                <button
+                    id="saveNotificationBtn"
+                    class="primary-btn"
+                    type="submit"
+                >
+                    <i class="fa-solid fa-paper-plane"></i>
+                    إرسال الإشعار
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     CONFIRM MODAL
+     ========================================================= -->
+
+<div
+    id="confirmModal"
+    class="modal hidden"
+    role="dialog"
+    aria-modal="true"
+>
+
+    <div class="modal-backdrop" data-close-modal></div>
+
+    <div class="modal-container small">
+
+        <div class="confirm-content">
+
+            <div
+                id="confirmIcon"
+                class="confirm-icon"
+            >
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+
+            <h2 id="confirmTitle">تأكيد العملية</h2>
+
+            <p id="confirmMessage">
+                هل أنت متأكد من تنفيذ هذه العملية؟
+            </p>
+
+            <div class="confirm-actions">
+
+                <button
+                    id="confirmCancelBtn"
+                    class="secondary-btn"
+                    type="button"
+                >
+                    إلغاء
+                </button>
+
+                <button
+                    id="confirmActionBtn"
+                    class="danger-btn"
+                    type="button"
+                >
+                    تأكيد
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST CONTAINER
+     ========================================================= -->
+
+<div
+    id="toastContainer"
+    class="toast-container"
+    aria-live="polite"
+></div>
+
+
+<!-- =========================================================
+     FULL PAGE OPERATION LOADER
+     ========================================================= -->
+
+<div
+    id="operationLoader"
+    class="operation-loader hidden"
+>
+
+    <div class="operation-loader-box">
+
+        <div class="loader-spinner"></div>
+
+        <strong id="operationLoaderTitle">
+            جاري تنفيذ العملية...
+        </strong>
+
+        <span id="operationLoaderText">
+            برجاء الانتظار
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     ADMIN JAVASCRIPT
+     ========================================================= -->
+
+<script type="module" src="admin.js"></script>
+
+</body>
+    </html>
