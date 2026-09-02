@@ -2,199 +2,256 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="theme-color" content="#080b12">
-    <meta name="description" content="منصة الكوتش التعليمية الرياضية">
+    <meta name="theme-color" content="#0a0d12">
+    <meta name="description" content="منصة الكوتش - منصة تعليمية رياضية متكاملة">
     <meta name="author" content="منصة الكوتش">
 
-    <title>منصة الكوتش</title>
+    <title>منصة الكوتش | التعليم والتدريب الرياضي</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
 
     <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
 
+    <!-- Page Loader -->
     <div class="page-loader" id="pageLoader" aria-hidden="true">
         <div class="loader-content">
-            <div class="loader-mark">K</div>
-            <div class="loader-line"></div>
+            <div class="loader-logo">الكوتش</div>
+            <div class="loader-ring"></div>
+            <span>جاري التحميل...</span>
         </div>
     </div>
 
-    <div class="site-background">
+    <!-- Background -->
+    <div class="background-system" aria-hidden="true">
         <div class="background-grid"></div>
         <div class="background-glow background-glow-one"></div>
         <div class="background-glow background-glow-two"></div>
+        <div class="background-noise"></div>
     </div>
 
+    <!-- Header -->
     <header class="site-header" id="siteHeader">
-        <div class="container header-inner">
+        <div class="container header-container">
 
-            <a href="#home" class="brand" aria-label="منصة الكوتش">
-                <span class="brand-mark">K</span>
+            <a href="#home" class="brand" data-nav-link>
+                <span class="brand-mark">
+                    <span class="brand-mark-inner">K</span>
+                </span>
 
-                <span class="brand-text">
+                <span class="brand-copy">
                     <strong>منصة الكوتش</strong>
-                    <small>منصة تعليمية رياضية</small>
+                    <small>تعلم • تدرب • تطور</small>
                 </span>
             </a>
 
-            <nav class="desktop-navigation" aria-label="التنقل الرئيسي">
-                <a href="#home" class="nav-link active">الرئيسية</a>
-                <a href="#features" class="nav-link">المميزات</a>
-                <a href="#about" class="nav-link">عن المنصة</a>
-                <a href="#support" class="nav-link">الدعم</a>
+            <nav class="desktop-nav" aria-label="التنقل الرئيسي">
+                <a href="#home" class="nav-link active" data-nav-link>
+                    الرئيسية
+                </a>
+
+                <a href="#features" class="nav-link" data-nav-link>
+                    المميزات
+                </a>
+
+                <a href="#about" class="nav-link" data-nav-link>
+                    عن المنصة
+                </a>
+
+                <a href="#access" class="nav-link" data-nav-link>
+                    المحتوى
+                </a>
+
+                <a href="#support" class="nav-link" data-nav-link>
+                    الدعم
+                </a>
             </nav>
 
             <div class="header-actions">
-                <button class="button button-outline button-small" type="button" data-open-login>
+
+                <button
+                    type="button"
+                    class="header-login"
+                    data-open-login
+                >
                     تسجيل الدخول
                 </button>
 
-                <button class="button button-primary button-small" type="button" data-open-register>
+                <button
+                    type="button"
+                    class="header-register"
+                    data-open-register
+                >
                     إنشاء حساب
                 </button>
-            </div>
 
-            <button
-                class="mobile-menu-button"
-                type="button"
-                aria-label="فتح القائمة"
-                aria-expanded="false"
-                data-mobile-menu-button
-            >
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+                <button
+                    type="button"
+                    class="mobile-menu-button"
+                    data-mobile-menu-button
+                    aria-label="فتح القائمة"
+                    aria-expanded="false"
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+            </div>
 
         </div>
 
+        <!-- Mobile Navigation -->
         <div class="mobile-navigation" data-mobile-menu>
-            <a href="#home" class="mobile-nav-link">الرئيسية</a>
-            <a href="#features" class="mobile-nav-link">المميزات</a>
-            <a href="#about" class="mobile-nav-link">عن المنصة</a>
-            <a href="#support" class="mobile-nav-link">الدعم</a>
+            <div class="mobile-navigation-inner">
 
-            <div class="mobile-nav-actions">
-                <button class="button button-outline" type="button" data-open-login>
-                    تسجيل الدخول
-                </button>
+                <a href="#home" class="mobile-nav-link active" data-nav-link>
+                    الرئيسية
+                </a>
 
-                <button class="button button-primary" type="button" data-open-register>
-                    إنشاء حساب
-                </button>
+                <a href="#features" class="mobile-nav-link" data-nav-link>
+                    المميزات
+                </a>
+
+                <a href="#about" class="mobile-nav-link" data-nav-link>
+                    عن المنصة
+                </a>
+
+                <a href="#access" class="mobile-nav-link" data-nav-link>
+                    المحتوى
+                </a>
+
+                <a href="#support" class="mobile-nav-link" data-nav-link>
+                    الدعم
+                </a>
+
+                <div class="mobile-nav-actions">
+                    <button
+                        type="button"
+                        class="mobile-login-button"
+                        data-open-login
+                    >
+                        تسجيل الدخول
+                    </button>
+
+                    <button
+                        type="button"
+                        class="mobile-register-button"
+                        data-open-register
+                    >
+                        إنشاء حساب
+                    </button>
+                </div>
+
             </div>
         </div>
     </header>
 
     <main>
 
-        <section class="hero-section section" id="home">
-            <div class="container hero-grid">
+        <!-- Hero -->
+        <section class="hero-section" id="home">
+
+            <div class="container hero-container">
 
                 <div class="hero-content reveal">
 
                     <div class="hero-badge">
-                        <span class="status-dot"></span>
-                        منصة تعليمية متكاملة
+                        <span class="hero-badge-dot"></span>
+                        <span>منصة تعليمية رياضية متكاملة</span>
                     </div>
 
-                    <h1>
-                        اتعلم.
-                        <span>تطور.</span>
-                        وحقق هدفك.
+                    <h1 class="hero-title">
+                        مستقبلك الرياضي
+                        <span>يبدأ من هنا</span>
                     </h1>
 
                     <p class="hero-description">
-                        منصة الكوتش تجمع لك المحتوى التعليمي، المواد، الملخصات،
-                        الفيديوهات، الملفات والاختبارات في تجربة واحدة منظمة وسهلة.
+                        منصة الكوتش تجمع لك المحتوى التعليمي والتدريبي
+                        في مكان واحد، بشكل منظم وسهل وسريع.
                     </p>
 
                     <div class="hero-actions">
-                        <button class="button button-primary button-large" type="button" data-open-register>
-                            ابدأ الآن
+
+                        <button
+                            type="button"
+                            class="primary-button"
+                            data-open-register
+                        >
+                            <span>ابدأ الآن</span>
                             <span class="button-arrow">←</span>
                         </button>
 
-                        <button class="button button-ghost button-large" type="button" data-scroll-target="#features">
-                            اكتشف المنصة
+                        <button
+                            type="button"
+                            class="secondary-button"
+                            data-open-login
+                        >
+                            تسجيل الدخول
                         </button>
+
                     </div>
 
                     <div class="hero-trust">
+
                         <div class="trust-item">
-                            <strong>01</strong>
+                            <span class="trust-icon">✓</span>
                             <span>محتوى منظم</span>
                         </div>
 
-                        <div class="trust-divider"></div>
-
                         <div class="trust-item">
-                            <strong>02</strong>
-                            <span>اختبارات وتقييم</span>
+                            <span class="trust-icon">✓</span>
+                            <span>وصول سريع</span>
                         </div>
 
-                        <div class="trust-divider"></div>
-
                         <div class="trust-item">
-                            <strong>03</strong>
+                            <span class="trust-icon">✓</span>
                             <span>دعم مستمر</span>
                         </div>
+
                     </div>
 
                 </div>
 
                 <div class="hero-visual reveal">
 
-                    <div class="hero-image-wrapper">
+                    <div class="hero-visual-glow"></div>
 
-                        <div class="hero-image-glow"></div>
+                    <div class="hero-image-card">
 
-                        <div class="hero-image-card">
+                        <div class="hero-image-frame">
                             <img
                                 src="1783950091830.jpg"
                                 alt="منصة الكوتش"
                                 class="hero-image"
+                                loading="eager"
                             >
-
-                            <div class="hero-image-overlay"></div>
-
-                            <div class="hero-card-top">
-                                <span class="live-indicator">
-                                    <span></span>
-                                    ONLINE
-                                </span>
-
-                                <span class="hero-card-label">
-                                    COACH PLATFORM
-                                </span>
-                            </div>
-
-                            <div class="hero-card-bottom">
-                                <span>تعلم بشكل أفضل</span>
-                                <strong>منصة الكوتش</strong>
-                            </div>
                         </div>
 
-                        <div class="floating-card floating-card-one">
-                            <span class="floating-icon">✓</span>
-                            <div>
-                                <strong>محتوى منظم</strong>
-                                <small>كل شيء في مكانه</small>
-                            </div>
-                        </div>
-
-                        <div class="floating-card floating-card-two">
+                        <div class="hero-floating-card hero-floating-top">
                             <span class="floating-icon">★</span>
+
                             <div>
-                                <strong>تجربة مميزة</strong>
-                                <small>مصممة للطلاب</small>
+                                <strong>تعلم بشكل أفضل</strong>
+                                <small>كل شيء في مكان واحد</small>
+                            </div>
+                        </div>
+
+                        <div class="hero-floating-card hero-floating-bottom">
+                            <span class="floating-icon">◈</span>
+
+                            <div>
+                                <strong>محتوى متجدد</strong>
+                                <small>دروس • ملفات • فيديوهات</small>
                             </div>
                         </div>
 
@@ -203,426 +260,758 @@
                 </div>
 
             </div>
+
+            <div class="hero-bottom-fade"></div>
         </section>
 
-        <section class="features-section section" id="features">
+        <!-- Stats -->
+        <section class="stats-section">
+            <div class="container">
+
+                <div class="stats-grid">
+
+                    <div class="stat-card reveal">
+                        <div class="stat-icon">01</div>
+                        <strong>محتوى منظم</strong>
+                        <span>كل مادة في مكانها</span>
+                    </div>
+
+                    <div class="stat-card reveal">
+                        <div class="stat-icon">02</div>
+                        <strong>مراحل دراسية</strong>
+                        <span>تنظيم حسب الفرقة والترم</span>
+                    </div>
+
+                    <div class="stat-card reveal">
+                        <div class="stat-icon">03</div>
+                        <strong>اختبارات</strong>
+                        <span>اختبر مستواك وتابع نتائجك</span>
+                    </div>
+
+                    <div class="stat-card reveal">
+                        <div class="stat-icon">04</div>
+                        <strong>دعم مستمر</strong>
+                        <span>نحن موجودون لمساعدتك</span>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="content-section features-section" id="features">
+
             <div class="container">
 
                 <div class="section-heading reveal">
-                    <span class="section-kicker">WHY COACH</span>
+
+                    <span class="section-eyebrow">
+                        لماذا منصة الكوتش؟
+                    </span>
 
                     <h2>
-                        كل أدواتك التعليمية
-                        <span>في مكان واحد.</span>
+                        كل الأدوات التي تحتاجها
+                        <span>في منصة واحدة</span>
                     </h2>
 
                     <p>
-                        بنينا المنصة عشان الوصول للمحتوى والمذاكرة والمتابعة
-                        يكونوا أسهل وأسرع.
+                        تجربة تعليمية منظمة تساعدك على الوصول للمحتوى
+                        والمذاكرة والمتابعة بشكل أسهل.
                     </p>
+
                 </div>
 
                 <div class="features-grid">
 
-                    <article class="feature-card reveal">
+                    <article class="feature-card feature-card-large reveal">
                         <div class="feature-number">01</div>
 
                         <div class="feature-icon">
-                            <span>◈</span>
+                            ◈
                         </div>
 
-                        <h3>محتوى منظم</h3>
+                        <h3>المحتوى الدراسي</h3>
 
                         <p>
-                            تصفح المواد والتلخيصات والفيديوهات والملفات
-                            بطريقة واضحة ومنظمة حسب الفرقة والترم.
+                            الوصول إلى المواد والمحتوى الخاص بفرقتك
+                            وترمك بطريقة واضحة ومنظمة.
                         </p>
+
+                        <div class="feature-line"></div>
                     </article>
 
                     <article class="feature-card reveal">
                         <div class="feature-number">02</div>
 
                         <div class="feature-icon">
-                            <span>▣</span>
+                            ▣
                         </div>
 
-                        <h3>اختبارات</h3>
+                        <h3>الملخصات</h3>
 
                         <p>
-                            اختبارات إلكترونية مع نظام تقييم ونتائج
-                            تساعدك على متابعة مستواك.
+                            ملخصات مرتبة تساعدك على مراجعة أهم النقاط
+                            بشكل أسرع.
                         </p>
+
+                        <div class="feature-line"></div>
                     </article>
 
                     <article class="feature-card reveal">
                         <div class="feature-number">03</div>
 
                         <div class="feature-icon">
-                            <span>↗</span>
+                            ▶
                         </div>
 
-                        <h3>تجربة سريعة</h3>
+                        <h3>الفيديوهات</h3>
 
                         <p>
-                            واجهة بسيطة وسريعة ومتوافقة مع الموبايل
-                            والتابلت والكمبيوتر.
+                            محتوى مرئي تعليمي يساعدك على فهم الدروس
+                            بصورة أوضح.
                         </p>
+
+                        <div class="feature-line"></div>
                     </article>
 
                     <article class="feature-card reveal">
                         <div class="feature-number">04</div>
 
                         <div class="feature-icon">
-                            <span>∞</span>
+                            PDF
                         </div>
 
-                        <h3>وصول مرن</h3>
+                        <h3>الملفات</h3>
 
                         <p>
-                            المحتوى يمكن أن يكون مجانيًا أو مدفوعًا،
-                            مع أنظمة وصول مختلفة حسب إعدادات المنصة.
+                            ملفات PDF والمراجع المرفوعة داخل المنصة
+                            بشكل مرتب.
                         </p>
+
+                        <div class="feature-line"></div>
+                    </article>
+
+                    <article class="feature-card feature-card-large reveal">
+                        <div class="feature-number">05</div>
+
+                        <div class="feature-icon">
+                            ?
+                        </div>
+
+                        <h3>اختبارات وتقييم</h3>
+
+                        <p>
+                            اختبارات تساعدك على قياس مستواك ومتابعة
+                            نتائجك التعليمية.
+                        </p>
+
+                        <div class="feature-line"></div>
+                    </article>
+
+                    <article class="feature-card reveal">
+                        <div class="feature-number">06</div>
+
+                        <div class="feature-icon">
+                            +
+                        </div>
+
+                        <h3>تحديثات مستمرة</h3>
+
+                        <p>
+                            محتوى وإشعارات جديدة تضاف للمنصة باستمرار.
+                        </p>
+
+                        <div class="feature-line"></div>
                     </article>
 
                 </div>
 
             </div>
+
         </section>
 
-        <section class="about-section section" id="about">
-            <div class="container">
+        <!-- About -->
+        <section class="content-section about-section" id="about">
 
-                <div class="about-card reveal">
+            <div class="container about-container">
 
-                    <div class="about-content">
-                        <span class="section-kicker">ABOUT PLATFORM</span>
+                <div class="about-visual reveal">
 
-                        <h2>
-                            مش مجرد محتوى...
-                            <span>دي تجربة تعليمية كاملة.</span>
-                        </h2>
+                    <div class="about-image-wrapper">
 
-                        <p>
-                            منصة الكوتش مصممة لتجميع التجربة التعليمية
-                            في نظام واحد: محتوى، ملفات، فيديوهات،
-                            تلخيصات، اختبارات ونتائج.
-                        </p>
+                        <img
+                            src="1783950091830.jpg"
+                            alt="منصة الكوتش"
+                            class="about-image"
+                            loading="lazy"
+                        >
 
-                        <div class="about-points">
-                            <div class="about-point">
-                                <span>✓</span>
-                                <p>تنظيم واضح حسب الفرقة والترم</p>
-                            </div>
+                        <div class="about-image-overlay"></div>
 
-                            <div class="about-point">
-                                <span>✓</span>
-                                <p>وصول سهل من أي جهاز</p>
-                            </div>
-
-                            <div class="about-point">
-                                <span>✓</span>
-                                <p>نظام محتوى مجاني ومدفوع</p>
-                            </div>
-
-                            <div class="about-point">
-                                <span>✓</span>
-                                <p>دعم ومساعدة داخل المنصة</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="about-statistics">
-
-                        <div class="stat-card">
-                            <strong>01</strong>
-                            <span>منصة واحدة</span>
-                        </div>
-
-                        <div class="stat-card">
-                            <strong>02</strong>
-                            <span>ترمين دراسيين</span>
-                        </div>
-
-                        <div class="stat-card">
-                            <strong>∞</strong>
-                            <span>إمكانيات قابلة للتوسع</span>
+                        <div class="about-label">
+                            <span>COACH</span>
+                            <strong>ACADEMY</strong>
                         </div>
 
                     </div>
+
+                    <div class="about-decoration about-decoration-one"></div>
+                    <div class="about-decoration about-decoration-two"></div>
+
+                </div>
+
+                <div class="about-content reveal">
+
+                    <span class="section-eyebrow">
+                        عن المنصة
+                    </span>
+
+                    <h2>
+                        مش مجرد محتوى،
+                        <span>دي تجربة كاملة</span>
+                    </h2>
+
+                    <p>
+                        منصة الكوتش مصممة لتجمع المحتوى التعليمي الرياضي
+                        في تجربة واحدة بسيطة وسريعة، بداية من اختيار
+                        الفرقة والترم وحتى المواد والملخصات والفيديوهات
+                        والملفات والاختبارات.
+                    </p>
+
+                    <div class="about-points">
+
+                        <div class="about-point">
+                            <span class="about-point-icon">✓</span>
+                            <div>
+                                <strong>تنظيم واضح</strong>
+                                <p>الوصول للمحتوى بدون تعقيد.</p>
+                            </div>
+                        </div>
+
+                        <div class="about-point">
+                            <span class="about-point-icon">✓</span>
+                            <div>
+                                <strong>تجربة سريعة</strong>
+                                <p>واجهة مناسبة للموبايل والكمبيوتر.</p>
+                            </div>
+                        </div>
+
+                        <div class="about-point">
+                            <span class="about-point-icon">✓</span>
+                            <div>
+                                <strong>تطور مستمر</strong>
+                                <p>المنصة قابلة لإضافة محتوى وخدمات جديدة.</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="outline-button"
+                        data-open-register
+                    >
+                        انضم للمنصة
+                        <span>←</span>
+                    </button>
 
                 </div>
 
             </div>
+
         </section>
 
-        <section class="access-section section">
+        <!-- Access -->
+        <section class="content-section access-section" id="access">
+
             <div class="container">
 
                 <div class="section-heading reveal">
-                    <span class="section-kicker">CONTENT ACCESS</span>
+
+                    <span class="section-eyebrow">
+                        نظام المحتوى
+                    </span>
 
                     <h2>
-                        أنت تختار طريقة
-                        <span>الوصول للمحتوى.</span>
+                        محتوى مرن حسب
+                        <span>احتياجاتك</span>
                     </h2>
 
                     <p>
-                        نظام المنصة مصمم بحيث يقدر الأدمن يتحكم في
-                        طبيعة المحتوى وطريقة الوصول إليه.
+                        المنصة مصممة لدعم المحتوى المجاني والمدفوع
+                        مع أنظمة وصول مختلفة.
                     </p>
+
                 </div>
 
                 <div class="access-grid">
 
-                    <div class="access-card reveal">
-                        <div class="access-card-icon">FREE</div>
+                    <article class="access-card reveal">
+
+                        <div class="access-card-top">
+                            <span class="access-badge free">
+                                مجاني
+                            </span>
+
+                            <span class="access-symbol">
+                                ∞
+                            </span>
+                        </div>
 
                         <h3>محتوى مجاني</h3>
 
                         <p>
-                            محتوى متاح للطلاب بدون الحاجة إلى شراء.
+                            محتوى متاح للطلاب بدون دفع، حسب ما يحدده
+                            إدارة المنصة.
                         </p>
 
-                        <div class="access-tag">FREE ACCESS</div>
-                    </div>
+                        <ul>
+                            <li>وصول مباشر</li>
+                            <li>محتوى تعليمي</li>
+                            <li>تحديثات مستمرة</li>
+                        </ul>
 
-                    <div class="access-card featured reveal">
-                        <div class="access-card-icon">PRO</div>
+                    </article>
+
+                    <article class="access-card featured reveal">
+
+                        <div class="access-card-top">
+                            <span class="access-badge paid">
+                                مدفوع
+                            </span>
+
+                            <span class="access-symbol">
+                                ◆
+                            </span>
+                        </div>
 
                         <h3>محتوى مدفوع</h3>
 
                         <p>
-                            محتوى يمكن للأدمن تحديد سعره وإدارته
-                            من خلال نظام المنصة.
+                            محتوى خاص يمكن التحكم في طريقة الوصول إليه
+                            من خلال إدارة المنصة.
                         </p>
 
-                        <div class="access-tag">PAID ACCESS</div>
-                    </div>
+                        <ul>
+                            <li>محتوى حصري</li>
+                            <li>صلاحية حسب النظام</li>
+                            <li>إدارة كاملة من الأدمن</li>
+                        </ul>
 
-                    <div class="access-card reveal">
-                        <div class="access-card-icon">∞</div>
+                    </article>
 
-                        <h3>وصول دائم</h3>
+                    <article class="access-card reveal">
+
+                        <div class="access-card-top">
+                            <span class="access-badge lifetime">
+                                مدى الحياة
+                            </span>
+
+                            <span class="access-symbol">
+                                ↗
+                            </span>
+                        </div>
+
+                        <h3>وصول مستمر</h3>
 
                         <p>
-                            يمكن تحديد المحتوى ليظل متاحًا
-                            للطالب بشكل دائم.
+                            يمكن تخصيص المحتوى ليظل متاحًا للمستخدم
+                            وفق الصلاحية المحددة له.
                         </p>
 
-                        <div class="access-tag">LIFETIME</div>
-                    </div>
+                        <ul>
+                            <li>وصول طويل المدى</li>
+                            <li>تنظيم الصلاحيات</li>
+                            <li>تحكم مركزي</li>
+                        </ul>
 
-                    <div class="access-card reveal">
-                        <div class="access-card-icon">×N</div>
+                    </article>
 
-                        <h3>وصول محدود</h3>
+                    <article class="access-card reveal">
+
+                        <div class="access-card-top">
+                            <span class="access-badge limited">
+                                محدود
+                            </span>
+
+                            <span class="access-symbol">
+                                #
+                            </span>
+                        </div>
+
+                        <h3>وصول بعدد مرات</h3>
 
                         <p>
-                            يمكن تحديد عدد مرات فتح أو استخدام
-                            المحتوى حسب إعدادات الأدمن.
+                            يمكن تحديد عدد مرات مشاهدة أو فتح المحتوى
+                            حسب النظام المحدد.
                         </p>
 
-                        <div class="access-tag">LIMITED ACCESS</div>
+                        <ul>
+                            <li>عدد مرات مخصص</li>
+                            <li>متابعة الاستخدام</li>
+                            <li>صلاحيات مرنة</li>
+                        </ul>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Journey -->
+        <section class="content-section journey-section">
+
+            <div class="container">
+
+                <div class="section-heading reveal">
+
+                    <span class="section-eyebrow">
+                        رحلتك داخل المنصة
+                    </span>
+
+                    <h2>
+                        بسيطة من أول خطوة
+                        <span>لحد النتيجة</span>
+                    </h2>
+
+                </div>
+
+                <div class="journey">
+
+                    <div class="journey-line"></div>
+
+                    <div class="journey-step reveal">
+
+                        <div class="journey-number">
+                            01
+                        </div>
+
+                        <div class="journey-content">
+                            <span>الخطوة الأولى</span>
+                            <h3>أنشئ حسابك</h3>
+                            <p>
+                                سجل بياناتك وابدأ رحلتك داخل المنصة.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="journey-step reveal">
+
+                        <div class="journey-number">
+                            02
+                        </div>
+
+                        <div class="journey-content">
+                            <span>الخطوة الثانية</span>
+                            <h3>اختار فرقتك</h3>
+                            <p>
+                                ادخل إلى المرحلة والترم المناسبين لك.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="journey-step reveal">
+
+                        <div class="journey-number">
+                            03
+                        </div>
+
+                        <div class="journey-content">
+                            <span>الخطوة الثالثة</span>
+                            <h3>ابدأ التعلم</h3>
+                            <p>
+                                تصفح المواد والملخصات والفيديوهات والملفات.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="journey-step reveal">
+
+                        <div class="journey-number">
+                            04
+                        </div>
+
+                        <div class="journey-content">
+                            <span>الخطوة الرابعة</span>
+                            <h3>اختبر نفسك</h3>
+                            <p>
+                                ادخل الاختبارات وتابع نتائجك وتقدمك.
+                            </p>
+                        </div>
+
                     </div>
 
                 </div>
 
             </div>
+
         </section>
 
-        <section class="support-section section" id="support">
+        <!-- Support -->
+        <section class="content-section support-section" id="support">
+
             <div class="container">
 
-                <div class="support-layout">
+                <div class="support-box reveal">
 
-                    <div class="support-content reveal">
-                        <span class="section-kicker">SUPPORT</span>
+                    <div class="support-content">
+
+                        <span class="section-eyebrow">
+                            الدعم والمساعدة
+                        </span>
 
                         <h2>
-                            محتاج مساعدة؟
-                            <span>إحنا معاك.</span>
+                            حصلت معاك مشكلة؟
+                            <span>إحنا معاك</span>
                         </h2>
 
                         <p>
-                            تقدر تتواصل مع الدعم من خلال القنوات المتاحة،
+                            تقدر تتواصل مع الدعم من خلال القنوات المتاحة
                             أو تبعت بلاغ بالمشكلة مباشرة.
                         </p>
 
-                        <button
-                            class="button button-primary"
-                            type="button"
-                            data-open-report
-                        >
-                            إرسال بلاغ
-                            <span class="button-arrow">←</span>
-                        </button>
+                        <div class="support-actions">
+
+                            <a
+                                href="#"
+                                class="support-action whatsapp"
+                                data-support-link="whatsapp"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <span class="support-action-icon">W</span>
+                                <span>
+                                    <strong>واتساب</strong>
+                                    <small>تواصل معنا</small>
+                                </span>
+                            </a>
+
+                            <a
+                                href="#"
+                                class="support-action telegram"
+                                data-support-link="telegram"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <span class="support-action-icon">T</span>
+                                <span>
+                                    <strong>تيليجرام</strong>
+                                    <small>تواصل معنا</small>
+                                </span>
+                            </a>
+
+                            <a
+                                href="#"
+                                class="support-action facebook"
+                                data-support-link="facebook"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <span class="support-action-icon">f</span>
+                                <span>
+                                    <strong>فيسبوك</strong>
+                                    <small>صفحتنا الرسمية</small>
+                                </span>
+                            </a>
+
+                            <button
+                                type="button"
+                                class="support-action report"
+                                data-open-report
+                            >
+                                <span class="support-action-icon">!</span>
+                                <span>
+                                    <strong>إبلاغ عن مشكلة</strong>
+                                    <small>أرسل لنا المشكلة</small>
+                                </span>
+                            </button>
+
+                        </div>
+
                     </div>
 
-                    <div class="support-links reveal">
+                    <div class="support-visual">
 
-                        <a
-                            href="#"
-                            class="support-link"
-                            data-support-link="whatsapp"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <span class="support-link-icon">WA</span>
+                        <div class="support-orbit support-orbit-one"></div>
+                        <div class="support-orbit support-orbit-two"></div>
 
-                            <span class="support-link-content">
-                                <strong>WhatsApp</strong>
-                                <small>تواصل مع الدعم</small>
-                            </span>
-
-                            <span class="support-link-arrow">←</span>
-                        </a>
-
-                        <a
-                            href="#"
-                            class="support-link"
-                            data-support-link="telegram"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <span class="support-link-icon">TG</span>
-
-                            <span class="support-link-content">
-                                <strong>Telegram</strong>
-                                <small>تواصل معنا</small>
-                            </span>
-
-                            <span class="support-link-arrow">←</span>
-                        </a>
-
-                        <a
-                            href="#"
-                            class="support-link"
-                            data-support-link="facebook"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <span class="support-link-icon">FB</span>
-
-                            <span class="support-link-content">
-                                <strong>Facebook</strong>
-                                <small>صفحة المنصة</small>
-                            </span>
-
-                            <span class="support-link-arrow">←</span>
-                        </a>
+                        <div class="support-center">
+                            <span>?</span>
+                        </div>
 
                     </div>
 
                 </div>
 
             </div>
+
         </section>
 
-        <section class="cta-section section">
+        <!-- CTA -->
+        <section class="cta-section">
+
             <div class="container">
 
-                <div class="cta-card reveal">
+                <div class="cta-box reveal">
+
+                    <div class="cta-decoration cta-decoration-one"></div>
+                    <div class="cta-decoration cta-decoration-two"></div>
 
                     <div class="cta-content">
-                        <span class="section-kicker">READY TO START?</span>
+
+                        <span class="cta-eyebrow">
+                            جاهز تبدأ؟
+                        </span>
 
                         <h2>
-                            مستعد تبدأ
-                            <span>رحلتك؟</span>
+                            خليك أقرب لهدفك
                         </h2>
 
                         <p>
                             أنشئ حسابك وابدأ استخدام منصة الكوتش.
                         </p>
-                    </div>
 
-                    <div class="cta-actions">
-                        <button class="button button-primary button-large" type="button" data-open-register>
-                            إنشاء حساب
-                            <span class="button-arrow">←</span>
-                        </button>
+                        <div class="cta-actions">
 
-                        <button class="button button-outline button-large" type="button" data-open-login>
-                            تسجيل الدخول
-                        </button>
+                            <button
+                                type="button"
+                                class="primary-button light"
+                                data-open-register
+                            >
+                                إنشاء حساب
+                                <span class="button-arrow">←</span>
+                            </button>
+
+                            <button
+                                type="button"
+                                class="cta-login-button"
+                                data-open-login
+                            >
+                                لدي حساب بالفعل
+                            </button>
+
+                        </div>
+
                     </div>
 
                 </div>
 
             </div>
+
         </section>
 
     </main>
 
+    <!-- Footer -->
     <footer class="site-footer">
+
         <div class="container">
 
             <div class="footer-main">
 
                 <div class="footer-brand">
-                    <a href="#home" class="brand">
-                        <span class="brand-mark">K</span>
 
-                        <span class="brand-text">
+                    <a href="#home" class="brand footer-brand-link" data-nav-link>
+                        <span class="brand-mark">
+                            <span class="brand-mark-inner">K</span>
+                        </span>
+
+                        <span class="brand-copy">
                             <strong>منصة الكوتش</strong>
-                            <small>منصة تعليمية رياضية</small>
+                            <small>تعلم • تدرب • تطور</small>
                         </span>
                     </a>
 
                     <p>
-                        تجربة تعليمية منظمة تجمع المحتوى
-                        والمتابعة والاختبارات في مكان واحد.
+                        منصة تعليمية رياضية تهدف لتوفير تجربة تعليمية
+                        منظمة وسهلة للطلاب.
                     </p>
+
                 </div>
 
                 <div class="footer-column">
+
                     <h3>المنصة</h3>
 
-                    <a href="#home">الرئيسية</a>
-                    <a href="#features">المميزات</a>
-                    <a href="#about">عن المنصة</a>
-                    <a href="#support">الدعم</a>
+                    <a href="#home" data-nav-link>الرئيسية</a>
+                    <a href="#features" data-nav-link>المميزات</a>
+                    <a href="#about" data-nav-link>عن المنصة</a>
+                    <a href="#access" data-nav-link>المحتوى</a>
+
                 </div>
 
                 <div class="footer-column">
-                    <h3>الحساب</h3>
 
-                    <button type="button" data-open-login>
+                    <h3>المساعدة</h3>
+
+                    <a href="#support" data-nav-link>الدعم</a>
+
+                    <button
+                        type="button"
+                        data-open-report
+                    >
+                        إبلاغ عن مشكلة
+                    </button>
+
+                    <button
+                        type="button"
+                        data-open-login
+                    >
                         تسجيل الدخول
                     </button>
 
-                    <button type="button" data-open-register>
+                    <button
+                        type="button"
+                        data-open-register
+                    >
                         إنشاء حساب
                     </button>
 
-                    <button type="button" data-open-forgot>
-                        نسيت كلمة المرور؟
-                    </button>
                 </div>
 
                 <div class="footer-column">
-                    <h3>الدعم</h3>
 
-                    <a href="#" data-support-link="whatsapp" target="_blank" rel="noopener noreferrer">
-                        WhatsApp
+                    <h3>تواصل معنا</h3>
+
+                    <a
+                        href="#"
+                        data-support-link="whatsapp"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        واتساب
                     </a>
 
-                    <a href="#" data-support-link="telegram" target="_blank" rel="noopener noreferrer">
-                        Telegram
+                    <a
+                        href="#"
+                        data-support-link="telegram"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        تيليجرام
                     </a>
 
-                    <a href="#" data-support-link="facebook" target="_blank" rel="noopener noreferrer">
-                        Facebook
+                    <a
+                        href="#"
+                        data-support-link="facebook"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        فيسبوك
                     </a>
 
-                    <button type="button" data-open-report>
-                        الإبلاغ عن مشكلة
-                    </button>
                 </div>
 
             </div>
 
             <div class="footer-bottom">
+
                 <span>
                     © <span id="currentYear"></span> منصة الكوتش
                 </span>
@@ -630,9 +1019,11 @@
                 <span>
                     جميع الحقوق محفوظة
                 </span>
+
             </div>
 
         </div>
+
     </footer>
 
     <!-- Login Modal -->
@@ -642,23 +1033,29 @@
         role="dialog"
         aria-modal="true"
         aria-labelledby="loginModalTitle"
-        aria-hidden="true"
     >
-        <div class="modal-backdrop" data-close-modal></div>
+        <div class="modal-overlay" data-close-modal></div>
 
-        <div class="modal-dialog">
+        <div class="modal-container">
 
             <button
-                class="modal-close"
                 type="button"
-                aria-label="إغلاق"
+                class="modal-close"
                 data-close-modal
+                aria-label="إغلاق"
             >
                 ×
             </button>
 
             <div class="modal-header">
-                <span class="modal-kicker">WELCOME BACK</span>
+
+                <div class="modal-icon">
+                    ◈
+                </div>
+
+                <span class="modal-eyebrow">
+                    أهلاً بعودتك
+                </span>
 
                 <h2 id="loginModalTitle">
                     تسجيل الدخول
@@ -667,6 +1064,7 @@
                 <p>
                     ادخل إلى حسابك للوصول إلى المنصة.
                 </p>
+
             </div>
 
             <div class="auth-method-switch">
@@ -689,42 +1087,74 @@
 
             </div>
 
-            <form id="loginForm" class="auth-form" novalidate>
+            <form id="loginForm" novalidate>
 
-                <div class="form-group login-phone-group">
-                    <label for="loginPhone">رقم الهاتف</label>
+                <div
+                    class="form-group"
+                    id="loginPhoneGroup"
+                >
+                    <label for="loginPhone">
+                        رقم الهاتف
+                    </label>
 
-                    <input
-                        id="loginPhone"
-                        name="phone"
-                        type="tel"
-                        inputmode="tel"
-                        autocomplete="tel"
-                        placeholder="أدخل رقم الهاتف"
-                    >
+                    <div class="input-wrapper">
+                        <span class="input-icon">☎</span>
+
+                        <input
+                            type="tel"
+                            id="loginPhone"
+                            name="phone"
+                            inputmode="tel"
+                            autocomplete="tel"
+                            placeholder="01xxxxxxxxx"
+                        >
+                    </div>
                 </div>
 
-                <div class="form-group login-email-group hidden">
-                    <label for="loginEmail">البريد الإلكتروني</label>
+                <div
+                    class="form-group hidden"
+                    id="loginEmailGroup"
+                >
+                    <label for="loginEmail">
+                        البريد الإلكتروني
+                    </label>
 
-                    <input
-                        id="loginEmail"
-                        name="email"
-                        type="email"
-                        inputmode="email"
-                        autocomplete="email"
-                        placeholder="example@email.com"
-                    >
+                    <div class="input-wrapper">
+                        <span class="input-icon">@</span>
+
+                        <input
+                            type="email"
+                            id="loginEmail"
+                            name="email"
+                            autocomplete="email"
+                            placeholder="example@email.com"
+                        >
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="loginPassword">كلمة المرور</label>
 
-                    <div class="password-field">
+                    <div class="form-label-row">
+                        <label for="loginPassword">
+                            كلمة المرور
+                        </label>
+
+                        <button
+                            type="button"
+                            class="form-link"
+                            data-open-forgot
+                        >
+                            نسيت كلمة المرور؟
+                        </button>
+                    </div>
+
+                    <div class="input-wrapper">
+                        <span class="input-icon">●</span>
+
                         <input
+                            type="password"
                             id="loginPassword"
                             name="password"
-                            type="password"
                             autocomplete="current-password"
                             placeholder="أدخل كلمة المرور"
                         >
@@ -732,49 +1162,55 @@
                         <button
                             type="button"
                             class="password-toggle"
-                            aria-label="إظهار كلمة المرور"
                             data-password-toggle
                             data-target="loginPassword"
+                            aria-label="إظهار كلمة المرور"
                         >
-                            عرض
+                            ◉
                         </button>
                     </div>
+
                 </div>
 
-                <div class="form-options">
-                    <label class="checkbox-label">
-                        <input
-                            type="checkbox"
-                            name="remember"
-                            id="loginRemember"
-                        >
-                        <span>تذكرني</span>
-                    </label>
+                <label class="checkbox-row">
 
-                    <button
-                        type="button"
-                        class="text-button"
-                        data-open-forgot
+                    <input
+                        type="checkbox"
+                        id="loginRemember"
+                        name="remember"
                     >
-                        نسيت كلمة المرور؟
-                    </button>
-                </div>
+
+                    <span class="custom-checkbox"></span>
+
+                    <span>
+                        تذكرني على هذا الجهاز
+                    </span>
+
+                </label>
+
+                <div
+                    class="form-message"
+                    id="loginMessage"
+                    role="alert"
+                    aria-live="polite"
+                ></div>
 
                 <button
                     type="submit"
-                    class="button button-primary button-full"
-                    id="loginSubmit"
+                    class="modal-submit"
                 >
-                    <span>تسجيل الدخول</span>
+                    تسجيل الدخول
+                    <span>←</span>
                 </button>
-
-                <div class="form-message" id="loginMessage" role="alert"></div>
 
             </form>
 
             <div class="modal-footer-text">
                 ليس لديك حساب؟
-                <button type="button" class="text-button" data-open-register>
+                <button
+                    type="button"
+                    data-open-register
+                >
                     إنشاء حساب
                 </button>
             </div>
@@ -789,163 +1225,244 @@
         role="dialog"
         aria-modal="true"
         aria-labelledby="registerModalTitle"
-        aria-hidden="true"
     >
-        <div class="modal-backdrop" data-close-modal></div>
+        <div class="modal-overlay" data-close-modal></div>
 
-        <div class="modal-dialog">
+        <div class="modal-container modal-container-large">
 
             <button
-                class="modal-close"
                 type="button"
-                aria-label="إغلاق"
+                class="modal-close"
                 data-close-modal
+                aria-label="إغلاق"
             >
                 ×
             </button>
 
             <div class="modal-header">
-                <span class="modal-kicker">JOIN COACH</span>
+
+                <div class="modal-icon">
+                    +
+                </div>
+
+                <span class="modal-eyebrow">
+                    ابدأ رحلتك
+                </span>
 
                 <h2 id="registerModalTitle">
-                    إنشاء حساب
+                    إنشاء حساب جديد
                 </h2>
 
                 <p>
-                    أنشئ حسابك للانضمام إلى منصة الكوتش.
+                    أدخل بياناتك لإنشاء حساب على منصة الكوتش.
                 </p>
+
             </div>
 
-            <form id="registerForm" class="auth-form" novalidate>
+            <form id="registerForm" novalidate>
 
-                <div class="form-group">
-                    <label for="registerName">الاسم بالكامل</label>
-
-                    <input
-                        id="registerName"
-                        name="name"
-                        type="text"
-                        autocomplete="name"
-                        placeholder="أدخل اسمك بالكامل"
-                    >
-                </div>
-
-                <div class="form-row">
+                <div class="form-grid">
 
                     <div class="form-group">
-                        <label for="registerGrade">الفرقة</label>
 
-                        <select id="registerGrade" name="grade">
-                            <option value="">اختر الفرقة</option>
-                            <option value="1">الفرقة الأولى</option>
-                            <option value="2">الفرقة الثانية</option>
-                            <option value="3">الفرقة الثالثة</option>
-                            <option value="4">الفرقة الرابعة</option>
-                        </select>
+                        <label for="registerName">
+                            الاسم بالكامل
+                        </label>
+
+                        <div class="input-wrapper">
+                            <span class="input-icon">A</span>
+
+                            <input
+                                type="text"
+                                id="registerName"
+                                name="name"
+                                autocomplete="name"
+                                placeholder="اكتب اسمك بالكامل"
+                            >
+                        </div>
+
                     </div>
 
                     <div class="form-group">
-                        <label for="registerPhone">رقم الهاتف</label>
 
-                        <input
-                            id="registerPhone"
-                            name="phone"
-                            type="tel"
-                            inputmode="tel"
-                            autocomplete="tel"
-                            placeholder="رقم الهاتف"
-                        >
+                        <label for="registerGrade">
+                            الفرقة الدراسية
+                        </label>
+
+                        <div class="input-wrapper">
+                            <span class="input-icon">#</span>
+
+                            <select
+                                id="registerGrade"
+                                name="grade"
+                            >
+                                <option value="">
+                                    اختر الفرقة
+                                </option>
+
+                                <option value="first">
+                                    الفرقة الأولى
+                                </option>
+
+                                <option value="second">
+                                    الفرقة الثانية
+                                </option>
+
+                                <option value="third">
+                                    الفرقة الثالثة
+                                </option>
+
+                                <option value="fourth">
+                                    الفرقة الرابعة
+                                </option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="registerPhone">
+                            رقم الهاتف
+                        </label>
+
+                        <div class="input-wrapper">
+                            <span class="input-icon">☎</span>
+
+                            <input
+                                type="tel"
+                                id="registerPhone"
+                                name="phone"
+                                inputmode="tel"
+                                autocomplete="tel"
+                                placeholder="01xxxxxxxxx"
+                            >
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="registerEmail">
+                            البريد الإلكتروني
+                            <small>اختياري</small>
+                        </label>
+
+                        <div class="input-wrapper">
+                            <span class="input-icon">@</span>
+
+                            <input
+                                type="email"
+                                id="registerEmail"
+                                name="email"
+                                autocomplete="email"
+                                placeholder="example@email.com"
+                            >
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="registerPassword">
+                            كلمة المرور
+                        </label>
+
+                        <div class="input-wrapper">
+                            <span class="input-icon">●</span>
+
+                            <input
+                                type="password"
+                                id="registerPassword"
+                                name="password"
+                                autocomplete="new-password"
+                                placeholder="أنشئ كلمة مرور"
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                data-password-toggle
+                                data-target="registerPassword"
+                                aria-label="إظهار كلمة المرور"
+                            >
+                                ◉
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="registerPasswordConfirm">
+                            تأكيد كلمة المرور
+                        </label>
+
+                        <div class="input-wrapper">
+                            <span class="input-icon">●</span>
+
+                            <input
+                                type="password"
+                                id="registerPasswordConfirm"
+                                name="passwordConfirm"
+                                autocomplete="new-password"
+                                placeholder="أعد كتابة كلمة المرور"
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                data-password-toggle
+                                data-target="registerPasswordConfirm"
+                                aria-label="إظهار كلمة المرور"
+                            >
+                                ◉
+                            </button>
+                        </div>
+
                     </div>
 
                 </div>
 
-                <div class="form-group">
-                    <label for="registerEmail">
-                        البريد الإلكتروني
-                        <small>اختياري</small>
-                    </label>
+                <label class="checkbox-row terms-row">
 
                     <input
-                        id="registerEmail"
-                        name="email"
-                        type="email"
-                        inputmode="email"
-                        autocomplete="email"
-                        placeholder="example@email.com"
+                        type="checkbox"
+                        id="registerTerms"
+                        name="terms"
                     >
-                </div>
 
-                <div class="form-group">
-                    <label for="registerPassword">كلمة المرور</label>
-
-                    <div class="password-field">
-                        <input
-                            id="registerPassword"
-                            name="password"
-                            type="password"
-                            autocomplete="new-password"
-                            placeholder="أنشئ كلمة مرور"
-                        >
-
-                        <button
-                            type="button"
-                            class="password-toggle"
-                            aria-label="إظهار كلمة المرور"
-                            data-password-toggle
-                            data-target="registerPassword"
-                        >
-                            عرض
-                        </button>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="registerPasswordConfirm">تأكيد كلمة المرور</label>
-
-                    <div class="password-field">
-                        <input
-                            id="registerPasswordConfirm"
-                            name="passwordConfirm"
-                            type="password"
-                            autocomplete="new-password"
-                            placeholder="أعد كتابة كلمة المرور"
-                        >
-
-                        <button
-                            type="button"
-                            class="password-toggle"
-                            aria-label="إظهار كلمة المرور"
-                            data-password-toggle
-                            data-target="registerPasswordConfirm"
-                        >
-                            عرض
-                        </button>
-                    </div>
-                </div>
-
-                <label class="terms-label">
-                    <input type="checkbox" id="registerTerms" name="terms">
+                    <span class="custom-checkbox"></span>
 
                     <span>
                         أوافق على شروط استخدام المنصة وسياسة الاستخدام.
                     </span>
+
                 </label>
+
+                <div
+                    class="form-message"
+                    id="registerMessage"
+                    role="alert"
+                    aria-live="polite"
+                ></div>
 
                 <button
                     type="submit"
-                    class="button button-primary button-full"
-                    id="registerSubmit"
+                    class="modal-submit"
                 >
                     إنشاء الحساب
+                    <span>←</span>
                 </button>
-
-                <div class="form-message" id="registerMessage" role="alert"></div>
 
             </form>
 
             <div class="modal-footer-text">
                 لديك حساب بالفعل؟
-                <button type="button" class="text-button" data-open-login>
+                <button
+                    type="button"
+                    data-open-login
+                >
                     تسجيل الدخول
                 </button>
             </div>
@@ -960,171 +1477,233 @@
         role="dialog"
         aria-modal="true"
         aria-labelledby="forgotModalTitle"
-        aria-hidden="true"
     >
-        <div class="modal-backdrop" data-close-modal></div>
+        <div class="modal-overlay" data-close-modal></div>
 
-        <div class="modal-dialog">
+        <div class="modal-container">
 
             <button
-                class="modal-close"
                 type="button"
-                aria-label="إغلاق"
+                class="modal-close"
                 data-close-modal
+                aria-label="إغلاق"
             >
                 ×
             </button>
 
             <div class="modal-header">
-                <span class="modal-kicker">ACCOUNT RECOVERY</span>
+
+                <div class="modal-icon">
+                    ?
+                </div>
+
+                <span class="modal-eyebrow">
+                    استعادة الحساب
+                </span>
 
                 <h2 id="forgotModalTitle">
-                    استعادة الحساب
+                    نسيت كلمة المرور؟
                 </h2>
 
                 <p>
                     أدخل رقم الهاتف أو البريد الإلكتروني المرتبط بحسابك.
                 </p>
+
             </div>
 
-            <form id="forgotForm" class="auth-form" novalidate>
+            <form id="forgotForm" novalidate>
 
                 <div class="form-group">
+
                     <label for="forgotIdentifier">
                         رقم الهاتف أو البريد الإلكتروني
                     </label>
 
-                    <input
-                        id="forgotIdentifier"
-                        name="identifier"
-                        type="text"
-                        autocomplete="username"
-                        placeholder="رقم الهاتف أو البريد الإلكتروني"
-                    >
+                    <div class="input-wrapper">
+                        <span class="input-icon">⌕</span>
+
+                        <input
+                            type="text"
+                            id="forgotIdentifier"
+                            name="identifier"
+                            autocomplete="username"
+                            placeholder="رقم الهاتف أو البريد الإلكتروني"
+                        >
+                    </div>
+
                 </div>
+
+                <div
+                    class="form-message"
+                    id="forgotMessage"
+                    role="alert"
+                    aria-live="polite"
+                ></div>
 
                 <button
                     type="submit"
-                    class="button button-primary button-full"
-                    id="forgotSubmit"
+                    class="modal-submit"
                 >
                     متابعة
+                    <span>←</span>
                 </button>
-
-                <div class="form-message" id="forgotMessage" role="alert"></div>
 
             </form>
 
             <div class="modal-footer-text">
                 تذكرت كلمة المرور؟
-                <button type="button" class="text-button" data-open-login>
-                    العودة لتسجيل الدخول
+                <button
+                    type="button"
+                    data-open-login
+                >
+                    تسجيل الدخول
                 </button>
             </div>
 
         </div>
     </div>
 
-    <!-- Report Modal -->
+    <!-- Report Problem Modal -->
     <div
         class="modal"
         id="reportModal"
         role="dialog"
         aria-modal="true"
         aria-labelledby="reportModalTitle"
-        aria-hidden="true"
     >
-        <div class="modal-backdrop" data-close-modal></div>
+        <div class="modal-overlay" data-close-modal></div>
 
-        <div class="modal-dialog">
+        <div class="modal-container modal-container-large">
 
             <button
-                class="modal-close"
                 type="button"
-                aria-label="إغلاق"
+                class="modal-close"
                 data-close-modal
+                aria-label="إغلاق"
             >
                 ×
             </button>
 
             <div class="modal-header">
-                <span class="modal-kicker">SUPPORT REQUEST</span>
+
+                <div class="modal-icon">
+                    !
+                </div>
+
+                <span class="modal-eyebrow">
+                    الدعم الفني
+                </span>
 
                 <h2 id="reportModalTitle">
-                    الإبلاغ عن مشكلة
+                    إبلاغ عن مشكلة
                 </h2>
 
                 <p>
-                    اكتب المشكلة بالتفصيل وسيتم التعامل معها من خلال الدعم.
+                    اكتب تفاصيل المشكلة وسنساعدك في حلها.
                 </p>
+
             </div>
 
-            <form id="reportForm" class="auth-form" novalidate>
+            <form id="reportForm" novalidate>
 
-                <div class="form-group">
-                    <label for="reportName">الاسم</label>
+                <div class="form-grid">
 
-                    <input
-                        id="reportName"
-                        name="name"
-                        type="text"
-                        autocomplete="name"
-                        placeholder="اسمك"
-                    >
+                    <div class="form-group">
+
+                        <label for="reportName">
+                            الاسم
+                        </label>
+
+                        <div class="input-wrapper">
+                            <span class="input-icon">A</span>
+
+                            <input
+                                type="text"
+                                id="reportName"
+                                name="name"
+                                autocomplete="name"
+                                placeholder="اسمك"
+                            >
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="reportContact">
+                            وسيلة التواصل
+                        </label>
+
+                        <div class="input-wrapper">
+                            <span class="input-icon">☎</span>
+
+                            <input
+                                type="text"
+                                id="reportContact"
+                                name="contact"
+                                placeholder="رقم الهاتف أو البريد"
+                            >
+                        </div>
+
+                    </div>
+
                 </div>
 
                 <div class="form-group">
-                    <label for="reportContact">
-                        رقم الهاتف أو البريد الإلكتروني
+
+                    <label for="reportSubject">
+                        عنوان المشكلة
                     </label>
 
-                    <input
-                        id="reportContact"
-                        name="contact"
-                        type="text"
-                        placeholder="وسيلة للتواصل"
-                    >
+                    <div class="input-wrapper">
+                        <span class="input-icon">#</span>
+
+                        <input
+                            type="text"
+                            id="reportSubject"
+                            name="subject"
+                            placeholder="مثال: مشكلة في تسجيل الدخول"
+                        >
+                    </div>
+
                 </div>
 
                 <div class="form-group">
-                    <label for="reportSubject">نوع المشكلة</label>
 
-                    <select id="reportSubject" name="subject">
-                        <option value="">اختر نوع المشكلة</option>
-                        <option value="account">مشكلة في الحساب</option>
-                        <option value="login">مشكلة في تسجيل الدخول</option>
-                        <option value="content">مشكلة في المحتوى</option>
-                        <option value="payment">مشكلة في الدفع</option>
-                        <option value="exam">مشكلة في الاختبار</option>
-                        <option value="technical">مشكلة تقنية</option>
-                        <option value="other">مشكلة أخرى</option>
-                    </select>
-                </div>
+                    <div class="form-label-row">
+                        <label for="reportMessage">
+                            تفاصيل المشكلة
+                        </label>
 
-                <div class="form-group">
-                    <label for="reportMessage">
-                        وصف المشكلة
-                        <span id="reportCharacterCount">0 / 1000</span>
-                    </label>
+                        <span class="character-count">
+                            <span id="reportCharacterCount">0</span>/1000
+                        </span>
+                    </div>
 
                     <textarea
                         id="reportMessage"
                         name="message"
-                        rows="5"
                         maxlength="1000"
-                        placeholder="اكتب تفاصيل المشكلة..."
+                        rows="6"
+                        placeholder="اشرح المشكلة بالتفصيل..."
                     ></textarea>
+
                 </div>
+
+                <div
+                    class="form-message"
+                    id="reportFormMessage"
+                    role="alert"
+                    aria-live="polite"
+                ></div>
 
                 <button
                     type="submit"
-                    class="button button-primary button-full"
-                    id="reportSubmit"
+                    class="modal-submit"
                 >
                     إرسال البلاغ
+                    <span>←</span>
                 </button>
-
-                <div class="form-message" id="reportFormMessage" role="alert"></div>
 
             </form>
 
@@ -1142,4 +1721,4 @@
     <script type="module" src="index.js"></script>
 
 </body>
-</html>
+    </html>
