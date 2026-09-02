@@ -3,334 +3,1683 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مقررات الترم الأول | منصة الكابتن</title>
+
+    <title>الترم الأول | منصة الكوتش</title>
+
+    <meta name="theme-color" content="#0b1020">
+    <meta name="description" content="الترم الأول - منصة الكوتش">
+
+    <link rel="icon" type="image/jpeg" href="1783950091830.jpg">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
-        :root {
-            --bg-color: #f0f4f8;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --text-color: #0f172a;
-            --text-muted: #475569;
-            --primary: #2563eb;
-            --primary-glow: #3b82f6;
-            --border-color: #cbd5e1;
-            --input-bg: #ffffff;
-            --accent-cyan: #06b6d4;
-            --success: #10b981;
+        * {
+            box-sizing: border-box;
         }
 
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-color: #0b0f19;
-                --card-bg: rgba(18, 24, 38, 0.95);
-                --text-color: #f8fafc;
-                --text-muted: #94a3b8;
-                --primary: #3b82f6;
-                --primary-glow: #60a5fa;
-                --border-color: #1e293b;
-                --input-bg: #0f172a;
-                --accent-cyan: #06b6d4;
-                --success: #10b981;
-            }
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
             min-height: 100vh;
-            padding: 20px 10px;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: center;
+            font-family:
+                "Cairo",
+                "Tahoma",
+                Arial,
+                sans-serif;
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(59, 130, 246, 0.16),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at bottom left,
+                    rgba(139, 92, 246, 0.12),
+                    transparent 30%
+                ),
+                #070b14;
+            color: #f8fafc;
         }
 
-        .container {
-            width: 100%;
-            max-width: 650px;
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(
+                    120deg,
+                    transparent 0%,
+                    rgba(255,255,255,0.015) 50%,
+                    transparent 100%
+                );
+            z-index: -1;
         }
 
-        .header-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
+        .glass {
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,0.075),
+                    rgba(255,255,255,0.025)
+                );
+            border: 1px solid rgba(255,255,255,0.09);
+            box-shadow:
+                0 20px 60px rgba(0,0,0,0.22),
+                inset 0 1px 0 rgba(255,255,255,0.04);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
         }
 
-        .back-btn {
-            padding: 8px 16px;
-            border-radius: 10px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
+        .course-card {
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease,
+                box-shadow 0.25s ease;
         }
 
-        .back-btn:hover {
-            border-color: var(--primary);
-            box-shadow: 0 0 10px var(--primary-glow);
+        .course-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(96,165,250,0.35);
+            box-shadow:
+                0 22px 60px rgba(0,0,0,0.30),
+                0 0 30px rgba(59,130,246,0.06);
         }
 
-        .page-title {
-            font-size: 1.3rem;
-            font-weight: 800;
-            margin: 0;
-            background: linear-gradient(135deg, var(--text-color) 0%, var(--accent-cyan) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .subjects-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-
-        .subject-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .subject-card:hover {
-            border-color: var(--primary);
-            box-shadow: 0 0 20px var(--primary-glow);
-        }
-
-        .subject-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .subject-name {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .subject-badge {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .subject-desc {
-            font-size: 0.88rem;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-            line-height: 1.5;
-        }
-
-        /* تصميم مشغل الفيديو الداخلي المطور (Iframe) */
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* نسبة العرض للارتفاع 16:9 */
-            height: 0;
-            background-color: #000;
-            border-radius: 12px;
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            margin-bottom: 16px;
         }
 
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
+        .loader {
+            width: 42px;
+            height: 42px;
+            border: 3px solid rgba(255,255,255,0.12);
+            border-top-color: #60a5fa;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
         }
 
-        .btn-view {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, var(--primary), #1d4ed8);
-            color: #ffffff;
-            text-align: center;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-            box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
-            transition: all 0.3s ease;
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
-        .btn-view:hover {
-            box-shadow: 0 0 20px var(--primary-glow);
+        .fade-in {
+            animation: fadeIn 0.45s ease both;
         }
 
-        .footer-credits {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border-color);
-            padding-top: 16px;
-            font-weight: 600;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toast {
+            animation:
+                toastIn 0.3s ease,
+                toastOut 0.3s ease 3.7s forwards;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes toastOut {
+            to {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+        }
+
+        .subject-icon {
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(59,130,246,0.20),
+                    rgba(139,92,246,0.18)
+                );
+        }
+
+        .empty-state {
+            border: 1px dashed rgba(255,255,255,0.12);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #070b14;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148,163,184,0.25);
+            border-radius: 20px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(148,163,184,0.4);
         }
     </style>
 </head>
+
 <body>
 
-    <div class="container">
-        <div class="header-nav">
-            <h1 class="page-title">📚 مقررات الترم الأول</h1>
-            <a href="courses.html" class="back-btn">← العودة للرئيسية</a>
-        </div>
+    <!-- Loading Screen -->
+    <div
+        id="loadingScreen"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-[#070b14]"
+    >
+        <div class="text-center">
+            <img
+                src="1783950091830.jpg"
+                alt="منصة الكوتش"
+                class="w-20 h-20 rounded-3xl object-cover mx-auto mb-5 shadow-2xl"
+            >
 
-        <div class="subjects-grid" id="term1SubjectsContainer">
-            <div class="subject-card" style="text-align: center;">
-                <p style="color: var(--text-muted); margin: 0;">جاري تحميل مواد الترم الأول...</p>
-            </div>
-        </div>
+            <div class="loader mx-auto mb-4"></div>
 
-        <div class="footer-credits">
-            تطوير المهندس عبدالناصر © 2026
+            <h2 class="text-xl font-bold">
+                منصة الكوتش
+            </h2>
+
+            <p class="text-slate-400 text-sm mt-2">
+                جاري تحميل الترم الأول...
+            </p>
         </div>
     </div>
 
-    <script>
-        const FIREBASE_URL = "https://abodaa-default-rtdb.firebaseio.com";
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const studentGrade = localStorage.getItem('studentGrade') || 'الجميع';
-            fetchTermSubjects(studentGrade);
-            updateStudentActivity();
-        });
+    <!-- Toast -->
+    <div
+        id="toastContainer"
+        class="fixed top-5 left-5 right-5 md:left-auto md:w-[360px] z-[110] space-y-3"
+    ></div>
 
-        async function updateStudentActivity() {
-            const studentName = localStorage.getItem('studentName');
-            if (!studentName) return;
-            try {
-                const res = await fetch(`${FIREBASE_URL}/students.json`);
-                const students = await res.json();
-                if (students) {
-                    let studentKey = null;
-                    Object.keys(students).forEach(key => {
-                        if (students[key].name === studentName) {
-                            studentKey = key;
-                        }
-                    });
-                    if (studentKey) {
-                        const now = new Date().toLocaleString('ar-EG');
-                        await fetch(`${FIREBASE_URL}/students/${studentKey}/lastActive.json`, {
-                            method: 'PUT',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(now)
-                        });
-                    }
-                }
-            } catch (e) {
-                console.error("خطأ في تحديث النشاط:", e);
-            }
-        }
 
-        // دالة استخراج الـ ID الخاص بيوتيوب وتحويل الرابط لـ Embed تلقائياً
-        function getYouTubeEmbedUrl(url) {
-            if (!url) return '';
-            let videoId = '';
-            if (url.includes('youtu.be/')) {
-                videoId = url.split('youtu.be/')[1]?.split('?')[0];
-            } else if (url.includes('watch?v=')) {
-                videoId = url.split('watch?v=')[1]?.split('&')[0];
-            } else if (url.includes('embed/')) {
-                return url; // لو الرابط متضمن جاهز
-            }
-            return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
-        }
+    <!-- Main App -->
+    <main
+        id="app"
+        class="hidden min-h-screen"
+    >
 
-        async function fetchTermSubjects(studentGrade) {
-            try {
-                const res = await fetch(`${FIREBASE_URL}/courses.json`);
-                const courses = await res.json() || {};
-                const container = document.getElementById('term1SubjectsContainer');
-                
-                container.innerHTML = '';
-                const keys = Object.keys(courses);
+        <!-- Header -->
+        <header
+            class="sticky top-0 z-50 border-b border-white/10 bg-[#070b14]/85 backdrop-blur-xl"
+        >
+            <div
+                class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4"
+            >
 
-                let foundCount = 0;
+                <div class="flex items-center gap-3 min-w-0">
 
-                keys.reverse().forEach(id => {
-                    const c = courses[id];
-                    if (c && c.term === 'الترم الأول' && (c.grade === 'الجميع' || c.grade === studentGrade)) {
-                        foundCount++;
-                        const embedUrl = getYouTubeEmbedUrl(c.link);
+                    <button
+                        id="backButton"
+                        type="button"
+                        class="w-11 h-11 shrink-0 rounded-2xl glass flex items-center justify-center text-slate-200 hover:bg-white/10 transition"
+                        aria-label="العودة"
+                    >
+                        <svg
+                            class="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M15 19l-7-7 7-7"
+                            />
+                        </svg>
+                    </button>
 
-                        container.innerHTML += `
-                            <div class="subject-card">
-                                <div class="subject-head">
-                                    <h3 class="subject-name">${c.title}</h3>
-                                    <span class="subject-badge">الترم الأول</span>
-                                </div>
-                                <p class="subject-desc">${c.desc || 'محاضرات، ملخصات، واختبارات تفاعلية للمادة الدراسية.'}</p>
-                                
-                                <div class="video-container">
-                                    <iframe src="${embedUrl}" title="${c.title}" allowfullscreen></iframe>
-                                </div>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="text-blue-400 text-xs font-bold"
+                            >
+                                منصة الكوتش
+                            </span>
 
-                                <a href="#" class="action-btn" style="display:none;"></a> </div>
-                        `;
-                        
-                        // تسجيل المشاهدة بمجرد ظهور الكارت في الصفحة
-                        logContentView(c.title);
-                    }
-                });
+                            <span
+                                class="text-slate-600"
+                            >
+                                /
+                            </span>
 
-                if (foundCount === 0) {
-                    container.innerHTML = `
-                        <div class="subject-card" style="text-align: center;">
-                            <h3 class="subject-name" style="color: var(--text-muted); margin-bottom: 8px;">لا توجد مواد مضافة للترم الأول حالياً</h3>
-                            <p class="subject-desc">سيتم إرفاق المواد الدراسية قريباً من قبل إدارة المنصة.</p>
+                            <span
+                                class="text-slate-400 text-xs"
+                            >
+                                المواد
+                            </span>
                         </div>
-                    `;
-                }
 
-            } catch (err) {
-                console.error("خطأ في جلب بيانات الترم الأول:", err);
-                document.getElementById('term1SubjectsContainer').innerHTML = `
-                    <div class="subject-card" style="text-align: center;">
-                        <h3 class="subject-name" style="color: #ef4444;">تعذر تحميل المقررات</h3>
-                        <p class="subject-desc">تحقق من اتصالك بالإنترنت.</p>
+                        <h1
+                            class="text-lg sm:text-xl font-black truncate"
+                        >
+                            الترم الأول
+                        </h1>
                     </div>
+
+                </div>
+
+
+                <div class="flex items-center gap-2">
+
+                    <button
+                        id="homeButton"
+                        type="button"
+                        class="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl glass text-sm font-bold hover:bg-white/10 transition"
+                    >
+                        <svg
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M3 10.5L12 3l9 7.5"
+                            />
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M5.5 9.5V21h13V9.5"
+                            />
+                        </svg>
+
+                        الرئيسية
+                    </button>
+
+                    <div
+                        class="w-11 h-11 rounded-2xl overflow-hidden border border-white/10"
+                    >
+                        <img
+                            src="1783950091830.jpg"
+                            alt="الكوتش"
+                            class="w-full h-full object-cover"
+                        >
+                    </div>
+
+                </div>
+
+            </div>
+        </header>
+
+
+        <!-- Content -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 py-7 sm:py-10">
+
+            <!-- Hero -->
+            <div
+                class="glass rounded-[28px] p-5 sm:p-8 mb-8 relative overflow-hidden"
+            >
+
+                <div
+                    class="absolute -top-20 -left-20 w-56 h-56 rounded-full bg-blue-500/10 blur-3xl"
+                ></div>
+
+                <div
+                    class="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6"
+                >
+
+                    <div class="max-w-2xl">
+
+                        <div
+                            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/10 text-blue-300 text-xs font-bold mb-4"
+                        >
+                            <span
+                                class="w-2 h-2 rounded-full bg-blue-400"
+                            ></span>
+
+                            الفصل الدراسي الأول
+                        </div>
+
+                        <h2
+                            class="text-2xl sm:text-4xl font-black leading-tight"
+                        >
+                            مواد
+                            <span class="text-blue-400">
+                                الترم الأول
+                            </span>
+                        </h2>
+
+                        <p
+                            class="text-slate-400 mt-3 leading-7 text-sm sm:text-base"
+                        >
+                            اختار المادة اللي عايز تذاكرها وابدأ
+                            رحلتك التعليمية مع منصة الكوتش.
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        class="shrink-0 w-full md:w-auto"
+                    >
+                        <div
+                            class="rounded-2xl bg-white/[0.035] border border-white/[0.07] px-5 py-4"
+                        >
+
+                            <p
+                                class="text-slate-500 text-xs mb-1"
+                            >
+                                الطالب
+                            </p>
+
+                            <p
+                                id="studentNameHero"
+                                class="font-bold truncate max-w-[240px]"
+                            >
+                                جاري التحميل...
+                            </p>
+
+                            <div
+                                class="flex items-center gap-2 mt-2"
+                            >
+                                <span
+                                    class="w-2 h-2 rounded-full bg-emerald-400"
+                                ></span>
+
+                                <span
+                                    class="text-xs text-slate-400"
+                                >
+                                    حساب مفعل
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- Statistics -->
+            <div
+                class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-8"
+            >
+
+                <div
+                    class="glass rounded-2xl p-4 sm:p-5"
+                >
+                    <div class="flex items-center justify-between gap-3">
+
+                        <div>
+                            <p
+                                class="text-slate-500 text-xs mb-1"
+                            >
+                                عدد المواد
+                            </p>
+
+                            <p
+                                id="coursesCount"
+                                class="text-2xl font-black"
+                            >
+                                0
+                            </p>
+                        </div>
+
+                        <div
+                            class="subject-icon w-11 h-11 rounded-xl flex items-center justify-center"
+                        >
+                            <svg
+                                class="w-5 h-5 text-blue-400"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M4 19.5A2.5 2.5 0 016.5 17H20"
+                                />
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"
+                                />
+                            </svg>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div
+                    class="glass rounded-2xl p-4 sm:p-5"
+                >
+                    <div class="flex items-center justify-between gap-3">
+
+                        <div>
+                            <p
+                                class="text-slate-500 text-xs mb-1"
+                            >
+                                الترم
+                            </p>
+
+                            <p
+                                class="text-2xl font-black"
+                            >
+                                01
+                            </p>
+                        </div>
+
+                        <div
+                            class="w-11 h-11 rounded-xl bg-violet-500/10 flex items-center justify-center"
+                        >
+                            <svg
+                                class="w-5 h-5 text-violet-400"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M12 6v12M6 12h12"
+                                />
+                            </svg>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div
+                    class="glass rounded-2xl p-4 sm:p-5 col-span-2 lg:col-span-1"
+                >
+                    <div class="flex items-center justify-between gap-3">
+
+                        <div>
+                            <p
+                                class="text-slate-500 text-xs mb-1"
+                            >
+                                الحالة
+                            </p>
+
+                            <p
+                                class="text-lg font-black text-emerald-400"
+                            >
+                                متاح للدراسة
+                            </p>
+                        </div>
+
+                        <div
+                            class="w-11 h-11 rounded-xl bg-emerald-500/10 flex items-center justify-center"
+                        >
+                            <svg
+                                class="w-5 h-5 text-emerald-400"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M5 13l4 4L19 7"
+                                />
+                            </svg>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Section Header -->
+            <div
+                class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-5"
+            >
+
+                <div>
+                    <p
+                        class="text-blue-400 text-xs font-bold mb-1"
+                    >
+                        CURRICULUM
+                    </p>
+
+                    <h3
+                        class="text-xl sm:text-2xl font-black"
+                    >
+                        المواد الدراسية
+                    </h3>
+                </div>
+
+                <p
+                    id="coursesDescription"
+                    class="text-sm text-slate-500"
+                >
+                    جاري تحميل المواد...
+                </p>
+
+            </div>
+
+
+            <!-- Courses -->
+            <div
+                id="coursesGrid"
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5"
+            ></div>
+
+
+            <!-- Empty -->
+            <div
+                id="emptyState"
+                class="hidden empty-state rounded-[24px] p-10 sm:p-16 text-center"
+            >
+
+                <div
+                    class="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mx-auto mb-5"
+                >
+                    <svg
+                        class="w-8 h-8 text-slate-500"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M4 19.5A2.5 2.5 0 016.5 17H20"
+                        />
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"
+                        />
+                    </svg>
+                </div>
+
+                <h3
+                    class="text-xl font-black"
+                >
+                    لا توجد مواد متاحة حالياً
+                </h3>
+
+                <p
+                    class="text-slate-500 mt-2 text-sm"
+                >
+                    سيتم إضافة المواد من الإدارة قريباً.
+                </p>
+
+            </div>
+
+
+            <!-- Error -->
+            <div
+                id="errorState"
+                class="hidden rounded-[24px] border border-red-400/10 bg-red-500/5 p-8 text-center"
+            >
+
+                <div
+                    class="w-14 h-14 rounded-2xl bg-red-500/10 flex items-center justify-center mx-auto mb-4"
+                >
+                    <svg
+                        class="w-7 h-7 text-red-400"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M12 9v4"
+                        />
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M12 17h.01"
+                        />
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M10.3 3.8L2.7 17a2 2 0 001.73 3h15.14a2 2 0 001.73-3L13.7 3.8a2 2 0 00-3.4 0z"
+                        />
+                    </svg>
+                </div>
+
+                <h3
+                    class="font-black text-lg"
+                >
+                    حصل خطأ أثناء تحميل المواد
+                </h3>
+
+                <p
+                    id="errorMessage"
+                    class="text-slate-500 text-sm mt-2"
+                >
+                    حاول مرة أخرى.
+                </p>
+
+                <button
+                    id="retryButton"
+                    type="button"
+                    class="mt-5 px-5 py-3 rounded-xl bg-blue-500 hover:bg-blue-400 text-white font-bold transition"
+                >
+                    إعادة المحاولة
+                </button>
+
+            </div>
+
+
+            <!-- Footer -->
+            <footer
+                class="mt-12 pt-6 border-t border-white/5 text-center"
+            >
+                <p
+                    class="text-xs text-slate-600"
+                >
+                    © منصة الكوتش — جميع الحقوق محفوظة
+                </p>
+            </footer>
+
+        </section>
+
+    </main>
+
+
+    <script type="module">
+
+        import {
+            getAuth,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+        import {
+            getDatabase,
+            ref,
+            get,
+            push,
+            set,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+
+        // ====================================================
+        // Firebase
+        // ====================================================
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD64Zup-c8pXmIeoRCUzSLtiKJYRfvAYbc",
+            authDomain: "abodaa.firebaseapp.com",
+            databaseURL: "https://abodaa-default-rtdb.firebaseio.com",
+            projectId: "abodaa",
+            storageBucket: "abodaa.firebasestorage.app",
+            messagingSenderId: "489477833785",
+            appId: "1:489477833785:web:cf7451889d7e7a5efdf9e8",
+            measurementId: "G-GQFLS5HEHZ"
+        };
+
+
+        // ====================================================
+        // DOM
+        // ====================================================
+
+        const loadingScreen =
+            document.getElementById("loadingScreen");
+
+        const app =
+            document.getElementById("app");
+
+        const coursesGrid =
+            document.getElementById("coursesGrid");
+
+        const emptyState =
+            document.getElementById("emptyState");
+
+        const errorState =
+            document.getElementById("errorState");
+
+        const errorMessage =
+            document.getElementById("errorMessage");
+
+        const retryButton =
+            document.getElementById("retryButton");
+
+        const coursesCount =
+            document.getElementById("coursesCount");
+
+        const coursesDescription =
+            document.getElementById("coursesDescription");
+
+        const studentNameHero =
+            document.getElementById("studentNameHero");
+
+        const backButton =
+            document.getElementById("backButton");
+
+        const homeButton =
+            document.getElementById("homeButton");
+
+        const toastContainer =
+            document.getElementById("toastContainer");
+
+
+        // ====================================================
+        // State
+        // ====================================================
+
+        let firebaseAuth = null;
+        let database = null;
+        let currentUser = null;
+        let currentStudent = null;
+
+
+        // ====================================================
+        // Helpers
+        // ====================================================
+
+        function escapeHTML(value) {
+            const div =
+                document.createElement("div");
+
+            div.textContent =
+                value === null ||
+                value === undefined
+                    ? ""
+                    : String(value);
+
+            return div.innerHTML;
+        }
+
+
+        function cleanText(
+            value,
+            fallback = ""
+        ) {
+            if (
+                value === null ||
+                value === undefined
+            ) {
+                return fallback;
+            }
+
+            return String(value).trim();
+        }
+
+
+        function showToast(
+            message,
+            type = "info"
+        ) {
+            const toast =
+                document.createElement("div");
+
+            let icon = "";
+
+            if (type === "success") {
+                icon = `
+                    <svg class="w-5 h-5 text-emerald-400 shrink-0"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M5 13l4 4L19 7"/>
+                    </svg>
+                `;
+            } else if (type === "error") {
+                icon = `
+                    <svg class="w-5 h-5 text-red-400 shrink-0"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M12 9v4"/>
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M12 17h.01"/>
+                    </svg>
+                `;
+            } else {
+                icon = `
+                    <svg class="w-5 h-5 text-blue-400 shrink-0"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M13 16h-1v-4h-1"/>
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M12 8h.01"/>
+                        <circle cx="12"
+                                cy="12"
+                                r="9"/>
+                    </svg>
                 `;
             }
+
+            toast.className =
+                "toast glass rounded-2xl px-4 py-3 flex items-center gap-3";
+
+            toast.innerHTML = `
+                ${icon}
+                <span class="text-sm text-slate-200 leading-6">
+                    ${escapeHTML(message)}
+                </span>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 4300);
         }
 
-        async function logContentView(subjectTitle) {
-            const studentName = localStorage.getItem('studentName') || 'طالب غير معروف';
-            const now = new Date().toLocaleString('ar-EG');
-            
-            const viewData = {
-                studentName: studentName,
-                contentTitle: `مادة الترم الأول: ${subjectTitle}`,
-                viewedAt: now
+
+        function hideLoading() {
+            loadingScreen.classList.add("hidden");
+            app.classList.remove("hidden");
+        }
+
+
+        function showError(message) {
+            coursesGrid.innerHTML = "";
+
+            emptyState.classList.add("hidden");
+
+            errorMessage.textContent =
+                message ||
+                "تعذر تحميل البيانات.";
+
+            errorState.classList.remove("hidden");
+
+            coursesDescription.textContent =
+                "تعذر تحميل المواد";
+
+            coursesCount.textContent = "0";
+        }
+
+
+        function resetCourseStates() {
+            errorState.classList.add("hidden");
+            emptyState.classList.add("hidden");
+            coursesGrid.innerHTML = "";
+        }
+
+
+        // ====================================================
+        // Firebase Initialization
+        // ====================================================
+
+        async function initializeFirebase() {
+
+            /*
+             * We first use the shared firebase-config.js
+             * if it is already loaded.
+             */
+
+            if (
+                window.AbdelnaseerFirebase &&
+                window.AbdelnaseerFirebase.auth &&
+                window.AbdelnaseerFirebase.database
+            ) {
+                firebaseAuth =
+                    window.AbdelnaseerFirebase.auth;
+
+                database =
+                    window.AbdelnaseerFirebase.database;
+
+                return;
+            }
+
+
+            /*
+             * Temporary compatibility fallback.
+             * The shared Firebase configuration will be
+             * finalized together with the other files.
+             */
+
+            const {
+                initializeApp
+            } = await import(
+                "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"
+            );
+
+            const appInstance =
+                initializeApp(firebaseConfig);
+
+            firebaseAuth =
+                getAuth(appInstance);
+
+            database =
+                getDatabase(appInstance);
+        }
+
+
+        // ====================================================
+        // Load Student
+        // ====================================================
+
+        async function loadCurrentStudent(user) {
+
+            if (!user) {
+                throw new Error(
+                    "لم يتم العثور على حساب مسجل."
+                );
+            }
+
+            const snapshot =
+                await get(
+                    ref(
+                        database,
+                        `students/${user.uid}`
+                    )
+                );
+
+            if (!snapshot.exists()) {
+                throw new Error(
+                    "بيانات الطالب غير موجودة."
+                );
+            }
+
+            const student =
+                snapshot.val();
+
+            const status =
+                String(
+                    student.status || ""
+                ).toLowerCase();
+
+            if (
+                status !== "approved" &&
+                status !== "active"
+            ) {
+                throw new Error(
+                    "حسابك غير مفعل حالياً."
+                );
+            }
+
+            currentStudent = {
+                ...student,
+                uid: user.uid,
+                email:
+                    user.email ||
+                    student.email ||
+                    ""
             };
 
+            studentNameHero.textContent =
+                cleanText(
+                    student.name,
+                    "الطالب"
+                );
+        }
+
+
+        // ====================================================
+        // Load Courses
+        // ====================================================
+
+        async function loadCourses() {
+
+            resetCourseStates();
+
+            coursesDescription.textContent =
+                "جاري تحميل المواد...";
+
+            const snapshot =
+                await get(
+                    ref(database, "courses")
+                );
+
+            if (!snapshot.exists()) {
+
+                coursesCount.textContent =
+                    "0";
+
+                coursesDescription.textContent =
+                    "لا توجد مواد متاحة حالياً";
+
+                emptyState.classList.remove(
+                    "hidden"
+                );
+
+                return;
+            }
+
+
+            const rawData =
+                snapshot.val();
+
+            const courses = [];
+
+
+            Object.entries(rawData)
+                .forEach(
+                    ([id, course]) => {
+
+                        if (
+                            !course ||
+                            typeof course !== "object"
+                        ) {
+                            return;
+                        }
+
+
+                        const term =
+                            String(
+                                course.term ??
+                                course.semester ??
+                                course.termNumber ??
+                                ""
+                            ).trim();
+
+
+                        /*
+                         * The old project uses term values
+                         * such as 1 / "1" / "الترم الأول".
+                         */
+
+                        const normalizedTerm =
+                            term
+                                .toLowerCase()
+                                .replace(/\s+/g, "");
+
+
+                        const isTermOne =
+                            normalizedTerm === "1" ||
+                            normalizedTerm === "01" ||
+                            normalizedTerm === "term1" ||
+                            normalizedTerm === "term01" ||
+                            normalizedTerm.includes(
+                                "الأول"
+                            ) ||
+                            normalizedTerm.includes(
+                                "الاول"
+                            );
+
+
+                        if (!isTermOne) {
+                            return;
+                        }
+
+
+                        const courseGrade =
+                            cleanText(
+                                course.grade ??
+                                course.level ??
+                                course.class ??
+                                ""
+                            );
+
+
+                        const studentGrade =
+                            cleanText(
+                                currentStudent?.grade ??
+                                currentStudent?.level ??
+                                currentStudent?.class ??
+                                ""
+                            );
+
+
+                        /*
+                         * Keep compatibility with the
+                         * previous database.
+                         *
+                         * If the course has no grade,
+                         * it remains available.
+                         */
+
+                        if (
+                            courseGrade &&
+                            studentGrade &&
+                            courseGrade !== studentGrade
+                        ) {
+                            return;
+                        }
+
+
+                        courses.push({
+                            id,
+                            ...course
+                        });
+                    }
+                );
+
+
+            courses.sort(
+                (a, b) => {
+
+                    const orderA =
+                        Number(
+                            a.order ??
+                            a.position ??
+                            9999
+                        );
+
+                    const orderB =
+                        Number(
+                            b.order ??
+                            b.position ??
+                            9999
+                        );
+
+                    return (
+                        orderA -
+                        orderB
+                    );
+                }
+            );
+
+
+            coursesCount.textContent =
+                String(courses.length);
+
+
+            if (!courses.length) {
+
+                coursesDescription.textContent =
+                    "لا توجد مواد للترم الأول";
+
+                emptyState.classList.remove(
+                    "hidden"
+                );
+
+                return;
+            }
+
+
+            coursesDescription.textContent =
+                `${courses.length} مادة متاحة لك`;
+
+
+            renderCourses(courses);
+        }
+
+
+        // ====================================================
+        // Render Courses
+        // ====================================================
+
+        function renderCourses(courses) {
+
+            coursesGrid.innerHTML = "";
+
+
+            courses.forEach(
+                (course, index) => {
+
+                    const id =
+                        cleanText(
+                            course.id
+                        );
+
+
+                    const title =
+                        cleanText(
+                            course.title ??
+                            course.name ??
+                            course.subject ??
+                            "مادة دراسية"
+                        );
+
+
+                    const description =
+                        cleanText(
+                            course.description ??
+                            course.desc ??
+                            "ابدأ دراسة المادة ومتابعة المحتوى التعليمي."
+                        );
+
+
+                    const teacher =
+                        cleanText(
+                            course.teacher ??
+                            course.instructor ??
+                            ""
+                        );
+
+
+                    const lessons =
+                        course.lessons ??
+                        course.lessonCount ??
+                        course.videos ??
+                        "";
+
+
+                    const card =
+                        document.createElement("article");
+
+                    card.className =
+                        "course-card glass rounded-[24px] overflow-hidden fade-in";
+
+                    card.style.animationDelay =
+                        `${Math.min(index * 60, 500)}ms`;
+
+
+                    card.innerHTML = `
+                        <div class="p-5 sm:p-6">
+
+                            <div class="flex items-start justify-between gap-4">
+
+                                <div
+                                    class="w-14 h-14 rounded-2xl subject-icon flex items-center justify-center shrink-0"
+                                >
+                                    <svg
+                                        class="w-7 h-7 text-blue-400"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.6"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M4 19.5A2.5 2.5 0 016.5 17H20"
+                                        />
+
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"
+                                        />
+                                    </svg>
+                                </div>
+
+
+                                <span
+                                    class="px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-400/10 text-blue-300 text-[11px] font-bold"
+                                >
+                                    ترم 01
+                                </span>
+
+                            </div>
+
+
+                            <h4
+                                class="mt-5 text-lg font-black leading-7"
+                            >
+                                ${escapeHTML(title)}
+                            </h4>
+
+
+                            <p
+                                class="mt-2 text-sm text-slate-500 leading-6 line-clamp-2 min-h-[48px]"
+                            >
+                                ${escapeHTML(description)}
+                            </p>
+
+
+                            <div
+                                class="flex flex-wrap items-center gap-3 mt-5"
+                            >
+
+                                ${
+                                    teacher
+                                        ? `
+                                            <span
+                                                class="text-xs text-slate-500 flex items-center gap-1.5"
+                                            >
+                                                <svg
+                                                    class="w-4 h-4"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="1.7"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"
+                                                    />
+                                                    <circle
+                                                        cx="9"
+                                                        cy="7"
+                                                        r="4"
+                                                    />
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        d="M22 21v-2a4 4 0 00-3-3.87"
+                                                    />
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        d="M16 3.13a4 4 0 010 7.75"
+                                                    />
+                                                </svg>
+
+                                                ${escapeHTML(teacher)}
+                                            </span>
+                                        `
+                                        : ""
+                                }
+
+
+                                ${
+                                    lessons !== ""
+                                        ? `
+                                            <span
+                                                class="text-xs text-slate-500 flex items-center gap-1.5"
+                                            >
+                                                <svg
+                                                    class="w-4 h-4"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="1.7"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <circle
+                                                        cx="12"
+                                                        cy="12"
+                                                        r="9"
+                                                    />
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        d="M12 7v5l3 2"
+                                                    />
+                                                </svg>
+
+                                                ${escapeHTML(lessons)}
+                                            </span>
+                                        `
+                                        : ""
+                                }
+
+                            </div>
+
+
+                            <button
+                                type="button"
+                                class="open-course mt-6 w-full rounded-xl bg-blue-500 hover:bg-blue-400 text-white font-bold py-3.5 transition flex items-center justify-center gap-2"
+                                data-course-id="${escapeHTML(id)}"
+                            >
+                                <span>
+                                    دخول المادة
+                                </span>
+
+                                <svg
+                                    class="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M9 5l7 7-7 7"
+                                    />
+                                </svg>
+                            </button>
+
+                        </div>
+                    `;
+
+
+                    const openButton =
+                        card.querySelector(
+                            ".open-course"
+                        );
+
+
+                    openButton.addEventListener(
+                        "click",
+                        () => {
+
+                            if (!id) {
+                                showToast(
+                                    "تعذر فتح المادة.",
+                                    "error"
+                                );
+
+                                return;
+                            }
+
+
+                            /*
+                             * The course ID is passed through
+                             * URL encoding only.
+                             */
+
+                            const safeId =
+                                encodeURIComponent(
+                                    id
+                                );
+
+
+                            window.location.href =
+                                `subject.html?id=${safeId}`;
+                        }
+                    );
+
+
+                    coursesGrid.appendChild(card);
+                }
+            );
+        }
+
+
+        // ====================================================
+        // Activity Logging
+        // ====================================================
+
+        async function logPageView() {
+
+            if (!currentUser) {
+                return;
+            }
+
             try {
-                await fetch(`${FIREBASE_URL}/content_views.json`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(viewData)
-                });
-            } catch (e) {
-                console.error("خطأ في تسجيل المشاهدة:", e);
+
+                const activityRef =
+                    push(
+                        ref(
+                            database,
+                            "content_views"
+                        )
+                    );
+
+
+                await set(
+                    activityRef,
+                    {
+                        uid: currentUser.uid,
+                        contentType: "term",
+                        contentTitle: "الترم الأول",
+                        term: 1,
+                        timestamp:
+                            serverTimestamp()
+                    }
+                );
+
+            } catch (error) {
+
+                /*
+                 * Activity logging must never prevent
+                 * the student from using the platform.
+                 */
+
+                console.warn(
+                    "Activity logging skipped:",
+                    error
+                );
             }
         }
+
+
+        // ====================================================
+        // Navigation
+        // ====================================================
+
+        function goHome() {
+            window.location.href =
+                "courses.html";
+        }
+
+
+        backButton.addEventListener(
+            "click",
+            () => {
+                if (
+                    document.referrer &&
+                    document.referrer.includes(
+                        "courses.html"
+                    )
+                ) {
+                    window.history.back();
+                } else {
+                    goHome();
+                }
+            }
+        );
+
+
+        homeButton.addEventListener(
+            "click",
+            goHome
+        );
+
+
+        retryButton.addEventListener(
+            "click",
+            async () => {
+
+                errorState.classList.add(
+                    "hidden"
+                );
+
+                try {
+                    await loadCourses();
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showError(
+                        "تعذر تحميل المواد. تأكد من اتصال الإنترنت وحاول مرة أخرى."
+                    );
+                }
+            }
+        );
+
+
+        // ====================================================
+        // Authentication
+        // ====================================================
+
+        async function startApp() {
+
+            try {
+
+                await initializeFirebase();
+
+
+                onAuthStateChanged(
+                    firebaseAuth,
+                    async (user) => {
+
+                        if (!user) {
+
+                            window.location.href =
+                                "index.html";
+
+                            return;
+                        }
+
+
+                        currentUser =
+                            user;
+
+
+                        try {
+
+                            await loadCurrentStudent(
+                                user
+                            );
+
+                            hideLoading();
+
+                            await loadCourses();
+
+                            await logPageView();
+
+                        } catch (error) {
+
+                            console.error(
+                                "Student initialization error:",
+                                error
+                            );
+
+                            hideLoading();
+
+                            showError(
+                                error.message ||
+                                "تعذر تحميل حساب الطالب."
+                            );
+
+
+                            showToast(
+                                error.message ||
+                                "تعذر تحميل حساب الطالب.",
+                                "error"
+                            );
+                        }
+                    }
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Application initialization failed:",
+                    error
+                );
+
+                hideLoading();
+
+                showError(
+                    "تعذر تشغيل المنصة حالياً. حاول تحديث الصفحة."
+                );
+            }
+        }
+
+
+        // ====================================================
+        // Start
+        // ====================================================
+
+        startApp();
+
     </script>
+
 </body>
-</html>
+                </html>
