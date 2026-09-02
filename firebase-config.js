@@ -1,223 +1,175 @@
 // ============================================================
-// Abdelnaseer Platform
-// Firebase Configuration & Shared Services
+// منصة الكوتش - Firebase Configuration
 // ============================================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+
 import {
-    getAuth,
-    setPersistence,
-    browserLocalPersistence
+  getAuth,
+  setPersistence,
+  browserLocalPersistence,
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
 import {
-    getDatabase,
-    ref,
-    get,
-    set,
-    update,
-    push,
-    remove,
-    onValue,
-    serverTimestamp
+  getDatabase,
+  ref,
+  get,
+  set,
+  update,
+  push,
+  remove,
+  onValue,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
-// ============================================================
-// Firebase Web App Configuration
-// ============================================================
+// ------------------------------------------------------------
+// Firebase Configuration
+// ------------------------------------------------------------
 
 const firebaseConfig = {
-    apiKey: "AIzaSyD64Zup-c8pXmIeoRCUzSLtiyKJRfvAYbc",
-    authDomain: "abodaa.firebaseapp.com",
-    databaseURL: "https://abodaa-default-rtdb.firebaseio.com",
-    projectId: "abodaa",
-    storageBucket: "abodaa.firebasestorage.app",
-    messagingSenderId: "489477833785",
-    appId: "1:489477833785:web:cf7451889d7e7a5efdf9e8",
-    measurementId: "G-GQFLS5HEHZ"
+  apiKey: "AIzaSyD64zup-c8pXmIeoRCUzSLtiKjYRfvAYbc",
+  authDomain: "abodaa.firebaseapp.com",
+  databaseURL: "https://abodaa-default-rtdb.firebaseio.com",
+  projectId: "abodaa",
+  storageBucket: "abodaa.firebasestorage.app",
+  messagingSenderId: "489477833785",
+  appId: "1:489477833785:web:cf7451889d7e7a5efdf9e8",
+  measurementId: "G-GQFLS5HEHZ"
 };
 
-// ============================================================
+// ------------------------------------------------------------
 // Initialize Firebase
-// ============================================================
+// ------------------------------------------------------------
 
 const app = initializeApp(firebaseConfig);
-
 const auth = getAuth(app);
-
 const database = getDatabase(app);
 
-// Keep the user signed in across page refreshes.
-await setPersistence(auth, browserLocalPersistence);
+// ------------------------------------------------------------
+// Authentication Persistence
+// ------------------------------------------------------------
 
-// ============================================================
+try {
+  await setPersistence(auth, browserLocalPersistence);
+} catch (error) {
+  console.error("Firebase persistence error:", error);
+}
+
+// ------------------------------------------------------------
 // Database Paths
-// ============================================================
+// ------------------------------------------------------------
 
-const DB_PATHS = Object.freeze({
-    students: "students",
-    courses: "courses",
-    quizzes: "quizzes",
-    quizResults: "quiz_results",
-    contentViews: "content_views",
-    notifications: "notifications",
-    settings: "settings"
-});
+const DB_PATHS = {
+  students: "students",
+  courses: "courses",
+  quizzes: "quizzes",
+  quizResults: "quiz_results",
+  contentViews: "content_views",
+  notifications: "notifications",
+  settings: "settings",
+  registrationRequests: "registration_requests",
+  admins: "admins"
+};
 
-// ============================================================
-// Authentication Helpers
-// ============================================================
+// ------------------------------------------------------------
+// Helpers
+// ------------------------------------------------------------
 
-function getCurrentUser() {
-    return auth.currentUser;
-}
-
-function isAuthenticated() {
-    return auth.currentUser !== null;
-}
-
-function waitForAuth() {
-    return new Promise((resolve) => {
-        const unsubscribe = auth.onAuthStateChanged((user) => {
-            unsubscribe();
-            resolve(user);
-        });
-    });
-}
-
-// ============================================================
-// Database Helpers
-// ============================================================
-
-function dbRef(path) {
-    return ref(database, path);
+function dbRef(path = "") {
+  return ref(database, path);
 }
 
 async function dbGet(path) {
-    const snapshot = await get(dbRef(path));
-    return snapshot.exists() ? snapshot.val() : null;
+  const snapshot = await get(dbRef(path));
+  return snapshot.exists() ? snapshot.val() : null;
 }
 
 async function dbSet(path, value) {
-    return set(dbRef(path), value);
+  return set(dbRef(path), value);
 }
 
 async function dbUpdate(path, value) {
-    return update(dbRef(path), value);
+  return update(dbRef(path), value);
 }
 
 async function dbPush(path, value) {
-    return push(dbRef(path), value);
+  const newRef = push(dbRef(path));
+  await set(newRef, value);
+
+  return {
+    key: newRef.key,
+    ref: newRef
+  };
 }
 
 async function dbRemove(path) {
-    return remove(dbRef(path));
+  return remove(dbRef(path));
 }
 
-function dbListen(path, callback) {
-    return onValue(dbRef(path), (snapshot) => {
-        callback(snapshot.exists() ? snapshot.val() : null);
+// ------------------------------------------------------------
+// Authentication Helpers
+// ------------------------------------------------------------
+
+function getCurrentUser() {
+  return auth.currentUser;
+}
+
+function waitForAuth() {
+  return new Promise((resolve) => {
+    let finished = false;
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (finished) return;
+
+      finished = true;
+      unsubscribe();
+      resolve(user);
     });
+  });
 }
 
-// ============================================================
-// Server Timestamp
-// ============================================================
-
-function getServerTimestamp() {
-    return serverTimestamp();
+async function logoutUser() {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error("Logout error:", error);
+  }
 }
 
-// ============================================================
-// Safe Local Storage Helpers
-// ============================================================
+// ------------------------------------------------------------
+// Export
+// ------------------------------------------------------------
 
-function storageGet(key) {
-    try {
-        return localStorage.getItem(key);
-    } catch (error) {
-        console.error("Storage read error:", error);
-        return null;
-    }
-}
+window.AbdelnaseerFirebase = {
+  app,
+  auth,
+  database,
 
-function storageSet(key, value) {
-    try {
-        localStorage.setItem(key, value);
-        return true;
-    } catch (error) {
-        console.error("Storage write error:", error);
-        return false;
-    }
-}
+  firebaseConfig,
 
-function storageRemove(key) {
-    try {
-        localStorage.removeItem(key);
-    } catch (error) {
-        console.error("Storage remove error:", error);
-    }
-}
+  DB_PATHS,
 
-// ============================================================
-// Application Constants
-// ============================================================
+  ref,
+  get,
+  set,
+  update,
+  push,
+  remove,
+  onValue,
+  serverTimestamp,
 
-const APP_CONFIG = Object.freeze({
-    name: "Abdelnaseer Platform",
-    version: "2.0.0",
+  dbRef,
+  dbGet,
+  dbSet,
+  dbUpdate,
+  dbPush,
+  dbRemove,
 
-    firebase: Object.freeze({
-        projectId: firebaseConfig.projectId,
-        databaseURL: firebaseConfig.databaseURL
-    }),
+  getCurrentUser,
+  waitForAuth,
+  logoutUser
+};
 
-    paths: DB_PATHS
-});
-
-// ============================================================
-// Global Export
-// ============================================================
-
-window.AbdelnaseerFirebase = Object.freeze({
-    app,
-    auth,
-    database,
-
-    firebaseConfig,
-    DB_PATHS,
-    APP_CONFIG,
-
-    getCurrentUser,
-    isAuthenticated,
-    waitForAuth,
-
-    dbRef,
-    dbGet,
-    dbSet,
-    dbUpdate,
-    dbPush,
-    dbRemove,
-    dbListen,
-
-    getServerTimestamp,
-
-    storageGet,
-    storageSet,
-    storageRemove
-});
-
-// ============================================================
-// Development Information
-// ============================================================
-
-if (
-    window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1"
-) {
-    console.log("==========================================");
-    console.log("Abdelnaseer Platform");
-    console.log("Version:", APP_CONFIG.version);
-    console.log("Firebase:", APP_CONFIG.firebase.projectId);
-    console.log("Firebase initialized successfully.");
-    console.log("==========================================");
-                   }
+console.log("منصة الكوتش - Firebase جاهز");
