@@ -1,0 +1,2049 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications | Abdelnaseer Academy</title>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+
+    <style>
+        :root {
+            --bg: #07080c;
+            --card: rgba(17, 19, 27, 0.86);
+            --card-solid: #11131b;
+            --border: rgba(255,255,255,0.08);
+            --text: #f5f5f7;
+            --muted: #9da3b4;
+            --gold: #d8aa55;
+            --gold-light: #f0ca78;
+            --danger: #ef6b73;
+            --success: #58c98b;
+            --shadow: 0 20px 60px rgba(0,0,0,0.35);
+            --sidebar-width: 270px;
+        }
+
+        body.light {
+            --bg: #f5f6f8;
+            --card: rgba(255,255,255,0.9);
+            --card-solid: #ffffff;
+            --border: rgba(20,25,35,0.09);
+            --text: #171923;
+            --muted: #687080;
+            --shadow: 0 20px 60px rgba(20,25,35,0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(
+                    circle at 15% 10%,
+                    rgba(216,170,85,0.09),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 80%,
+                    rgba(216,170,85,0.06),
+                    transparent 28%
+                ),
+                var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        button {
+            font: inherit;
+            cursor: pointer;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .app {
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: var(--sidebar-width);
+            background: rgba(10,12,18,0.88);
+            backdrop-filter: blur(18px);
+            border-right: 1px solid var(--border);
+            z-index: 1000;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            transition: transform .3s ease;
+        }
+
+        body.light .sidebar {
+            background: rgba(255,255,255,0.92);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 10px 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 18px;
+        }
+
+        .brand-mark {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            color: #111;
+            font-weight: 900;
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--gold-light),
+                    var(--gold)
+                );
+            box-shadow:
+                0 10px 25px rgba(216,170,85,0.18);
+        }
+
+        .brand-text strong {
+            display: block;
+            font-size: 15px;
+            letter-spacing: .3px;
+        }
+
+        .brand-text span {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            overflow-y: auto;
+            padding-right: 3px;
+        }
+
+        .nav a {
+            min-height: 46px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 14px;
+            border-radius: 13px;
+            color: var(--muted);
+            font-size: 13px;
+            transition: .2s ease;
+        }
+
+        .nav a:hover {
+            color: var(--text);
+            background: rgba(216,170,85,0.07);
+        }
+
+        .nav a.active {
+            color: var(--text);
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(216,170,85,0.16),
+                    rgba(216,170,85,0.05)
+                );
+            border: 1px solid rgba(216,170,85,0.14);
+        }
+
+        .nav-icon {
+            width: 25px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+        }
+
+        .logout-btn {
+            width: 100%;
+            height: 44px;
+            border-radius: 12px;
+            border: 1px solid rgba(239,107,115,0.16);
+            background: rgba(239,107,115,0.06);
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .main {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 76px;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: rgba(7,8,12,0.7);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        body.light .topbar {
+            background: rgba(245,246,248,0.75);
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .mobile-menu {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+        }
+
+        .page-title h1 {
+            font-size: 20px;
+        }
+
+        .page-title p {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            transition: .2s ease;
+        }
+
+        .icon-btn:hover {
+            border-color: rgba(216,170,85,0.35);
+            transform: translateY(-1px);
+        }
+
+        .content {
+            padding: 32px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            background:
+                radial-gradient(
+                    circle at 90% 10%,
+                    rgba(216,170,85,0.14),
+                    transparent 32%
+                ),
+                var(--card);
+            box-shadow: var(--shadow);
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--gold-light);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .hero h2 {
+            font-size: clamp(23px, 3vw, 32px);
+            line-height: 1.2;
+            margin-bottom: 9px;
+        }
+
+        .hero p {
+            color: var(--muted);
+            max-width: 720px;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .notification-summary {
+            display: grid;
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 26px;
+        }
+
+        .summary-card {
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            background: var(--card);
+            padding: 18px;
+        }
+
+        .summary-label {
+            color: var(--muted);
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+
+        .summary-value {
+            font-size: 24px;
+            font-weight: 900;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .section-head h3 {
+            font-size: 18px;
+        }
+
+        .section-head span {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .notifications-list {
+            display: grid;
+            gap: 13px;
+        }
+
+        .notification-card {
+            position: relative;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: var(--card);
+            padding: 19px;
+            transition: .25s ease;
+        }
+
+        .notification-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(216,170,85,0.22);
+        }
+
+        .notification-card.unread {
+            border-color: rgba(216,170,85,0.24);
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(216,170,85,0.07),
+                    var(--card)
+                );
+        }
+
+        .notification-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .notification-title-wrap {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .notification-icon {
+            flex: 0 0 auto;
+            width: 42px;
+            height: 42px;
+            border-radius: 13px;
+            display: grid;
+            place-items: center;
+            background: rgba(216,170,85,0.09);
+            color: var(--gold-light);
+            font-size: 18px;
+        }
+
+        .notification-title {
+            font-size: 15px;
+            line-height: 1.45;
+            margin-bottom: 5px;
+            word-break: break-word;
+        }
+
+        .notification-date {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .unread-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gold);
+            margin-top: 8px;
+            flex: 0 0 auto;
+            box-shadow: 0 0 0 4px rgba(216,170,85,0.08);
+        }
+
+        .notification-message {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+            margin-top: 15px;
+            padding-left: 54px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .notification-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 13px;
+            padding-left: 54px;
+            border-top: 1px solid var(--border);
+        }
+
+        .notification-type {
+            color: var(--gold-light);
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .7px;
+        }
+
+        .mark-read-btn {
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            border-radius: 10px;
+            min-height: 32px;
+            padding: 0 11px;
+            font-size: 10px;
+        }
+
+        .mark-read-btn:hover {
+            color: var(--text);
+            border-color: rgba(216,170,85,0.3);
+        }
+
+        .empty-state {
+            border: 1px dashed var(--border);
+            border-radius: 20px;
+            padding: 60px 20px;
+            text-align: center;
+            background: var(--card);
+        }
+
+        .empty-icon {
+            width: 60px;
+            height: 60px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 15px;
+            border-radius: 19px;
+            background: rgba(216,170,85,0.08);
+            color: var(--gold-light);
+            font-size: 25px;
+        }
+
+        .empty-state h4 {
+            font-size: 16px;
+            margin-bottom: 7px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+            max-width: 520px;
+            margin: auto;
+        }
+
+        .loader {
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(216,170,85,0.2);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 25px;
+            transform: translate(-50%, 120px);
+            z-index: 3000;
+            min-width: min(420px, calc(100% - 30px));
+            padding: 14px 17px;
+            border-radius: 13px;
+            border: 1px solid var(--border);
+            background: var(--card-solid);
+            box-shadow: var(--shadow);
+            color: var(--text);
+            font-size: 12px;
+            text-align: center;
+            transition: .3s ease;
+        }
+
+        .toast.show {
+            transform: translate(-50%, 0);
+        }
+
+        .toast.error {
+            border-color: rgba(239,107,115,0.3);
+        }
+
+        .toast.success {
+            border-color: rgba(88,201,139,0.3);
+        }
+
+        .mobile-overlay {
+            display: none;
+        }
+
+        @media (max-width: 850px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .mobile-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 950;
+                background: rgba(0,0,0,0.55);
+            }
+
+            .mobile-overlay.show {
+                display: block;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .content {
+                padding: 20px 16px 30px;
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .notification-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 22px;
+            }
+
+            .page-title p {
+                display: none;
+            }
+
+            .topbar {
+                height: 68px;
+            }
+
+            .notification-top {
+                gap: 8px;
+            }
+
+            .notification-message {
+                padding-left: 0;
+            }
+
+            .notification-footer {
+                padding-left: 0;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<div class="app">
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-mark">
+                A
+            </div>
+
+            <div class="brand-text">
+                <strong>
+                    Abdelnaseer Academy
+                </strong>
+
+                <span>
+                    Student Platform
+                </span>
+            </div>
+
+        </div>
+
+        <nav class="nav">
+
+            <a href="dashboard.html">
+                <span class="nav-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="courses.html">
+                <span class="nav-icon">▣</span>
+                <span>Courses</span>
+            </a>
+
+            <a href="summaries.html">
+                <span class="nav-icon">☰</span>
+                <span>Summaries</span>
+            </a>
+
+            <a href="videos.html">
+                <span class="nav-icon">▶</span>
+                <span>Videos</span>
+            </a>
+
+            <a href="files.html">
+                <span class="nav-icon">□</span>
+                <span>Files</span>
+            </a>
+
+            <a href="quizzes.html">
+                <span class="nav-icon">✓</span>
+                <span>Quizzes</span>
+            </a>
+
+            <a href="results.html">
+                <span class="nav-icon">◫</span>
+                <span>Results</span>
+            </a>
+
+            <a
+                href="notifications.html"
+                class="active"
+            >
+                <span class="nav-icon">◉</span>
+                <span>Notifications</span>
+            </a>
+
+            <a href="profile.html">
+                <span class="nav-icon">○</span>
+                <span>Profile</span>
+            </a>
+
+            <a href="support.html">
+                <span class="nav-icon">?</span>
+                <span>Support</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <button
+                class="logout-btn"
+                id="logoutBtn"
+                type="button"
+            >
+                Logout
+            </button>
+
+        </div>
+
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    class="mobile-menu"
+                    id="mobileMenu"
+                    type="button"
+                >
+                    ☰
+                </button>
+
+                <div class="page-title">
+
+                    <h1>
+                        Notifications
+                    </h1>
+
+                    <p>
+                        Stay updated with academy announcements
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="top-actions">
+
+                <button
+                    class="icon-btn"
+                    id="notificationsBtn"
+                    type="button"
+                    title="Notifications"
+                >
+                    ◉
+                </button>
+
+                <button
+                    class="icon-btn"
+                    id="themeBtn"
+                    type="button"
+                    title="Toggle theme"
+                >
+                    ◐
+                </button>
+
+            </div>
+
+        </header>
+
+        <section class="content">
+
+            <div class="hero">
+
+                <div class="hero-content">
+
+                    <div class="eyebrow">
+                        <span>●</span>
+                        Academy Updates
+                    </div>
+
+                    <h2 id="heroTitle">
+                        Your Notifications
+                    </h2>
+
+                    <p id="heroDescription">
+                        Important announcements, updates, and academy messages will appear here.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="notification-summary">
+
+                <div class="summary-card">
+
+                    <div class="summary-label">
+                        Total Notifications
+                    </div>
+
+                    <div
+                        class="summary-value"
+                        id="totalNotifications"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+                <div class="summary-card">
+
+                    <div class="summary-label">
+                        Unread
+                    </div>
+
+                    <div
+                        class="summary-value"
+                        id="unreadNotifications"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+                <div class="summary-card">
+
+                    <div class="summary-label">
+                        Latest Update
+                    </div>
+
+                    <div
+                        class="summary-value"
+                        id="latestNotification"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="section-head">
+
+                <h3>
+                    Latest Updates
+                </h3>
+
+                <span id="notificationCount">
+                    0 notifications
+                </span>
+
+            </div>
+
+            <div id="notificationsContainer">
+
+                <div class="loader">
+
+                    <span class="spinner"></span>
+
+                    Loading notifications...
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+<script>
+
+    const firebaseConfig = {
+
+        apiKey:
+            "AIzaSyD64zup-c8pXmIeoRCUZSLtiKjYRfvAYbc",
+
+        authDomain:
+            "abodaa.firebaseapp.com",
+
+        databaseURL:
+            "https://abodaa-default-rtdb.firebaseio.com",
+
+        projectId:
+            "abodaa",
+
+        storageBucket:
+            "abodaa.firebasestorage.app",
+
+        messagingSenderId:
+            "489477833785",
+
+        appId:
+            "1:489477833785:web:cf7451889d7e7a5efdf9e8",
+
+        measurementId:
+            "G-GQFLS5HEHZ"
+
+    };
+
+    if (!firebase.apps.length) {
+
+        firebase.initializeApp(
+            firebaseConfig
+        );
+
+    }
+
+    const database =
+        firebase.database();
+
+    let currentUser = null;
+
+    let notifications = [];
+
+    function readCurrentUser() {
+
+        const keys = [
+            "currentUser",
+            "student",
+            "currentStudent"
+        ];
+
+        for (const key of keys) {
+
+            const raw =
+                localStorage.getItem(key);
+
+            if (!raw) {
+                continue;
+            }
+
+            try {
+
+                const parsed =
+                    JSON.parse(raw);
+
+                if (
+                    parsed &&
+                    typeof parsed === "object"
+                ) {
+
+                    currentUser = parsed;
+
+                    return;
+
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "Invalid stored user:",
+                    key
+                );
+
+            }
+
+        }
+
+    }
+
+    function getStudentKey() {
+
+        if (
+            currentUser &&
+            currentUser.uid
+        ) {
+
+            return sanitizeKey(
+                currentUser.uid
+            );
+
+        }
+
+        if (
+            currentUser &&
+            currentUser.id
+        ) {
+
+            return sanitizeKey(
+                currentUser.id
+            );
+
+        }
+
+        if (
+            currentUser &&
+            currentUser.phone
+        ) {
+
+            return sanitizeKey(
+                currentUser.phone
+            );
+
+        }
+
+        return "guest";
+
+    }
+
+    function sanitizeKey(value) {
+
+        return String(value)
+            .replace(
+                /[.#$[\]/]/g,
+                "_"
+            )
+            .substring(
+                0,
+                100
+            );
+
+    }
+
+    function normalizeList(value) {
+
+        if (!value) {
+            return [];
+        }
+
+        if (Array.isArray(value)) {
+
+            return value.map(
+                (item, index) => {
+
+                    return {
+                        id: String(index),
+                        ...(item || {})
+                    };
+
+                }
+            );
+
+        }
+
+        if (
+            typeof value === "object"
+        ) {
+
+            return Object.entries(value)
+                .map(
+                    ([id, item]) => {
+
+                        return {
+                            id,
+                            ...(item || {})
+                        };
+
+                    }
+                );
+
+        }
+
+        return [];
+
+    }
+
+    function normalizeNotification(
+        id,
+        data
+    ) {
+
+        const item =
+            data || {};
+
+        return {
+
+            id,
+
+            title:
+                item.title ||
+                item.name ||
+                "Academy Notification",
+
+            message:
+                item.message ||
+                item.body ||
+                item.description ||
+                "",
+
+            type:
+                item.type ||
+                item.category ||
+                "General",
+
+            target:
+                item.target ||
+                item.audience ||
+                "all",
+
+            grade:
+                item.grade ||
+                item.year ||
+                "",
+
+            term:
+                item.term ||
+                "",
+
+            published:
+                item.published !== false,
+
+            createdAt:
+                item.createdAt ||
+                item.timestamp ||
+                item.date ||
+                0,
+
+            read:
+                Boolean(
+                    item.read
+                )
+
+        };
+
+    }
+
+    function getCurrentGrade() {
+
+        if (!currentUser) {
+            return "";
+        }
+
+        return String(
+            currentUser.grade ||
+            currentUser.year ||
+            currentUser.level ||
+            ""
+        ).toLowerCase();
+
+    }
+
+    function shouldShowNotification(
+        notification
+    ) {
+
+        if (
+            notification.published === false
+        ) {
+
+            return false;
+
+        }
+
+        const currentGrade =
+            getCurrentGrade();
+
+        const target =
+            String(
+                notification.target ||
+                "all"
+            ).toLowerCase();
+
+        if (
+            target !== "all" &&
+            target !== "students" &&
+            target !== "student"
+        ) {
+
+            if (
+                currentUser &&
+                currentUser.uid &&
+                target ===
+                    String(
+                        currentUser.uid
+                    ).toLowerCase()
+            ) {
+
+                return true;
+
+            }
+
+            if (
+                currentUser &&
+                currentUser.id &&
+                target ===
+                    String(
+                        currentUser.id
+                    ).toLowerCase()
+            ) {
+
+                return true;
+
+            }
+
+            return false;
+
+        }
+
+        if (
+            notification.grade &&
+            currentGrade &&
+            String(
+                notification.grade
+            ).toLowerCase() !== currentGrade
+        ) {
+
+            return false;
+
+        }
+
+        return true;
+
+    }
+
+    function getTimestamp(value) {
+
+        if (!value) {
+            return 0;
+        }
+
+        if (
+            typeof value === "number"
+        ) {
+
+            return value;
+
+        }
+
+        const parsed =
+            new Date(value).getTime();
+
+        return Number.isFinite(parsed)
+            ? parsed
+            : 0;
+
+    }
+
+    function formatDate(value) {
+
+        const timestamp =
+            getTimestamp(value);
+
+        if (!timestamp) {
+            return "Date not available";
+        }
+
+        try {
+
+            return new Intl.DateTimeFormat(
+                "en-US",
+                {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
+            ).format(
+                new Date(timestamp)
+            );
+
+        } catch (error) {
+
+            return "Date not available";
+
+        }
+
+    }
+
+    function createElement(
+        tag,
+        className,
+        text
+    ) {
+
+        const element =
+            document.createElement(tag);
+
+        if (className) {
+            element.className =
+                className;
+        }
+
+        if (
+            text !== undefined
+        ) {
+
+            element.textContent =
+                text;
+
+        }
+
+        return element;
+
+    }
+
+    function renderNotifications() {
+
+        const container =
+            document.getElementById(
+                "notificationsContainer"
+            );
+
+        container.innerHTML = "";
+
+        const visible =
+            notifications
+                .filter(
+                    shouldShowNotification
+                )
+                .sort(
+                    (a, b) =>
+                        getTimestamp(
+                            b.createdAt
+                        ) -
+                        getTimestamp(
+                            a.createdAt
+                        )
+                );
+
+        updateSummary(
+            visible
+        );
+
+        if (!visible.length) {
+
+            const empty =
+                createElement(
+                    "div",
+                    "empty-state"
+                );
+
+            const icon =
+                createElement(
+                    "div",
+                    "empty-icon",
+                    "◉"
+                );
+
+            const title =
+                createElement(
+                    "h4",
+                    "",
+                    "No notifications"
+                );
+
+            const text =
+                createElement(
+                    "p",
+                    "",
+                    "There are no announcements or updates available for you right now."
+                );
+
+            empty.appendChild(icon);
+            empty.appendChild(title);
+            empty.appendChild(text);
+
+            container.appendChild(empty);
+
+            return;
+
+        }
+
+        const list =
+            createElement(
+                "div",
+                "notifications-list"
+            );
+
+        visible.forEach(
+            notification => {
+
+                const card =
+                    createElement(
+                        "article",
+                        `notification-card ${
+                            notification.read
+                                ? ""
+                                : "unread"
+                        }`
+                    );
+
+                const top =
+                    createElement(
+                        "div",
+                        "notification-top"
+                    );
+
+                const titleWrap =
+                    createElement(
+                        "div",
+                        "notification-title-wrap"
+                    );
+
+                const icon =
+                    createElement(
+                        "div",
+                        "notification-icon",
+                        getNotificationIcon(
+                            notification.type
+                        )
+                    );
+
+                const titleArea =
+                    createElement(
+                        "div"
+                    );
+
+                const title =
+                    createElement(
+                        "h4",
+                        "notification-title",
+                        notification.title
+                    );
+
+                const date =
+                    createElement(
+                        "div",
+                        "notification-date",
+                        formatDate(
+                            notification.createdAt
+                        )
+                    );
+
+                titleArea.appendChild(
+                    title
+                );
+
+                titleArea.appendChild(
+                    date
+                );
+
+                titleWrap.appendChild(
+                    icon
+                );
+
+                titleWrap.appendChild(
+                    titleArea
+                );
+
+                top.appendChild(
+                    titleWrap
+                );
+
+                if (
+                    !notification.read
+                ) {
+
+                    const dot =
+                        createElement(
+                            "span",
+                            "unread-dot"
+                        );
+
+                    top.appendChild(
+                        dot
+                    );
+
+                }
+
+                const message =
+                    createElement(
+                        "div",
+                        "notification-message",
+                        notification.message
+                    );
+
+                const footer =
+                    createElement(
+                        "div",
+                        "notification-footer"
+                    );
+
+                const type =
+                    createElement(
+                        "span",
+                        "notification-type",
+                        notification.type
+                    );
+
+                footer.appendChild(
+                    type
+                );
+
+                if (
+                    !notification.read
+                ) {
+
+                    const readButton =
+                        createElement(
+                            "button",
+                            "mark-read-btn",
+                            "Mark as read"
+                        );
+
+                    readButton.type =
+                        "button";
+
+                    readButton.addEventListener(
+                        "click",
+                        () =>
+                            markAsRead(
+                                notification
+                            )
+                    );
+
+                    footer.appendChild(
+                        readButton
+                    );
+
+                }
+
+                card.appendChild(
+                    top
+                );
+
+                if (
+                    notification.message
+                ) {
+
+                    card.appendChild(
+                        message
+                    );
+
+                }
+
+                card.appendChild(
+                    footer
+                );
+
+                list.appendChild(
+                    card
+                );
+
+            }
+        );
+
+        container.appendChild(
+            list
+        );
+
+    }
+
+    function getNotificationIcon(
+        type
+    ) {
+
+        const value =
+            String(
+                type || ""
+            ).toLowerCase();
+
+        if (
+            value.includes("quiz") ||
+            value.includes("exam")
+        ) {
+
+            return "✓";
+
+        }
+
+        if (
+            value.includes("course") ||
+            value.includes("content")
+        ) {
+
+            return "▣";
+
+        }
+
+        if (
+            value.includes("video")
+        ) {
+
+            return "▶";
+
+        }
+
+        if (
+            value.includes("file") ||
+            value.includes("pdf")
+        ) {
+
+            return "□";
+
+        }
+
+        if (
+            value.includes("important") ||
+            value.includes("alert")
+        ) {
+
+            return "!";
+
+        }
+
+        return "◉";
+
+    }
+
+    function updateSummary(
+        visible
+    ) {
+
+        const unread =
+            visible.filter(
+                item =>
+                    !item.read
+            );
+
+        const latest =
+            visible.length
+                ? visible[0]
+                : null;
+
+        document.getElementById(
+            "totalNotifications"
+        ).textContent =
+            visible.length;
+
+        document.getElementById(
+            "unreadNotifications"
+        ).textContent =
+            unread.length;
+
+        document.getElementById(
+            "latestNotification"
+        ).textContent =
+            latest
+                ? "New"
+                : "—";
+
+        document.getElementById(
+            "notificationCount"
+        ).textContent =
+            `${visible.length} ${
+                visible.length === 1
+                    ? "notification"
+                    : "notifications"
+            }`;
+
+    }
+
+    async function markAsRead(
+        notification
+    ) {
+
+        const studentKey =
+            getStudentKey();
+
+        try {
+
+            await database
+                .ref(
+                    `notificationReads/${studentKey}/${notification.id}`
+                )
+                .set({
+                    read: true,
+                    readAt:
+                        firebase.database
+                            .ServerValue
+                            .TIMESTAMP
+                });
+
+            notification.read =
+                true;
+
+            renderNotifications();
+
+            showToast(
+                "Notification marked as read.",
+                "success"
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            showToast(
+                "Unable to update notification.",
+                "error"
+            );
+
+        }
+
+    }
+
+    function loadReadStates(
+        list
+    ) {
+
+        const studentKey =
+            getStudentKey();
+
+        database
+            .ref(
+                `notificationReads/${studentKey}`
+            )
+            .on(
+                "value",
+                snapshot => {
+
+                    const data =
+                        snapshot.val() || {};
+
+                    list.forEach(
+                        notification => {
+
+                            if (
+                                data[
+                                    notification.id
+                                ] &&
+                                data[
+                                    notification.id
+                                ].read === true
+                            ) {
+
+                                notification.read =
+                                    true;
+
+                            }
+
+                        }
+                    );
+
+                    renderNotifications();
+
+                },
+                error => {
+
+                    console.error(
+                        error
+                    );
+
+                }
+            );
+
+    }
+
+    function loadNotifications() {
+
+        database
+            .ref("notifications")
+            .on(
+                "value",
+                snapshot => {
+
+                    notifications = [];
+
+                    const data =
+                        snapshot.val();
+
+                    if (data) {
+
+                        normalizeList(
+                            data
+                        ).forEach(
+                            item => {
+
+                                notifications.push(
+                                    normalizeNotification(
+                                        item.id,
+                                        item
+                                    )
+                                );
+
+                            }
+                        );
+
+                    }
+
+                    loadReadStates(
+                        notifications
+                    );
+
+                    renderNotifications();
+
+                },
+                error => {
+
+                    console.error(
+                        error
+                    );
+
+                    renderError();
+
+                    showToast(
+                        "Unable to load notifications.",
+                        "error"
+                    );
+
+                }
+            );
+
+    }
+
+    function renderError() {
+
+        const container =
+            document.getElementById(
+                "notificationsContainer"
+            );
+
+        container.innerHTML = "";
+
+        const empty =
+            createElement(
+                "div",
+                "empty-state"
+            );
+
+        const icon =
+            createElement(
+                "div",
+                "empty-icon",
+                "!"
+            );
+
+        const title =
+            createElement(
+                "h4",
+                "",
+                "Unable to load notifications"
+            );
+
+        const text =
+            createElement(
+                "p",
+                "",
+                "Please check your connection and Firebase permissions, then try again."
+            );
+
+        empty.appendChild(
+            icon
+        );
+
+        empty.appendChild(
+            title
+        );
+
+        empty.appendChild(
+            text
+        );
+
+        container.appendChild(
+            empty
+        );
+
+    }
+
+    function setupTheme() {
+
+        const savedTheme =
+            localStorage.getItem(
+                "abdelnaseer_theme"
+            );
+
+        if (
+            savedTheme === "light"
+        ) {
+
+            document.body.classList.add(
+                "light"
+            );
+
+        }
+
+    }
+
+    function toggleTheme() {
+
+        document.body.classList.toggle(
+            "light"
+        );
+
+        localStorage.setItem(
+            "abdelnaseer_theme",
+            document.body.classList.contains(
+                "light"
+            )
+                ? "light"
+                : "dark"
+        );
+
+    }
+
+    function setupMobileMenu() {
+
+        const sidebar =
+            document.getElementById(
+                "sidebar"
+            );
+
+        const overlay =
+            document.getElementById(
+                "mobileOverlay"
+            );
+
+        document
+            .getElementById(
+                "mobileMenu"
+            )
+            .addEventListener(
+                "click",
+                () => {
+
+                    sidebar.classList.add(
+                        "open"
+                    );
+
+                    overlay.classList.add(
+                        "show"
+                    );
+
+                }
+            );
+
+        overlay.addEventListener(
+            "click",
+            () => {
+
+                sidebar.classList.remove(
+                    "open"
+                );
+
+                overlay.classList.remove(
+                    "show"
+                );
+
+            }
+        );
+
+        document
+            .querySelectorAll(
+                ".nav a"
+            )
+            .forEach(
+                link => {
+
+                    link.addEventListener(
+                        "click",
+                        () => {
+
+                            sidebar.classList.remove(
+                                "open"
+                            );
+
+                            overlay.classList.remove(
+                                "show"
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+    }
+
+    function setupLogout() {
+
+        document
+            .getElementById(
+                "logoutBtn"
+            )
+            .addEventListener(
+                "click",
+                () => {
+
+                    [
+                        "currentUser",
+                        "student",
+                        "currentStudent"
+                    ].forEach(
+                        key => {
+
+                            localStorage.removeItem(
+                                key
+                            );
+
+                        }
+                    );
+
+                    window.location.href =
+                        "login.html";
+
+                }
+            );
+
+    }
+
+    function setupNotificationsButton() {
+
+        document
+            .getElementById(
+                "notificationsBtn"
+            )
+            .addEventListener(
+                "click",
+                () => {
+
+                    window.location.href =
+                        "notifications.html";
+
+                }
+            );
+
+    }
+
+    readCurrentUser();
+
+    setupTheme();
+
+    setupMobileMenu();
+
+    setupLogout();
+
+    setupNotificationsButton();
+
+    loadNotifications();
+
+</script>
+
+</body>
+</html>
