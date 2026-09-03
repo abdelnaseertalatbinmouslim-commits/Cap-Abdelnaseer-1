@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0d12">
+    <meta name="description" content="لوحة التحكم الخاصة بك في منصة الكوتش">
+    <title>لوحة التحكم | منصة الكوتش</title>
+
+    <link rel="icon" type="image/jpeg" href="1783950091830.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+    <!-- Background -->
+    <div class="background-decoration" aria-hidden="true">
+        <div class="background-orb background-orb-one"></div>
+        <div class="background-orb background-orb-two"></div>
+        <div class="background-grid"></div>
+        <div class="background-noise"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-header" id="siteHeader">
+        <div class="container header-container">
+
+            <a href="dashboard.html" class="brand" aria-label="منصة الكوتش">
+                <span class="brand-mark">C</span>
+                <span class="brand-text">منصة الكوتش</span>
+            </a>
+
+            <nav class="desktop-nav" aria-label="التنقل الرئيسي">
+                <a href="dashboard.html" class="active">الرئيسية</a>
+                <a href="courses.html">المقررات</a>
+                <a href="files.html">الملفات</a>
+                <a href="videos.html">الفيديوهات</a>
+                <a href="quizzes.html">الاختبارات</a>
+                <a href="results.html">النتائج</a>
+            </nav>
+
+            <div class="header-actions">
+
+                <button
+                    type="button"
+                    class="theme-toggle"
+                    id="themeToggle"
+                    aria-label="تغيير المظهر"
+                    title="تغيير المظهر"
+                >
+                    <span class="theme-toggle-icon">☾</span>
+                </button>
+
+                <a href="notifications.html" class="header-login-button dashboard-notification-link">
+                    الإشعارات
+                    <span
+                        id="notificationBadge"
+                        class="notification-badge"
+                        style="display:none;"
+                    >0</span>
+                </a>
+
+                <a href="profile.html" class="header-register-button">
+                    الملف الشخصي
+                </a>
+
+                <button
+                    type="button"
+                    class="mobile-menu-toggle"
+                    id="mobileMenuToggle"
+                    aria-label="فتح القائمة"
+                    aria-expanded="false"
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+            </div>
+        </div>
+
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="dashboard.html" class="active">الرئيسية</a>
+            <a href="courses.html">المقررات</a>
+            <a href="files.html">الملفات</a>
+            <a href="videos.html">الفيديوهات</a>
+            <a href="quizzes.html">الاختبارات</a>
+            <a href="results.html">النتائج</a>
+            <a href="notifications.html">الإشعارات</a>
+            <a href="profile.html">الملف الشخصي</a>
+            <a href="support.html">الدعم والمساعدة</a>
+        </div>
+    </header>
+
+
+    <main>
+
+        <!-- Dashboard Hero -->
+        <section class="hero-section dashboard-hero">
+            <div class="container">
+
+                <div class="hero-content reveal">
+
+                    <span class="section-kicker">DASHBOARD</span>
+
+                    <h1>
+                        أهلاً بك
+                        <span id="studentName">...</span>
+                    </h1>
+
+                    <p id="studentWelcome">
+                        سعيدين بوجودك معانا في منصة الكوتش.
+                        تابع دراستك، اختباراتك ونتائجك من مكان واحد.
+                    </p>
+
+                    <div class="hero-actions">
+
+                        <a href="courses.html" class="modal-submit-button">
+                            استكشف المقررات
+                        </a>
+
+                        <a href="quizzes.html" class="auth-back-link dashboard-secondary-action">
+                            الاختبارات
+                            <span>←</span>
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div class="hero-visual reveal">
+
+                    <div class="visual-glow"></div>
+
+                    <div class="profile-orbit orbit-one"></div>
+                    <div class="profile-orbit orbit-two"></div>
+
+                    <div class="profile-image-wrap">
+                        <div class="profile-image-ring ring-one"></div>
+                        <div class="profile-image-ring ring-two"></div>
+
+                        <img
+                            src="1783950091830.jpg"
+                            alt="منصة الكوتش"
+                            class="profile-image hero-image"
+                        >
+
+                        <div class="profile-status">
+                            <span></span>
+                            متصل الآن
+                        </div>
+                    </div>
+
+                    <div class="profile-floating-card card-one">
+                        <span class="floating-icon">📚</span>
+                        <div>
+                            <strong id="heroCoursesCount">0</strong>
+                            <small>مقررات</small>
+                        </div>
+                    </div>
+
+                    <div class="profile-floating-card card-two">
+                        <span class="floating-icon">✓</span>
+                        <div>
+                            <strong id="heroQuizCount">0</strong>
+                            <small>اختبارات</small>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- Student Information -->
+        <section class="dashboard-section">
+            <div class="container">
+
+                <div class="section-heading reveal">
+                    <span class="section-kicker">MY ACCOUNT</span>
+                    <h2>بياناتي</h2>
+                    <p>معلومات حسابك الدراسي الحالية.</p>
+                </div>
+
+                <div class="dashboard-grid">
+
+                    <article class="dashboard-card reveal">
+                        <div class="dashboard-card-icon">👤</div>
+                        <div class="dashboard-card-content">
+                            <span>الاسم</span>
+                            <strong id="infoName">—</strong>
+                        </div>
+                    </article>
+
+                    <article class="dashboard-card reveal">
+                        <div class="dashboard-card-icon">🎓</div>
+                        <div class="dashboard-card-content">
+                            <span>الفرقة الدراسية</span>
+                            <strong id="infoGrade">—</strong>
+                        </div>
+                    </article>
+
+                    <article class="dashboard-card reveal">
+                        <div class="dashboard-card-icon">📱</div>
+                        <div class="dashboard-card-content">
+                            <span>رقم الهاتف</span>
+                            <strong id="infoPhone">—</strong>
+                        </div>
+                    </article>
+
+                    <article class="dashboard-card reveal">
+                        <div class="dashboard-card-icon">✉</div>
+                        <div class="dashboard-card-content">
+                            <span>البريد الإلكتروني</span>
+                            <strong id="infoEmail">—</strong>
+                        </div>
+                    </article>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- Statistics -->
+        <section class="dashboard-section">
+            <div class="container">
+
+                <div class="section-heading reveal">
+                    <span class="section-kicker">STATISTICS</span>
+                    <h2>ملخص دراستك</h2>
+                    <p>إحصائياتك الحالية من بيانات المنصة.</p>
+                </div>
+
+                <div class="dashboard-stats-grid">
+
+                    <article class="dashboard-stat-card reveal">
+                        <span class="dashboard-stat-icon">📚</span>
+                        <strong id="statCourses">0</strong>
+                        <span>المقررات</span>
+                    </article>
+
+                    <article class="dashboard-stat-card reveal">
+                        <span class="dashboard-stat-icon">📄</span>
+                        <strong id="statFiles">0</strong>
+                        <span>الملفات</span>
+                    </article>
+
+                    <article class="dashboard-stat-card reveal">
+                        <span class="dashboard-stat-icon">🎥</span>
+                        <strong id="statVideos">0</strong>
+                        <span>الفيديوهات</span>
+                    </article>
+
+                    <article class="dashboard-stat-card reveal">
+                        <span class="dashboard-stat-icon">📝</span>
+                        <strong id="statQuizzes">0</strong>
+                        <span>الاختبارات</span>
+                    </article>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- Progress -->
+        <section class="dashboard-section">
+            <div class="container">
+
+                <div class="dashboard-two-column">
+
+                    <article class="dashboard-panel reveal">
+
+                        <div class="dashboard-panel-header">
+                            <div>
+                                <span class="section-kicker">PROGRESS</span>
+                                <h2>تقدمك</h2>
+                            </div>
+                        </div>
+
+                        <div class="progress-stat">
+
+                            <div class="progress-stat-top">
+                                <span>نسبة الإنجاز</span>
+                                <strong id="progressPercentage">0%</strong>
+                            </div>
+
+                            <div class="progress-bar">
+                                <span
+                                    id="progressBar"
+                                    style="width:0%;"
+                                ></span>
+                            </div>
+
+                            <p id="progressDescription">
+                                ابدأ المذاكرة والاختبارات لمتابعة تقدمك.
+                            </p>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="dashboard-panel reveal">
+
+                        <div class="dashboard-panel-header">
+                            <div>
+                                <span class="section-kicker">QUICK ACCESS</span>
+                                <h2>الوصول السريع</h2>
+                            </div>
+                        </div>
+
+                        <div class="quick-links">
+
+                            <a href="courses.html" class="quick-link">
+                                <span class="quick-link-icon">📚</span>
+                                <span>
+                                    <strong>المقررات</strong>
+                                    <small>شاهد المواد الدراسية</small>
+                                </span>
+                                <span class="quick-arrow">←</span>
+                            </a>
+
+                            <a href="files.html" class="quick-link">
+                                <span class="quick-link-icon">📄</span>
+                                <span>
+                                    <strong>الملفات</strong>
+                                    <small>المحاضرات والمذكرات</small>
+                                </span>
+                                <span class="quick-arrow">←</span>
+                            </a>
+
+                            <a href="videos.html" class="quick-link">
+                                <span class="quick-link-icon">🎥</span>
+                                <span>
+                                    <strong>الفيديوهات</strong>
+                                    <small>المحتوى المرئي</small>
+                                </span>
+                                <span class="quick-arrow">←</span>
+                            </a>
+
+                            <a href="quizzes.html" class="quick-link">
+                                <span class="quick-link-icon">📝</span>
+                                <span>
+                                    <strong>الاختبارات</strong>
+                                    <small>اختبر معلوماتك</small>
+                                </span>
+                                <span class="quick-arrow">←</span>
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- Recent Notifications -->
+        <section class="dashboard-section">
+            <div class="container">
+
+                <div class="section-heading reveal">
+                    <span class="section-kicker">NOTIFICATIONS</span>
+                    <h2>آخر الإشعارات</h2>
+                    <p>تابع أحدث التنبيهات المهمة من المنصة.</p>
+                </div>
+
+                <div
+                    id="notificationsList"
+                    class="dashboard-notifications-list reveal"
+                >
+                    <div class="dashboard-empty-state">
+                        جاري تحميل الإشعارات...
+                    </div>
+                </div>
+
+                <div class="dashboard-section-action reveal">
+                    <a href="notifications.html" class="auth-back-link">
+                        عرض كل الإشعارات
+                        <span>←</span>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- Final CTA -->
+        <section class="dashboard-section dashboard-final-section">
+            <div class="container">
+
+                <div class="dashboard-cta reveal">
+
+                    <div>
+                        <span class="section-kicker">KEEP GOING</span>
+                        <h2>جاهز تكمل مذاكرتك؟</h2>
+                        <p>
+                            اختار المادة اللي عايز تذاكرها وابدأ من حيث توقفت.
+                        </p>
+                    </div>
+
+                    <a href="courses.html" class="modal-submit-button">
+                        الذهاب للمقررات
+                    </a>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- Toast -->
+    <div
+        id="toastContainer"
+        class="toast-container"
+        aria-live="polite"
+        aria-atomic="true"
+    ></div>
+
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+    <script src="firebase-auth.js"></script>
+    <script src="firebase-database.js"></script>
+    <script src="firebase-content.js"></script>
+    <script src="firebase-features.js"></script>
+
+
+    <script>
+        "use strict";
+
+        const THEME_KEY = "coach_platform_theme";
+
+        let dashboardStudent = null;
+        let dashboardData = null;
+
+
+        /* =========================
+           Theme
+        ========================= */
+
+        function applyTheme(theme) {
+            const safeTheme = theme === "light" ? "light" : "dark";
+
+            document.documentElement.setAttribute("data-theme", safeTheme);
+
+            document.body.classList.toggle(
+                "light-theme",
+                safeTheme === "light"
+            );
+
+            document.body.classList.toggle(
+                "dark-theme",
+                safeTheme === "dark"
+            );
+
+            const button = document.getElementById("themeToggle");
+
+            if (button) {
+                const icon = button.querySelector(".theme-toggle-icon");
+
+                if (icon) {
+                    icon.textContent = safeTheme === "dark" ? "☀" : "☾";
+                }
+            }
+
+            try {
+                localStorage.setItem(THEME_KEY, safeTheme);
+            } catch (error) {
+                console.warn("Theme storage unavailable.", error);
+            }
+        }
+
+
+        function initializeTheme() {
+            let savedTheme = "dark";
+
+            try {
+                savedTheme = localStorage.getItem(THEME_KEY) || "dark";
+            } catch (error) {
+                savedTheme = "dark";
+            }
+
+            applyTheme(savedTheme);
+
+            const button = document.getElementById("themeToggle");
+
+            if (button) {
+                button.addEventListener("click", function () {
+                    const current =
+                        document.documentElement.getAttribute("data-theme") ||
+                        "dark";
+
+                    applyTheme(current === "dark" ? "light" : "dark");
+                });
+            }
+        }
+
+
+        /* =========================
+           Mobile Menu
+        ========================= */
+
+        function initializeMobileMenu() {
+            const toggle = document.getElementById("mobileMenuToggle");
+            const menu = document.getElementById("mobileMenu");
+
+            if (!toggle || !menu) {
+                return;
+            }
+
+            toggle.addEventListener("click", function () {
+                const isOpen =
+                    toggle.getAttribute("aria-expanded") === "true";
+
+                toggle.setAttribute(
+                    "aria-expanded",
+                    String(!isOpen)
+                );
+
+                menu.classList.toggle("active", !isOpen);
+            });
+
+            menu.querySelectorAll("a").forEach(function (link) {
+                link.addEventListener("click", function () {
+                    toggle.setAttribute("aria-expanded", "false");
+                    menu.classList.remove("active");
+                });
+            });
+        }
+
+
+        /* =========================
+           Helpers
+        ========================= */
+
+        function safeText(value, fallback = "—") {
+            if (
+                value === null ||
+                value === undefined ||
+                String(value).trim() === ""
+            ) {
+                return fallback;
+            }
+
+            return String(value);
+        }
+
+
+        function setText(id, value, fallback = "—") {
+            const element = document.getElementById(id);
+
+            if (!element) {
+                return;
+            }
+
+            element.textContent = safeText(value, fallback);
+        }
+
+
+        function normalizeNumber(value) {
+            const number = Number(value);
+
+            return Number.isFinite(number) ? number : 0;
+        }
+
+
+        function getGradeLabel(student) {
+            if (!student) {
+                return "—";
+            }
+
+            return (
+                student.grade ||
+                student.year ||
+                student.level ||
+                student.class ||
+                student.academicYear ||
+                "—"
+            );
+        }
+
+
+        function getStudentName(student, user) {
+            return (
+                student?.name ||
+                student?.studentName ||
+                student?.fullName ||
+                user?.displayName ||
+                "الطالب"
+            );
+        }
+
+
+        function showToast(message, type = "info") {
+            const container =
+                document.getElementById("toastContainer");
+
+            if (!container) {
+                return;
+            }
+
+            const toast = document.createElement("div");
+
+            toast.className = "toast toast-" + type;
+            toast.textContent = message;
+
+            container.appendChild(toast);
+
+            window.setTimeout(function () {
+                toast.classList.add("show");
+            }, 20);
+
+            window.setTimeout(function () {
+                toast.classList.remove("show");
+
+                window.setTimeout(function () {
+                    toast.remove();
+                }, 300);
+            }, 3500);
+        }
+
+
+        /* =========================
+           Authentication
+        ========================= */
+
+        async function ensureAuthenticated() {
+            if (
+                window.FirebaseFeatures &&
+                typeof window.FirebaseFeatures.waitForAuth === "function"
+            ) {
+                const user =
+                    await window.FirebaseFeatures.waitForAuth();
+
+                if (!user) {
+                    window.location.replace("login.html");
+                    return null;
+                }
+
+                return user;
+            }
+
+            if (
+                window.FirebaseAuth &&
+                typeof window.FirebaseAuth.getCurrentUser === "function"
+            ) {
+                const user =
+                    window.FirebaseAuth.getCurrentUser();
+
+                if (!user) {
+                    window.location.replace("login.html");
+                    return null;
+                }
+
+                return user;
+            }
+
+            return null;
+        }
+
+
+        /* =========================
+           Student Context
+        ========================= */
+
+        async function loadStudentContext() {
+            if (
+                !window.FirebaseFeatures ||
+                typeof window.FirebaseFeatures.getCurrentStudentContext !== "function"
+            ) {
+                throw new Error(
+                    "طبقة بيانات الطالب غير متاحة."
+                );
+            }
+
+            const context =
+                await window.FirebaseFeatures.getCurrentStudentContext();
+
+            if (!context || !context.student) {
+                throw new Error(
+                    "لم يتم العثور على بيانات الطالب."
+                );
+            }
+
+            dashboardStudent = context.student;
+
+            return context;
+        }
+
+
+        /* =========================
+           Dashboard Data
+        ========================= */
+
+        async function loadDashboardData() {
+            if (
+                !window.FirebaseFeatures ||
+                typeof window.FirebaseFeatures.getDashboardData !== "function"
+            ) {
+                return null;
+            }
+
+            return window.FirebaseFeatures.getDashboardData();
+        }
+
+
+        /* =========================
+           Render Student
+        ========================= */
+
+        function renderStudent(student, user) {
+            const name = getStudentName(student, user);
+            const grade = getGradeLabel(student);
+
+            setText("studentName", name, "الطالب");
+            setText("infoName", name);
+            setText("infoGrade", grade);
+
+            setText(
+                "infoPhone",
+                student?.phone ||
+                student?.mobile ||
+                user?.phoneNumber
+            );
+
+            setText(
+                "infoEmail",
+                student?.email ||
+                user?.email
+            );
+
+            const welcome = document.getElementById(
+                "studentWelcome"
+            );
+
+            if (welcome) {
+                welcome.textContent =
+                    "سعيدين بوجودك معانا يا " +
+                    name +
+                    ". تابع دراستك، اختباراتك ونتائجك من مكان واحد.";
+            }
+        }
+
+
+        /* =========================
+           Render Statistics
+        ========================= */
+
+        function renderStatistics(data) {
+            const statistics = data?.statistics || {};
+            const content = data?.content || {};
+
+            const courses =
+                normalizeNumber(
+                    statistics.courses ??
+                    content.subjects ??
+                    content.courses ??
+                    0
+                );
+
+            const files =
+                normalizeNumber(
+                    statistics.files ??
+                    content.files ??
+                    0
+                );
+
+            const videos =
+                normalizeNumber(
+                    statistics.videos ??
+                    content.videos ??
+                    0
+                );
+
+            const quizzes =
+                normalizeNumber(
+                    statistics.quizzes ??
+                    content.quizzes ??
+                    0
+                );
+
+            setText("statCourses", courses, "0");
+            setText("statFiles", files, "0");
+            setText("statVideos", videos, "0");
+            setText("statQuizzes", quizzes, "0");
+
+            setText("heroCoursesCount", courses, "0");
+            setText("heroQuizCount", quizzes, "0");
+        }
+
+
+        /* =========================
+           Render Progress
+        ========================= */
+
+        function renderProgress(data) {
+            const statistics = data?.statistics || {};
+            const results = data?.results || {};
+
+            let percentage = Number(
+                statistics.progress ??
+                statistics.percentage ??
+                results.percentage ??
+                0
+            );
+
+            if (!Number.isFinite(percentage)) {
+                percentage = 0;
+            }
+
+            percentage = Math.max(
+                0,
+                Math.min(100, percentage)
+            );
+
+            const percentageText =
+                Math.round(percentage) + "%";
+
+            setText(
+                "progressPercentage",
+                percentageText,
+                "0%"
+            );
+
+            const progressBar =
+                document.getElementById("progressBar");
+
+            if (progressBar) {
+                progressBar.style.width =
+                    percentage + "%";
+            }
+
+            const description =
+                document.getElementById(
+                    "progressDescription"
+                );
+
+            if (description) {
+                if (percentage > 0) {
+                    description.textContent =
+                        "استمر في المذاكرة والاختبارات للوصول إلى تقدم أفضل.";
+                } else {
+                    description.textContent =
+                        "ابدأ المذاكرة والاختبارات لمتابعة تقدمك.";
+                }
+            }
+        }
+
+
+        /* =========================
+           Notifications
+        ========================= */
+
+        function getNotificationId(notification) {
+            return (
+                notification?.id ||
+                notification?._key ||
+                notification?.key ||
+                notification?.notificationId ||
+                ""
+            );
+        }
+
+
+        function formatNotificationDate(notification) {
+            const value =
+                notification?.createdAt ||
+                notification?.date ||
+                notification?.timestamp;
+
+            if (!value) {
+                return "";
+            }
+
+            const numericValue = Number(value);
+
+            if (!Number.isFinite(numericValue)) {
+                return String(value);
+            }
+
+            const date = new Date(numericValue);
+
+            if (Number.isNaN(date.getTime())) {
+                return "";
+            }
+
+            return date.toLocaleDateString("ar-EG", {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            });
+        }
+
+
+        function renderNotifications(notifications) {
+            const container =
+                document.getElementById(
+                    "notificationsList"
+                );
+
+            if (!container) {
+                return;
+            }
+
+            const items = Array.isArray(notifications)
+                ? notifications.slice(0, 5)
+                : [];
+
+            if (!items.length) {
+                container.innerHTML = `
+                    <div class="dashboard-empty-state">
+                        لا توجد إشعارات جديدة حاليًا.
+                    </div>
+                `;
+
+                return;
+            }
+
+            container.innerHTML = "";
+
+            items.forEach(function (notification) {
+                const title =
+                    notification?.title ||
+                    notification?.name ||
+                    "إشعار جديد";
+
+                const message =
+                    notification?.message ||
+                    notification?.body ||
+                    notification?.description ||
+                    "";
+
+                const date =
+                    formatNotificationDate(
+                        notification
+                    );
+
+                const item =
+                    document.createElement("a");
+
+                item.href = "notifications.html";
+                item.className =
+                    "dashboard-notification-item";
+
+                item.innerHTML = `
+                    <span class="notification-item-icon">🔔</span>
+                    <span class="notification-item-content">
+                        <strong></strong>
+                        <small></small>
+                        <em></em>
+                    </span>
+                    <span class="quick-arrow">←</span>
+                `;
+
+                const strong =
+                    item.querySelector("strong");
+
+                const small =
+                    item.querySelector("small");
+
+                const em =
+                    item.querySelector("em");
+
+                strong.textContent = title;
+                small.textContent = message;
+                em.textContent = date;
+
+                container.appendChild(item);
+            });
+        }
+
+
+        async function loadNotifications() {
+            if (
+                !window.FirebaseFeatures ||
+                typeof window.FirebaseFeatures.getNotificationSummary !== "function"
+            ) {
+                renderNotifications([]);
+                return;
+            }
+
+            try {
+                const summary =
+                    await window.FirebaseFeatures.getNotificationSummary();
+
+                const notifications =
+                    summary?.notifications || [];
+
+                const unread =
+                    normalizeNumber(
+                        summary?.unreadCount
+                    );
+
+                const badge =
+                    document.getElementById(
+                        "notificationBadge"
+                    );
+
+                if (badge) {
+                    if (unread > 0) {
+                        badge.textContent =
+                            unread > 99 ? "99+" : unread;
+
+                        badge.style.display = "inline-flex";
+                    } else {
+                        badge.style.display = "none";
+                    }
+                }
+
+                renderNotifications(notifications);
+            } catch (error) {
+                console.warn(
+                    "Unable to load notifications.",
+                    error
+                );
+
+                renderNotifications([]);
+            }
+        }
+
+
+        /* =========================
+           Loading State
+        ========================= */
+
+        function showDashboardLoading() {
+            setText(
+                "studentName",
+                "جاري التحميل...",
+                "جاري التحميل..."
+            );
+
+            setText(
+                "infoName",
+                "جاري التحميل...",
+                "جاري التحميل..."
+            );
+        }
+
+
+        /* =========================
+           Reveal Animation
+        ========================= */
+
+        function initializeReveal() {
+            const elements =
+                document.querySelectorAll(".reveal");
+
+            if (!elements.length) {
+                return;
+            }
+
+            if (
+                !("IntersectionObserver" in window)
+            ) {
+                elements.forEach(function (element) {
+                    element.classList.add("active");
+                });
+
+                return;
+            }
+
+            const observer =
+                new IntersectionObserver(
+                    function (entries) {
+                        entries.forEach(
+                            function (entry) {
+                                if (
+                                    entry.isIntersecting
+                                ) {
+                                    entry.target.classList.add(
+                                        "active"
+                                    );
+
+                                    observer.unobserve(
+                                        entry.target
+                                    );
+                                }
+                            }
+                        );
+                    },
+                    {
+                        threshold: 0.08
+                    }
+                );
+
+            elements.forEach(function (element) {
+                observer.observe(element);
+            });
+        }
+
+
+        /* =========================
+           Header Scroll
+        ========================= */
+
+        function initializeHeaderScroll() {
+            const header =
+                document.getElementById("siteHeader");
+
+            if (!header) {
+                return;
+            }
+
+            function updateHeader() {
+                header.classList.toggle(
+                    "scrolled",
+                    window.scrollY > 30
+                );
+            }
+
+            updateHeader();
+
+            window.addEventListener(
+                "scroll",
+                updateHeader,
+                { passive: true }
+            );
+        }
+
+
+        /* =========================
+           Logout
+        ========================= */
+
+        async function logoutUser() {
+            try {
+                if (
+                    window.FirebaseFeatures &&
+                    typeof window.FirebaseFeatures.signOut === "function"
+                ) {
+                    await window.FirebaseFeatures.signOut();
+                } else if (
+                    window.FirebaseAuth &&
+                    typeof window.FirebaseAuth.signOut === "function"
+                ) {
+                    await window.FirebaseAuth.signOut();
+                }
+
+                window.location.replace("login.html");
+            } catch (error) {
+                console.error(error);
+
+                showToast(
+                    "حدث خطأ أثناء تسجيل الخروج.",
+                    "error"
+                );
+            }
+        }
+
+
+        /* =========================
+           Main Initialization
+        ========================= */
+
+        async function initializeDashboard() {
+            initializeTheme();
+            initializeMobileMenu();
+            initializeHeaderScroll();
+
+            showDashboardLoading();
+
+            try {
+                const user =
+                    await ensureAuthenticated();
+
+                if (!user) {
+                    return;
+                }
+
+                const context =
+                    await loadStudentContext();
+
+                renderStudent(
+                    context.student,
+                    context.user || user
+                );
+
+                dashboardData =
+                    await loadDashboardData();
+
+                renderStatistics(
+                    dashboardData
+                );
+
+                renderProgress(
+                    dashboardData
+                );
+
+                await loadNotifications();
+
+            } catch (error) {
+                console.error(
+                    "Dashboard initialization error:",
+                    error
+                );
+
+                const message =
+                    error?.message ||
+                    "تعذر تحميل بيانات لوحة التحكم.";
+
+                showToast(
+                    message,
+                    "error"
+                );
+
+                /*
+                 * لا يتم إنشاء بيانات وهمية.
+                 * إذا كانت بيانات الطالب غير موجودة،
+                 * تظل الصفحة كما هي بدون اختلاق معلومات.
+                 */
+            }
+
+            initializeReveal();
+        }
+
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initializeDashboard
+        );
+
+    </script>
+
+</body>
+</html>
