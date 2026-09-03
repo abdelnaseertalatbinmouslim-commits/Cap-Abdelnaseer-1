@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <meta name="theme-color" content="#0b0d12">
+    <meta
+        name="description"
+        content="تسجيل الدخول إلى منصة الكوتش التعليمية"
+    >
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="black-translucent"
+    >
+
+    <title>تسجيل الدخول | منصة الكوتش</title>
+
+    <link
+        rel="icon"
+        type="image/jpeg"
+        href="1783950091830.jpg"
+    >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-orbit"></div>
+
+        <div class="loader-brand">
+            <span>منصة الكوتش</span>
+        </div>
+    </div>
+
+    <!-- Background -->
+    <div class="background-decoration" aria-hidden="true">
+        <div class="background-orb background-orb-one"></div>
+        <div class="background-orb background-orb-two"></div>
+        <div class="background-grid"></div>
+        <div class="background-noise"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-header" id="siteHeader">
+
+        <div class="container header-container">
+
+            <a
+                href="index.html"
+                class="brand"
+                aria-label="العودة إلى الصفحة الرئيسية"
+            >
+                <span class="brand-mark">
+                    <img
+                        src="1783950091830.jpg"
+                        alt="منصة الكوتش"
+                    >
+                </span>
+
+                <span class="brand-text">
+                    <span class="brand-name">منصة الكوتش</span>
+                    <span class="brand-subtitle">
+                        المنصة التعليمية الرياضية
+                    </span>
+                </span>
+            </a>
+
+            <div class="header-actions">
+
+                <button
+                    type="button"
+                    class="theme-toggle"
+                    id="themeToggle"
+                    data-theme-toggle
+                    aria-label="تغيير المظهر"
+                    aria-pressed="false"
+                >
+                    <span
+                        class="theme-icon theme-icon-sun"
+                        aria-hidden="true"
+                    >
+                        ☀
+                    </span>
+
+                    <span
+                        class="theme-icon theme-icon-moon"
+                        aria-hidden="true"
+                    >
+                        ☾
+                    </span>
+                </button>
+
+                <a
+                    href="register.html"
+                    class="header-register-button"
+                >
+                    إنشاء حساب
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- Main -->
+    <main class="auth-page">
+
+        <div class="container auth-container">
+
+            <!-- Intro -->
+            <section class="auth-intro reveal">
+
+                <div class="hero-badge">
+                    <span class="hero-badge-dot"></span>
+                    أهلاً بعودتك
+                </div>
+
+                <div class="hero-title-wrap">
+
+                    <span class="hero-mini-title">
+                        منصة الكوتش التعليمية
+                    </span>
+
+                    <h1 class="hero-title">
+
+                        <span class="hero-title-line">
+                            سجل دخولك إلى
+                        </span>
+
+                        <span class="hero-title-main">
+                            رحلتك التعليمية
+                        </span>
+
+                        <span
+                            class="hero-title-line-decoration"
+                            aria-hidden="true"
+                        ></span>
+
+                    </h1>
+
+                </div>
+
+                <p class="hero-description">
+                    ادخل إلى حسابك واستكمل رحلتك التعليمية،
+                    واستمتع بالمحتوى والمقررات الخاصة بك
+                    في مكان واحد.
+                </p>
+
+                <div class="hero-mini-stats">
+
+                    <div class="mini-stat">
+                        <strong>01</strong>
+                        <span>حسابك</span>
+                    </div>
+
+                    <div class="mini-stat">
+                        <strong>∞</strong>
+                        <span>محتواك</span>
+                    </div>
+
+                    <div class="mini-stat">
+                        <strong>24/7</strong>
+                        <span>وصولك</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Login Visual -->
+            <section class="auth-visual" aria-hidden="true">
+
+                <div class="visual-glow"></div>
+
+                <div class="profile-orbit orbit-one"></div>
+                <div class="profile-orbit orbit-two"></div>
+
+                <div class="profile-badge profile-badge-top">
+                    <span class="badge-dot"></span>
+                    منصة الكوتش
+                </div>
+
+                <div class="profile-image-wrap">
+
+                    <div class="profile-image-ring ring-one"></div>
+                    <div class="profile-image-ring ring-two"></div>
+
+                    <div class="profile-image">
+                        <img
+                            src="1783950091830.jpg"
+                            alt=""
+                        >
+                    </div>
+
+                    <span class="profile-status"></span>
+
+                </div>
+
+                <div class="profile-floating-card card-one">
+                    <span class="floating-icon">✓</span>
+
+                    <div>
+                        <strong>حسابك جاهز</strong>
+                        <small>ابدأ الآن</small>
+                    </div>
+                </div>
+
+                <div class="profile-floating-card card-two">
+                    <span class="floating-icon">◆</span>
+
+                    <div>
+                        <strong>محتوى منظم</strong>
+                        <small>كل شيء في مكانه</small>
+                    </div>
+                </div>
+
+                <div class="profile-floating-card card-three">
+                    <span class="floating-icon">★</span>
+
+                    <div>
+                        <strong>تجربة مميزة</strong>
+                        <small>مصممة للطلاب</small>
+                    </div>
+                </div>
+
+                <div class="visual-particles">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+            </section>
+
+            <!-- Login Card -->
+            <section class="auth-card reveal">
+
+                <div class="auth-card-top">
+
+                    <div class="auth-card-icon">
+                        <span>↪</span>
+                    </div>
+
+                    <div class="auth-card-heading">
+                        <span class="auth-card-kicker">
+                            ACCOUNT ACCESS
+                        </span>
+
+                        <h2>تسجيل الدخول</h2>
+
+                        <p>
+                            أدخل بيانات حسابك للمتابعة
+                        </p>
+                    </div>
+
+                </div>
+
+                <div
+                    class="auth-message"
+                    id="loginMessage"
+                    role="alert"
+                    aria-live="polite"
+                ></div>
+
+                <form
+                    id="loginForm"
+                    class="auth-form"
+                    novalidate
+                >
+
+                    <!-- Login Method -->
+                    <div
+                        class="login-method-switch"
+                        role="tablist"
+                        aria-label="طريقة تسجيل الدخول"
+                    >
+
+                        <button
+                            type="button"
+                            class="method-button active"
+                            data-login-method="phone"
+                            role="tab"
+                            aria-selected="true"
+                        >
+                            <span class="method-icon">☎</span>
+                            رقم الهاتف
+                        </button>
+
+                        <button
+                            type="button"
+                            class="method-button"
+                            data-login-method="email"
+                            role="tab"
+                            aria-selected="false"
+                        >
+                            <span class="method-icon">@</span>
+                            البريد الإلكتروني
+                        </button>
+
+                    </div>
+
+                    <!-- Phone -->
+                    <div
+                        class="form-group"
+                        id="loginPhoneGroup"
+                    >
+
+                        <label for="loginPhone">
+                            رقم الهاتف
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span
+                                class="input-icon"
+                                aria-hidden="true"
+                            >
+                                ☎
+                            </span>
+
+                            <input
+                                type="tel"
+                                id="loginPhone"
+                                name="phone"
+                                inputmode="tel"
+                                autocomplete="tel"
+                                placeholder="01xxxxxxxxx"
+                            >
+
+                        </div>
+
+                        <small
+                            class="field-error"
+                            id="loginPhoneError"
+                        ></small>
+
+                    </div>
+
+                    <!-- Email -->
+                    <div
+                        class="form-group hidden"
+                        id="loginEmailGroup"
+                    >
+
+                        <label for="loginEmail">
+                            البريد الإلكتروني
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span
+                                class="input-icon"
+                                aria-hidden="true"
+                            >
+                                @
+                            </span>
+
+                            <input
+                                type="email"
+                                id="loginEmail"
+                                name="email"
+                                autocomplete="email"
+                                placeholder="example@email.com"
+                            >
+
+                        </div>
+
+                        <small
+                            class="field-error"
+                            id="loginEmailError"
+                        ></small>
+
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+
+                        <label for="loginPassword">
+                            كلمة المرور
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span
+                                class="input-icon password-icon"
+                                aria-hidden="true"
+                            >
+                                ●
+                            </span>
+
+                            <input
+                                type="password"
+                                id="loginPassword"
+                                name="password"
+                                autocomplete="current-password"
+                                placeholder="أدخل كلمة المرور"
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                data-password-toggle
+                                data-target="loginPassword"
+                                aria-label="إظهار كلمة المرور"
+                            >
+                                ◉
+                            </button>
+
+                        </div>
+
+                        <small
+                            class="field-error"
+                            id="loginPasswordError"
+                        ></small>
+
+                    </div>
+
+                    <!-- Options -->
+                    <div class="form-options">
+
+                        <label class="remember-option">
+
+                            <input
+                                type="checkbox"
+                                id="loginRemember"
+                                name="remember"
+                            >
+
+                            <span class="custom-checkbox"></span>
+
+                            <span>تذكرني</span>
+
+                        </label>
+
+                        <a
+                            href="forgot-password.html"
+                            class="forgot-link"
+                        >
+                            نسيت كلمة المرور؟
+                        </a>
+
+                    </div>
+
+                    <!-- Submit -->
+                    <button
+                        type="submit"
+                        class="modal-submit-button"
+                        id="loginSubmitButton"
+                    >
+
+                        <span class="button-text">
+                            تسجيل الدخول
+                        </span>
+
+                        <span
+                            class="button-arrow"
+                            aria-hidden="true"
+                        >
+                            ←
+                        </span>
+
+                        <span
+                            class="button-loader"
+                            aria-hidden="true"
+                        ></span>
+
+                    </button>
+
+                </form>
+
+                <!-- Divider -->
+                <div class="auth-divider">
+                    <span>أو</span>
+                </div>
+
+                <!-- Register -->
+                <div class="register-prompt">
+
+                    <span>
+                        ليس لديك حساب؟
+                    </span>
+
+                    <a href="register.html">
+                        إنشاء حساب جديد
+                        <span aria-hidden="true">←</span>
+                    </a>
+
+                </div>
+
+                <!-- Support -->
+                <a
+                    href="index.html#support"
+                    class="support-link"
+                >
+                    <span class="support-icon">?</span>
+
+                    <span>
+                        تحتاج إلى مساعدة؟
+                    </span>
+                </a>
+
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer auth-footer">
+
+        <div class="container footer-container">
+
+            <p>
+                ©
+                <span id="currentYear"></span>
+                منصة الكوتش — جميع الحقوق محفوظة
+            </p>
+
+            <div class="footer-links">
+
+                <a href="index.html">
+                    الرئيسية
+                </a>
+
+                <span>•</span>
+
+                <a href="register.html">
+                    إنشاء حساب
+                </a>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <script src="login.js"></script>
+
+</body>
+</html>
