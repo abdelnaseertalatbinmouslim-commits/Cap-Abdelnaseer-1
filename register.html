@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0b0d12"
+    >
+
+    <meta
+        name="description"
+        content="إنشاء حساب جديد في منصة الكوتش"
+    >
+
+    <title>إنشاء حساب | منصة الكوتش</title>
+
+    <link
+        rel="icon"
+        type="image/jpeg"
+        href="1783950091830.jpg"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="index.css"
+    >
+</head>
+
+<body>
+
+    <!-- =========================
+         BACKGROUND
+    ========================== -->
+    <div
+        class="background-decoration"
+        aria-hidden="true"
+    >
+        <span class="background-orb background-orb-one"></span>
+        <span class="background-orb background-orb-two"></span>
+        <span class="background-grid"></span>
+        <span class="background-noise"></span>
+    </div>
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <header class="site-header">
+
+        <div class="container header-container">
+
+            <a
+                href="index.html"
+                class="brand"
+                aria-label="العودة إلى منصة الكوتش"
+            >
+                <span class="brand-mark">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+
+                <span class="brand-text">
+                    <strong>منصة الكوتش</strong>
+                    <small>تعلم • تطور • انجح</small>
+                </span>
+            </a>
+
+
+            <div class="header-actions">
+
+                <button
+                    type="button"
+                    class="theme-toggle"
+                    id="themeToggle"
+                    data-theme-toggle
+                    aria-label="تغيير الوضع"
+                    aria-pressed="false"
+                >
+                    <span
+                        class="theme-icon theme-icon-sun"
+                        aria-hidden="true"
+                    >
+                        ☀
+                    </span>
+
+                    <span
+                        class="theme-icon theme-icon-moon"
+                        aria-hidden="true"
+                    >
+                        ☾
+                    </span>
+                </button>
+
+
+                <a
+                    href="index.html"
+                    class="header-login-button"
+                >
+                    الرئيسية
+                </a>
+
+
+                <a
+                    href="login.html"
+                    class="header-register-button"
+                >
+                    تسجيل الدخول
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         REGISTER
+    ========================== -->
+    <main>
+
+        <section class="auth-section">
+
+            <div class="container">
+
+                <div class="auth-layout">
+
+                    <!-- =====================
+                         VISUAL SIDE
+                    ====================== -->
+                    <div class="auth-visual reveal">
+
+                        <div
+                            class="visual-glow"
+                            aria-hidden="true"
+                        ></div>
+
+                        <div class="profile-orbit orbit-one"></div>
+                        <div class="profile-orbit orbit-two"></div>
+
+
+                        <div class="profile-badge profile-badge-top">
+                            <span>JOIN US</span>
+                        </div>
+
+
+                        <div class="profile-image-wrap">
+
+                            <div class="profile-image-ring ring-one"></div>
+                            <div class="profile-image-ring ring-two"></div>
+
+                            <div class="profile-image">
+
+                                <img
+                                    src="1783950091830.jpg"
+                                    alt="صورة الكوتش"
+                                    class="hero-image"
+                                    loading="eager"
+                                    decoding="async"
+                                >
+
+                            </div>
+
+                            <span class="profile-status"></span>
+
+                        </div>
+
+
+                        <div class="profile-floating-card card-one">
+
+                            <span class="floating-icon">
+                                ✦
+                            </span>
+
+                            <div>
+                                <strong>ابدأ</strong>
+                                <small>رحلتك التعليمية</small>
+                            </div>
+
+                        </div>
+
+
+                        <div class="profile-floating-card card-two">
+
+                            <span class="floating-icon">
+                                ◈
+                            </span>
+
+                            <div>
+                                <strong>تطور</strong>
+                                <small>مع محتوى منظم</small>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =====================
+                         REGISTER CARD
+                    ====================== -->
+                    <div class="auth-card-wrap reveal">
+
+                        <div class="auth-card">
+
+                            <div class="auth-card-header">
+
+                                <span class="section-kicker">
+                                    CREATE ACCOUNT
+                                </span>
+
+                                <h1>
+                                    إنشاء حساب
+                                </h1>
+
+                                <p>
+                                    أنشئ حسابك وأرسل طلب الانضمام
+                                    إلى منصة الكوتش.
+                                </p>
+
+                            </div>
+
+
+                            <!-- =====================
+                                 REGISTER FORM
+                            ====================== -->
+                            <form
+                                id="registerForm"
+                                class="auth-form"
+                                novalidate
+                            >
+
+                                <!-- NAME -->
+                                <div class="form-group">
+
+                                    <label for="registerName">
+                                        الاسم بالكامل
+                                    </label>
+
+                                    <div class="input-wrap">
+
+                                        <span
+                                            class="input-icon"
+                                            aria-hidden="true"
+                                        >
+                                            ✦
+                                        </span>
+
+                                        <input
+                                            type="text"
+                                            id="registerName"
+                                            name="name"
+                                            autocomplete="name"
+                                            placeholder="اكتب اسمك بالكامل"
+                                            maxlength="120"
+                                            required
+                                        >
+
+                                    </div>
+
+                                    <small
+                                        class="field-error"
+                                        id="registerNameError"
+                                        aria-live="polite"
+                                    ></small>
+
+                                </div>
+
+
+                                <!-- PHONE -->
+                                <div class="form-group">
+
+                                    <label for="registerPhone">
+                                        رقم الهاتف
+                                    </label>
+
+                                    <div class="input-wrap">
+
+                                        <span
+                                            class="input-icon"
+                                            aria-hidden="true"
+                                        >
+                                            ☎
+                                        </span>
+
+                                        <input
+                                            type="tel"
+                                            id="registerPhone"
+                                            name="phone"
+                                            autocomplete="tel"
+                                            inputmode="tel"
+                                            placeholder="اكتب رقم الهاتف"
+                                            maxlength="20"
+                                            required
+                                        >
+
+                                    </div>
+
+                                    <small
+                                        class="field-error"
+                                        id="registerPhoneError"
+                                        aria-live="polite"
+                                    ></small>
+
+                                </div>
+
+
+                                <!-- EMAIL -->
+                                <div class="form-group">
+
+                                    <label for="registerEmail">
+                                        البريد الإلكتروني
+                                    </label>
+
+                                    <div class="input-wrap">
+
+                                        <span
+                                            class="input-icon"
+                                            aria-hidden="true"
+                                        >
+                                            @
+                                        </span>
+
+                                        <input
+                                            type="email"
+                                            id="registerEmail"
+                                            name="email"
+                                            autocomplete="email"
+                                            inputmode="email"
+                                            placeholder="اكتب البريد الإلكتروني"
+                                            maxlength="160"
+                                            required
+                                        >
+
+                                    </div>
+
+                                    <small
+                                        class="field-error"
+                                        id="registerEmailError"
+                                        aria-live="polite"
+                                    ></small>
+
+                                </div>
+
+
+                                <!-- STUDENT ID -->
+                                <div class="form-group">
+
+                                    <label for="registerStudentId">
+                                        رقم الطالب
+                                    </label>
+
+                                    <div class="input-wrap">
+
+                                        <span
+                                            class="input-icon"
+                                            aria-hidden="true"
+                                        >
+                                            #
+                                        </span>
+
+                                        <input
+                                            type="text"
+                                            id="registerStudentId"
+                                            name="studentId"
+                                            autocomplete="off"
+                                            placeholder="اكتب رقم الطالب إن وجد"
+                                            maxlength="80"
+                                        >
+
+                                    </div>
+
+                                    <small
+                                        class="field-error"
+                                        id="registerStudentIdError"
+                                        aria-live="polite"
+                                    ></small>
+
+                                </div>
+
+
+                                <!-- GRADE -->
+                                <div class="form-group">
+
+                                    <label for="registerGrade">
+                                        الفرقة الدراسية
+                                    </label>
+
+                                    <div class="input-wrap">
+
+                                        <span
+                                            class="input-icon"
+                                            aria-hidden="true"
+                                        >
+                                            ◈
+                                        </span>
+
+                                        <select
+                                            id="registerGrade"
+                                            name="grade"
+                                            autocomplete="off"
+                                        >
+                                            <option value="">
+                                                اختر الفرقة
+                                            </option>
+
+                                            <option value="الأولى">
+                                                الفرقة الأولى
+                                            </option>
+
+                                            <option value="الثانية">
+                                                الفرقة الثانية
+                                            </option>
+
+                                            <option value="الثالثة">
+                                                الفرقة الثالثة
+                                            </option>
+
+                                            <option value="الرابعة">
+                                                الفرقة الرابعة
+                                            </option>
+                                        </select>
+
+                                    </div>
+
+                                    <small
+                                        class="field-error"
+                                        id="registerGradeError"
+                                        aria-live="polite"
+                                    ></small>
+
+                                </div>
+
+
+                                <!-- PASSWORD -->
+                                <div class="form-group">
+
+                                    <label for="registerPassword">
+                                        كلمة المرور
+                                    </label>
+
+                                    <div class="input-wrap">
+
+                                        <span
+                                            class="input-icon"
+                                            aria-hidden="true"
+                                        >
+                                            •
+                                        </span>
+
+                                        <input
+                                            type="password"
+                                            id="registerPassword"
+                                            name="password"
+                                            autocomplete="new-password"
+                                            placeholder="اكتب كلمة مرور قوية"
+                                            minlength="6"
+                                            maxlength="128"
+                                            required
+                                        >
+
+                                        <button
+                                            type="button"
+                                            class="password-toggle"
+                                            id="passwordToggle"
+                                            aria-label="إظهار كلمة المرور"
+                                            aria-pressed="false"
+                                        >
+                                            ◉
+                                        </button>
+
+                                    </div>
+
+                                    <small
+                                        class="field-error"
+                                        id="registerPasswordError"
+                                        aria-live="polite"
+                                    ></small>
+
+                                </div>
+
+
+                                <!-- CONFIRM PASSWORD -->
+                                <div class="form-group">
+
+                                    <label for="registerConfirmPassword">
+                                        تأكيد كلمة المرور
+                                    </label>
+
+                                    <div class="input-wrap">
+
+                                        <span
+                                            class="input-icon"
+                                            aria-hidden="true"
+                                        >
+                                            •
+                                        </span>
+
+                                        <input
+                                            type="password"
+                                            id="registerConfirmPassword"
+                                            name="confirmPassword"
+                                            autocomplete="new-password"
+                                            placeholder="أعد كتابة كلمة المرور"
+                                            minlength="6"
+                                            maxlength="128"
+                                            required
+                                        >
+
+                                        <button
+                                            type="button"
+                                            class="password-toggle"
+                                            id="confirmPasswordToggle"
+                                            aria-label="إظهار كلمة المرور"
+                                            aria-pressed="false"
+                                        >
+                                            ◉
+                                        </button>
+
+                                    </div>
+
+                                    <small
+                                        class="field-error"
+                                        id="registerConfirmPasswordError"
+                                        aria-live="polite"
+                                    ></small>
+
+                                </div>
+
+
+                                <!-- INFO -->
+                                <div
+                                    id="registerMessage"
+                                    class="form-message"
+                                    aria-live="polite"
+                                    role="status"
+                                ></div>
+
+
+                                <!-- SUBMIT -->
+                                <button
+                                    type="submit"
+                                    id="registerSubmit"
+                                    class="modal-submit-button"
+                                >
+                                    إرسال طلب التسجيل
+                                </button>
+
+                            </form>
+
+
+                            <div class="auth-divider">
+                                <span>أو</span>
+                            </div>
+
+
+                            <div class="auth-switch">
+
+                                <span>
+                                    عندك حساب بالفعل؟
+                                </span>
+
+                                <a href="login.html">
+                                    تسجيل الدخول
+                                </a>
+
+                            </div>
+
+
+                            <div class="auth-back-link">
+
+                                <a href="index.html">
+                                    <span>→</span>
+                                    العودة إلى الرئيسية
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         TOAST
+    ========================== -->
+    <div
+        id="toastContainer"
+        class="toast-container"
+        aria-live="polite"
+        aria-atomic="true"
+    ></div>
+
+
+    <!-- ==================================================
+         FIREBASE SDK
+    =================================================== -->
+
+    <script
+        src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"
+    ></script>
+
+    <script
+        src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"
+    ></script>
+
+    <script
+        src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"
+    ></script>
+
+
+    <!-- ==================================================
+         FIREBASE PROJECT LAYERS
+    =================================================== -->
+
+    <script src="firebase-config.js"></script>
+    <script src="firebase-auth.js"></script>
+    <script src="firebase-database.js"></script>
+    <script src="firebase-content.js"></script>
+    <script src="firebase-features.js"></script>
+
+
+    <!-- ==================================================
+         REGISTER PAGE LOGIC
+    =================================================== -->
+
+    <script>
+        "use strict";
+
+        let registerSubmitting = false;
+
+        const $ = (selector, parent = document) =>
+            parent.querySelector(selector);
+
+
+        function storageGet(key) {
+            try {
+                return localStorage.getItem(key);
+            } catch (error) {
+                return null;
+            }
+        }
+
+
+        function storageSet(key, value) {
+            try {
+                localStorage.setItem(key, value);
+            } catch (error) {}
+        }
+
+
+        /* =========================
+           THEME
+        ========================== */
+
+        function initializeTheme() {
+
+            const toggle = $("#themeToggle");
+
+            const savedTheme =
+                storageGet("coach_platform_theme");
+
+            const theme =
+                savedTheme === "light" ||
+                savedTheme === "dark"
+                    ? savedTheme
+                    : "dark";
+
+            applyTheme(theme, false);
+
+
+            if (toggle) {
+
+                toggle.addEventListener(
+                    "click",
+                    () => {
+
+                        const current =
+                            document.documentElement
+                                .getAttribute("data-theme") ||
+                            "dark";
+
+                        applyTheme(
+                            current === "dark"
+                                ? "light"
+                                : "dark",
+                            true
+                        );
+
+                    }
+                );
+
+            }
+
+        }
+
+
+        function applyTheme(theme, save = true) {
+
+            const normalized =
+                theme === "light"
+                    ? "light"
+                    : "dark";
+
+
+            document.documentElement.setAttribute(
+                "data-theme",
+                normalized
+            );
+
+
+            document.body.classList.toggle(
+                "light-theme",
+                normalized === "light"
+            );
+
+
+            document.body.classList.toggle(
+                "dark-theme",
+                normalized === "dark"
+            );
+
+
+            const toggle = $("#themeToggle");
+
+
+            if (toggle) {
+
+                toggle.setAttribute(
+                    "aria-pressed",
+                    String(normalized === "light")
+                );
+
+
+                toggle.setAttribute(
+                    "aria-label",
+                    normalized === "light"
+                        ? "تفعيل الوضع الداكن"
+                        : "تفعيل الوضع الفاتح"
+                );
+
+            }
+
+
+            if (save) {
+
+                storageSet(
+                    "coach_platform_theme",
+                    normalized
+                );
+
+            }
+
+        }
+
+
+        /* =========================
+           TOAST
+        ========================== */
+
+        function showToast(
+            message,
+            type = "info"
+        ) {
+
+            const container =
+                $("#toastContainer");
+
+
+            if (!container) {
+                return;
+            }
+
+
+            const toast =
+                document.createElement("div");
+
+            toast.className =
+                `toast toast-${type}`;
+
+
+            const text =
+                document.createElement("span");
+
+            text.className =
+                "toast-message";
+
+            text.textContent =
+                message;
+
+
+            toast.appendChild(text);
+            container.appendChild(toast);
+
+
+            requestAnimationFrame(() => {
+                toast.classList.add("show");
+            });
+
+
+            setTimeout(() => {
+
+                toast.classList.remove("show");
+
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+
+            }, 3500);
+
+        }
+
+
+        /* =========================
+           MESSAGE
+        ========================== */
+
+        function setMessage(
+            message,
+            type = ""
+        ) {
+
+            const element =
+                $("#registerMessage");
+
+
+            if (!element) {
+                return;
+            }
+
+
+            element.textContent =
+                message || "";
+
+
+            element.className =
+                `form-message ${type}`;
+
+        }
+
+
+        function setFieldError(
+            id,
+            message
+        ) {
+
+            const element =
+                $("#" + id);
+
+
+            if (!element) {
+                return;
+            }
+
+
+            element.textContent =
+                message || "";
+
+        }
+
+
+        /* =========================
+           VALIDATION
+        ========================== */
+
+        function validateEmail(email) {
+
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                .test(email);
+
+        }
+
+
+        function validatePhone(phone) {
+
+            const normalized =
+                phone.replace(/[^\d+]/g, "");
+
+            return normalized.length >= 8 &&
+                   normalized.length <= 20;
+
+        }
+
+
+        function validateRegister(
+            name,
+            phone,
+            email,
+            studentId,
+            grade,
+            password,
+            confirmPassword
+        ) {
+
+            const errorFields = [
+                "registerNameError",
+                "registerPhoneError",
+                "registerEmailError",
+                "registerStudentIdError",
+                "registerGradeError",
+                "registerPasswordError",
+                "registerConfirmPasswordError"
+            ];
+
+
+            errorFields.forEach(
+                id => setFieldError(id, "")
+            );
+
+
+            if (!name) {
+
+                setFieldError(
+                    "registerNameError",
+                    "من فضلك اكتب الاسم بالكامل."
+                );
+
+                return false;
+
+            }
+
+
+            if (name.length < 3) {
+
+                setFieldError(
+                    "registerNameError",
+                    "الاسم يجب أن يكون 3 أحرف على الأقل."
+                );
+
+                return false;
+
+            }
+
+
+            if (!phone) {
+
+                setFieldError(
+                    "registerPhoneError",
+                    "من فضلك اكتب رقم الهاتف."
+                );
+
+                return false;
+
+            }
+
+
+            if (!validatePhone(phone)) {
+
+                setFieldError(
+                    "registerPhoneError",
+                    "اكتب رقم هاتف صحيحًا."
+                );
+
+                return false;
+
+            }
+
+
+            if (!email) {
+
+                setFieldError(
+                    "registerEmailError",
+                    "من فضلك اكتب البريد الإلكتروني."
+                );
+
+                return false;
+
+            }
+
+
+            if (!validateEmail(email)) {
+
+                setFieldError(
+                    "registerEmailError",
+                    "اكتب بريدًا إلكترونيًا صحيحًا."
+                );
+
+                return false;
+
+            }
+
+
+            if (!password) {
+
+                setFieldError(
+                    "registerPasswordError",
+                    "من فضلك اكتب كلمة المرور."
+                );
+
+                return false;
+
+            }
+
+
+            if (password.length < 6) {
+
+                setFieldError(
+                    "registerPasswordError",
+                    "كلمة المرور يجب أن تكون 6 أحرف على الأقل."
+                );
+
+                return false;
+
+            }
+
+
+            if (!confirmPassword) {
+
+                setFieldError(
+                    "registerConfirmPasswordError",
+                    "من فضلك أكد كلمة المرور."
+                );
+
+                return false;
+
+            }
+
+
+            if (password !== confirmPassword) {
+
+                setFieldError(
+                    "registerConfirmPasswordError",
+                    "كلمتا المرور غير متطابقتين."
+                );
+
+                return false;
+
+            }
+
+
+            return true;
+
+        }
+
+
+        /* =========================
+           SUBMIT STATE
+        ========================== */
+
+        function setSubmitting(state) {
+
+            const button =
+                $("#registerSubmit");
+
+
+            if (!button) {
+                return;
+            }
+
+
+            registerSubmitting =
+                state;
+
+
+            button.disabled =
+                state;
+
+
+            if (state) {
+
+                button.dataset.originalText =
+                    button.textContent;
+
+                button.textContent =
+                    "جاري إرسال طلب التسجيل...";
+
+            } else {
+
+                button.textContent =
+                    button.dataset.originalText ||
+                    "إرسال طلب التسجيل";
+
+            }
+
+        }
+
+
+        /* =========================
+           FIREBASE ERROR
+        ========================== */
+
+        function getFirebaseErrorMessage(
+            error
+        ) {
+
+            if (
+                window.FirebaseAuth &&
+                typeof window.FirebaseAuth
+                    .getErrorMessage ===
+                "function"
+            ) {
+
+                return window.FirebaseAuth
+                    .getErrorMessage(error);
+
+            }
+
+
+            if (
+                window.FirebaseCore &&
+                typeof window.FirebaseCore
+                    .getErrorMessage ===
+                "function"
+            ) {
+
+                return window.FirebaseCore
+                    .getErrorMessage(error);
+
+            }
+
+
+            return "تعذر إنشاء الحساب. حاول مرة أخرى.";
+
+        }
+
+
+        /* =========================
+           CREATE FIREBASE ACCOUNT
+        ========================== */
+
+        async function createAccount(
+            email,
+            password
+        ) {
+
+            if (
+                !window.FirebaseAuth ||
+                typeof window.FirebaseAuth
+                    .registerWithEmail !==
+                "function"
+            ) {
+
+                throw new Error(
+                    "Firebase Authentication is not available."
+                );
+
+            }
+
+
+            return window.FirebaseAuth
+                .registerWithEmail(
+                    email,
+                    password
+                );
+
+        }
+
+
+        /* =========================
+           CREATE PENDING REQUEST
+        ========================== */
+
+        async function createPendingRequest(
+            user,
+            data
+        ) {
+
+            if (
+                !window.FirebaseDatabase ||
+                typeof window.FirebaseDatabase
+                    .push !== "function"
+            ) {
+
+                throw new Error(
+                    "Firebase Database is not available."
+                );
+
+            }
+
+
+            const request = {
+
+                uid:
+                    user?.uid || "",
+
+                userId:
+                    user?.uid || "",
+
+                email:
+                    data.email || "",
+
+                name:
+                    data.name || "",
+
+                studentName:
+                    data.name || "",
+
+                phone:
+                    data.phone || "",
+
+                studentId:
+                    data.studentId || "",
+
+                grade:
+                    data.grade || "",
+
+                status:
+                    "pending",
+
+                approvalStatus:
+                    "pending",
+
+                accountStatus:
+                    "pending",
+
+                createdAt:
+                    window.FirebaseCore
+                        ?.serverTimestamp?.() ||
+                    Date.now(),
+
+                updatedAt:
+                    window.FirebaseCore
+                        ?.serverTimestamp?.() ||
+                    Date.now(),
+
+                source:
+                    "register.html"
+
+            };
+
+
+            /*
+             * الطلبات الجديدة تكون منفصلة عن
+             * بيانات الطلاب القديمة.
+             *
+             * لا يوجد حذف أو overwrite لسجل
+             * موجود مسبقًا.
+             */
+
+            return window.FirebaseDatabase
+                .push(
+                    "registrationRequests",
+                    request
+                );
+
+        }
+
+
+        /* =========================
+           UPDATE AUTH PROFILE
+        ========================== */
+
+        async function updateAuthProfile(
+            name
+        ) {
+
+            try {
+
+                if (
+                    window.FirebaseAuth &&
+                    typeof window.FirebaseAuth
+                        .updateDisplayName ===
+                    "function"
+                ) {
+
+                    await window.FirebaseAuth
+                        .updateDisplayName(name);
+
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "Display name update skipped:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* =========================
+           SEND VERIFICATION
+        ========================== */
+
+        async function sendVerification() {
+
+            try {
+
+                if (
+                    window.FirebaseAuth &&
+                    typeof window.FirebaseAuth
+                        .sendEmailVerification ===
+                    "function"
+                ) {
+
+                    await window.FirebaseAuth
+                        .sendEmailVerification();
+
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "Email verification skipped:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* =========================
+           REGISTER
+        ========================== */
+
+        async function handleRegister(
+            event
+        ) {
+
+            event.preventDefault();
+
+
+            if (registerSubmitting) {
+                return;
+            }
+
+
+            const name =
+                $("#registerName")
+                    ?.value
+                    .trim() || "";
+
+
+            const phone =
+                $("#registerPhone")
+                    ?.value
+                    .trim() || "";
+
+
+            const email =
+                $("#registerEmail")
+                    ?.value
+                    .trim()
+                    .toLowerCase() || "";
+
+
+            const studentId =
+                $("#registerStudentId")
+                    ?.value
+                    .trim() || "";
+
+
+            const grade =
+                $("#registerGrade")
+                    ?.value
+                    .trim() || "";
+
+
+            const password =
+                $("#registerPassword")
+                    ?.value || "";
+
+
+            const confirmPassword =
+                $("#registerConfirmPassword")
+                    ?.value || "";
+
+
+            if (
+                !validateRegister(
+                    name,
+                    phone,
+                    email,
+                    studentId,
+                    grade,
+                    password,
+                    confirmPassword
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            setMessage("", "");
+
+            setSubmitting(true);
+
+
+            try {
+
+                /*
+                 * 1. إنشاء حساب Firebase Auth.
+                 */
+
+                const result =
+                    await createAccount(
+                        email,
+                        password
+                    );
+
+
+                const user =
+                    result?.user ||
+                    window.FirebaseAuth
+                        ?.getCurrentUser?.();
+
+
+                if (!user) {
+
+                    throw new Error(
+                        "تم إنشاء الحساب ولكن لم يتم العثور على المستخدم."
+                    );
+
+                }
+
+
+                /*
+                 * 2. تحديث اسم المستخدم في Auth.
+                 */
+
+                await updateAuthProfile(name);
+
+
+                /*
+                 * 3. إنشاء طلب تسجيل Pending.
+                 */
+
+                await createPendingRequest(
+                    user,
+                    {
+                        name,
+                        phone,
+                        email,
+                        studentId,
+                        grade
+                    }
+                );
+
+
+                /*
+                 * 4. إرسال تأكيد البريد إن أمكن.
+                 */
+
+                await sendVerification();
+
+
+                /*
+                 * حفظ توافق مع النظام القديم.
+                 */
+
+                storageSet(
+                    "coach_platform_remembered_login",
+                    "true"
+                );
+
+
+                /*
+                 * لا يتم إعطاء حالة approved
+                 * من الواجهة.
+                 */
+
+                setMessage(
+                    "تم إرسال طلب التسجيل بنجاح. حسابك الآن قيد المراجعة من الإدارة.",
+                    "success"
+                );
+
+
+                showToast(
+                    "تم إرسال طلب التسجيل بنجاح",
+                    "success"
+                );
+
+
+                /*
+                 * نترك وقتًا لظهور الرسالة ثم
+                 * ننتقل لتسجيل الدخول.
+                 */
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        "login.html";
+
+                }, 1600);
+
+
+            } catch (error) {
+
+                console.error(
+                    "Register error:",
+                    error
+                );
+
+
+                const message =
+                    getFirebaseErrorMessage(
+                        error
+                    );
+
+
+                setMessage(
+                    message,
+                    "error"
+                );
+
+
+                showToast(
+                    message,
+                    "error"
+                );
+
+            } finally {
+
+                setSubmitting(false);
+
+            }
+
+        }
+
+
+        /* =========================
+           PASSWORD TOGGLE
+        ========================== */
+
+        function initializePasswordToggle(
+            buttonId,
+            inputId
+        ) {
+
+            const button =
+                $("#" + buttonId);
+
+            const input =
+                $("#" + inputId);
+
+
+            if (!button || !input) {
+                return;
+            }
+
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const showing =
+                        input.type === "text";
+
+
+                    input.type =
+                        showing
+                            ? "password"
+                            : "text";
+
+
+                    button.setAttribute(
+                        "aria-pressed",
+                        String(!showing)
+                    );
+
+
+                    button.setAttribute(
+                        "aria-label",
+                        showing
+                            ? "إظهار كلمة المرور"
+                            : "إخفاء كلمة المرور"
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =========================
+           REVEAL
+        ========================== */
+
+        function initializeReveal() {
+
+            const elements =
+                document.querySelectorAll(
+                    ".reveal"
+                );
+
+
+            if (!elements.length) {
+                return;
+            }
+
+
+            if (
+                !("IntersectionObserver" in window)
+            ) {
+
+                elements.forEach(
+                    element => {
+
+                        element.classList.add(
+                            "visible"
+                        );
+
+                        element.classList.add(
+                            "revealed"
+                        );
+
+                    }
+                );
+
+                return;
+
+            }
+
+
+            const observer =
+                new IntersectionObserver(
+                    entries => {
+
+                        entries.forEach(
+                            entry => {
+
+                                if (
+                                    !entry.isIntersecting
+                                ) {
+
+                                    return;
+
+                                }
+
+
+                                entry.target.classList.add(
+                                    "visible"
+                                );
+
+
+                                entry.target.classList.add(
+                                    "revealed"
+                                );
+
+
+                                observer.unobserve(
+                                    entry.target
+                                );
+
+                            }
+                        );
+
+                    },
+                    {
+                        threshold: 0.08
+                    }
+                );
+
+
+            elements.forEach(
+                element => {
+                    observer.observe(element);
+                }
+            );
+
+        }
+
+
+        /* =========================
+           INITIAL SESSION CHECK
+        ========================== */
+
+        function handleExistingSession() {
+
+            try {
+
+                if (
+                    !window.FirebaseAuth ||
+                    typeof window.FirebaseAuth
+                        .getCurrentUser !==
+                    "function"
+                ) {
+
+                    return;
+
+                }
+
+
+                const user =
+                    window.FirebaseAuth
+                        .getCurrentUser();
+
+
+                if (!user) {
+                    return;
+                }
+
+
+                /*
+                 * لا يتم تحويل المستخدم تلقائيًا.
+                 */
+
+            } catch (error) {
+
+                console.warn(
+                    "Existing session check skipped:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* =========================
+           INITIALIZE
+        ========================== */
+
+        function initializeRegisterPage() {
+
+            initializeTheme();
+
+
+            initializePasswordToggle(
+                "passwordToggle",
+                "registerPassword"
+            );
+
+
+            initializePasswordToggle(
+                "confirmPasswordToggle",
+                "registerConfirmPassword"
+            );
+
+
+            initializeReveal();
+
+
+            const form =
+                $("#registerForm");
+
+
+            if (form) {
+
+                form.addEventListener(
+                    "submit",
+                    handleRegister
+                );
+
+            }
+
+
+            handleExistingSession();
+
+        }
+
+
+        if (
+            document.readyState ===
+            "loading"
+        ) {
+
+            document.addEventListener(
+                "DOMContentLoaded",
+                initializeRegisterPage,
+                { once: true }
+            );
+
+        } else {
+
+            initializeRegisterPage();
+
+        }
+
+    </script>
+
+</body>
+</html>
