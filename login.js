@@ -1,6 +1,11 @@
 (() => {
     "use strict";
 
+    const STORAGE_KEYS = {
+        theme: "abdelnaseer_theme",
+        rememberedLogin: "abdelnaseer_login_identifier"
+    };
+
     const pageLoader = document.getElementById("pageLoader");
     const themeToggle = document.querySelector("[data-theme-toggle]");
 
@@ -13,54 +18,74 @@
     const loginPassword = document.getElementById("loginPassword");
     const loginRemember = document.getElementById("loginRemember");
 
-    const formMessage = document.getElementById("loginFormMessage");
-    const submitButton = document.getElementById("loginSubmit");
+    const loginFormMessage = document.getElementById("loginFormMessage");
+    const loginSubmit = document.getElementById("loginSubmit");
 
-    const methodButtons = document.querySelectorAll("[data-login-method]");
-    const passwordToggles = document.querySelectorAll("[data-password-toggle]");
+    const methodButtons = document.querySelectorAll(
+        "[data-login-method]"
+    );
 
-    const THEME_KEY = "abdelnaseer_theme";
-    const REMEMBER_KEY = "abdelnaseer_login_identifier";
+    const passwordToggles = document.querySelectorAll(
+        "[data-password-toggle]"
+    );
 
     let loginMethod = "phone";
 
-    function getStoredTheme() {
-        const savedTheme = localStorage.getItem(THEME_KEY);
+    function getPreferredTheme() {
+        const savedTheme = localStorage.getItem(
+            STORAGE_KEYS.theme
+        );
 
         if (savedTheme === "light" || savedTheme === "dark") {
             return savedTheme;
         }
 
-        return window.matchMedia("(prefers-color-scheme: light)").matches
+        return window.matchMedia(
+            "(prefers-color-scheme: light)"
+        ).matches
             ? "light"
             : "dark";
     }
 
     function applyTheme(theme) {
-        document.documentElement.setAttribute("data-theme", theme);
+        document.documentElement.setAttribute(
+            "data-theme",
+            theme
+        );
 
-        if (themeToggle) {
-            themeToggle.setAttribute(
-                "aria-label",
-                theme === "dark"
-                    ? "Switch to light mode"
-                    : "Switch to dark mode"
-            );
-
-            themeToggle.setAttribute(
-                "aria-pressed",
-                theme === "light" ? "true" : "false"
-            );
+        if (!themeToggle) {
+            return;
         }
+
+        themeToggle.setAttribute(
+            "aria-pressed",
+            theme === "light" ? "true" : "false"
+        );
+
+        themeToggle.setAttribute(
+            "aria-label",
+            theme === "light"
+                ? "Switch to dark mode"
+                : "Switch to light mode"
+        );
     }
 
     function toggleTheme() {
         const currentTheme =
-            document.documentElement.getAttribute("data-theme") || "dark";
+            document.documentElement.getAttribute(
+                "data-theme"
+            ) || "dark";
 
-        const nextTheme = currentTheme === "dark" ? "light" : "dark";
+        const nextTheme =
+            currentTheme === "dark"
+                ? "light"
+                : "dark";
 
-        localStorage.setItem(THEME_KEY, nextTheme);
+        localStorage.setItem(
+            STORAGE_KEYS.theme,
+            nextTheme
+        );
+
         applyTheme(nextTheme);
     }
 
@@ -70,35 +95,39 @@
         }
 
         window.setTimeout(() => {
-            pageLoader.classList.add("is-hidden");
+            pageLoader.classList.add("loaded");
         }, 350);
     }
 
     function setLoginMethod(method) {
-        loginMethod = method === "email" ? "email" : "phone";
+        loginMethod =
+            method === "email"
+                ? "email"
+                : "phone";
 
         methodButtons.forEach((button) => {
-            const isActive =
+            const active =
                 button.dataset.loginMethod === loginMethod;
 
-            button.classList.toggle("is-active", isActive);
-            button.setAttribute("aria-selected", String(isActive));
+            button.classList.toggle(
+                "is-active",
+                active
+            );
+
+            button.setAttribute(
+                "aria-selected",
+                String(active)
+            );
         });
 
         if (loginPhoneGroup) {
-            loginPhoneGroup.hidden = loginMethod !== "phone";
+            loginPhoneGroup.hidden =
+                loginMethod !== "phone";
         }
 
         if (loginEmailGroup) {
-            loginEmailGroup.hidden = loginMethod !== "email";
-        }
-
-        if (loginMethod === "phone" && loginPhone) {
-            loginPhone.focus();
-        }
-
-        if (loginMethod === "email" && loginEmail) {
-            loginEmail.focus();
+            loginEmailGroup.hidden =
+                loginMethod !== "email";
         }
 
         clearFormMessage();
@@ -111,54 +140,72 @@
             return;
         }
 
-        const input = document.getElementById(targetId);
+        const input =
+            document.getElementById(targetId);
 
         if (!input) {
             return;
         }
 
-        const isPassword = input.type === "password";
+        const shouldShow =
+            input.type === "password";
 
-        input.type = isPassword ? "text" : "password";
-
-        button.setAttribute(
-            "aria-label",
-            isPassword
-                ? "Hide password"
-                : "Show password"
-        );
+        input.type =
+            shouldShow
+                ? "text"
+                : "password";
 
         button.setAttribute(
             "aria-pressed",
-            String(isPassword)
+            String(shouldShow)
+        );
+
+        button.setAttribute(
+            "aria-label",
+            shouldShow
+                ? "Hide password"
+                : "Show password"
         );
     }
 
-    function showFormMessage(message, type = "error") {
-        if (!formMessage) {
+    function showFormMessage(
+        message,
+        type = "error"
+    ) {
+        if (!loginFormMessage) {
             return;
         }
 
-        formMessage.textContent = message;
-        formMessage.className = `form-message is-visible ${type}`;
+        loginFormMessage.textContent =
+            message;
+
+        loginFormMessage.className =
+            `login-form-message is-visible ${type}`;
     }
 
     function clearFormMessage() {
-        if (!formMessage) {
+        if (!loginFormMessage) {
             return;
         }
 
-        formMessage.textContent = "";
-        formMessage.className = "form-message";
+        loginFormMessage.textContent = "";
+
+        loginFormMessage.className =
+            "login-form-message";
     }
 
     function setLoading(isLoading) {
-        if (!submitButton) {
+        if (!loginSubmit) {
             return;
         }
 
-        submitButton.classList.toggle("is-loading", isLoading);
-        submitButton.disabled = isLoading;
+        loginSubmit.classList.toggle(
+            "is-loading",
+            isLoading
+        );
+
+        loginSubmit.disabled =
+            isLoading;
     }
 
     function normalizePhone(value) {
@@ -169,40 +216,50 @@
     }
 
     function isValidEmail(value) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+            value
+        );
     }
 
-    function validateLoginForm() {
-        const password = loginPassword?.value || "";
+    function validateForm() {
+        const password =
+            loginPassword?.value || "";
 
         if (!password) {
             return {
                 valid: false,
-                message: "Please enter your password."
+                message:
+                    "Please enter your password."
             };
         }
 
         if (password.length < 6) {
             return {
                 valid: false,
-                message: "Password must contain at least 6 characters."
+                message:
+                    "Password must contain at least 6 characters."
             };
         }
 
         if (loginMethod === "phone") {
-            const phone = normalizePhone(loginPhone?.value || "");
+            const phone =
+                normalizePhone(
+                    loginPhone?.value || ""
+                );
 
             if (!phone) {
                 return {
                     valid: false,
-                    message: "Please enter your phone number."
+                    message:
+                        "Please enter your phone number."
                 };
             }
 
             if (!/^\+?[0-9]{8,15}$/.test(phone)) {
                 return {
                     valid: false,
-                    message: "Please enter a valid phone number."
+                    message:
+                        "Please enter a valid phone number."
                 };
             }
 
@@ -214,19 +271,24 @@
             };
         }
 
-        const email = (loginEmail?.value || "").trim().toLowerCase();
+        const email =
+            (loginEmail?.value || "")
+                .trim()
+                .toLowerCase();
 
         if (!email) {
             return {
                 valid: false,
-                message: "Please enter your email address."
+                message:
+                    "Please enter your email address."
             };
         }
 
         if (!isValidEmail(email)) {
             return {
                 valid: false,
-                message: "Please enter a valid email address."
+                message:
+                    "Please enter a valid email address."
             };
         }
 
@@ -238,8 +300,30 @@
         };
     }
 
+    function saveRememberedIdentifier(
+        identifier
+    ) {
+        if (!loginRemember) {
+            return;
+        }
+
+        if (loginRemember.checked) {
+            localStorage.setItem(
+                STORAGE_KEYS.rememberedLogin,
+                identifier
+            );
+        } else {
+            localStorage.removeItem(
+                STORAGE_KEYS.rememberedLogin
+            );
+        }
+    }
+
     function loadRememberedIdentifier() {
-        const remembered = localStorage.getItem(REMEMBER_KEY);
+        const remembered =
+            localStorage.getItem(
+                STORAGE_KEYS.rememberedLogin
+            );
 
         if (!remembered) {
             return;
@@ -249,36 +333,20 @@
             setLoginMethod("email");
 
             if (loginEmail) {
-                loginEmail.value = remembered;
+                loginEmail.value =
+                    remembered;
             }
+        } else {
+            setLoginMethod("phone");
 
-            if (loginRemember) {
-                loginRemember.checked = true;
+            if (loginPhone) {
+                loginPhone.value =
+                    remembered;
             }
-
-            return;
-        }
-
-        setLoginMethod("phone");
-
-        if (loginPhone) {
-            loginPhone.value = remembered;
         }
 
         if (loginRemember) {
             loginRemember.checked = true;
-        }
-    }
-
-    function handleRememberIdentifier(identifier) {
-        if (!loginRemember) {
-            return;
-        }
-
-        if (loginRemember.checked) {
-            localStorage.setItem(REMEMBER_KEY, identifier);
-        } else {
-            localStorage.removeItem(REMEMBER_KEY);
         }
     }
 
@@ -287,10 +355,14 @@
 
         clearFormMessage();
 
-        const validation = validateLoginForm();
+        const validation =
+            validateForm();
 
         if (!validation.valid) {
-            showFormMessage(validation.message, "error");
+            showFormMessage(
+                validation.message,
+                "error"
+            );
             return;
         }
 
@@ -298,26 +370,35 @@
 
         try {
             /*
-             * Firebase authentication will be connected here later.
+             * Authentication will be connected
+             * through the shared authentication
+             * service later.
              *
-             * The final authentication flow must be handled through
-             * the shared authentication layer instead of exposing
-             * database permissions or sensitive validation logic
-             * inside this page.
+             * Do not put Firebase credentials,
+             * database rules, admin secrets,
+             * or privileged operations here.
              */
 
             await new Promise((resolve) => {
-                window.setTimeout(resolve, 500);
+                window.setTimeout(
+                    resolve,
+                    400
+                );
             });
 
-            handleRememberIdentifier(validation.identifier);
+            saveRememberedIdentifier(
+                validation.identifier
+            );
 
             showFormMessage(
-                "The login service is being connected. Please try again after the authentication system is enabled.",
+                "The authentication service is not connected yet.",
                 "error"
             );
         } catch (error) {
-            console.error("Login error:", error);
+            console.error(
+                "Login initialization error:",
+                error
+            );
 
             showFormMessage(
                 "Unable to complete the login request. Please try again.",
@@ -328,46 +409,110 @@
         }
     }
 
-    function setupEvents() {
-        if (themeToggle) {
-            themeToggle.addEventListener("click", toggleTheme);
-        }
-
-        methodButtons.forEach((button) => {
-            button.addEventListener("click", () => {
-                setLoginMethod(button.dataset.loginMethod);
-            });
-        });
-
+    function setupPasswordToggles() {
         passwordToggles.forEach((button) => {
-            button.addEventListener("click", () => {
-                togglePassword(button);
-            });
+            button.addEventListener(
+                "click",
+                () => {
+                    togglePassword(button);
+                }
+            );
         });
+    }
 
-        if (loginForm) {
-            loginForm.addEventListener("submit", handleLogin);
+    function setupMethodButtons() {
+        methodButtons.forEach((button) => {
+            button.addEventListener(
+                "click",
+                () => {
+                    setLoginMethod(
+                        button.dataset.loginMethod
+                    );
+                }
+            );
+        });
+    }
+
+    function setupFormEvents() {
+        if (!loginForm) {
+            return;
         }
 
-        [loginPhone, loginEmail, loginPassword].forEach((input) => {
+        loginForm.addEventListener(
+            "submit",
+            handleLogin
+        );
+
+        [
+            loginPhone,
+            loginEmail,
+            loginPassword
+        ].forEach((input) => {
             if (!input) {
                 return;
             }
 
-            input.addEventListener("input", clearFormMessage);
+            input.addEventListener(
+                "input",
+                clearFormMessage
+            );
         });
     }
 
+    function setupTheme() {
+        applyTheme(
+            getPreferredTheme()
+        );
+
+        if (themeToggle) {
+            themeToggle.addEventListener(
+                "click",
+                toggleTheme
+            );
+        }
+    }
+
+    function setupPageLinks() {
+        document
+            .querySelectorAll(
+                'a[href="login.html"]'
+            )
+            .forEach((link) => {
+                link.addEventListener(
+                    "click",
+                    () => {
+                        link.blur();
+                    }
+                );
+            });
+    }
+
     function initialize() {
-        applyTheme(getStoredTheme());
+        setupTheme();
+
         setLoginMethod("phone");
+
         loadRememberedIdentifier();
-        setupEvents();
+
+        setupMethodButtons();
+
+        setupPasswordToggles();
+
+        setupFormEvents();
+
+        setupPageLinks();
+
         hideLoader();
     }
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initialize);
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+        document.addEventListener(
+            "DOMContentLoaded",
+            initialize
+        );
     } else {
         initialize();
     }
