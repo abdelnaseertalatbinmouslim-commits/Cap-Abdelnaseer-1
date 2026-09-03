@@ -1,0 +1,2542 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#080a0f">
+    <meta name="description" content="المادة الدراسية | منصة الكوتش">
+
+    <title>المادة الدراسية | منصة الكوتش</title>
+
+    <link rel="icon" type="image/jpeg" href="1783950091830.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-primary: #080a0f;
+            --bg-secondary: #0d1017;
+            --bg-card: rgba(18, 22, 31, 0.78);
+            --bg-card-solid: #12161f;
+            --bg-input: rgba(255, 255, 255, 0.045);
+
+            --text-primary: #f7f7f8;
+            --text-secondary: #a7adb9;
+            --text-muted: #707784;
+
+            --accent: #d9b45a;
+            --accent-light: #f2d98b;
+            --accent-dark: #9d7930;
+            --accent-soft: rgba(217, 180, 90, 0.12);
+            --accent-glow: rgba(217, 180, 90, 0.28);
+
+            --success: #53d89a;
+            --warning: #e9bb58;
+            --blue: #6da8ff;
+
+            --border: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(217, 180, 90, 0.28);
+
+            --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+            --shadow-soft: 0 15px 45px rgba(0, 0, 0, 0.22);
+
+            --radius-sm: 12px;
+            --radius-md: 18px;
+            --radius-lg: 26px;
+            --radius-xl: 34px;
+
+            --sidebar-width: 270px;
+            --header-height: 76px;
+
+            --transition-fast: 0.2s ease;
+            --transition: 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        html[data-theme="light"] {
+            --bg-primary: #f5f6f8;
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.88);
+            --bg-card-solid: #ffffff;
+            --bg-input: rgba(15, 18, 25, 0.045);
+
+            --text-primary: #11141b;
+            --text-secondary: #626a78;
+            --text-muted: #89909d;
+
+            --border: rgba(15, 18, 25, 0.09);
+            --border-strong: rgba(157, 121, 48, 0.32);
+
+            --shadow: 0 24px 70px rgba(20, 24, 35, 0.12);
+            --shadow-soft: 0 15px 45px rgba(20, 24, 35, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Cairo", "Tajawal", sans-serif;
+            color: var(--text-primary);
+            background:
+                radial-gradient(circle at 85% 5%, rgba(217, 180, 90, 0.08), transparent 28%),
+                radial-gradient(circle at 10% 85%, rgba(217, 180, 90, 0.045), transparent 25%),
+                var(--bg-primary);
+            overflow-x: hidden;
+            transition:
+                background var(--transition),
+                color var(--transition);
+        }
+
+        body.menu-open {
+            overflow: hidden;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            border: 0;
+            cursor: pointer;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        ::selection {
+            background: var(--accent);
+            color: #17130b;
+        }
+
+        /* Loader */
+
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: grid;
+            place-items: center;
+            background: var(--bg-primary);
+            transition:
+                opacity 0.45s ease,
+                visibility 0.45s ease;
+        }
+
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .loader-orbit {
+            width: 58px;
+            height: 58px;
+            border: 2px solid rgba(217, 180, 90, 0.15);
+            border-top-color: var(--accent);
+            border-right-color: var(--accent-light);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader-brand {
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            color: var(--accent-light);
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Background */
+
+        .background-decoration {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .background-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: 0.5;
+        }
+
+        .background-orb-one {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            right: 20%;
+            background: rgba(217, 180, 90, 0.07);
+        }
+
+        .background-orb-two {
+            width: 260px;
+            height: 260px;
+            bottom: 5%;
+            left: -100px;
+            background: rgba(217, 180, 90, 0.045);
+        }
+
+        .background-grid {
+            position: absolute;
+            inset: 0;
+            opacity: 0.025;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
+            background-size: 55px 55px;
+            mask-image: linear-gradient(to bottom, black, transparent 80%);
+        }
+
+        /* Layout */
+
+        .app-shell {
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 1000;
+            width: var(--sidebar-width);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 15px;
+            border-left: 1px solid var(--border);
+            background: rgba(10, 13, 19, 0.86);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            transition: transform var(--transition);
+        }
+
+        html[data-theme="light"] .sidebar {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 56px;
+            padding: 8px 10px;
+            margin-bottom: 22px;
+        }
+
+        .sidebar-brand-mark {
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--border-strong);
+            border-radius: 14px;
+            background: linear-gradient(
+                145deg,
+                rgba(242, 217, 139, 0.14),
+                rgba(217, 180, 90, 0.04)
+            );
+            color: var(--accent-light);
+        }
+
+        .sidebar-brand-mark svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .sidebar-brand-text {
+            min-width: 0;
+        }
+
+        .sidebar-brand-title {
+            display: block;
+            font-size: 14px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .sidebar-brand-subtitle {
+            display: block;
+            margin-top: 1px;
+            color: var(--text-muted);
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .sidebar-section-title {
+            padding: 0 12px;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            position: relative;
+            min-height: 45px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 13px;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 800;
+            transition: var(--transition-fast);
+        }
+
+        .nav-item svg {
+            width: 18px;
+            height: 18px;
+            flex: 0 0 18px;
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background: var(--bg-input);
+            transform: translateX(-2px);
+        }
+
+        .nav-item.active {
+            color: var(--accent-light);
+            border-color: var(--border-strong);
+            background: linear-gradient(
+                135deg,
+                rgba(217, 180, 90, 0.13),
+                rgba(217, 180, 90, 0.045)
+            );
+        }
+
+        .nav-item.active::before {
+            content: "";
+            position: absolute;
+            right: -1px;
+            width: 3px;
+            height: 22px;
+            border-radius: 99px;
+            background: var(--accent);
+            box-shadow: 0 0 18px var(--accent-glow);
+        }
+
+        .nav-badge {
+            margin-right: auto;
+            min-width: 20px;
+            height: 20px;
+            display: grid;
+            place-items: center;
+            padding: 0 5px;
+            border-radius: 7px;
+            background: rgba(217, 180, 90, 0.1);
+            color: var(--accent-light);
+            font-size: 8px;
+            font-weight: 900;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+
+        .sidebar-support {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 12px;
+            margin-bottom: 7px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            color: var(--text-secondary);
+            font-size: 10px;
+            font-weight: 800;
+            transition: var(--transition-fast);
+        }
+
+        .sidebar-support:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+        }
+
+        .sidebar-support svg {
+            width: 17px;
+            height: 17px;
+            color: var(--accent);
+        }
+
+        .logout-button {
+            width: 100%;
+            min-height: 43px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 12px;
+            border: 1px solid rgba(255, 111, 125, 0.13);
+            border-radius: 14px;
+            background: rgba(255, 111, 125, 0.045);
+            color: #ff8b97;
+            font-size: 10px;
+            font-weight: 900;
+            transition: var(--transition-fast);
+        }
+
+        .logout-button:hover {
+            border-color: rgba(255, 111, 125, 0.3);
+            background: rgba(255, 111, 125, 0.08);
+        }
+
+        .logout-button svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .main-area {
+            min-height: 100vh;
+            margin-right: var(--sidebar-width);
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 500;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(8, 10, 15, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        html[data-theme="light"] .topbar {
+            background: rgba(245, 246, 248, 0.78);
+        }
+
+        .topbar-title {
+            min-width: 0;
+        }
+
+        .topbar-kicker {
+            display: block;
+            color: var(--accent);
+            font-size: 8px;
+            font-weight: 900;
+            letter-spacing: 0.07em;
+        }
+
+        .topbar-title h1 {
+            margin-top: 2px;
+            font-size: 17px;
+            font-weight: 900;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .topbar-button {
+            position: relative;
+            width: 41px;
+            height: 41px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            transition: var(--transition-fast);
+        }
+
+        .topbar-button:hover {
+            color: var(--accent-light);
+            border-color: var(--border-strong);
+            transform: translateY(-2px);
+        }
+
+        .topbar-button svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .mobile-menu-button {
+            display: none;
+        }
+
+        /* Content */
+
+        .content {
+            width: min(1220px, calc(100% - 48px));
+            margin: 0 auto;
+            padding: 32px 0 55px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 17px;
+            color: var(--text-muted);
+            font-size: 8px;
+            font-weight: 800;
+        }
+
+        .breadcrumb a {
+            transition: var(--transition-fast);
+        }
+
+        .breadcrumb a:hover {
+            color: var(--accent-light);
+        }
+
+        .breadcrumb-separator {
+            color: var(--accent-dark);
+        }
+
+        /* Subject hero */
+
+        .subject-hero {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 30px;
+            padding: 27px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-xl);
+            background:
+                radial-gradient(
+                    circle at 10% 20%,
+                    rgba(217, 180, 90, 0.1),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    135deg,
+                    rgba(217, 180, 90, 0.055),
+                    transparent 55%
+                ),
+                var(--bg-card);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .subject-hero::before {
+            content: "";
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            left: -100px;
+            top: -120px;
+            border-radius: 50%;
+            border: 1px solid rgba(217, 180, 90, 0.09);
+            box-shadow:
+                0 0 0 30px rgba(217, 180, 90, 0.025),
+                0 0 0 60px rgba(217, 180, 90, 0.015);
+            pointer-events: none;
+        }
+
+        .subject-hero-copy {
+            position: relative;
+            z-index: 1;
+        }
+
+        .subject-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--accent);
+            font-size: 8px;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+        }
+
+        .subject-label-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .subject-hero-title {
+            margin-top: 8px;
+            font-size: clamp(25px, 4vw, 39px);
+            line-height: 1.3;
+            font-weight: 900;
+            letter-spacing: -0.035em;
+        }
+
+        .subject-hero-description {
+            max-width: 650px;
+            margin-top: 8px;
+            color: var(--text-secondary);
+            font-size: 10px;
+            line-height: 1.9;
+        }
+
+        .subject-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 15px;
+        }
+
+        .meta-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 28px;
+            padding: 0 9px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            font-size: 7px;
+            font-weight: 800;
+        }
+
+        .meta-chip svg {
+            width: 13px;
+            height: 13px;
+            color: var(--accent);
+        }
+
+        .subject-hero-icon {
+            position: relative;
+            width: 118px;
+            height: 118px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--border-strong);
+            border-radius: 34px;
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(242, 217, 139, 0.12),
+                    rgba(217, 180, 90, 0.025)
+                );
+            color: var(--accent-light);
+            box-shadow:
+                0 25px 55px rgba(0, 0, 0, 0.18),
+                0 0 40px rgba(217, 180, 90, 0.05);
+        }
+
+        .subject-hero-icon::before,
+        .subject-hero-icon::after {
+            content: "";
+            position: absolute;
+            border: 1px solid rgba(217, 180, 90, 0.12);
+            border-radius: 50%;
+        }
+
+        .subject-hero-icon::before {
+            width: 145px;
+            height: 145px;
+        }
+
+        .subject-hero-icon::after {
+            width: 175px;
+            height: 175px;
+            border-color: rgba(217, 180, 90, 0.06);
+        }
+
+        .subject-hero-icon svg {
+            position: relative;
+            z-index: 2;
+            width: 47px;
+            height: 47px;
+        }
+
+        /* Sections */
+
+        .section-heading {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 14px;
+        }
+
+        .section-heading h2 {
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .section-heading p {
+            margin-top: 3px;
+            color: var(--text-muted);
+            font-size: 9px;
+            line-height: 1.6;
+        }
+
+        .section-count {
+            color: var(--text-muted);
+            font-size: 8px;
+            font-weight: 800;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 13px;
+        }
+
+        .content-card {
+            position: relative;
+            min-height: 190px;
+            display: flex;
+            flex-direction: column;
+            padding: 17px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-card);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition:
+                transform var(--transition),
+                border-color var(--transition),
+                box-shadow var(--transition);
+        }
+
+        .content-card::before {
+            content: "";
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            left: -55px;
+            top: -55px;
+            border-radius: 50%;
+            background: rgba(217, 180, 90, 0.07);
+            filter: blur(12px);
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--border-strong);
+            box-shadow: var(--shadow);
+        }
+
+        .content-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .content-icon {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--border-strong);
+            border-radius: 14px;
+            background: var(--accent-soft);
+            color: var(--accent-light);
+        }
+
+        .content-icon svg {
+            width: 21px;
+            height: 21px;
+        }
+
+        .content-number {
+            color: var(--text-muted);
+            font-size: 8px;
+            font-weight: 900;
+        }
+
+        .content-card h3 {
+            position: relative;
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .content-card p {
+            position: relative;
+            margin-top: 5px;
+            color: var(--text-secondary);
+            font-size: 8px;
+            line-height: 1.8;
+        }
+
+        .content-card-footer {
+            margin-top: auto;
+            padding-top: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .content-count {
+            color: var(--text-muted);
+            font-size: 8px;
+            font-weight: 800;
+        }
+
+        .content-count strong {
+            color: var(--accent-light);
+            font-size: 12px;
+            margin-left: 3px;
+        }
+
+        .content-open {
+            width: 35px;
+            height: 35px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: rgba(217, 180, 90, 0.08);
+            color: var(--accent-light);
+            transition: var(--transition-fast);
+        }
+
+        .content-open:hover {
+            background: var(--accent);
+            color: #17130b;
+            transform: translateX(-2px);
+        }
+
+        .content-open svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Info panel */
+
+        .info-panel {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 14px;
+            margin-top: 28px;
+        }
+
+        .info-card {
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-card);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .info-card-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .info-card-title svg {
+            width: 18px;
+            height: 18px;
+            color: var(--accent);
+        }
+
+        .info-card p {
+            margin-top: 7px;
+            color: var(--text-secondary);
+            font-size: 9px;
+            line-height: 1.9;
+        }
+
+        .status-list {
+            display: grid;
+            gap: 8px;
+            margin-top: 13px;
+        }
+
+        .status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            min-height: 36px;
+            padding: 0 10px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-input);
+        }
+
+        .status-row span {
+            color: var(--text-secondary);
+            font-size: 8px;
+            font-weight: 800;
+        }
+
+        .status-row strong {
+            color: var(--success);
+            font-size: 8px;
+            font-weight: 900;
+        }
+
+        /* Toast */
+
+        .toast-container {
+            position: fixed;
+            left: 22px;
+            bottom: 22px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            width: min(360px, calc(100vw - 44px));
+        }
+
+        .toast {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 13px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            background: var(--bg-card-solid);
+            box-shadow: var(--shadow);
+            animation: toastIn 0.35s ease forwards;
+        }
+
+        .toast-icon {
+            width: 30px;
+            height: 30px;
+            flex: 0 0 30px;
+            display: grid;
+            place-items: center;
+            border-radius: 9px;
+            background: var(--accent-soft);
+            color: var(--accent-light);
+        }
+
+        .toast-icon svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        .toast-text strong {
+            display: block;
+            font-size: 9px;
+            font-weight: 900;
+        }
+
+        .toast-text span {
+            display: block;
+            margin-top: 2px;
+            color: var(--text-secondary);
+            font-size: 8px;
+            line-height: 1.6;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile */
+
+        .mobile-overlay {
+            display: none;
+        }
+
+        @media (max-width: 1100px) {
+            :root {
+                --sidebar-width: 235px;
+            }
+
+            .content-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .info-panel {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 820px) {
+            :root {
+                --sidebar-width: 270px;
+            }
+
+            .sidebar {
+                transform: translateX(100%);
+                box-shadow: -20px 0 70px rgba(0, 0, 0, 0.25);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-area {
+                margin-right: 0;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .mobile-menu-button {
+                display: grid;
+            }
+
+            .mobile-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 900;
+                background: rgba(0, 0, 0, 0.42);
+                backdrop-filter: blur(3px);
+            }
+
+            .mobile-overlay.visible {
+                display: block;
+            }
+
+            .subject-hero {
+                grid-template-columns: 1fr;
+            }
+
+            .subject-hero-icon {
+                width: 90px;
+                height: 90px;
+                border-radius: 27px;
+            }
+
+            .subject-hero-icon svg {
+                width: 36px;
+                height: 36px;
+            }
+
+            .content {
+                width: min(100% - 30px, 700px);
+                padding-top: 25px;
+            }
+        }
+
+        @media (max-width: 580px) {
+            .topbar-title h1 {
+                font-size: 14px;
+            }
+
+            .topbar-kicker {
+                font-size: 7px;
+            }
+
+            .topbar-actions {
+                gap: 5px;
+            }
+
+            .topbar-button {
+                width: 38px;
+                height: 38px;
+            }
+
+            .content {
+                width: calc(100% - 24px);
+            }
+
+            .subject-hero {
+                padding: 20px;
+                border-radius: 24px;
+            }
+
+            .subject-hero-title {
+                font-size: 25px;
+            }
+
+            .subject-hero-description {
+                font-size: 9px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-heading {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 3px;
+            }
+
+            .breadcrumb {
+                font-size: 7px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="loader-orbit"></div>
+            <div class="loader-brand">COACH ACADEMY</div>
+        </div>
+    </div>
+
+    <div class="background-decoration" aria-hidden="true">
+        <div class="background-orb background-orb-one"></div>
+        <div class="background-orb background-orb-two"></div>
+        <div class="background-grid"></div>
+    </div>
+
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <div class="app-shell">
+
+        <aside class="sidebar" id="sidebar">
+
+            <a href="dashboard.html" class="sidebar-brand">
+                <span class="sidebar-brand-mark">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M12 3L19 6V11.5C19 16.2 16.2 19.6 12 21C7.8 19.6 5 16.2 5 11.5V6L12 3Z"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linejoin="round"/>
+                        <path d="M9 12L11 14L15.5 9.5"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                </span>
+
+                <span class="sidebar-brand-text">
+                    <span class="sidebar-brand-title">منصة الكوتش</span>
+                    <span class="sidebar-brand-subtitle">STUDENT PLATFORM</span>
+                </span>
+            </a>
+
+            <div class="sidebar-section-title">MAIN MENU</div>
+
+            <nav class="sidebar-nav">
+
+                <a href="dashboard.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <rect x="4" y="4" width="6" height="6" rx="1.5"
+                              stroke="currentColor" stroke-width="1.7"/>
+                        <rect x="14" y="4" width="6" height="6" rx="1.5"
+                              stroke="currentColor" stroke-width="1.7"/>
+                        <rect x="4" y="14" width="6" height="6" rx="1.5"
+                              stroke="currentColor" stroke-width="1.7"/>
+                        <rect x="14" y="14" width="6" height="6" rx="1.5"
+                              stroke="currentColor" stroke-width="1.7"/>
+                    </svg>
+                    <span>لوحة التحكم</span>
+                </a>
+
+                <a href="courses.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M4 5.5C4 4.67 4.67 4 5.5 4H19V18H5.5C4.67 18 4 18.67 4 19.5C4 20.33 4.67 21 5.5 21H19"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M8 8H15M8 12H15"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                    </svg>
+                    <span>المواد الدراسية</span>
+                </a>
+
+                <a href="summaries.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M6 3.5H15L19 7.5V20.5H6V3.5Z"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linejoin="round"/>
+                        <path d="M14.5 3.5V8H19"
+                              stroke="currentColor"
+                              stroke-width="1.7"/>
+                        <path d="M9 12H16M9 15.5H16"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                    </svg>
+                    <span>التلخيصات</span>
+                </a>
+
+                <a href="videos.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <rect x="3.5" y="5" width="17" height="14" rx="3"
+                              stroke="currentColor" stroke-width="1.7"/>
+                        <path d="M10 9L15 12L10 15V9Z"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linejoin="round"/>
+                    </svg>
+                    <span>الفيديوهات</span>
+                </a>
+
+                <a href="files.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M4 6.5C4 5.67 4.67 5 5.5 5H10L12 7H18.5C19.33 7 20 7.67 20 8.5V18.5C20 19.33 19.33 20 18.5 20H5.5C4.67 20 4 19.33 4 18.5V6.5Z"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linejoin="round"/>
+                    </svg>
+                    <span>الملفات</span>
+                </a>
+
+                <a href="quizzes.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="8.5"
+                                stroke="currentColor"
+                                stroke-width="1.7"/>
+                        <path d="M9 12L11 14L15.5 9.5"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                    <span>الاختبارات</span>
+                </a>
+
+                <a href="results.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M5 19V11M12 19V5M19 19V8"
+                              stroke="currentColor"
+                              stroke-width="1.8"
+                              stroke-linecap="round"/>
+                    </svg>
+                    <span>النتائج</span>
+                </a>
+
+                <a href="notifications.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M18 9.5C18 6.19 15.31 4 12 4C8.69 4 6 6.19 6 9.5C6 14 4.5 15 4.5 16.5H19.5C19.5 15 18 14 18 9.5Z"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linejoin="round"/>
+                        <path d="M9.5 19C10.1 19.7 11 20 12 20C13 20 13.9 19.7 14.5 19"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                    </svg>
+                    <span>الإشعارات</span>
+                    <span class="nav-badge">0</span>
+                </a>
+
+                <a href="profile.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="8" r="3.5"
+                                stroke="currentColor"
+                                stroke-width="1.7"/>
+                        <path d="M5 20C5.7 16.8 8.2 15 12 15C15.8 15 18.3 16.8 19 20"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                    </svg>
+                    <span>حسابي</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <a href="support.html" class="sidebar-support">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="8.5"
+                                stroke="currentColor"
+                                stroke-width="1.7"/>
+                        <path d="M12 10V16"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                        <circle cx="12" cy="7.2" r="0.8"
+                                fill="currentColor"/>
+                    </svg>
+                    <span>مركز الدعم والمساعدة</span>
+                </a>
+
+                <button
+                    class="logout-button"
+                    id="logoutButton"
+                    type="button"
+                >
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M10 5H6.5C5.67 5 5 5.67 5 6.5V17.5C5 18.33 5.67 19 6.5 19H10"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                        <path d="M14 8L18 12L14 16M18 12H9"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                    <span>تسجيل الخروج</span>
+                </button>
+
+            </div>
+
+        </aside>
+
+        <main class="main-area">
+
+            <header class="topbar">
+
+                <div class="topbar-title">
+                    <span class="topbar-kicker">ACADEMIC CENTER</span>
+                    <h1>تفاصيل المادة</h1>
+                </div>
+
+                <div class="topbar-actions">
+
+                    <button
+                        class="topbar-button mobile-menu-button"
+                        id="mobileMenuButton"
+                        type="button"
+                        aria-label="فتح القائمة"
+                        aria-expanded="false"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M4 7H20M4 12H20M4 17H20"
+                                  stroke="currentColor"
+                                  stroke-width="1.8"
+                                  stroke-linecap="round"/>
+                        </svg>
+                    </button>
+
+                    <a
+                        href="notifications.html"
+                        class="topbar-button"
+                        aria-label="الإشعارات"
+                    >
+                        <span class="notification-dot"></span>
+
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M18 9.5C18 6.19 15.31 4 12 4C8.69 4 6 6.19 6 9.5C6 14 4.5 15 4.5 16.5H19.5C19.5 15 18 14 18 9.5Z"
+                                  stroke="currentColor"
+                                  stroke-width="1.7"
+                                  stroke-linejoin="round"/>
+                            <path d="M9.5 19C10.1 19.7 11 20 12 20C13 20 13.9 19.7 14.5 19"
+                                  stroke="currentColor"
+                                  stroke-width="1.7"
+                                  stroke-linecap="round"/>
+                        </svg>
+                    </a>
+
+                    <button
+                        class="topbar-button"
+                        id="themeToggle"
+                        type="button"
+                        aria-label="تغيير المظهر"
+                    >
+                        <svg
+                            id="themeIcon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        ></svg>
+                    </button>
+
+                </div>
+
+            </header>
+
+            <div class="content">
+
+                <div class="breadcrumb">
+                    <a href="dashboard.html">لوحة التحكم</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <a id="coursesBreadcrumb" href="courses.html">
+                        المواد الدراسية
+                    </a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span id="breadcrumbSubject">المادة</span>
+                </div>
+
+                <section class="subject-hero">
+
+                    <div class="subject-hero-copy">
+
+                        <div class="subject-label">
+                            <span class="subject-label-dot"></span>
+                            <span id="subjectCode">SUB-00</span>
+                        </div>
+
+                        <h2
+                            class="subject-hero-title"
+                            id="subjectTitle"
+                        >
+                            جاري تحميل المادة...
+                        </h2>
+
+                        <p
+                            class="subject-hero-description"
+                            id="subjectDescription"
+                        >
+                            يتم تجهيز بيانات المادة.
+                        </p>
+
+                        <div class="subject-meta">
+
+                            <span class="meta-chip">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path d="M6 4H18C18.55 4 19 4.45 19 5V19L15.5 17L12 19L8.5 17L5 19V5C5 4.45 5 4 6 4Z"
+                                          stroke="currentColor"
+                                          stroke-width="1.7"
+                                          stroke-linejoin="round"/>
+                                </svg>
+                                <span id="termMeta">الترم الأول</span>
+                            </span>
+
+                            <span class="meta-chip">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path d="M4 5.5C4 4.67 4.67 4 5.5 4H19V18H5.5C4.67 18 4 18.67 4 19.5C4 20.33 4.67 21 5.5 21H19"
+                                          stroke="currentColor"
+                                          stroke-width="1.7"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+                                </svg>
+                                <span id="gradeMeta">الفرقة الأولى</span>
+                            </span>
+
+                            <span class="meta-chip">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 3L19 6V11.5C19 16.2 16.2 19.6 12 21C7.8 19.6 5 16.2 5 11.5V6L12 3Z"
+                                          stroke="currentColor"
+                                          stroke-width="1.7"
+                                          stroke-linejoin="round"/>
+                                </svg>
+                                <span>محتوى أكاديمي</span>
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="subject-hero-icon"
+                        id="subjectHeroIcon"
+                    ></div>
+
+                </section>
+
+                <section>
+
+                    <div class="section-heading">
+
+                        <div>
+                            <h2>محتوى المادة</h2>
+                            <p>
+                                اختر نوع المحتوى الذي تريد الوصول إليه.
+                            </p>
+                        </div>
+
+                        <span
+                            class="section-count"
+                            id="totalContentCount"
+                        >
+                            0 عنصر
+                        </span>
+
+                    </div>
+
+                    <div class="content-grid">
+
+                        <a
+                            class="content-card"
+                            id="summariesCard"
+                            href="#"
+                        >
+                            <div class="content-card-top">
+
+                                <div class="content-icon">
+                                    <svg viewBox="0 0 24 24" fill="none">
+                                        <path d="M6 3.5H15L19 7.5V20.5H6V3.5Z"
+                                              stroke="currentColor"
+                                              stroke-width="1.7"
+                                              stroke-linejoin="round"/>
+                                        <path d="M14.5 3.5V8H19"
+                                              stroke="currentColor"
+                                              stroke-width="1.7"/>
+                                        <path d="M9 12H16M9 15.5H14"
+                                              stroke="currentColor"
+                                              stroke-width="1.7"
+                                              stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+
+                                <span class="content-number">01</span>
+
+                            </div>
+
+                            <h3>التلخيصات</h3>
+
+                            <p>
+                                مراجعات مختصرة ومنظمة لأهم نقاط المادة.
+                            </p>
+
+                            <div class="content-card-footer">
+
+                                <span
+                                    class="content-count"
+                                    id="summaryCount"
+                                >
+                                    <strong>0</strong>
+                                    ملخص
+                                </span>
+
+                                <span class="content-open">
+                                    <svg viewBox="0 0 24 24" fill="none">
+                                        <path d="M9 5L16 12L9 19"
+                                              stroke="currentColor"
+                                              stroke-width="1.8"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+
+                            </div>
+
+                        </a>
+
+                        <a
+                            class="content-card"
+                            id="videosCard"
+                            href="#"
+                        >
+                            <div class="content-card-top">
+
+                                <div class="content-icon">
+                                    <svg viewBox="0 0 24 24" fill="none">
+                                        <rect x="3.5" y="5" width="17" height="14" rx="3"
+                                              stroke="currentColor"
+                                              stroke-width="1.7"/>
+                                        <path d="M10 9L15 12L10 15V9Z"
+                                              stroke="currentColor"
+                                              stroke-width="1.7"
+                                              stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+
+                                <span class="content-number">02</span>
+
+                            </div>
+
+                            <h3>الفيديوهات</h3>
+
+                            <p>
+                                شروحات ودروس مرئية مرتبطة بالمادة.
+                            </p>
+
+                            <div class="content-card-footer">
+
+                                <span
+                                    class="content-count"
+                                    id="videoCount"
+                                >
+                                    <strong>0</strong>
+                                    فيديو
+                                </span>
+
+                                <span class="content-open">
+                                    <svg viewBox="0 0 24 24" fill="none">
+                                        <path d="M9 5L16 12L9 19"
+                                              stroke="currentColor"
+                                              stroke-width="1.8"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+
+                            </div>
+
+                        </a>
+
+                        <a
+                            class="content-card"
+                            id="filesCard"
+                            href="#"
+                        >
+                            <div class="content-card-top">
+
+                                <div class="content-icon">
+                                    <svg viewBox="0 0 24 24" fill="none">
+                                        <path d="M4 6.5C4 5.67 4.67 5 5.5 5H10L12 7H18.5C19.33 7 20 7.67 20 8.5V18.5C20 19.33 19.33 20 18.5 20H5.5C4.67 20 4 19.33 4 18.5V6.5Z"
+                                              stroke="currentColor"
+                                              stroke-width="1.7"
+                                              stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+
+                                <span class="content-number">03</span>
+
+                            </div>
+
+                            <h3>ملفات PDF</h3>
+
+                            <p>
+                                المذكرات والمراجع والملفات الدراسية.
+                            </p>
+
+                            <div class="content-card-footer">
+
+                                <span
+                                    class="content-count"
+                                    id="fileCount"
+                                >
+                                    <strong>0</strong>
+                                    ملف
+                                </span>
+
+                                <span class="content-open">
+                                    <svg viewBox="0 0 24 24" fill="none">
+                                        <path d="M9 5L16 12L9 19"
+                                              stroke="currentColor"
+                                              stroke-width="1.8"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+
+                            </div>
+
+                        </a>
+
+                        <a
+                            class="content-card"
+                            id="quizzesCard"
+                            href="#"
+                        >
+                            <div class="content-card-top">
+
+                                <div class="content-icon">
+                                    <svg viewBox="0 0 24 24" fill="none">
+                                        <circle cx="12" cy="12" r="8.5"
+                                                stroke="currentColor"
+                                                stroke-width="1.7"/>
+                                        <path d="M9 12L11 14L15.5 9.5"
+                                              stroke="currentColor"
+                                              stroke-width="1.7"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+
+                                <span class="content-number">04</span>
+
+                            </div>
+
+                            <h3>الاختبارات</h3>
+
+                            <p>
+                                اختبارات وتدريبات لقياس مستوى الاستيعاب.
+                            </p>
+
+                            <div class="content-card-footer">
+
+                                <span
+                                    class="content-count"
+                                    id="quizCount"
+                                >
+                                    <strong>0</strong>
+                                    اختبار
+                                </span>
+
+                                <span class="content-open">
+                                    <svg viewBox="0 0 24 24" fill="none">
+                                        <path d="M9 5L16 12L9 19"
+                                              stroke="currentColor"
+                                              stroke-width="1.8"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+
+                </section>
+
+                <section class="info-panel">
+
+                    <div class="info-card">
+
+                        <div class="info-card-title">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="8.5"
+                                        stroke="currentColor"
+                                        stroke-width="1.7"/>
+                                <path d="M12 10V16"
+                                      stroke="currentColor"
+                                      stroke-width="1.7"
+                                      stroke-linecap="round"/>
+                                <circle cx="12" cy="7.2" r="0.8"
+                                        fill="currentColor"/>
+                            </svg>
+
+                            <span>عن المادة</span>
+                        </div>
+
+                        <p id="aboutSubject">
+                            سيتم عرض تفاصيل المادة ومعلوماتها هنا عند ربط
+                            المنصة بقاعدة البيانات.
+                        </p>
+
+                    </div>
+
+                    <div class="info-card">
+
+                        <div class="info-card-title">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path d="M12 3L19 6V11.5C19 16.2 16.2 19.6 12 21C7.8 19.6 5 16.2 5 11.5V6L12 3Z"
+                                      stroke="currentColor"
+                                      stroke-width="1.7"
+                                      stroke-linejoin="round"/>
+                                <path d="M9 12L11 14L15.5 9.5"
+                                      stroke="currentColor"
+                                      stroke-width="1.7"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                            </svg>
+
+                            <span>حالة المحتوى</span>
+                        </div>
+
+                        <div class="status-list">
+
+                            <div class="status-row">
+                                <span>المادة</span>
+                                <strong id="subjectStatus">
+                                    متاحة
+                                </strong>
+                            </div>
+
+                            <div class="status-row">
+                                <span>التلخيصات</span>
+                                <strong id="summaryStatus">
+                                    متاحة
+                                </strong>
+                            </div>
+
+                            <div class="status-row">
+                                <span>الفيديوهات</span>
+                                <strong id="videoStatus">
+                                    متاحة
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <div
+        class="toast-container"
+        id="toastContainer"
+    ></div>
+
+    <script>
+        "use strict";
+
+        const STORAGE_KEYS = {
+            theme: "abdelnaseer_theme",
+            currentUser: "currentUser",
+            student: "student",
+            currentStudent: "currentStudent"
+        };
+
+        const gradeNames = {
+            first: "الفرقة الأولى",
+            second: "الفرقة الثانية",
+            third: "الفرقة الثالثة",
+            fourth: "الفرقة الرابعة"
+        };
+
+        const termNames = {
+            first: "الترم الأول",
+            second: "الترم الثاني"
+        };
+
+        /*
+         * Temporary local data.
+         * This structure will later be replaced by Firebase data
+         * without changing the page architecture.
+         */
+        const subjectsData = {
+            anatomy: {
+                code: "SUB-01",
+                title: "التشريح",
+                description: "دراسة أساسيات التشريح والمفاهيم المرتبطة بجسم الإنسان.",
+                about: "مادة التشريح تتناول أساسيات دراسة جسم الإنسان وأهم المفاهيم التشريحية التي يحتاج إليها الطالب.",
+                icon: "anatomy",
+                summaries: 8,
+                videos: 6,
+                files: 5,
+                quizzes: 3
+            },
+
+            physiology: {
+                code: "SUB-02",
+                title: "الفسيولوجي",
+                description: "شرح أساسيات وظائف أعضاء الجسم والعمليات الحيوية.",
+                about: "مادة الفسيولوجي تركز على وظائف أجهزة الجسم والعمليات الحيوية الأساسية.",
+                icon: "physiology",
+                summaries: 7,
+                videos: 5,
+                files: 4,
+                quizzes: 2
+            },
+
+            english: {
+                code: "SUB-03",
+                title: "اللغة الإنجليزية",
+                description: "المقرر والشرح والمراجعات الخاصة باللغة الإنجليزية.",
+                about: "المادة تحتوي على موضوعات اللغة الإنجليزية والمراجعات والتمارين المرتبطة بالمقرر.",
+                icon: "language",
+                summaries: 6,
+                videos: 4,
+                files: 5,
+                quizzes: 3
+            },
+
+            fencing: {
+                code: "SUB-04",
+                title: "أساسيات المبارزة",
+                description: "المهارات والمبادئ والقواعد الأساسية لرياضة المبارزة.",
+                about: "تتناول المادة المهارات والمبادئ والقواعد الأساسية لرياضة المبارزة.",
+                icon: "sport",
+                summaries: 5,
+                videos: 8,
+                files: 4,
+                quizzes: 4
+            },
+
+            "sport-anatomy": {
+                code: "SUB-05",
+                title: "التشريح الرياضي",
+                description: "مبادئ التشريح المرتبطة بالحركة والنشاط الرياضي.",
+                about: "تربط المادة المفاهيم التشريحية بالحركة والنشاط والأداء الرياضي.",
+                icon: "sport",
+                summaries: 5,
+                videos: 4,
+                files: 3,
+                quizzes: 2
+            },
+
+            communication: {
+                code: "SUB-06",
+                title: "الاتصال",
+                description: "مفاهيم الاتصال وأنواعه ومبادئه وتطبيقاته.",
+                about: "تتناول المادة مفهوم الاتصال وأنواعه ومبادئه وأهم تطبيقاته.",
+                icon: "communication",
+                summaries: 4,
+                videos: 3,
+                files: 4,
+                quizzes: 2
+            },
+
+            movement: {
+                code: "SUB-01",
+                title: "علم الحركة",
+                description: "مبادئ الحركة وتحليل الأداء الحركي.",
+                about: "مقدمة في علم الحركة وتحليل الأداء الحركي والمفاهيم المرتبطة به.",
+                icon: "movement",
+                summaries: 0,
+                videos: 0,
+                files: 0,
+                quizzes: 0
+            },
+
+            training: {
+                code: "SUB-02",
+                title: "التدريب الرياضي",
+                description: "أسس ومبادئ التدريب الرياضي والإعداد البدني.",
+                about: "مقدمة في أسس التدريب الرياضي والإعداد البدني والمبادئ الأساسية للتخطيط.",
+                icon: "sport",
+                summaries: 0,
+                videos: 0,
+                files: 0,
+                quizzes: 0
+            },
+
+            psychology: {
+                code: "SUB-03",
+                title: "علم النفس الرياضي",
+                description: "المفاهيم الأساسية في علم النفس المرتبط بالرياضة.",
+                about: "تتناول المادة المفاهيم الأساسية لعلم النفس وتطبيقاته في المجال الرياضي.",
+                icon: "psychology",
+                summaries: 0,
+                videos: 0,
+                files: 0,
+                quizzes: 0
+            }
+        };
+
+        const state = {
+            grade: "first",
+            term: "first",
+            subject: "anatomy"
+        };
+
+        const elements = {
+            pageLoader: document.getElementById("pageLoader"),
+            sidebar: document.getElementById("sidebar"),
+            mobileOverlay: document.getElementById("mobileOverlay"),
+            mobileMenuButton: document.getElementById("mobileMenuButton"),
+            themeToggle: document.getElementById("themeToggle"),
+            themeIcon: document.getElementById("themeIcon"),
+            logoutButton: document.getElementById("logoutButton"),
+
+            coursesBreadcrumb: document.getElementById("coursesBreadcrumb"),
+            breadcrumbSubject: document.getElementById("breadcrumbSubject"),
+
+            subjectCode: document.getElementById("subjectCode"),
+            subjectTitle: document.getElementById("subjectTitle"),
+            subjectDescription: document.getElementById("subjectDescription"),
+            subjectHeroIcon: document.getElementById("subjectHeroIcon"),
+
+            termMeta: document.getElementById("termMeta"),
+            gradeMeta: document.getElementById("gradeMeta"),
+
+            totalContentCount: document.getElementById("totalContentCount"),
+
+            summaryCount: document.getElementById("summaryCount"),
+            videoCount: document.getElementById("videoCount"),
+            fileCount: document.getElementById("fileCount"),
+            quizCount: document.getElementById("quizCount"),
+
+            summariesCard: document.getElementById("summariesCard"),
+            videosCard: document.getElementById("videosCard"),
+            filesCard: document.getElementById("filesCard"),
+            quizzesCard: document.getElementById("quizzesCard"),
+
+            aboutSubject: document.getElementById("aboutSubject"),
+
+            subjectStatus: document.getElementById("subjectStatus"),
+            summaryStatus: document.getElementById("summaryStatus"),
+            videoStatus: document.getElementById("videoStatus"),
+
+            toastContainer: document.getElementById("toastContainer")
+        };
+
+        function getStoredStudent() {
+            const keys = [
+                STORAGE_KEYS.currentUser,
+                STORAGE_KEYS.student,
+                STORAGE_KEYS.currentStudent
+            ];
+
+            for (const key of keys) {
+                try {
+                    const value = localStorage.getItem(key);
+
+                    if (!value) {
+                        continue;
+                    }
+
+                    const parsed = JSON.parse(value);
+
+                    if (parsed && typeof parsed === "object") {
+                        return parsed;
+                    }
+                } catch (error) {
+                    continue;
+                }
+            }
+
+            return null;
+        }
+
+        function resolveGrade(student) {
+            if (!student) {
+                return "first";
+            }
+
+            const rawGrade = String(
+                student.grade ||
+                student.level ||
+                student.year ||
+                "first"
+            ).toLowerCase().trim();
+
+            const aliases = {
+                "1": "first",
+                "1st": "first",
+                "first": "first",
+                "الاولى": "first",
+                "الأولى": "first",
+
+                "2": "second",
+                "2nd": "second",
+                "second": "second",
+                "الثانية": "second",
+                "التانية": "second",
+
+                "3": "third",
+                "3rd": "third",
+                "third": "third",
+                "الثالثة": "third",
+                "التالتة": "third",
+
+                "4": "fourth",
+                "4th": "fourth",
+                "fourth": "fourth",
+                "الرابعة": "fourth"
+            };
+
+            return aliases[rawGrade] || "first";
+        }
+
+        function readUrlState() {
+            const params = new URLSearchParams(
+                window.location.search
+            );
+
+            const requestedGrade = params.get("grade");
+            const requestedTerm = params.get("term");
+            const requestedSubject = params.get("subject");
+
+            if (
+                requestedGrade === "first" ||
+                requestedGrade === "second" ||
+                requestedGrade === "third" ||
+                requestedGrade === "fourth"
+            ) {
+                state.grade = requestedGrade;
+            }
+
+            if (
+                requestedTerm === "first" ||
+                requestedTerm === "second"
+            ) {
+                state.term = requestedTerm;
+            }
+
+            if (
+                requestedSubject &&
+                subjectsData[requestedSubject]
+            ) {
+                state.subject = requestedSubject;
+            }
+        }
+
+        function setTheme(theme) {
+            const normalized =
+                theme === "light"
+                    ? "light"
+                    : "dark";
+
+            document.documentElement.dataset.theme =
+                normalized;
+
+            localStorage.setItem(
+                STORAGE_KEYS.theme,
+                normalized
+            );
+
+            if (normalized === "light") {
+                elements.themeIcon.innerHTML = `
+                    <circle cx="12" cy="12" r="4"
+                            stroke="currentColor"
+                            stroke-width="1.7"/>
+                    <path d="M12 2V4M12 20V22M4.93 4.93L6.34 6.34M17.66 17.66L19.07 19.07M2 12H4M20 12H22M4.93 19.07L6.34 17.66M17.66 6.34L19.07 4.93"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linecap="round"/>
+                `;
+            } else {
+                elements.themeIcon.innerHTML = `
+                    <path d="M20 15.5C19.05 15.82 18.03 16 17 16C11.48 16 7 11.52 7 6C7 4.97 7.18 3.95 7.5 3C4.31 4.35 2 7.5 2 11.2C2 16.72 6.48 21.2 12 21.2C15.7 21.2 18.85 18.89 20 15.5Z"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linejoin="round"/>
+                `;
+            }
+        }
+
+        function initializeTheme() {
+            const savedTheme =
+                localStorage.getItem(
+                    STORAGE_KEYS.theme
+                );
+
+            if (
+                savedTheme === "light" ||
+                savedTheme === "dark"
+            ) {
+                setTheme(savedTheme);
+                return;
+            }
+
+            const prefersLight =
+                window.matchMedia &&
+                window.matchMedia(
+                    "(prefers-color-scheme: light)"
+                ).matches;
+
+            setTheme(
+                prefersLight
+                    ? "light"
+                    : "dark"
+            );
+        }
+
+        function toggleTheme() {
+            const current =
+                document.documentElement.dataset.theme ||
+                "dark";
+
+            setTheme(
+                current === "dark"
+                    ? "light"
+                    : "dark"
+            );
+        }
+
+        function subjectIcon(type) {
+            const icons = {
+                anatomy: `
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M12 4C9.8 4 8 5.8 8 8C8 9.4 8.7 10.65 9.8 11.35C8.05 12.25 7 14.05 7 16.2V20"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                        <path d="M12 4C14.2 4 16 5.8 16 8C16 9.4 15.3 10.65 14.2 11.35C15.95 12.25 17 14.05 17 16.2V20"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                        <path d="M9 15H15M9.5 18H14.5"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                    </svg>
+                `,
+
+                physiology: `
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M3 12H7L9 6L13 18L15 12H21"
+                              stroke="currentColor"
+                              stroke-width="1.8"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                `,
+
+                language: `
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M5 5H19M12 5C12 11.5 9.2 15.8 5 18"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                        <path d="M9 10H15M14 14L18.5 20M18.5 20L20 22M18.5 20L17 22"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                `,
+
+                sport: `
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="8.5"
+                                stroke="currentColor"
+                                stroke-width="1.7"/>
+                        <path d="M7 8.5C9 10 10.2 10.2 12 10.2C13.8 10.2 15 10 17 8.5M7 15.5C9 14 10.2 13.8 12 13.8C13.8 13.8 15 14 17 15.5"
+                              stroke="currentColor"
+                              stroke-width="1.5"
+                              stroke-linecap="round"/>
+                    </svg>
+                `,
+
+                communication: `
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M5 6.5C5 5.67 5.67 5 6.5 5H17.5C18.33 5 19 5.67 19 6.5V14.5C19 15.33 18.33 16 17.5 16H11L7 19V16H6.5C5.67 16 5 15.33 5 14.5V6.5Z"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linejoin="round"/>
+                        <path d="M8 9H16M8 12H13"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"/>
+                    </svg>
+                `,
+
+                movement: `
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="5" r="2"
+                                stroke="currentColor"
+                                stroke-width="1.7"/>
+                        <path d="M12 7V12M12 9L7 11M12 9L17 11M12 12L8 19M12 12L17 19"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                `,
+
+                psychology: `
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M8.5 17.5C6.4 16.5 5 14.5 5 12C5 8.69 7.69 6 11 6C11.45 6 11.89 6.05 12.3 6.14C13.16 4.84 14.65 4 16.34 4C18.92 4 21 6.08 21 8.66C21 9.4 20.83 10.1 20.52 10.72C21.45 11.65 22 12.93 22 14.34C22 17.47 19.47 20 16.34 20H9.5C7.57 20 6 18.43 6 16.5C6 15.73 6.25 15.02 6.67 14.45"
+                              stroke="currentColor"
+                              stroke-width="1.6"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M10 11.5C11 10.8 12 10.8 13 11.5M10 15C11 15.7 12 15.7 13 15"
+                              stroke="currentColor"
+                              stroke-width="1.5"
+                              stroke-linecap="round"/>
+                    </svg>
+                `
+            };
+
+            return icons[type] || icons.sport;
+        }
+
+        function getSubject() {
+            return subjectsData[state.subject] || null;
+        }
+
+        function createContentUrl(page) {
+            return `${page}?grade=${encodeURIComponent(state.grade)}&term=${encodeURIComponent(state.term)}&subject=${encodeURIComponent(state.subject)}`;
+        }
+
+        function renderSubject() {
+            const subject = getSubject();
+
+            if (!subject) {
+                elements.subjectTitle.textContent =
+                    "المادة غير موجودة";
+
+                elements.subjectDescription.textContent =
+                    "تعذر العثور على المادة المطلوبة.";
+
+                return;
+            }
+
+            elements.subjectCode.textContent =
+                subject.code;
+
+            elements.subjectTitle.textContent =
+                subject.title;
+
+            elements.breadcrumbSubject.textContent =
+                subject.title;
+
+            elements.subjectDescription.textContent =
+                subject.description;
+
+            elements.aboutSubject.textContent =
+                subject.about;
+
+            elements.termMeta.textContent =
+                termNames[state.term];
+
+            elements.gradeMeta.textContent =
+                gradeNames[state.grade];
+
+            elements.subjectHeroIcon.innerHTML =
+                subjectIcon(subject.icon);
+
+            elements.summaryCount.innerHTML =
+                `<strong>${subject.summaries}</strong> ملخص`;
+
+            elements.videoCount.innerHTML =
+                `<strong>${subject.videos}</strong> فيديو`;
+
+            elements.fileCount.innerHTML =
+                `<strong>${subject.files}</strong> ملف`;
+
+            elements.quizCount.innerHTML =
+                `<strong>${subject.quizzes}</strong> اختبار`;
+
+            const total =
+                Number(subject.summaries || 0) +
+                Number(subject.videos || 0) +
+                Number(subject.files || 0) +
+                Number(subject.quizzes || 0);
+
+            elements.totalContentCount.textContent =
+                `${total} عنصر`;
+
+            elements.coursesBreadcrumb.href =
+                `courses.html?term=${encodeURIComponent(state.term)}`;
+
+            elements.summariesCard.href =
+                createContentUrl("summaries.html");
+
+            elements.videosCard.href =
+                createContentUrl("videos.html");
+
+            elements.filesCard.href =
+                createContentUrl("files.html");
+
+            elements.quizzesCard.href =
+                createContentUrl("quizzes.html");
+
+            elements.subjectStatus.textContent =
+                "متاحة";
+
+            elements.summaryStatus.textContent =
+                subject.summaries > 0
+                    ? "متاحة"
+                    : "قريبًا";
+
+            elements.videoStatus.textContent =
+                subject.videos > 0
+                    ? "متاحة"
+                    : "قريبًا";
+        }
+
+        function initializeStudent() {
+            const student = getStoredStudent();
+
+            if (!student) {
+                return;
+            }
+
+            const studentGrade =
+                resolveGrade(student);
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+            if (!params.get("grade")) {
+                state.grade = studentGrade;
+            }
+        }
+
+        function openMobileMenu() {
+            elements.sidebar.classList.add("open");
+            elements.mobileOverlay.classList.add("visible");
+
+            elements.mobileMenuButton.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+            document.body.classList.add("menu-open");
+        }
+
+        function closeMobileMenu() {
+            elements.sidebar.classList.remove("open");
+            elements.mobileOverlay.classList.remove("visible");
+
+            elements.mobileMenuButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            document.body.classList.remove("menu-open");
+        }
+
+        function toggleMobileMenu() {
+            if (
+                elements.sidebar.classList.contains("open")
+            ) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        }
+
+        function showToast(title, message) {
+            const toast =
+                document.createElement("div");
+
+            toast.className = "toast";
+
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M12 3L19 6V11.5C19 16.2 16.2 19.6 12 21C7.8 19.6 5 16.2 5 11.5V6L12 3Z"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linejoin="round"/>
+                        <path d="M9 12L11 14L15.5 9.5"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                </div>
+
+                <div class="toast-text">
+                    <strong>${escapeHtml(title)}</strong>
+                    <span>${escapeHtml(message)}</span>
+                </div>
+            `;
+
+            elements.toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = "0";
+                toast.style.transform =
+                    "translateY(8px)";
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 250);
+            }, 3000);
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function logout() {
+            [
+                STORAGE_KEYS.currentUser,
+                STORAGE_KEYS.student,
+                STORAGE_KEYS.currentStudent
+            ].forEach(key => {
+                localStorage.removeItem(key);
+            });
+
+            window.location.href =
+                "login.html";
+        }
+
+        function bindEvents() {
+            elements.themeToggle.addEventListener(
+                "click",
+                toggleTheme
+            );
+
+            elements.mobileMenuButton.addEventListener(
+                "click",
+                toggleMobileMenu
+            );
+
+            elements.mobileOverlay.addEventListener(
+                "click",
+                closeMobileMenu
+            );
+
+            elements.logoutButton.addEventListener(
+                "click",
+                logout
+            );
+
+            document.querySelectorAll(".nav-item").forEach(
+                item => {
+                    item.addEventListener(
+                        "click",
+                        closeMobileMenu
+                    );
+                }
+            );
+
+            window.addEventListener(
+                "resize",
+                () => {
+                    if (window.innerWidth > 820) {
+                        closeMobileMenu();
+                    }
+                }
+            );
+        }
+
+        function initialize() {
+            initializeTheme();
+            readUrlState();
+            initializeStudent();
+            renderSubject();
+            bindEvents();
+
+            setTimeout(() => {
+                elements.pageLoader.classList.add(
+                    "hidden"
+                );
+            }, 450);
+        }
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initialize
+        );
+    </script>
+
+</body>
+</html>
