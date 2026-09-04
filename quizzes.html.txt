@@ -1,0 +1,3033 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>الاختبارات | Cap Abdelnaseer</title>
+
+    <meta
+        name="description"
+        content="اختبارات Cap Abdelnaseer التعليمية"
+    >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        :root {
+            --bg: #070b12;
+            --bg-soft: #0b111b;
+            --card: #101722;
+            --card-2: #131c29;
+            --border: rgba(255,255,255,.08);
+            --border-strong: rgba(255,255,255,.13);
+            --text: #f5f7fb;
+            --muted: #9ba7b7;
+            --primary: #6c63ff;
+            --primary-2: #857dff;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow: 0 18px 50px rgba(0,0,0,.28);
+            --radius: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at 15% 10%,
+                    rgba(108,99,255,.12),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 85% 15%,
+                    rgba(34,197,94,.06),
+                    transparent 25%
+                ),
+                var(--bg);
+            color: var(--text);
+            font-family: "Cairo", sans-serif;
+            line-height: 1.7;
+        }
+
+        body.menu-open {
+            overflow: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            border: 0;
+            cursor: pointer;
+        }
+
+        .container {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        /* =========================
+           LOADER
+        ========================= */
+
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            transition:
+                opacity .35s ease,
+                visibility .35s ease;
+        }
+
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-box {
+            text-align: center;
+        }
+
+        .loader-spinner {
+            width: 46px;
+            height: 46px;
+            margin: 0 auto 14px;
+            border: 4px solid rgba(255,255,255,.10);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+        }
+
+        .loader-text {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(7,11,18,.82);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(18px);
+        }
+
+        .header-inner {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            flex: 0 0 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #4038b8
+                );
+            box-shadow:
+                0 10px 30px rgba(108,99,255,.28);
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .brand-text {
+            min-width: 0;
+        }
+
+        .brand-title {
+            font-size: 17px;
+            font-weight: 800;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .brand-subtitle {
+            margin-top: 2px;
+            color: var(--muted);
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-link {
+            padding: 9px 13px;
+            border-radius: 11px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            transition:
+                color .2s ease,
+                background .2s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--text);
+            background: rgba(255,255,255,.06);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .header-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 40px;
+            padding: 8px 13px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            background: rgba(255,255,255,.03);
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .header-btn:hover {
+            border-color: var(--border-strong);
+            background: rgba(255,255,255,.07);
+            transform: translateY(-1px);
+        }
+
+        .header-btn.primary {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .header-btn.primary:hover {
+            background: var(--primary-2);
+        }
+
+        .menu-btn {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: rgba(255,255,255,.04);
+            color: var(--text);
+            font-size: 20px;
+        }
+
+        /* =========================
+           MOBILE NAV
+        ========================= */
+
+        .mobile-nav {
+            position: fixed;
+            top: 76px;
+            right: 16px;
+            left: 16px;
+            z-index: 1200;
+            display: none;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: rgba(16,23,34,.98);
+            box-shadow: var(--shadow);
+        }
+
+        .mobile-nav.open {
+            display: block;
+            animation: menuIn .2s ease;
+        }
+
+        @keyframes menuIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mobile-nav a {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 11px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .mobile-nav a:hover,
+        .mobile-nav a.active {
+            color: var(--text);
+            background: rgba(255,255,255,.06);
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .page {
+            padding: 34px 0 60px;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 34px;
+            border: 1px solid var(--border);
+            border-radius: 26px;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(108,99,255,.13),
+                    rgba(16,23,34,.96) 45%
+                );
+            box-shadow: var(--shadow);
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            left: -100px;
+            top: -100px;
+            border-radius: 50%;
+            background: rgba(108,99,255,.11);
+            filter: blur(4px);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 760px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 12px;
+            padding: 6px 11px;
+            border: 1px solid rgba(108,99,255,.24);
+            border-radius: 999px;
+            background: rgba(108,99,255,.09);
+            color: #aaa5ff;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 12px rgba(108,99,255,.7);
+        }
+
+        .hero h1 {
+            margin-bottom: 8px;
+            font-size: clamp(27px, 4vw, 42px);
+            line-height: 1.25;
+            font-weight: 800;
+        }
+
+        .hero p {
+            max-width: 650px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* =========================
+           FILTERS
+        ========================= */
+
+        .toolbar {
+            margin-top: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            min-height: 39px;
+            padding: 7px 13px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            background: rgba(255,255,255,.03);
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .filter-btn:hover {
+            color: var(--text);
+            background: rgba(255,255,255,.06);
+        }
+
+        .filter-btn.active {
+            color: #fff;
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .search-box {
+            position: relative;
+            width: min(300px, 100%);
+        }
+
+        .search-box input {
+            width: 100%;
+            min-height: 42px;
+            padding: 9px 42px 9px 13px;
+            outline: none;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: rgba(255,255,255,.035);
+            color: var(--text);
+            font-size: 12px;
+            transition: .2s ease;
+        }
+
+        .search-box input::placeholder {
+            color: #667284;
+        }
+
+        .search-box input:focus {
+            border-color: rgba(108,99,255,.55);
+            box-shadow: 0 0 0 3px rgba(108,99,255,.08);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 15px;
+            pointer-events: none;
+        }
+
+        /* =========================
+           TERMS
+        ========================= */
+
+        .terms {
+            margin-top: 18px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+            scrollbar-width: thin;
+        }
+
+        .term-btn {
+            flex: 0 0 auto;
+            min-height: 37px;
+            padding: 7px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: rgba(255,255,255,.025);
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .term-btn:hover {
+            color: var(--text);
+        }
+
+        .term-btn.active {
+            color: #fff;
+            border-color: rgba(108,99,255,.55);
+            background: rgba(108,99,255,.15);
+        }
+
+        /* =========================
+           CONTENT HEADER
+        ========================= */
+
+        .section-head {
+            margin: 30px 0 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .section-title {
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .section-count {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* =========================
+           QUIZ GRID
+        ========================= */
+
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .quiz-card {
+            position: relative;
+            min-width: 0;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.035),
+                    rgba(255,255,255,.015)
+                );
+            box-shadow: 0 12px 35px rgba(0,0,0,.16);
+            transition:
+                transform .25s ease,
+                border-color .25s ease,
+                box-shadow .25s ease;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(108,99,255,.30);
+            box-shadow: 0 20px 45px rgba(0,0,0,.25);
+        }
+
+        .quiz-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .quiz-icon {
+            width: 48px;
+            height: 48px;
+            flex: 0 0 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: rgba(108,99,255,.13);
+            border: 1px solid rgba(108,99,255,.17);
+            font-size: 22px;
+        }
+
+        .quiz-status {
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .quiz-status.free {
+            color: #86efac;
+            background: rgba(34,197,94,.10);
+            border: 1px solid rgba(34,197,94,.16);
+        }
+
+        .quiz-status.paid {
+            color: #fcd34d;
+            background: rgba(245,158,11,.10);
+            border: 1px solid rgba(245,158,11,.16);
+        }
+
+        .quiz-title {
+            margin-bottom: 7px;
+            font-size: 16px;
+            line-height: 1.55;
+            font-weight: 800;
+        }
+
+        .quiz-description {
+            min-height: 48px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .quiz-meta {
+            margin-top: 17px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .meta-item {
+            padding: 9px 10px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            background: rgba(255,255,255,.02);
+        }
+
+        .meta-label {
+            display: block;
+            margin-bottom: 2px;
+            color: #687487;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .meta-value {
+            color: var(--text);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .quiz-footer {
+            margin-top: 17px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .quiz-subject {
+            min-width: 0;
+            color: var(--muted);
+            font-size: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .start-btn {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 38px;
+            padding: 8px 13px;
+            border-radius: 11px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            transition: .2s ease;
+        }
+
+        .start-btn:hover {
+            background: var(--primary-2);
+            transform: translateY(-1px);
+        }
+
+        /* =========================
+           SKELETON
+        ========================= */
+
+        .skeleton-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .skeleton-card {
+            height: 300px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background:
+                linear-gradient(
+                    100deg,
+                    rgba(255,255,255,.025) 30%,
+                    rgba(255,255,255,.07) 50%,
+                    rgba(255,255,255,.025) 70%
+                );
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+        }
+
+        @keyframes shimmer {
+            from {
+                background-position: 200% 0;
+            }
+
+            to {
+                background-position: -200% 0;
+            }
+        }
+
+        /* =========================
+           EMPTY / ERROR
+        ========================= */
+
+        .state-box {
+            padding: 45px 20px;
+            border: 1px dashed var(--border-strong);
+            border-radius: var(--radius);
+            background: rgba(255,255,255,.018);
+            text-align: center;
+        }
+
+        .state-icon {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 14px;
+            display: grid;
+            place-items: center;
+            border-radius: 17px;
+            background: rgba(108,99,255,.10);
+            font-size: 25px;
+        }
+
+        .state-title {
+            margin-bottom: 5px;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .state-text {
+            max-width: 520px;
+            margin: 0 auto;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .retry-btn {
+            margin-top: 16px;
+            padding: 9px 15px;
+            border-radius: 10px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        .toast-container {
+            position: fixed;
+            left: 18px;
+            bottom: 18px;
+            z-index: 5000;
+            width: min(360px, calc(100% - 36px));
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            pointer-events: none;
+        }
+
+        .toast {
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            background: rgba(16,23,34,.97);
+            box-shadow: var(--shadow);
+            color: var(--text);
+            font-size: 11px;
+            pointer-events: auto;
+            animation:
+                toastIn .25s ease,
+                toastOut .25s ease 3.5s forwards;
+        }
+
+        .toast.success {
+            border-color: rgba(34,197,94,.25);
+        }
+
+        .toast.error {
+            border-color: rgba(239,68,68,.25);
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes toastOut {
+            to {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+            margin-top: 55px;
+            padding: 25px 0 30px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .footer-copy {
+            color: #687487;
+            font-size: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .footer-links a:hover {
+            color: var(--text);
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1050px) {
+            .desktop-nav {
+                display: none;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .quiz-grid,
+            .skeleton-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                width: min(100% - 22px, 1180px);
+            }
+
+            .header-inner {
+                min-height: 68px;
+            }
+
+            .site-header {
+                background: rgba(7,11,18,.94);
+            }
+
+            .brand-logo {
+                width: 40px;
+                height: 40px;
+                flex-basis: 40px;
+                border-radius: 12px;
+            }
+
+            .brand-title {
+                font-size: 14px;
+            }
+
+            .brand-subtitle {
+                font-size: 9px;
+            }
+
+            .header-actions .header-btn {
+                display: none;
+            }
+
+            .mobile-nav {
+                top: 68px;
+                right: 11px;
+                left: 11px;
+            }
+
+            .page {
+                padding-top: 20px;
+            }
+
+            .hero {
+                padding: 23px 18px;
+                border-radius: 20px;
+            }
+
+            .hero h1 {
+                font-size: 26px;
+            }
+
+            .hero p {
+                font-size: 12px;
+            }
+
+            .toolbar {
+                align-items: stretch;
+            }
+
+            .filter-group {
+                width: 100%;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 3px;
+            }
+
+            .filter-btn {
+                flex: 0 0 auto;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .quiz-grid,
+            .skeleton-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz-card {
+                padding: 17px;
+            }
+
+            .footer-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .quiz-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz-footer {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .start-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         PAGE LOADER
+    ========================== -->
+
+    <div id="pageLoader" class="page-loader">
+        <div class="loader-box">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">جاري تحميل الاختبارات...</div>
+        </div>
+    </div>
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header id="siteHeader" class="site-header">
+        <div class="container header-inner">
+
+            <a href="dashboard.html" class="brand">
+                <div class="brand-logo">CA</div>
+
+                <div class="brand-text">
+                    <div class="brand-title">
+                        Cap Abdelnaseer
+                    </div>
+
+                    <div class="brand-subtitle">
+                        منصة التعليم والتدريب
+                    </div>
+                </div>
+            </a>
+
+            <nav class="desktop-nav" aria-label="التنقل الرئيسي">
+                <a href="dashboard.html" class="nav-link">
+                    الرئيسية
+                </a>
+
+                <a href="courses.html" class="nav-link">
+                    الكورسات
+                </a>
+
+                <a href="files.html" class="nav-link">
+                    الملفات
+                </a>
+
+                <a href="videos.html" class="nav-link">
+                    الفيديوهات
+                </a>
+
+                <a href="quizzes.html" class="nav-link active">
+                    الاختبارات
+                </a>
+
+                <a href="results.html" class="nav-link">
+                    النتائج
+                </a>
+
+                <a href="notifications.html" class="nav-link">
+                    الإشعارات
+                </a>
+            </nav>
+
+            <div class="header-actions">
+
+                <a
+                    id="profileHeaderButton"
+                    href="profile.html"
+                    class="header-btn"
+                >
+                    👤 الحساب
+                </a>
+
+                <button
+                    id="mobileMenuButton"
+                    class="menu-btn"
+                    type="button"
+                    aria-label="فتح القائمة"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+            </div>
+
+        </div>
+    </header>
+
+    <!-- =========================
+         MOBILE NAV
+    ========================== -->
+
+    <nav
+        id="mobileNav"
+        class="mobile-nav"
+        aria-label="قائمة الهاتف"
+    >
+        <a href="dashboard.html">
+            الرئيسية
+        </a>
+
+        <a href="courses.html">
+            الكورسات
+        </a>
+
+        <a href="files.html">
+            الملفات
+        </a>
+
+        <a href="videos.html">
+            الفيديوهات
+        </a>
+
+        <a href="quizzes.html" class="active">
+            الاختبارات
+        </a>
+
+        <a href="results.html">
+            النتائج
+        </a>
+
+        <a href="notifications.html">
+            الإشعارات
+        </a>
+
+        <a href="summaries.html">
+            الملخصات
+        </a>
+
+        <a href="profile.html">
+            الملف الشخصي
+        </a>
+
+        <a href="support.html">
+            الدعم
+        </a>
+    </nav>
+
+    <!-- =========================
+         MAIN
+    ========================== -->
+
+    <main class="page">
+        <div class="container">
+
+            <!-- HERO -->
+
+            <section class="hero">
+
+                <div class="hero-content">
+
+                    <div class="eyebrow">
+                        <span class="eyebrow-dot"></span>
+                        اختباراتك التعليمية
+                    </div>
+
+                    <h1>
+                        الاختبارات
+                    </h1>
+
+                    <p>
+                        اختبر معلوماتك، راجع إجاباتك، وتابع محاولاتك
+                        ونتائجك من مكان واحد.
+                    </p>
+
+                </div>
+
+            </section>
+
+            <!-- FILTER TOOLBAR -->
+
+            <section class="toolbar">
+
+                <div class="filter-group" id="typeFilters">
+
+                    <button
+                        type="button"
+                        class="filter-btn active"
+                        data-type="all"
+                    >
+                        الكل
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-type="free"
+                    >
+                        مجاني
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-type="paid"
+                    >
+                        مدفوع
+                    </button>
+
+                </div>
+
+                <div class="search-box">
+
+                    <span class="search-icon">
+                        🔎
+                    </span>
+
+                    <input
+                        id="searchInput"
+                        type="search"
+                        placeholder="ابحث عن اختبار..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+            </section>
+
+            <!-- TERMS -->
+
+            <section class="terms" id="terms">
+
+                <button
+                    type="button"
+                    class="term-btn active"
+                    data-term="all"
+                >
+                    كل الترمات
+                </button>
+
+                <button
+                    type="button"
+                    class="term-btn"
+                    data-term="1"
+                >
+                    الترم الأول
+                </button>
+
+                <button
+                    type="button"
+                    class="term-btn"
+                    data-term="2"
+                >
+                    الترم الثاني
+                </button>
+
+                <button
+                    type="button"
+                    class="term-btn"
+                    data-term="3"
+                >
+                    الترم الثالث
+                </button>
+
+                <button
+                    type="button"
+                    class="term-btn"
+                    data-term="4"
+                >
+                    الترم الرابع
+                </button>
+
+            </section>
+
+            <!-- SECTION HEADER -->
+
+            <div class="section-head">
+
+                <div>
+                    <h2 class="section-title">
+                        الاختبارات المتاحة
+                    </h2>
+                </div>
+
+                <div
+                    id="sectionCount"
+                    class="section-count"
+                >
+                    جاري التحميل...
+                </div>
+
+            </div>
+
+            <!-- SKELETON -->
+
+            <div
+                id="skeletonGrid"
+                class="skeleton-grid"
+            >
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+            </div>
+
+            <!-- QUIZ GRID -->
+
+            <div
+                id="quizGrid"
+                class="quiz-grid"
+                hidden
+            ></div>
+
+            <!-- EMPTY -->
+
+            <div
+                id="emptyState"
+                class="state-box"
+                hidden
+            >
+                <div class="state-icon">
+                    📝
+                </div>
+
+                <div class="state-title">
+                    مفيش اختبارات مطابقة
+                </div>
+
+                <div class="state-text">
+                    جرّب تغيّر الترم أو نوع الاختبار أو
+                    اكتب كلمة بحث مختلفة.
+                </div>
+            </div>
+
+            <!-- ERROR -->
+
+            <div
+                id="errorState"
+                class="state-box"
+                hidden
+            >
+                <div class="state-icon">
+                    ⚠️
+                </div>
+
+                <div class="state-title">
+                    حصلت مشكلة أثناء تحميل الاختبارات
+                </div>
+
+                <div
+                    id="errorText"
+                    class="state-text"
+                >
+                    حاول مرة أخرى.
+                </div>
+
+                <button
+                    id="retryButton"
+                    type="button"
+                    class="retry-btn"
+                >
+                    إعادة المحاولة
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer class="footer">
+        <div class="container footer-inner">
+
+            <div class="footer-copy">
+                © <span id="currentYear"></span>
+                Cap Abdelnaseer — جميع الحقوق محفوظة
+            </div>
+
+            <div class="footer-links">
+
+                <a href="dashboard.html">
+                    الرئيسية
+                </a>
+
+                <a href="support.html">
+                    الدعم
+                </a>
+
+                <a href="profile.html">
+                    الحساب
+                </a>
+
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- TOAST -->
+
+    <div
+        id="toastContainer"
+        class="toast-container"
+        aria-live="polite"
+    ></div>
+
+    <!-- =========================
+         FIREBASE
+    ========================== -->
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+    <script src="firebase-auth.js"></script>
+    <script src="firebase-database.js"></script>
+    <script src="firebase-content.js"></script>
+    <script src="firebase-features.js"></script>
+
+    <script>
+        (function () {
+            "use strict";
+
+            /* =========================================
+               STATE
+            ========================================== */
+
+            const state = {
+                quizzes: [],
+                filtered: [],
+                type: "all",
+                term: "all",
+                search: "",
+                loading: true,
+                error: null
+            };
+
+            /* =========================================
+               ELEMENTS
+            ========================================== */
+
+            const elements = {
+                pageLoader:
+                    document.getElementById("pageLoader"),
+
+                quizGrid:
+                    document.getElementById("quizGrid"),
+
+                skeletonGrid:
+                    document.getElementById("skeletonGrid"),
+
+                emptyState:
+                    document.getElementById("emptyState"),
+
+                errorState:
+                    document.getElementById("errorState"),
+
+                errorText:
+                    document.getElementById("errorText"),
+
+                retryButton:
+                    document.getElementById("retryButton"),
+
+                sectionCount:
+                    document.getElementById("sectionCount"),
+
+                searchInput:
+                    document.getElementById("searchInput"),
+
+                typeFilters:
+                    document.getElementById("typeFilters"),
+
+                terms:
+                    document.getElementById("terms"),
+
+                mobileMenuButton:
+                    document.getElementById("mobileMenuButton"),
+
+                mobileNav:
+                    document.getElementById("mobileNav"),
+
+                toastContainer:
+                    document.getElementById("toastContainer"),
+
+                currentYear:
+                    document.getElementById("currentYear")
+            };
+
+            /* =========================================
+               HELPERS
+            ========================================== */
+
+            function escapeHtml(value) {
+                return String(value == null ? "" : value)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            function safeString(value, fallback) {
+                if (
+                    value === null ||
+                    value === undefined
+                ) {
+                    return fallback || "";
+                }
+
+                const result = String(value).trim();
+
+                return result || (fallback || "");
+            }
+
+            function numberValue(value, fallback) {
+                const n = Number(value);
+
+                return Number.isFinite(n)
+                    ? n
+                    : (fallback || 0);
+            }
+
+            function normalizeTerm(value) {
+                if (
+                    value === null ||
+                    value === undefined ||
+                    value === ""
+                ) {
+                    return "";
+                }
+
+                const raw = String(value)
+                    .trim()
+                    .toLowerCase();
+
+                const map = {
+                    "term1": "1",
+                    "term01": "1",
+                    "first": "1",
+                    "first term": "1",
+                    "الترم الاول": "1",
+                    "الترم الأول": "1",
+
+                    "term2": "2",
+                    "term02": "2",
+                    "second": "2",
+                    "second term": "2",
+                    "الترم الثاني": "2",
+
+                    "term3": "3",
+                    "term03": "3",
+                    "third": "3",
+                    "third term": "3",
+                    "الترم الثالث": "3",
+
+                    "term4": "4",
+                    "term04": "4",
+                    "fourth": "4",
+                    "fourth term": "4",
+                    "الترم الرابع": "4"
+                };
+
+                if (map[raw]) {
+                    return map[raw];
+                }
+
+                const match = raw.match(/[1-4]/);
+
+                return match
+                    ? match[0]
+                    : raw;
+            }
+
+            function isPublished(quiz) {
+                if (!quiz) {
+                    return false;
+                }
+
+                if (
+                    quiz.published === false ||
+                    quiz.active === false
+                ) {
+                    return false;
+                }
+
+                const status =
+                    safeString(quiz.status)
+                        .toLowerCase();
+
+                if (
+                    status === "draft" ||
+                    status === "hidden" ||
+                    status === "disabled"
+                ) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            function isPaid(quiz) {
+                if (!quiz) {
+                    return false;
+                }
+
+                const values = [
+                    quiz.paid,
+                    quiz.isPaid,
+                    quiz.premium,
+                    quiz.requiresPayment,
+                    quiz.paymentRequired
+                ];
+
+                for (const value of values) {
+
+                    if (
+                        value === true ||
+                        String(value).toLowerCase() === "true"
+                    ) {
+                        return true;
+                    }
+
+                    if (
+                        String(value).toLowerCase() === "paid" ||
+                        String(value).toLowerCase() === "premium"
+                    ) {
+                        return true;
+                    }
+                }
+
+                const price = Number(
+                    quiz.price ??
+                    quiz.amount ??
+                    quiz.cost
+                );
+
+                return Number.isFinite(price) && price > 0;
+            }
+
+            function getQuizId(quiz) {
+                return safeString(
+                    quiz.id ||
+                    quiz.quizId ||
+                    quiz.key ||
+                    quiz._id
+                );
+            }
+
+            function getQuizTitle(quiz) {
+                return safeString(
+                    quiz.title ||
+                    quiz.name ||
+                    quiz.quizTitle,
+                    "اختبار بدون عنوان"
+                );
+            }
+
+            function getQuizDescription(quiz) {
+                return safeString(
+                    quiz.description ||
+                    quiz.desc ||
+                    quiz.details,
+                    "اختبر معلوماتك وراجع مستواك في المادة."
+                );
+            }
+
+            function getSubjectName(quiz) {
+                return safeString(
+                    quiz.subjectName ||
+                    quiz.subjectTitle ||
+                    quiz.subject ||
+                    quiz.courseName ||
+                    quiz.course ||
+                    "اختبار عام"
+                );
+            }
+
+            function getQuestionCount(quiz) {
+                if (Array.isArray(quiz.questions)) {
+                    return quiz.questions.length;
+                }
+
+                if (
+                    quiz.questions &&
+                    typeof quiz.questions === "object"
+                ) {
+                    return Object.keys(
+                        quiz.questions
+                    ).length;
+                }
+
+                return numberValue(
+                    quiz.totalQuestions ||
+                    quiz.questionCount ||
+                    quiz.questionsCount,
+                    0
+                );
+            }
+
+            function getDuration(quiz) {
+                return numberValue(
+                    quiz.durationMinutes ??
+                    quiz.duration ??
+                    quiz.time ??
+                    quiz.minutes,
+                    0
+                );
+            }
+
+            function getPassScore(quiz) {
+                return numberValue(
+                    quiz.passScore ??
+                    quiz.passingScore ??
+                    quiz.passMark,
+                    0
+                );
+            }
+
+            function getOrder(quiz) {
+                return numberValue(
+                    quiz.order ??
+                    quiz.sortOrder ??
+                    quiz.position,
+                    999999
+                );
+            }
+
+            function getCreatedAt(quiz) {
+                return numberValue(
+                    quiz.createdAt ??
+                    quiz.updatedAt ??
+                    quiz.timestamp,
+                    0
+                );
+            }
+
+            function normalizeQuiz(quiz, fallbackId) {
+                const source = quiz || {};
+
+                const normalized = {
+                    ...source,
+
+                    id: getQuizId(source) || fallbackId || "",
+
+                    title:
+                        getQuizTitle(source),
+
+                    description:
+                        getQuizDescription(source),
+
+                    subject:
+                        getSubjectName(source),
+
+                    subjectId:
+                        safeString(
+                            source.subjectId ||
+                            source.subjectID ||
+                            source.courseId
+                        ),
+
+                    term:
+                        normalizeTerm(
+                            source.term ||
+                            source.semester ||
+                            source.termNumber
+                        ),
+
+                    grade:
+                        safeString(
+                            source.grade ||
+                            source.year ||
+                            source.level
+                        ),
+
+                    duration:
+                        getDuration(source),
+
+                    passScore:
+                        getPassScore(source),
+
+                    questionCount:
+                        getQuestionCount(source),
+
+                    paid:
+                        isPaid(source),
+
+                    published:
+                        isPublished(source),
+
+                    order:
+                        getOrder(source),
+
+                    createdAt:
+                        getCreatedAt(source)
+                };
+
+                return normalized;
+            }
+
+            function normalizeQuizCollection(data) {
+                const list = [];
+
+                if (Array.isArray(data)) {
+
+                    data.forEach(function (item, index) {
+
+                        if (!item) {
+                            return;
+                        }
+
+                        list.push(
+                            normalizeQuiz(
+                                item,
+                                String(index)
+                            )
+                        );
+
+                    });
+
+                    return list;
+                }
+
+                if (
+                    data &&
+                    typeof data === "object"
+                ) {
+
+                    Object.keys(data).forEach(function (key) {
+
+                        const item = data[key];
+
+                        if (!item) {
+                            return;
+                        }
+
+                        list.push(
+                            normalizeQuiz(
+                                item,
+                                key
+                            )
+                        );
+
+                    });
+                }
+
+                return list;
+            }
+
+            function uniqueQuizzes(list) {
+                const map = new Map();
+
+                list.forEach(function (quiz) {
+
+                    const id =
+                        getQuizId(quiz) ||
+                        (
+                            getQuizTitle(quiz) +
+                            "|" +
+                            getSubjectName(quiz)
+                        );
+
+                    if (!map.has(id)) {
+                        map.set(id, quiz);
+                    }
+
+                });
+
+                return Array.from(map.values());
+            }
+
+            function sortQuizzes(list) {
+                return list.slice().sort(function (a, b) {
+
+                    const orderA =
+                        numberValue(a.order, 999999);
+
+                    const orderB =
+                        numberValue(b.order, 999999);
+
+                    if (orderA !== orderB) {
+                        return orderA - orderB;
+                    }
+
+                    return (
+                        numberValue(b.createdAt, 0) -
+                        numberValue(a.createdAt, 0)
+                    );
+                });
+            }
+
+            /* =========================================
+               TOAST
+            ========================================== */
+
+            function showToast(
+                message,
+                type
+            ) {
+                if (!elements.toastContainer) {
+                    return;
+                }
+
+                const toast =
+                    document.createElement("div");
+
+                toast.className =
+                    "toast " +
+                    (type || "");
+
+                toast.textContent =
+                    message;
+
+                elements.toastContainer.appendChild(
+                    toast
+                );
+
+                setTimeout(function () {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(
+                            toast
+                        );
+                    }
+                }, 3900);
+            }
+
+            window.showQuizzesToast =
+                showToast;
+
+            /* =========================================
+               LOADER
+            ========================================== */
+
+            function hideLoader() {
+                if (
+                    elements.pageLoader
+                ) {
+                    elements.pageLoader.classList.add(
+                        "hidden"
+                    );
+                }
+            }
+
+            function showLoader() {
+                if (
+                    elements.pageLoader
+                ) {
+                    elements.pageLoader.classList.remove(
+                        "hidden"
+                    );
+                }
+            }
+
+            /* =========================================
+               MOBILE MENU
+            ========================================== */
+
+            function closeMobileMenu() {
+                if (
+                    elements.mobileNav
+                ) {
+                    elements.mobileNav.classList.remove(
+                        "open"
+                    );
+                }
+
+                if (
+                    elements.mobileMenuButton
+                ) {
+                    elements.mobileMenuButton.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+                }
+
+                document.body.classList.remove(
+                    "menu-open"
+                );
+            }
+
+            function toggleMobileMenu() {
+                if (
+                    !elements.mobileNav
+                ) {
+                    return;
+                }
+
+                const isOpen =
+                    elements.mobileNav.classList.contains(
+                        "open"
+                    );
+
+                if (isOpen) {
+                    closeMobileMenu();
+                    return;
+                }
+
+                elements.mobileNav.classList.add(
+                    "open"
+                );
+
+                elements.mobileMenuButton.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+
+                document.body.classList.add(
+                    "menu-open"
+                );
+            }
+
+            if (
+                elements.mobileMenuButton
+            ) {
+                elements.mobileMenuButton.addEventListener(
+                    "click",
+                    toggleMobileMenu
+                );
+            }
+
+            if (
+                elements.mobileNav
+            ) {
+                elements.mobileNav
+                    .querySelectorAll("a")
+                    .forEach(function (link) {
+
+                        link.addEventListener(
+                            "click",
+                            closeMobileMenu
+                        );
+
+                    });
+            }
+
+            /* =========================================
+               FIREBASE WAIT
+            ========================================== */
+
+            function waitForModules(
+                timeout
+            ) {
+                timeout =
+                    timeout || 12000;
+
+                return new Promise(
+                    function (resolve, reject) {
+
+                        const started =
+                            Date.now();
+
+                        function check() {
+
+                            const ready =
+                                window.FirebaseCoreReady &&
+                                window.FirebaseAuthReady &&
+                                window.FirebaseDatabaseReady &&
+                                window.FirebaseContentReady &&
+                                window.FirebaseFeaturesReady;
+
+                            if (ready) {
+                                resolve();
+                                return;
+                            }
+
+                            if (
+                                Date.now() -
+                                started >
+                                timeout
+                            ) {
+                                reject(
+                                    new Error(
+                                        "Firebase modules timeout"
+                                    )
+                                );
+
+                                return;
+                            }
+
+                            setTimeout(
+                                check,
+                                100
+                            );
+                        }
+
+                        check();
+                    }
+                );
+            }
+
+            /* =========================================
+               LOAD QUIZZES
+            ========================================== */
+
+            async function loadQuizzes() {
+
+                state.loading = true;
+                state.error = null;
+
+                showLoader();
+
+                elements.skeletonGrid.hidden =
+                    false;
+
+                elements.quizGrid.hidden =
+                    true;
+
+                elements.emptyState.hidden =
+                    true;
+
+                elements.errorState.hidden =
+                    true;
+
+                elements.sectionCount.textContent =
+                    "جاري التحميل...";
+
+                try {
+
+                    await waitForModules();
+
+                    let quizzes = [];
+
+                    const Content =
+                        window.FirebaseContent;
+
+                    const Features =
+                        window.FirebaseFeatures;
+
+                    const DB =
+                        window.FirebaseDatabase;
+
+                    /*
+                     * الأولوية:
+                     * FirebaseContent
+                     * ثم FirebaseFeatures
+                     * ثم Database
+                     */
+
+                    if (
+                        Content &&
+                        typeof Content.getQuizzes ===
+                        "function"
+                    ) {
+
+                        quizzes =
+                            await Content.getQuizzes();
+
+                    } else if (
+                        Features &&
+                        typeof Features.getQuizzes ===
+                        "function"
+                    ) {
+
+                        quizzes =
+                            await Features.getQuizzes();
+
+                    } else if (
+                        DB &&
+                        DB.quizzes &&
+                        typeof DB.quizzes.getAll ===
+                        "function"
+                    ) {
+
+                        quizzes =
+                            await DB.quizzes.getAll();
+
+                    } else {
+
+                        throw new Error(
+                            "لم يتم العثور على طبقة الاختبارات."
+                        );
+                    }
+
+                    quizzes =
+                        normalizeQuizCollection(
+                            quizzes
+                        );
+
+                    quizzes =
+                        quizzes.filter(
+                            isPublished
+                        );
+
+                    quizzes =
+                        uniqueQuizzes(
+                            quizzes
+                        );
+
+                    quizzes =
+                        sortQuizzes(
+                            quizzes
+                        );
+
+                    state.quizzes =
+                        quizzes;
+
+                    state.loading = false;
+
+                    applyFilters();
+
+                    hideLoader();
+
+                } catch (error) {
+
+                    console.error(
+                        "Quizzes loading error:",
+                        error
+                    );
+
+                    state.loading = false;
+                    state.error = error;
+
+                    hideLoader();
+
+                    elements.skeletonGrid.hidden =
+                        true;
+
+                    elements.quizGrid.hidden =
+                        true;
+
+                    elements.emptyState.hidden =
+                        true;
+
+                    elements.errorState.hidden =
+                        false;
+
+                    elements.errorText.textContent =
+                        getFriendlyError(
+                            error
+                        );
+
+                    elements.sectionCount.textContent =
+                        "تعذر التحميل";
+                }
+            }
+
+            function getFriendlyError(error) {
+
+                if (!error) {
+                    return "حدث خطأ غير معروف.";
+                }
+
+                const code =
+                    safeString(
+                        error.code
+                    ).toLowerCase();
+
+                if (
+                    code.includes("permission")
+                ) {
+                    return "لا توجد صلاحية للوصول إلى الاختبارات حاليًا.";
+                }
+
+                if (
+                    code.includes("network")
+                ) {
+                    return "تأكد من اتصال الإنترنت وحاول مرة أخرى.";
+                }
+
+                if (
+                    error.message
+                ) {
+                    return error.message;
+                }
+
+                return "تعذر تحميل الاختبارات. حاول مرة أخرى.";
+            }
+
+            /* =========================================
+               FILTERS
+            ========================================== */
+
+            function applyFilters() {
+
+                const search =
+                    state.search
+                        .trim()
+                        .toLowerCase();
+
+                let result =
+                    state.quizzes.slice();
+
+                if (
+                    state.type === "free"
+                ) {
+
+                    result =
+                        result.filter(
+                            function (quiz) {
+                                return !quiz.paid;
+                            }
+                        );
+
+                } else if (
+                    state.type === "paid"
+                ) {
+
+                    result =
+                        result.filter(
+                            function (quiz) {
+                                return quiz.paid;
+                            }
+                        );
+                }
+
+                if (
+                    state.term !== "all"
+                ) {
+
+                    result =
+                        result.filter(
+                            function (quiz) {
+
+                                return (
+                                    normalizeTerm(
+                                        quiz.term
+                                    ) ===
+                                    state.term
+                                );
+
+                            }
+                        );
+                }
+
+                if (search) {
+
+                    result =
+                        result.filter(
+                            function (quiz) {
+
+                                const searchable =
+                                    [
+                                        quiz.title,
+                                        quiz.description,
+                                        quiz.subject,
+                                        quiz.subjectId,
+                                        quiz.grade,
+                                        quiz.term
+                                    ]
+                                        .join(" ")
+                                        .toLowerCase();
+
+                                return searchable
+                                    .includes(
+                                        search
+                                    );
+                            }
+                        );
+                }
+
+                state.filtered =
+                    result;
+
+                renderQuizzes();
+            }
+
+            /* =========================================
+               RENDER
+            ========================================== */
+
+            function renderQuizzes() {
+
+                elements.skeletonGrid.hidden =
+                    true;
+
+                elements.errorState.hidden =
+                    true;
+
+                if (
+                    state.filtered.length === 0
+                ) {
+
+                    elements.quizGrid.hidden =
+                        true;
+
+                    elements.emptyState.hidden =
+                        false;
+
+                    elements.sectionCount.textContent =
+                        "0 اختبار";
+
+                    return;
+                }
+
+                elements.emptyState.hidden =
+                    true;
+
+                elements.quizGrid.hidden =
+                    false;
+
+                elements.sectionCount.textContent =
+                    state.filtered.length === 1
+                        ? "اختبار واحد"
+                        : state.filtered.length +
+                          " اختبارات";
+
+                elements.quizGrid.innerHTML =
+                    state.filtered
+                        .map(
+                            renderQuizCard
+                        )
+                        .join("");
+
+                bindQuizButtons();
+            }
+
+            function renderQuizCard(
+                quiz
+            ) {
+
+                const id =
+                    getQuizId(quiz);
+
+                const title =
+                    escapeHtml(
+                        getQuizTitle(quiz)
+                    );
+
+                const description =
+                    escapeHtml(
+                        getQuizDescription(
+                            quiz
+                        )
+                    );
+
+                const subject =
+                    escapeHtml(
+                        getSubjectName(
+                            quiz
+                        )
+                    );
+
+                const questionCount =
+                    getQuestionCount(
+                        quiz
+                    );
+
+                const duration =
+                    getDuration(
+                        quiz
+                    );
+
+                const passScore =
+                    getPassScore(
+                        quiz
+                    );
+
+                const term =
+                    normalizeTerm(
+                        quiz.term
+                    );
+
+                const paid =
+                    isPaid(quiz);
+
+                const statusClass =
+                    paid
+                        ? "paid"
+                        : "free";
+
+                const statusText =
+                    paid
+                        ? "مدفوع"
+                        : "مجاني";
+
+                const durationText =
+                    duration > 0
+                        ? duration + " دقيقة"
+                        : "حسب الاختبار";
+
+                const questionsText =
+                    questionCount > 0
+                        ? questionCount + " سؤال"
+                        : "عدد الأسئلة متاح داخل الاختبار";
+
+                const passText =
+                    passScore > 0
+                        ? passScore + "%"
+                        : "حسب التقييم";
+
+                const termText =
+                    term
+                        ? "الترم " + term
+                        : "كل الترمات";
+
+                return `
+                    <article
+                        class="quiz-card"
+                        data-quiz-id="${escapeHtml(id)}"
+                    >
+
+                        <div class="quiz-top">
+
+                            <div class="quiz-icon">
+                                📝
+                            </div>
+
+                            <span
+                                class="quiz-status ${statusClass}"
+                            >
+                                ${statusText}
+                            </span>
+
+                        </div>
+
+                        <h3 class="quiz-title">
+                            ${title}
+                        </h3>
+
+                        <p class="quiz-description">
+                            ${description}
+                        </p>
+
+                        <div class="quiz-meta">
+
+                            <div class="meta-item">
+                                <span class="meta-label">
+                                    الأسئلة
+                                </span>
+
+                                <span class="meta-value">
+                                    ${escapeHtml(
+                                        questionsText
+                                    )}
+                                </span>
+                            </div>
+
+                            <div class="meta-item">
+                                <span class="meta-label">
+                                    الوقت
+                                </span>
+
+                                <span class="meta-value">
+                                    ${escapeHtml(
+                                        durationText
+                                    )}
+                                </span>
+                            </div>
+
+                            <div class="meta-item">
+                                <span class="meta-label">
+                                    الترم
+                                </span>
+
+                                <span class="meta-value">
+                                    ${escapeHtml(
+                                        termText
+                                    )}
+                                </span>
+                            </div>
+
+                            <div class="meta-item">
+                                <span class="meta-label">
+                                    النجاح
+                                </span>
+
+                                <span class="meta-value">
+                                    ${escapeHtml(
+                                        passText
+                                    )}
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="quiz-footer">
+
+                            <div
+                                class="quiz-subject"
+                                title="${subject}"
+                            >
+                                ${subject}
+                            </div>
+
+                            <button
+                                type="button"
+                                class="start-btn"
+                                data-start-quiz="${escapeHtml(id)}"
+                            >
+                                ابدأ الاختبار
+                                <span>←</span>
+                            </button>
+
+                        </div>
+
+                    </article>
+                `;
+            }
+
+            /* =========================================
+               START QUIZ
+            ========================================== */
+
+            function bindQuizButtons() {
+
+                elements.quizGrid
+                    .querySelectorAll(
+                        "[data-start-quiz]"
+                    )
+                    .forEach(
+                        function (button) {
+
+                            button.addEventListener(
+                                "click",
+                                function () {
+
+                                    const id =
+                                        button.getAttribute(
+                                            "data-start-quiz"
+                                        );
+
+                                    startQuiz(
+                                        id
+                                    );
+                                }
+                            );
+
+                        }
+                    );
+            }
+
+            async function startQuiz(
+                quizId
+            ) {
+
+                if (!quizId) {
+                    showToast(
+                        "تعذر تحديد الاختبار.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+                try {
+
+                    const Auth =
+                        window.FirebaseAuth;
+
+                    let identity =
+                        null;
+
+                    if (
+                        Auth &&
+                        typeof Auth.getCurrentUser ===
+                        "function"
+                    ) {
+                        identity =
+                            Auth.getCurrentUser();
+                    }
+
+                    if (!identity) {
+
+                        try {
+
+                            const DB =
+                                window.FirebaseDatabase;
+
+                            if (
+                                DB &&
+                                typeof DB.getCurrentUser ===
+                                "function"
+                            ) {
+                                identity =
+                                    DB.getCurrentUser();
+                            }
+
+                        } catch (ignore) {}
+                    }
+
+                    if (!identity) {
+
+                        showToast(
+                            "سجّل الدخول أولًا لبدء الاختبار.",
+                            "error"
+                        );
+
+                        setTimeout(
+                            function () {
+                                window.location.href =
+                                    "login.html?next=" +
+                                    encodeURIComponent(
+                                        "quizzes.html"
+                                    );
+                            },
+                            700
+                        );
+
+                        return;
+                    }
+
+                    /*
+                     * لا ننشئ محاولة في قاعدة البيانات
+                     * هنا إلا إذا كانت طبقة Features
+                     * مهيأة لبدء الاختبار.
+                     *
+                     * وإلا ننتقل لصفحة الاختبار
+                     * مع الـ quizId فقط.
+                     */
+
+                    const Features =
+                        window.FirebaseFeatures;
+
+                    if (
+                        Features &&
+                        typeof Features.startQuiz ===
+                        "function"
+                    ) {
+
+                        try {
+
+                            const attempt =
+                                await Features.startQuiz(
+                                    quizId
+                                );
+
+                            const attemptId =
+                                attempt &&
+                                (
+                                    attempt.id ||
+                                    attempt.attemptId ||
+                                    attempt.key
+                                );
+
+                            let url =
+                                "quiz.html?id=" +
+                                encodeURIComponent(
+                                    quizId
+                                );
+
+                            if (
+                                attemptId
+                            ) {
+                                url +=
+                                    "&attemptId=" +
+                                    encodeURIComponent(
+                                        attemptId
+                                    );
+                            }
+
+                            window.location.href =
+                                url;
+
+                            return;
+
+                        } catch (startError) {
+
+                            /*
+                             * لو startQuiz غير متوافق
+                             * مع نسخة صفحة الاختبار،
+                             * نسمح للصفحة نفسها بإدارة البداية.
+                             */
+
+                            console.warn(
+                                "startQuiz fallback:",
+                                startError
+                            );
+                        }
+                    }
+
+                    window.location.href =
+                        "quiz.html?id=" +
+                        encodeURIComponent(
+                            quizId
+                        );
+
+                } catch (error) {
+
+                    console.error(
+                        "Start quiz error:",
+                        error
+                    );
+
+                    showToast(
+                        "تعذر فتح الاختبار. حاول مرة أخرى.",
+                        "error"
+                    );
+                }
+            }
+
+            /* =========================================
+               TYPE FILTER EVENTS
+            ========================================== */
+
+            if (
+                elements.typeFilters
+            ) {
+
+                elements.typeFilters
+                    .querySelectorAll(
+                        "[data-type]"
+                    )
+                    .forEach(
+                        function (button) {
+
+                            button.addEventListener(
+                                "click",
+                                function () {
+
+                                    elements.typeFilters
+                                        .querySelectorAll(
+                                            "[data-type]"
+                                        )
+                                        .forEach(
+                                            function (item) {
+                                                item.classList.remove(
+                                                    "active"
+                                                );
+                                            }
+                                        );
+
+                                    button.classList.add(
+                                        "active"
+                                    );
+
+                                    state.type =
+                                        button.getAttribute(
+                                            "data-type"
+                                        ) ||
+                                        "all";
+
+                                    applyFilters();
+                                }
+                            );
+
+                        }
+                    );
+            }
+
+            /* =========================================
+               TERM EVENTS
+            ========================================== */
+
+            if (
+                elements.terms
+            ) {
+
+                elements.terms
+                    .querySelectorAll(
+                        "[data-term]"
+                    )
+                    .forEach(
+                        function (button) {
+
+                            button.addEventListener(
+                                "click",
+                                function () {
+
+                                    elements.terms
+                                        .querySelectorAll(
+                                            "[data-term]"
+                                        )
+                                        .forEach(
+                                            function (item) {
+                                                item.classList.remove(
+                                                    "active"
+                                                );
+                                            }
+                                        );
+
+                                    button.classList.add(
+                                        "active"
+                                    );
+
+                                    state.term =
+                                        button.getAttribute(
+                                            "data-term"
+                                        ) ||
+                                        "all";
+
+                                    applyFilters();
+                                }
+                            );
+
+                        }
+                    );
+            }
+
+            /* =========================================
+               SEARCH
+            ========================================== */
+
+            if (
+                elements.searchInput
+            ) {
+
+                let searchTimer =
+                    null;
+
+                elements.searchInput.addEventListener(
+                    "input",
+                    function () {
+
+                        clearTimeout(
+                            searchTimer
+                        );
+
+                        searchTimer =
+                            setTimeout(
+                                function () {
+
+                                    state.search =
+                                        elements.searchInput.value ||
+                                        "";
+
+                                    applyFilters();
+
+                                },
+                                120
+                            );
+                    }
+                );
+            }
+
+            /* =========================================
+               RETRY
+            ========================================== */
+
+            if (
+                elements.retryButton
+            ) {
+
+                elements.retryButton.addEventListener(
+                    "click",
+                    loadQuizzes
+                );
+            }
+
+            /* =========================================
+               AUTH STATE
+            ========================================== */
+
+            function setupAuthState() {
+
+                const Auth =
+                    window.FirebaseAuth;
+
+                if (
+                    Auth &&
+                    typeof Auth.onAuthStateChanged ===
+                    "function"
+                ) {
+
+                    try {
+
+                        Auth.onAuthStateChanged(
+                            function (user) {
+
+                                if (!user) {
+                                    return;
+                                }
+
+                            }
+                        );
+
+                    } catch (error) {
+                        console.warn(
+                            "Auth listener unavailable:",
+                            error
+                        );
+                    }
+                }
+            }
+
+            /* =========================================
+               YEAR
+            ========================================== */
+
+            if (
+                elements.currentYear
+            ) {
+                elements.currentYear.textContent =
+                    new Date().getFullYear();
+            }
+
+            /* =========================================
+               GLOBAL API
+            ========================================== */
+
+            window.CapQuizzes = {
+
+                state: state,
+
+                load: loadQuizzes,
+
+                reload: loadQuizzes,
+
+                applyFilters:
+                    applyFilters,
+
+                getQuizzes:
+                    function () {
+                        return state.quizzes.slice();
+                    },
+
+                getFilteredQuizzes:
+                    function () {
+                        return state.filtered.slice();
+                    },
+
+                getQuizById:
+                    function (id) {
+
+                        return state.quizzes.find(
+                            function (quiz) {
+                                return (
+                                    getQuizId(quiz) ===
+                                    String(id)
+                                );
+                            }
+                        ) || null;
+                    },
+
+                startQuiz:
+                    startQuiz
+
+            };
+
+            /* =========================================
+               INITIALIZE
+            ========================================== */
+
+            document.addEventListener(
+                "DOMContentLoaded",
+                function () {
+
+                    setupAuthState();
+
+                    loadQuizzes();
+
+                }
+            );
+
+        })();
+    </script>
+
+</body>
+</html>

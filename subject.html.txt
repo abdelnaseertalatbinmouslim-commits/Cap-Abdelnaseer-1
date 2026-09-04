@@ -1,0 +1,4872 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <meta
+        name="description"
+        content="Cap Abdelnaseer - تفاصيل المادة الدراسية"
+    >
+
+    <meta name="theme-color" content="#080c18">
+
+    <title>المادة الدراسية | Cap Abdelnaseer</title>
+
+    <!-- =========================================================
+         FONT
+    ========================================================== -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <style>
+        /* =========================================================
+           RESET
+        ========================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+
+            font-family: "Cairo", sans-serif;
+
+            color: #f8fafc;
+
+            background:
+                radial-gradient(
+                    circle at 12% 8%,
+                    rgba(99, 102, 241, 0.11),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 88% 22%,
+                    rgba(139, 92, 246, 0.08),
+                    transparent 30%
+                ),
+                #080c18;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        select {
+            font-family: inherit;
+        }
+
+        button {
+            border: 0;
+            cursor: pointer;
+        }
+
+        ::selection {
+            background: rgba(99, 102, 241, 0.35);
+            color: #fff;
+        }
+
+
+        /* =========================================================
+           SCROLLBAR
+        ========================================================== */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #080c18;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.25);
+            border-radius: 20px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.4);
+        }
+
+
+        /* =========================================================
+           LOADER
+        ========================================================== */
+
+        .page-loader {
+            position: fixed;
+            inset: 0;
+
+            z-index: 99999;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #080c18;
+
+            transition:
+                opacity 0.35s ease,
+                visibility 0.35s ease;
+        }
+
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-box {
+            text-align: center;
+        }
+
+        .loader-spinner {
+            width: 48px;
+            height: 48px;
+
+            margin: 0 auto 14px;
+
+            border: 4px solid rgba(255, 255, 255, 0.07);
+            border-top-color: #6366f1;
+            border-right-color: #8b5cf6;
+
+            border-radius: 50%;
+
+            animation: spin 0.9s linear infinite;
+        }
+
+        .loader-text {
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+
+        /* =========================================================
+           HEADER
+        ========================================================== */
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            height: 76px;
+
+            border-bottom:
+                1px solid rgba(255, 255, 255, 0.06);
+
+            background:
+                rgba(8, 12, 24, 0.84);
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        .header-inner {
+            width: min(1180px, calc(100% - 36px));
+            height: 100%;
+
+            margin: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+
+            gap: 11px;
+
+            min-width: 0;
+        }
+
+        .brand-logo {
+            width: 43px;
+            height: 43px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 13px;
+
+            color: #fff;
+
+            font-size: 17px;
+            font-weight: 900;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #8b5cf6
+                );
+
+            box-shadow:
+                0 8px 28px rgba(99, 102, 241, 0.27);
+        }
+
+        .brand-text {
+            min-width: 0;
+        }
+
+        .brand-title {
+            color: #f8fafc;
+
+            font-size: 16px;
+            line-height: 1.2;
+            font-weight: 900;
+
+            white-space: nowrap;
+        }
+
+        .brand-subtitle {
+            margin-top: 2px;
+
+            color: #64748b;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            white-space: nowrap;
+        }
+
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-link {
+            padding: 9px 13px;
+
+            border-radius: 10px;
+
+            color: #94a3b8;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            transition:
+                color 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #fff;
+
+            background:
+                rgba(99, 102, 241, 0.12);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+        }
+
+        .header-user {
+            display: none;
+
+            align-items: center;
+
+            gap: 9px;
+
+            padding:
+                6px 10px 6px 7px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.07);
+
+            border-radius: 12px;
+
+            background:
+                rgba(255, 255, 255, 0.035);
+        }
+
+        .header-user-avatar {
+            width: 32px;
+            height: 32px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            color: #fff;
+
+            font-size: 12px;
+            font-weight: 900;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #8b5cf6
+                );
+        }
+
+        .header-user-name {
+            max-width: 120px;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            color: #e2e8f0;
+
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .auth-btn {
+            min-height: 38px;
+
+            padding: 0 14px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            transition:
+                transform 0.2s ease,
+                filter 0.2s ease;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .login-btn {
+            color: #cbd5e1;
+
+            background:
+                rgba(255, 255, 255, 0.055);
+        }
+
+        .register-btn {
+            color: #fff;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #8b5cf6
+                );
+        }
+
+        .mobile-menu-button {
+            width: 42px;
+            height: 42px;
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 11px;
+
+            color: #fff;
+
+            font-size: 21px;
+
+            background:
+                rgba(255, 255, 255, 0.055);
+        }
+
+
+        /* =========================================================
+           MOBILE NAV
+        ========================================================== */
+
+        .mobile-nav {
+            position: fixed;
+
+            top: 76px;
+            right: 18px;
+            left: 18px;
+
+            z-index: 999;
+
+            display: none;
+
+            padding: 12px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.07);
+
+            border-radius: 16px;
+
+            background:
+                rgba(15, 23, 42, 0.97);
+
+            box-shadow:
+                0 25px 70px rgba(0, 0, 0, 0.4);
+        }
+
+        .mobile-nav.open {
+            display: block;
+
+            animation:
+                mobileNavIn 0.22s ease;
+        }
+
+        @keyframes mobileNavIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mobile-nav a {
+            display: block;
+
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            color: #cbd5e1;
+
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .mobile-nav a:hover,
+        .mobile-nav a.active {
+            color: #fff;
+
+            background:
+                rgba(99, 102, 241, 0.12);
+        }
+
+
+        /* =========================================================
+           MAIN
+        ========================================================== */
+
+        .main {
+            width: min(1180px, calc(100% - 36px));
+
+            margin: 0 auto;
+
+            padding:
+                40px 0 80px;
+        }
+
+
+        /* =========================================================
+           BACK BUTTON
+        ========================================================== */
+
+        .back-row {
+            margin-bottom: 18px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            min-height: 38px;
+
+            padding: 0 13px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.07);
+
+            border-radius: 10px;
+
+            color: #94a3b8;
+
+            font-size: 11px;
+            font-weight: 800;
+
+            background:
+                rgba(255, 255, 255, 0.03);
+
+            transition:
+                color 0.2s ease,
+                background 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .back-button:hover {
+            color: #fff;
+
+            background:
+                rgba(255, 255, 255, 0.06);
+
+            transform: translateX(2px);
+        }
+
+
+        /* =========================================================
+           SUBJECT HERO
+        ========================================================== */
+
+        .subject-hero {
+            position: relative;
+
+            overflow: hidden;
+
+            padding: 32px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.065);
+
+            border-radius: 24px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(99, 102, 241, 0.15),
+                    rgba(139, 92, 246, 0.055),
+                    rgba(255, 255, 255, 0.025)
+                );
+
+            box-shadow:
+                0 20px 70px rgba(0, 0, 0, 0.16);
+        }
+
+        .subject-hero::before {
+            content: "";
+
+            position: absolute;
+
+            width: 300px;
+            height: 300px;
+
+            top: -180px;
+            left: -100px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(99, 102, 241, 0.13);
+
+            filter: blur(22px);
+        }
+
+        .subject-hero::after {
+            content: "";
+
+            position: absolute;
+
+            width: 240px;
+            height: 240px;
+
+            right: -100px;
+            bottom: -150px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(139, 92, 246, 0.08);
+
+            filter: blur(25px);
+        }
+
+        .subject-hero-content {
+            position: relative;
+            z-index: 1;
+
+            display: flex;
+            align-items: center;
+
+            gap: 22px;
+        }
+
+        .subject-big-icon {
+            width: 82px;
+            height: 82px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.09);
+
+            border-radius: 22px;
+
+            color: #c7d2fe;
+
+            font-size: 38px;
+
+            background:
+                rgba(8, 12, 24, 0.55);
+
+            box-shadow:
+                0 12px 40px rgba(0, 0, 0, 0.18);
+        }
+
+        .subject-info {
+            min-width: 0;
+        }
+
+        .subject-badge-row {
+            display: flex;
+            align-items: center;
+
+            gap: 7px;
+
+            flex-wrap: wrap;
+
+            margin-bottom: 8px;
+        }
+
+        .subject-badge {
+            display: inline-flex;
+            align-items: center;
+
+            min-height: 26px;
+
+            padding: 0 9px;
+
+            border-radius: 8px;
+
+            color: #a5b4fc;
+
+            font-size: 9px;
+            font-weight: 800;
+
+            background:
+                rgba(99, 102, 241, 0.10);
+        }
+
+        .subject-badge.paid {
+            color: #fbbf24;
+
+            background:
+                rgba(245, 158, 11, 0.09);
+        }
+
+        .subject-title {
+            color: #fff;
+
+            font-size: clamp(25px, 4vw, 38px);
+            line-height: 1.35;
+            font-weight: 900;
+        }
+
+        .subject-description {
+            max-width: 720px;
+
+            margin-top: 8px;
+
+            color: #94a3b8;
+
+            font-size: 12px;
+            line-height: 1.9;
+            font-weight: 500;
+        }
+
+
+        /* =========================================================
+           QUICK STATS
+        ========================================================== */
+
+        .quick-stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 12px;
+
+            margin-top: 16px;
+        }
+
+        .quick-stat {
+            min-height: 82px;
+
+            padding: 15px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.06);
+
+            border-radius: 16px;
+
+            background:
+                rgba(255, 255, 255, 0.025);
+        }
+
+        .quick-stat-icon {
+            width: 42px;
+            height: 42px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            color: #a5b4fc;
+
+            font-size: 18px;
+
+            background:
+                rgba(99, 102, 241, 0.09);
+        }
+
+        .quick-stat-info {
+            min-width: 0;
+        }
+
+        .quick-stat-value {
+            color: #f8fafc;
+
+            font-size: 18px;
+            line-height: 1.2;
+            font-weight: 900;
+        }
+
+        .quick-stat-label {
+            margin-top: 2px;
+
+            color: #64748b;
+
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           CONTENT SECTION
+        ========================================================== */
+
+        .content-section {
+            margin-top: 28px;
+        }
+
+        .section-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .section-title-icon {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 11px;
+
+            color: #a5b4fc;
+
+            font-size: 17px;
+
+            background:
+                rgba(99, 102, 241, 0.11);
+        }
+
+        .section-title-text h2 {
+            color: #f8fafc;
+
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .section-title-text p {
+            margin-top: 1px;
+
+            color: #64748b;
+
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+
+        /* =========================================================
+           CONTENT CARDS
+        ========================================================== */
+
+        .content-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 15px;
+        }
+
+        .content-card {
+            position: relative;
+
+            min-height: 230px;
+
+            padding: 21px;
+
+            overflow: hidden;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.065);
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.045),
+                    rgba(255, 255, 255, 0.018)
+                );
+
+            box-shadow:
+                0 12px 45px rgba(0, 0, 0, 0.11);
+
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-4px);
+
+            border-color:
+                rgba(99, 102, 241, 0.22);
+
+            box-shadow:
+                0 20px 55px rgba(0, 0, 0, 0.22);
+        }
+
+        .content-card-icon {
+            width: 54px;
+            height: 54px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 16px;
+
+            color: #c7d2fe;
+
+            font-size: 23px;
+
+            background:
+                rgba(99, 102, 241, 0.10);
+
+            border:
+                1px solid rgba(99, 102, 241, 0.10);
+        }
+
+        .content-card-title {
+            margin-top: 17px;
+
+            color: #f8fafc;
+
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .content-card-description {
+            margin-top: 5px;
+
+            color: #64748b;
+
+            font-size: 10px;
+            line-height: 1.8;
+            font-weight: 600;
+        }
+
+        .content-card-count {
+            margin-top: 14px;
+
+            color: #a5b4fc;
+
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .content-card-button {
+            position: absolute;
+
+            right: 21px;
+            left: 21px;
+            bottom: 20px;
+
+            min-height: 40px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 7px;
+
+            border-radius: 10px;
+
+            color: #fff;
+
+            font-size: 10px;
+            font-weight: 900;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #7c3aed
+                );
+
+            transition:
+                filter 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .content-card-button:hover {
+            filter: brightness(1.08);
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================================================
+           CONTENT LIST
+        ========================================================== */
+
+        .recent-section {
+            margin-top: 28px;
+        }
+
+        .recent-list {
+            display: flex;
+            flex-direction: column;
+
+            gap: 9px;
+        }
+
+        .recent-item {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            min-height: 68px;
+
+            padding: 10px 13px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.055);
+
+            border-radius: 14px;
+
+            background:
+                rgba(255, 255, 255, 0.022);
+
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .recent-item:hover {
+            background:
+                rgba(255, 255, 255, 0.04);
+
+            border-color:
+                rgba(99, 102, 241, 0.14);
+        }
+
+        .recent-icon {
+            width: 40px;
+            height: 40px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 11px;
+
+            color: #a5b4fc;
+
+            background:
+                rgba(99, 102, 241, 0.09);
+        }
+
+        .recent-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .recent-title {
+            overflow: hidden;
+
+            color: #e2e8f0;
+
+            font-size: 11px;
+            font-weight: 800;
+
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .recent-meta {
+            margin-top: 3px;
+
+            color: #64748b;
+
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        .recent-link {
+            flex-shrink: 0;
+
+            min-height: 34px;
+
+            padding: 0 11px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 9px;
+
+            color: #c7d2fe;
+
+            font-size: 9px;
+            font-weight: 800;
+
+            background:
+                rgba(99, 102, 241, 0.08);
+        }
+
+
+        /* =========================================================
+           EMPTY / ERROR
+        ========================================================== */
+
+        .empty-state {
+            display: none;
+
+            padding: 40px 20px;
+
+            border:
+                1px dashed rgba(255, 255, 255, 0.09);
+
+            border-radius: 18px;
+
+            text-align: center;
+
+            background:
+                rgba(255, 255, 255, 0.015);
+        }
+
+        .empty-state.show {
+            display: block;
+        }
+
+        .empty-icon {
+            width: 58px;
+            height: 58px;
+
+            margin: 0 auto 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 17px;
+
+            color: #818cf8;
+
+            font-size: 23px;
+
+            background:
+                rgba(99, 102, 241, 0.08);
+        }
+
+        .empty-title {
+            color: #f8fafc;
+
+            font-size: 15px;
+            font-weight: 900;
+        }
+
+        .empty-description {
+            max-width: 500px;
+
+            margin: 7px auto 0;
+
+            color: #64748b;
+
+            font-size: 10px;
+            line-height: 1.9;
+        }
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================== */
+
+        .site-footer {
+            margin-top: 65px;
+
+            padding:
+                30px 0 10px;
+
+            border-top:
+                1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+        .footer-copy {
+            color: #475569;
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .footer-link {
+            color: #64748b;
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .footer-link:hover {
+            color: #a5b4fc;
+        }
+
+
+        /* =========================================================
+           TOAST
+        ========================================================== */
+
+        .toast-container {
+            position: fixed;
+
+            right: 20px;
+            bottom: 20px;
+
+            z-index: 99998;
+
+            width:
+                min(360px, calc(100% - 40px));
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 9px;
+        }
+
+        .toast {
+            padding: 13px 15px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 13px;
+
+            color: #e2e8f0;
+
+            font-size: 11px;
+            line-height: 1.7;
+            font-weight: 700;
+
+            background:
+                rgba(15, 23, 42, 0.96);
+
+            box-shadow:
+                0 18px 45px rgba(0, 0, 0, 0.3);
+
+            animation:
+                toastIn 0.25s ease;
+        }
+
+        .toast.error {
+            border-color:
+                rgba(239, 68, 68, 0.22);
+        }
+
+        .toast.success {
+            border-color:
+                rgba(34, 197, 94, 0.22);
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================== */
+
+        @media (max-width: 1050px) {
+
+            .desktop-nav {
+                display: none;
+            }
+
+            .mobile-menu-button {
+                display: flex;
+            }
+
+            .content-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .quick-stats {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .subject-hero-content {
+                align-items: flex-start;
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .site-header {
+                height: 68px;
+            }
+
+            .mobile-nav {
+                top: 68px;
+            }
+
+            .header-inner {
+                width:
+                    min(100% - 24px, 1180px);
+            }
+
+            .brand-logo {
+                width: 39px;
+                height: 39px;
+                border-radius: 11px;
+            }
+
+            .brand-title {
+                font-size: 14px;
+            }
+
+            .brand-subtitle {
+                display: none;
+            }
+
+            .header-actions .auth-btn {
+                display: none;
+            }
+
+            .main {
+                width:
+                    min(100% - 24px, 1180px);
+
+                padding-top: 25px;
+            }
+
+            .subject-hero {
+                padding: 23px 19px;
+
+                border-radius: 20px;
+            }
+
+            .subject-hero-content {
+                flex-direction: column;
+
+                gap: 15px;
+            }
+
+            .subject-big-icon {
+                width: 68px;
+                height: 68px;
+
+                border-radius: 18px;
+
+                font-size: 31px;
+            }
+
+            .subject-title {
+                font-size: 25px;
+            }
+
+            .subject-description {
+                font-size: 11px;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr 1fr;
+
+                gap: 9px;
+            }
+
+            .quick-stat {
+                min-height: 74px;
+
+                padding: 11px;
+
+                gap: 8px;
+            }
+
+            .quick-stat-icon {
+                width: 35px;
+                height: 35px;
+
+                border-radius: 10px;
+
+                font-size: 15px;
+            }
+
+            .quick-stat-value {
+                font-size: 15px;
+            }
+
+            .quick-stat-label {
+                font-size: 8px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-card {
+                min-height: 220px;
+            }
+
+            .section-title-text h2 {
+                font-size: 16px;
+            }
+
+            .footer-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+        }
+
+
+        @media (max-width: 400px) {
+
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .subject-title {
+                font-size: 22px;
+            }
+
+            .recent-item {
+                align-items: flex-start;
+            }
+
+            .recent-link {
+                padding: 0 8px;
+            }
+
+        }
+
+
+        /* =========================================================
+           REDUCED MOTION
+        ========================================================== */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+        }
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         PAGE LOADER
+    ========================================================== -->
+
+    <div
+        id="pageLoader"
+        class="page-loader"
+        aria-live="polite"
+        aria-label="جاري تحميل المادة"
+    >
+
+        <div class="loader-box">
+
+            <div class="loader-spinner"></div>
+
+            <div class="loader-text">
+                جاري تحميل المادة...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <header
+        id="siteHeader"
+        class="site-header"
+    >
+
+        <div class="header-inner">
+
+
+            <a
+                href="index.html"
+                class="brand"
+                aria-label="Cap Abdelnaseer"
+            >
+
+                <div class="brand-logo">
+                    CA
+                </div>
+
+                <div class="brand-text">
+
+                    <div class="brand-title">
+                        Cap Abdelnaseer
+                    </div>
+
+                    <div class="brand-subtitle">
+                        Student Learning Platform
+                    </div>
+
+                </div>
+
+            </a>
+
+
+            <nav
+                class="desktop-nav"
+                aria-label="التنقل الرئيسي"
+            >
+
+                <a
+                    href="index.html"
+                    class="nav-link"
+                >
+                    الرئيسية
+                </a>
+
+                <a
+                    href="dashboard.html"
+                    class="nav-link"
+                >
+                    لوحة التحكم
+                </a>
+
+                <a
+                    href="courses.html"
+                    class="nav-link active"
+                >
+                    المواد
+                </a>
+
+                <a
+                    href="files.html"
+                    class="nav-link"
+                >
+                    الملفات
+                </a>
+
+                <a
+                    href="videos.html"
+                    class="nav-link"
+                >
+                    الفيديوهات
+                </a>
+
+                <a
+                    href="quizzes.html"
+                    class="nav-link"
+                >
+                    الاختبارات
+                </a>
+
+            </nav>
+
+
+            <div class="header-actions">
+
+
+                <div
+                    id="headerUser"
+                    class="header-user"
+                >
+
+                    <div
+                        id="headerUserAvatar"
+                        class="header-user-avatar"
+                    >
+                        ط
+                    </div>
+
+                    <div
+                        id="headerUserName"
+                        class="header-user-name"
+                    >
+                        الطالب
+                    </div>
+
+                </div>
+
+
+                <a
+                    id="loginButton"
+                    href="login.html"
+                    class="auth-btn login-btn"
+                >
+                    تسجيل الدخول
+                </a>
+
+
+                <a
+                    id="registerButton"
+                    href="register.html"
+                    class="auth-btn register-btn"
+                >
+                    إنشاء حساب
+                </a>
+
+
+                <button
+                    id="mobileMenuButton"
+                    class="mobile-menu-button"
+                    type="button"
+                    aria-label="فتح القائمة"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+         MOBILE NAV
+    ========================================================== -->
+
+    <nav
+        id="mobileNav"
+        class="mobile-nav"
+        aria-label="قائمة الهاتف"
+    >
+
+        <a href="index.html">
+            الرئيسية
+        </a>
+
+        <a href="dashboard.html">
+            لوحة التحكم
+        </a>
+
+        <a
+            href="courses.html"
+            class="active"
+        >
+            المواد الدراسية
+        </a>
+
+        <a href="files.html">
+            الملفات
+        </a>
+
+        <a href="videos.html">
+            الفيديوهات
+        </a>
+
+        <a href="quizzes.html">
+            الاختبارات
+        </a>
+
+        <a href="results.html">
+            النتائج
+        </a>
+
+        <a href="notifications.html">
+            الإشعارات
+        </a>
+
+        <a href="profile.html">
+            الملف الشخصي
+        </a>
+
+        <a href="support.html">
+            الدعم
+        </a>
+
+    </nav>
+
+
+    <!-- =========================================================
+         MAIN
+    ========================================================== -->
+
+    <main class="main">
+
+
+        <!-- =====================================================
+             BACK
+        ====================================================== -->
+
+        <div class="back-row">
+
+            <a
+                href="courses.html"
+                class="back-button"
+            >
+                →
+                <span>
+                    العودة للمواد
+                </span>
+            </a>
+
+        </div>
+
+
+        <!-- =====================================================
+             SUBJECT HERO
+        ====================================================== -->
+
+        <section
+            id="subjectHero"
+            class="subject-hero"
+        >
+
+            <div class="subject-hero-content">
+
+
+                <div
+                    id="subjectIcon"
+                    class="subject-big-icon"
+                >
+                    📚
+                </div>
+
+
+                <div class="subject-info">
+
+
+                    <div class="subject-badge-row">
+
+
+                        <span
+                            id="subjectTermBadge"
+                            class="subject-badge"
+                        >
+                            المادة الدراسية
+                        </span>
+
+
+                        <span
+                            id="subjectPaidBadge"
+                            class="subject-badge"
+                            style="display:none;"
+                        >
+                            ⭐ مدفوعة
+                        </span>
+
+
+                    </div>
+
+
+                    <h1
+                        id="subjectTitle"
+                        class="subject-title"
+                    >
+                        جاري تحميل المادة...
+                    </h1>
+
+
+                    <p
+                        id="subjectDescription"
+                        class="subject-description"
+                    >
+                        جاري تحميل تفاصيل المادة...
+                    </p>
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             QUICK STATS
+        ====================================================== -->
+
+        <section
+            id="quickStats"
+            class="quick-stats"
+        >
+
+
+            <div class="quick-stat">
+
+                <div class="quick-stat-icon">
+                    📄
+                </div>
+
+                <div class="quick-stat-info">
+
+                    <div
+                        id="filesCount"
+                        class="quick-stat-value"
+                    >
+                        0
+                    </div>
+
+                    <div class="quick-stat-label">
+                        ملفات
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="quick-stat">
+
+                <div class="quick-stat-icon">
+                    🎬
+                </div>
+
+                <div class="quick-stat-info">
+
+                    <div
+                        id="videosCount"
+                        class="quick-stat-value"
+                    >
+                        0
+                    </div>
+
+                    <div class="quick-stat-label">
+                        فيديوهات
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="quick-stat">
+
+                <div class="quick-stat-icon">
+                    📝
+                </div>
+
+                <div class="quick-stat-info">
+
+                    <div
+                        id="quizzesCount"
+                        class="quick-stat-value"
+                    >
+                        0
+                    </div>
+
+                    <div class="quick-stat-label">
+                        اختبارات
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="quick-stat">
+
+                <div class="quick-stat-icon">
+                    👁️
+                </div>
+
+                <div class="quick-stat-info">
+
+                    <div
+                        id="viewsCount"
+                        class="quick-stat-value"
+                    >
+                        0
+                    </div>
+
+                    <div class="quick-stat-label">
+                        مشاهداتك
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =====================================================
+             MAIN CONTENT
+        ====================================================== -->
+
+        <section class="content-section">
+
+
+            <div class="section-title-row">
+
+                <div class="section-title">
+
+                    <div class="section-title-icon">
+                        🚀
+                    </div>
+
+                    <div class="section-title-text">
+
+                        <h2>
+                            محتوى المادة
+                        </h2>
+
+                        <p>
+                            كل المصادر المتاحة للمادة
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="content-grid">
+
+
+                <!-- FILES -->
+
+                <article class="content-card">
+
+                    <div class="content-card-icon">
+                        📄
+                    </div>
+
+                    <h3 class="content-card-title">
+                        الملفات والمذكرات
+                    </h3>
+
+                    <p class="content-card-description">
+                        تصفح ملفات المادة والمذكرات والـ PDF
+                        المتاحة ليك.
+                    </p>
+
+                    <div
+                        id="filesCardCount"
+                        class="content-card-count"
+                    >
+                        جاري الحساب...
+                    </div>
+
+                    <a
+                        id="filesLink"
+                        href="files.html"
+                        class="content-card-button"
+                    >
+                        فتح الملفات
+                        <span>←</span>
+                    </a>
+
+                </article>
+
+
+                <!-- VIDEOS -->
+
+                <article class="content-card">
+
+                    <div class="content-card-icon">
+                        🎬
+                    </div>
+
+                    <h3 class="content-card-title">
+                        الفيديوهات
+                    </h3>
+
+                    <p class="content-card-description">
+                        شاهد المحاضرات والشروحات المرئية
+                        الخاصة بالمادة.
+                    </p>
+
+                    <div
+                        id="videosCardCount"
+                        class="content-card-count"
+                    >
+                        جاري الحساب...
+                    </div>
+
+                    <a
+                        id="videosLink"
+                        href="videos.html"
+                        class="content-card-button"
+                    >
+                        فتح الفيديوهات
+                        <span>←</span>
+                    </a>
+
+                </article>
+
+
+                <!-- QUIZZES -->
+
+                <article class="content-card">
+
+                    <div class="content-card-icon">
+                        📝
+                    </div>
+
+                    <h3 class="content-card-title">
+                        الاختبارات
+                    </h3>
+
+                    <p class="content-card-description">
+                        اختبر نفسك في المادة وشوف تقدمك
+                        في الاختبارات المتاحة.
+                    </p>
+
+                    <div
+                        id="quizzesCardCount"
+                        class="content-card-count"
+                    >
+                        جاري الحساب...
+                    </div>
+
+                    <a
+                        id="quizzesLink"
+                        href="quizzes.html"
+                        class="content-card-button"
+                    >
+                        فتح الاختبارات
+                        <span>←</span>
+                    </a>
+
+                </article>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             RECENT CONTENT
+        ====================================================== -->
+
+        <section
+            id="recentSection"
+            class="recent-section"
+        >
+
+            <div class="section-title-row">
+
+                <div class="section-title">
+
+                    <div class="section-title-icon">
+                        ✨
+                    </div>
+
+                    <div class="section-title-text">
+
+                        <h2>
+                            أحدث المحتوى
+                        </h2>
+
+                        <p>
+                            آخر المحتوى المنشور في المادة
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="recentList"
+                class="recent-list"
+            >
+            </div>
+
+
+            <div
+                id="recentEmpty"
+                class="empty-state"
+            >
+
+                <div class="empty-icon">
+                    📚
+                </div>
+
+                <div class="empty-title">
+                    لسه مفيش محتوى ظاهر
+                </div>
+
+                <p class="empty-description">
+                    عند إضافة محتوى جديد للمادة هيظهر هنا
+                    تلقائيًا.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             ERROR STATE
+        ====================================================== -->
+
+        <section
+            id="errorState"
+            class="empty-state"
+        >
+
+            <div class="empty-icon">
+                ⚠️
+            </div>
+
+            <div class="empty-title">
+                المادة غير موجودة
+            </div>
+
+            <p class="empty-description">
+                لم نتمكن من العثور على المادة المطلوبة.
+                ارجع لقائمة المواد واختار المادة مرة أخرى.
+            </p>
+
+            <a
+                href="courses.html"
+                class="content-card-button"
+                style="
+                    position:static;
+                    width:min(260px,100%);
+                    margin:18px auto 0;
+                "
+            >
+                العودة للمواد
+            </a>
+
+        </section>
+
+
+        <!-- =====================================================
+             FOOTER
+        ====================================================== -->
+
+        <footer class="site-footer">
+
+            <div class="footer-inner">
+
+                <div class="footer-copy">
+                    ©
+                    <span id="currentYear"></span>
+                    Cap Abdelnaseer — جميع الحقوق محفوظة
+                </div>
+
+
+                <div class="footer-links">
+
+                    <a
+                        href="support.html"
+                        class="footer-link"
+                    >
+                        الدعم
+                    </a>
+
+                    <a
+                        href="profile.html"
+                        class="footer-link"
+                    >
+                        الملف الشخصي
+                    </a>
+
+                </div>
+
+            </div>
+
+        </footer>
+
+
+    </main>
+
+
+    <!-- =========================================================
+         TOAST
+    ========================================================== -->
+
+    <div
+        id="toastContainer"
+        class="toast-container"
+        aria-live="polite"
+        aria-atomic="true"
+    ></div>
+
+
+    <!-- =========================================================
+         FIREBASE
+    ========================================================== -->
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+
+
+    <!-- =========================================================
+         PROJECT LAYERS
+    ========================================================== -->
+
+    <script src="firebase-config.js"></script>
+    <script src="firebase-auth.js"></script>
+    <script src="firebase-database.js"></script>
+    <script src="firebase-content.js"></script>
+    <script src="firebase-features.js"></script>
+
+
+    <!-- =========================================================
+         SUBJECT PAGE SCRIPT
+    ========================================================== -->
+
+    <script>
+        (function () {
+
+            "use strict";
+
+
+            /* =====================================================
+               STATE
+            ====================================================== */
+
+            const state = {
+
+                subjectId: "",
+
+                subject: null,
+
+                files: [],
+
+                videos: [],
+
+                quizzes: [],
+
+                views: [],
+
+                currentUser: null,
+
+                loading: true
+
+            };
+
+
+            /* =====================================================
+               ELEMENTS
+            ====================================================== */
+
+            const el = {
+
+                loader:
+                    document.getElementById(
+                        "pageLoader"
+                    ),
+
+                mobileMenuButton:
+                    document.getElementById(
+                        "mobileMenuButton"
+                    ),
+
+                mobileNav:
+                    document.getElementById(
+                        "mobileNav"
+                    ),
+
+                headerUser:
+                    document.getElementById(
+                        "headerUser"
+                    ),
+
+                headerUserAvatar:
+                    document.getElementById(
+                        "headerUserAvatar"
+                    ),
+
+                headerUserName:
+                    document.getElementById(
+                        "headerUserName"
+                    ),
+
+                loginButton:
+                    document.getElementById(
+                        "loginButton"
+                    ),
+
+                registerButton:
+                    document.getElementById(
+                        "registerButton"
+                    ),
+
+                subjectIcon:
+                    document.getElementById(
+                        "subjectIcon"
+                    ),
+
+                subjectTitle:
+                    document.getElementById(
+                        "subjectTitle"
+                    ),
+
+                subjectDescription:
+                    document.getElementById(
+                        "subjectDescription"
+                    ),
+
+                subjectTermBadge:
+                    document.getElementById(
+                        "subjectTermBadge"
+                    ),
+
+                subjectPaidBadge:
+                    document.getElementById(
+                        "subjectPaidBadge"
+                    ),
+
+                filesCount:
+                    document.getElementById(
+                        "filesCount"
+                    ),
+
+                videosCount:
+                    document.getElementById(
+                        "videosCount"
+                    ),
+
+                quizzesCount:
+                    document.getElementById(
+                        "quizzesCount"
+                    ),
+
+                viewsCount:
+                    document.getElementById(
+                        "viewsCount"
+                    ),
+
+                filesCardCount:
+                    document.getElementById(
+                        "filesCardCount"
+                    ),
+
+                videosCardCount:
+                    document.getElementById(
+                        "videosCardCount"
+                    ),
+
+                quizzesCardCount:
+                    document.getElementById(
+                        "quizzesCardCount"
+                    ),
+
+                filesLink:
+                    document.getElementById(
+                        "filesLink"
+                    ),
+
+                videosLink:
+                    document.getElementById(
+                        "videosLink"
+                    ),
+
+                quizzesLink:
+                    document.getElementById(
+                        "quizzesLink"
+                    ),
+
+                recentList:
+                    document.getElementById(
+                        "recentList"
+                    ),
+
+                recentEmpty:
+                    document.getElementById(
+                        "recentEmpty"
+                    ),
+
+                errorState:
+                    document.getElementById(
+                        "errorState"
+                    ),
+
+                currentYear:
+                    document.getElementById(
+                        "currentYear"
+                    ),
+
+                toastContainer:
+                    document.getElementById(
+                        "toastContainer"
+                    )
+
+            };
+
+
+            /* =====================================================
+               HELPERS
+            ====================================================== */
+
+            function safeString(value) {
+
+                if (
+                    value === null ||
+                    value === undefined
+                ) {
+                    return "";
+                }
+
+                return String(value).trim();
+
+            }
+
+
+            function escapeHtml(value) {
+
+                return safeString(value)
+                    .replace(
+                        /&/g,
+                        "&amp;"
+                    )
+                    .replace(
+                        /</g,
+                        "&lt;"
+                    )
+                    .replace(
+                        />/g,
+                        "&gt;"
+                    )
+                    .replace(
+                        /"/g,
+                        "&quot;"
+                    )
+                    .replace(
+                        /'/g,
+                        "&#039;"
+                    );
+
+            }
+
+
+            function normalizeTerm(value) {
+
+                const text =
+                    safeString(value)
+                        .toLowerCase()
+                        .trim();
+
+                if (!text) {
+                    return "";
+                }
+
+                const arabicNumbers = {
+
+                    "الأول": "1",
+                    "الاول": "1",
+                    "الأولى": "1",
+                    "الاولى": "1",
+
+                    "الثاني": "2",
+                    "الثانى": "2",
+                    "الثانية": "2",
+                    "الثانيه": "2",
+
+                    "الثالث": "3",
+                    "الثالثة": "3",
+
+                    "الرابع": "4",
+                    "الرابعة": "4"
+
+                };
+
+                if (
+                    arabicNumbers[text]
+                ) {
+                    return arabicNumbers[text];
+                }
+
+                const match =
+                    text.match(/[1-4]/);
+
+                return match
+                    ? match[0]
+                    : text;
+
+            }
+
+
+            function normalizeId(value) {
+
+                return safeString(value)
+                    .toLowerCase()
+                    .replace(
+                        /\s+/g,
+                        "-"
+                    )
+                    .replace(
+                        /_/g,
+                        "-"
+                    );
+
+            }
+
+
+            function getUrlParams() {
+
+                const params =
+                    new URLSearchParams(
+                        window.location.search
+                    );
+
+                return {
+
+                    id:
+                        safeString(
+                            params.get("id") ||
+                            params.get("subject") ||
+                            params.get("subjectId") ||
+                            ""
+                        ),
+
+                    term:
+                        normalizeTerm(
+                            params.get("term") ||
+                            params.get("semester") ||
+                            ""
+                        )
+
+                };
+
+            }
+
+
+            function getSubjectId(subject) {
+
+                return safeString(
+                    subject?.id ||
+                    subject?.subjectId ||
+                    subject?.key ||
+                    subject?.code
+                );
+
+            }
+
+
+            function getSubjectName(subject) {
+
+                return safeString(
+                    subject?.name ||
+                    subject?.title ||
+                    subject?.subjectName ||
+                    subject?.label ||
+                    "مادة دراسية"
+                );
+
+            }
+
+
+            function getSubjectDescription(subject) {
+
+                return safeString(
+                    subject?.description ||
+                    subject?.desc ||
+                    subject?.details ||
+                    "استعرض محتوى المادة والملفات والفيديوهات والاختبارات المتاحة."
+                );
+
+            }
+
+
+            function isPaidSubject(subject) {
+
+                const value =
+                    safeString(
+                        subject?.paid ??
+                        subject?.isPaid ??
+                        subject?.premium ??
+                        subject?.requiredPayment ??
+                        ""
+                    )
+                    .toLowerCase();
+
+                return (
+                    value === "true" ||
+                    value === "yes" ||
+                    value === "paid" ||
+                    value === "premium" ||
+                    value === "مدفوع"
+                );
+
+            }
+
+
+            function getSubjectIcon(subject) {
+
+                const id =
+                    normalizeId(
+                        getSubjectId(subject)
+                    );
+
+                const icons = {
+
+                    anatomy: "🦴",
+
+                    physiology: "❤️",
+
+                    english: "🇬🇧",
+
+                    fencing: "🤺",
+
+                    "sport-anatomy": "🏃",
+
+                    "sport_anatomy": "🏃",
+
+                    communication: "💬",
+
+                    movement: "🏃",
+
+                    training: "🏋️",
+
+                    psychology: "🧠"
+
+                };
+
+                return (
+                    subject?.icon ||
+                    icons[id] ||
+                    "📚"
+                );
+
+            }
+
+
+            function getTermText(term) {
+
+                switch (
+                    normalizeTerm(term)
+                ) {
+
+                    case "1":
+                        return "الترم الأول";
+
+                    case "2":
+                        return "الترم الثاني";
+
+                    case "3":
+                        return "الترم الثالث";
+
+                    case "4":
+                        return "الترم الرابع";
+
+                    default:
+                        return "المادة الدراسية";
+
+                }
+
+            }
+
+
+            function getInitials(name) {
+
+                const text =
+                    safeString(name);
+
+                if (!text) {
+                    return "ط";
+                }
+
+                const words =
+                    text.split(/\s+/)
+                        .filter(Boolean);
+
+                if (
+                    words.length === 1
+                ) {
+                    return words[0]
+                        .charAt(0);
+                }
+
+                return (
+                    words[0].charAt(0) +
+                    words[1].charAt(0)
+                );
+
+            }
+
+
+            function getItemTitle(item) {
+
+                return safeString(
+                    item?.title ||
+                    item?.name ||
+                    item?.fileName ||
+                    item?.filename ||
+                    item?.videoTitle ||
+                    item?.quizTitle ||
+                    "محتوى"
+                );
+
+            }
+
+
+            function getItemDate(item) {
+
+                const value =
+                    item?.createdAt ||
+                    item?.updatedAt ||
+                    item?.publishedAt ||
+                    item?.date ||
+                    0;
+
+                if (!value) {
+                    return 0;
+                }
+
+                if (
+                    typeof value === "object" &&
+                    value[".sv"]
+                ) {
+                    return 0;
+                }
+
+                const number =
+                    Number(value);
+
+                if (
+                    !Number.isNaN(number)
+                ) {
+                    return number;
+                }
+
+                const parsed =
+                    Date.parse(
+                        String(value)
+                    );
+
+                return Number.isNaN(parsed)
+                    ? 0
+                    : parsed;
+
+            }
+
+
+            function getItemType(item) {
+
+                const type =
+                    safeString(
+                        item?.type ||
+                        item?.contentType ||
+                        ""
+                    ).toLowerCase();
+
+                if (
+                    type.includes("video")
+                ) {
+                    return "فيديو";
+                }
+
+                if (
+                    type.includes("quiz") ||
+                    type.includes("test")
+                ) {
+                    return "اختبار";
+                }
+
+                if (
+                    type.includes("pdf") ||
+                    type.includes("file") ||
+                    type.includes("document")
+                ) {
+                    return "ملف";
+                }
+
+                return "محتوى";
+
+            }
+
+
+            /* =====================================================
+               TOAST
+            ====================================================== */
+
+            function showToast(
+                message,
+                type = "success"
+            ) {
+
+                if (
+                    !el.toastContainer
+                ) {
+                    return;
+                }
+
+                const toast =
+                    document.createElement(
+                        "div"
+                    );
+
+                toast.className =
+                    "toast " + type;
+
+                toast.textContent =
+                    safeString(message);
+
+                el.toastContainer.appendChild(
+                    toast
+                );
+
+                setTimeout(
+                    function () {
+
+                        toast.style.opacity =
+                            "0";
+
+                        toast.style.transform =
+                            "translateY(8px)";
+
+                        setTimeout(
+                            function () {
+
+                                toast.remove();
+
+                            },
+                            250
+                        );
+
+                    },
+                    3000
+                );
+
+            }
+
+
+            window.showSubjectToast =
+                showToast;
+
+
+            /* =====================================================
+               LOADER
+            ====================================================== */
+
+            function hideLoader() {
+
+                if (!el.loader) {
+                    return;
+                }
+
+                el.loader.classList.add(
+                    "hidden"
+                );
+
+            }
+
+
+            function showLoader() {
+
+                if (!el.loader) {
+                    return;
+                }
+
+                el.loader.classList.remove(
+                    "hidden"
+                );
+
+            }
+
+
+            /* =====================================================
+               MOBILE MENU
+            ====================================================== */
+
+            function setupMobileMenu() {
+
+                if (
+                    !el.mobileMenuButton ||
+                    !el.mobileNav
+                ) {
+                    return;
+                }
+
+                el.mobileMenuButton
+                    .addEventListener(
+                        "click",
+                        function () {
+
+                            const isOpen =
+                                el.mobileNav
+                                    .classList
+                                    .toggle(
+                                        "open"
+                                    );
+
+                            el.mobileMenuButton
+                                .setAttribute(
+                                    "aria-expanded",
+                                    String(
+                                        isOpen
+                                    )
+                                );
+
+                        }
+                    );
+
+
+                el.mobileNav
+                    .querySelectorAll("a")
+                    .forEach(
+                        function (link) {
+
+                            link.addEventListener(
+                                "click",
+                                function () {
+
+                                    el.mobileNav
+                                        .classList
+                                        .remove(
+                                            "open"
+                                        );
+
+                                    el.mobileMenuButton
+                                        .setAttribute(
+                                            "aria-expanded",
+                                            "false"
+                                        );
+
+                                }
+                            );
+
+                        }
+                    );
+
+            }
+
+
+            /* =====================================================
+               AUTH
+            ====================================================== */
+
+            function getCurrentUser() {
+
+                try {
+
+                    if (
+                        window.FirebaseAuth &&
+                        typeof
+                        window.FirebaseAuth
+                            .getCurrentUser ===
+                            "function"
+                    ) {
+
+                        return window.FirebaseAuth
+                            .getCurrentUser();
+
+                    }
+
+                } catch (error) {
+
+                    console.warn(
+                        "Auth identity error:",
+                        error
+                    );
+
+                }
+
+
+                try {
+
+                    if (
+                        window.FirebaseDatabase &&
+                        typeof
+                        window.FirebaseDatabase
+                            .getCurrentUser ===
+                            "function"
+                    ) {
+
+                        return window.FirebaseDatabase
+                            .getCurrentUser();
+
+                    }
+
+                } catch (error) {
+
+                    console.warn(
+                        "Database identity error:",
+                        error
+                    );
+
+                }
+
+
+                return null;
+
+            }
+
+
+            function setupAuth() {
+
+                const user =
+                    getCurrentUser();
+
+                state.currentUser =
+                    user || null;
+
+                updateHeader(
+                    user
+                );
+
+
+                try {
+
+                    if (
+                        window.FirebaseAuth &&
+                        typeof
+                        window.FirebaseAuth
+                            .onAuthStateChanged ===
+                            "function"
+                    ) {
+
+                        window.FirebaseAuth
+                            .onAuthStateChanged(
+                                function (
+                                    nextUser
+                                ) {
+
+                                    state.currentUser =
+                                        nextUser ||
+                                        null;
+
+                                    updateHeader(
+                                        nextUser
+                                    );
+
+                                }
+                            );
+
+                    }
+
+                } catch (error) {
+
+                    console.warn(
+                        "Auth listener error:",
+                        error
+                    );
+
+                }
+
+            }
+
+
+            function updateHeader(user) {
+
+                if (
+                    !el.headerUser ||
+                    !el.loginButton ||
+                    !el.registerButton
+                ) {
+                    return;
+                }
+
+
+                if (user) {
+
+                    const name =
+                        safeString(
+                            user.name ||
+                            user.studentName ||
+                            user.fullName ||
+                            "الطالب"
+                        );
+
+
+                    el.headerUser.style.display =
+                        "flex";
+
+                    el.loginButton.style.display =
+                        "none";
+
+                    el.registerButton.style.display =
+                        "inline-flex";
+
+                    el.registerButton.href =
+                        "dashboard.html";
+
+                    el.registerButton.textContent =
+                        "لوحة التحكم";
+
+                    el.headerUserName.textContent =
+                        name;
+
+                    el.headerUserAvatar.textContent =
+                        getInitials(
+                            name
+                        );
+
+                } else {
+
+                    el.headerUser.style.display =
+                        "none";
+
+                    el.loginButton.style.display =
+                        "inline-flex";
+
+                    el.registerButton.style.display =
+                        "inline-flex";
+
+                    el.registerButton.href =
+                        "register.html";
+
+                    el.registerButton.textContent =
+                        "إنشاء حساب";
+
+                }
+
+            }
+
+
+            /* =====================================================
+               WAIT FOR FIREBASE
+            ====================================================== */
+
+            async function waitForFirebase() {
+
+                const promises = [];
+
+                if (
+                    window.FirebaseCoreReadyPromise
+                ) {
+
+                    promises.push(
+                        Promise.resolve(
+                            window.FirebaseCoreReadyPromise
+                        )
+                    );
+
+                }
+
+                if (
+                    window.FirebaseAuthReadyPromise
+                ) {
+
+                    promises.push(
+                        Promise.resolve(
+                            window.FirebaseAuthReadyPromise
+                        )
+                    );
+
+                }
+
+                if (
+                    window.FirebaseDatabaseReadyPromise
+                ) {
+
+                    promises.push(
+                        Promise.resolve(
+                            window.FirebaseDatabaseReadyPromise
+                        )
+                    );
+
+                }
+
+                if (
+                    window.FirebaseContentReadyPromise
+                ) {
+
+                    promises.push(
+                        Promise.resolve(
+                            window.FirebaseContentReadyPromise
+                        )
+                    );
+
+                }
+
+                if (
+                    window.FirebaseFeaturesReadyPromise
+                ) {
+
+                    promises.push(
+                        Promise.resolve(
+                            window.FirebaseFeaturesReadyPromise
+                        )
+                    );
+
+                }
+
+
+                if (
+                    promises.length
+                ) {
+
+                    await Promise.allSettled(
+                        promises
+                    );
+
+                }
+
+
+                /*
+                 * Small compatibility wait for
+                 * scripts loaded in unusual order.
+                 */
+
+                let attempts = 0;
+
+                while (
+                    !window.FirebaseContent &&
+                    attempts < 50
+                ) {
+
+                    await new Promise(
+                        function (resolve) {
+
+                            setTimeout(
+                                resolve,
+                                50
+                            );
+
+                        }
+                    );
+
+                    attempts++;
+
+                }
+
+            }
+
+
+            /* =====================================================
+               FIND SUBJECT
+            ====================================================== */
+
+            async function findSubject() {
+
+                const params =
+                    getUrlParams();
+
+                state.subjectId =
+                    params.id;
+
+
+                if (
+                    !state.subjectId
+                ) {
+
+                    return null;
+
+                }
+
+
+                let subjects = [];
+
+
+                try {
+
+                    if (
+                        window.FirebaseContent &&
+                        typeof
+                        window.FirebaseContent
+                            .getSubjects ===
+                            "function"
+                    ) {
+
+                        subjects =
+                            await window.FirebaseContent
+                                .getSubjects();
+
+                    }
+
+                } catch (error) {
+
+                    console.warn(
+                        "Content subjects failed:",
+                        error
+                    );
+
+                }
+
+
+                if (
+                    Array.isArray(subjects)
+                ) {
+
+                    const wanted =
+                        normalizeId(
+                            state.subjectId
+                        );
+
+
+                    const found =
+                        subjects.find(
+                            function (
+                                subject
+                            ) {
+
+                                return (
+                                    normalizeId(
+                                        getSubjectId(
+                                            subject
+                                        )
+                                    ) ===
+                                    wanted
+                                );
+
+                            }
+                        );
+
+
+                    if (found) {
+                        return found;
+                    }
+
+                }
+
+
+                /*
+                 * Direct database fallback.
+                 */
+
+                try {
+
+                    if (
+                        window.FirebaseDatabase &&
+                        typeof
+                        window.FirebaseDatabase
+                            .get ===
+                            "function"
+                    ) {
+
+                        const raw =
+                            await window.FirebaseDatabase
+                                .get(
+                                    "subjects/" +
+                                    state.subjectId
+                                );
+
+                        if (
+                            raw &&
+                            typeof raw ===
+                            "object"
+                        ) {
+
+                            return {
+
+                                id:
+                                    state.subjectId,
+
+                                ...raw
+
+                            };
+
+                        }
+
+                    }
+
+                } catch (error) {
+
+                    console.warn(
+                        "Direct subject lookup failed:",
+                        error
+                    );
+
+                }
+
+
+                /*
+                 * Fallback for default subjects from
+                 * firebase-content.js.
+                 */
+
+                const defaults = [
+
+                    {
+                        id: "anatomy",
+                        name: "التشريح",
+                        description:
+                            "مادة التشريح الرياضي ودراسة جسم الإنسان.",
+                        term: "1"
+                    },
+
+                    {
+                        id: "physiology",
+                        name: "الفسيولوجي",
+                        description:
+                            "دراسة وظائف أجهزة جسم الإنسان.",
+                        term: "1"
+                    },
+
+                    {
+                        id: "english",
+                        name: "اللغة الإنجليزية",
+                        description:
+                            "اللغة الإنجليزية والمصطلحات الدراسية.",
+                        term: "1"
+                    },
+
+                    {
+                        id: "fencing",
+                        name: "أساسيات المبارزة",
+                        description:
+                            "أساسيات وقواعد ومهارات رياضة المبارزة.",
+                        term: "1",
+                        paid: true
+                    },
+
+                    {
+                        id: "sport-anatomy",
+                        name: "التشريح الرياضي",
+                        description:
+                            "التشريح المرتبط بالنشاط الرياضي والحركة.",
+                        term: "1"
+                    },
+
+                    {
+                        id: "communication",
+                        name: "التواصل",
+                        description:
+                            "أساسيات التواصل والمهارات المرتبطة به.",
+                        term: "1"
+                    },
+
+                    {
+                        id: "movement",
+                        name: "علم الحركة",
+                        description:
+                            "دراسة الحركة والمبادئ الأساسية لها.",
+                        term: "2"
+                    },
+
+                    {
+                        id: "training",
+                        name: "التدريب الرياضي",
+                        description:
+                            "مبادئ وأساسيات التدريب الرياضي.",
+                        term: "2",
+                        paid: true
+                    },
+
+                    {
+                        id: "psychology",
+                        name: "علم النفس",
+                        description:
+                            "المفاهيم الأساسية في علم النفس الرياضي.",
+                        term: "2",
+                        paid: true
+                    }
+
+                ];
+
+
+                const wanted =
+                    normalizeId(
+                        state.subjectId
+                    );
+
+
+                return (
+                    defaults.find(
+                        function (
+                            subject
+                        ) {
+
+                            return (
+                                normalizeId(
+                                    subject.id
+                                ) ===
+                                wanted
+                            );
+
+                        }
+                    ) ||
+                    null
+                );
+
+            }
+
+
+            /* =====================================================
+               GET SUBJECT CONTENT
+            ====================================================== */
+
+            async function loadFiles() {
+
+                let files = [];
+
+                try {
+
+                    if (
+                        window.FirebaseContent &&
+                        typeof
+                        window.FirebaseContent
+                            .getFilesBySubject ===
+                            "function"
+                    ) {
+
+                        files =
+                            await window.FirebaseContent
+                                .getFilesBySubject(
+                                    state.subjectId
+                                );
+
+                    }
+
+                } catch (error) {
+
+                    console.warn(
+                        "Content files failed:",
+                        error
+                    );
+
+                }
+
+
+                if (
+                    !Array.isArray(files) ||
+                    files.length === 0
+                ) {
+
+                    try {
+
+                        if (
+                            window.FirebaseFeatures &&
+                            typeof
+                            window.FirebaseFeatures
+                                .getFiles ===
+                                "function"
+                        ) {
+
+                            const result =
+                                await window.FirebaseFeatures
+                                    .getFiles({
+                                        subject:
+                                            state.subjectId
+                                    });
+
+                            if (
+                                Array.isArray(
+                                    result
+                                )
+                            ) {
+                                files = result;
+                            }
+
+                        }
+
+                    } catch (error) {
+
+                        console.warn(
+                            "Features files failed:",
+                            error
+                        );
+
+                    }
+
+                }
+
+
+                if (
+                    !Array.isArray(files)
+                ) {
+                    files = [];
+                }
+
+
+                return filterContentBySubject(
+                    files
+                );
+
+            }
+
+
+            async function loadVideos() {
+
+                let videos = [];
+
+                try {
+
+                    if (
+                        window.FirebaseContent &&
+                        typeof
+                        window.FirebaseContent
+                            .getVideosBySubject ===
+                            "function"
+                    ) {
+
+                        videos =
+                            await window.FirebaseContent
+                                .getVideosBySubject(
+                                    state.subjectId
+                                );
+
+                    }
+
+                } catch (error) {
+
+                    console.warn(
+                        "Content videos failed:",
+                        error
+                    );
+
+                }
+
+
+                if (
+                    !Array.isArray(videos) ||
+                    videos.length === 0
+                ) {
+
+                    try {
+
+                        if (
+                            window.FirebaseFeatures &&
+                            typeof
+                            window.FirebaseFeatures
+                                .getVideos ===
+                                "function"
+                        ) {
+
+                            const result =
+                                await window.FirebaseFeatures
+                                    .getVideos({
+                                        subject:
+                                            state.subjectId
+                                    });
+
+                            if (
+                                Array.isArray(
+                                    result
+                                )
+                            ) {
+                                videos = result;
+                            }
+
+                        }
+
+                    } catch (error) {
+
+                        console.warn(
+                            "Features videos failed:",
+                            error
+                        );
+
+                    }
+
+                }
+
+
+                if (
+                    !Array.isArray(videos)
+                ) {
+                    videos = [];
+                }
+
+
+                return filterContentBySubject(
+                    videos
+                );
+
+            }
+
+
+            async function loadQuizzes() {
+
+                let quizzes = [];
+
+                try {
+
+                    if (
+                        window.FirebaseContent &&
+                        typeof
+                        window.FirebaseContent
+                            .getQuizzesBySubject ===
+                            "function"
+                    ) {
+
+                        quizzes =
+                            await window.FirebaseContent
+                                .getQuizzesBySubject(
+                                    state.subjectId
+                                );
+
+                    }
+
+                } catch (error) {
+
+                    console.warn(
+                        "Content quizzes failed:",
+                        error
+                    );
+
+                }
+
+
+                if (
+                    !Array.isArray(quizzes) ||
+                    quizzes.length === 0
+                ) {
+
+                    try {
+
+                        if (
+                            window.FirebaseFeatures &&
+                            typeof
+                            window.FirebaseFeatures
+                                .getQuizzes ===
+                                "function"
+                        ) {
+
+                            const result =
+                                await window.FirebaseFeatures
+                                    .getQuizzes({
+                                        subject:
+                                            state.subjectId
+                                    });
+
+                            if (
+                                Array.isArray(
+                                    result
+                                )
+                            ) {
+                                quizzes = result;
+                            }
+
+                        }
+
+                    } catch (error) {
+
+                        console.warn(
+                            "Features quizzes failed:",
+                            error
+                        );
+
+                    }
+
+                }
+
+
+                if (
+                    !Array.isArray(quizzes)
+                ) {
+                    quizzes = [];
+                }
+
+
+                return filterContentBySubject(
+                    quizzes
+                );
+
+            }
+
+
+            function filterContentBySubject(
+                items
+            ) {
+
+                const wanted =
+                    normalizeId(
+                        state.subjectId
+                    );
+
+
+                if (
+                    !Array.isArray(items)
+                ) {
+                    return [];
+                }
+
+
+                return items.filter(
+                    function (item) {
+
+                        const itemSubject =
+                            normalizeId(
+                                item?.subject ||
+                                item?.subjectId ||
+                                item?.course ||
+                                item?.courseId ||
+                                ""
+                            );
+
+
+                        /*
+                         * If item does not have subject
+                         * metadata, don't force-remove it
+                         * when it came from a subject-specific
+                         * FirebaseContent method.
+                         */
+
+                        if (!itemSubject) {
+                            return true;
+                        }
+
+
+                        return (
+                            itemSubject ===
+                            wanted
+                        );
+
+                    }
+                );
+
+            }
+
+
+            /* =====================================================
+               VIEWS
+            ====================================================== */
+
+            async function loadViews() {
+
+                let views = [];
+
+
+                try {
+
+                    if (
+                        window.FirebaseDatabase &&
+                        window.FirebaseDatabase
+                            .contentViews &&
+                        typeof
+                        window.FirebaseDatabase
+                            .contentViews
+                            .getAll ===
+                            "function"
+                    ) {
+
+                        views =
+                            await window.FirebaseDatabase
+                                .contentViews
+                                .getAll();
+
+                    }
+
+                } catch (error) {
+
+                    console.warn(
+                        "Views load failed:",
+                        error
+                    );
+
+                }
+
+
+                if (
+                    !Array.isArray(views)
+                ) {
+                    views = [];
+                }
+
+
+                return views;
+
+            }
+
+
+            /* =====================================================
+               RENDER SUBJECT
+            ====================================================== */
+
+            function renderSubject() {
+
+                const subject =
+                    state.subject;
+
+
+                if (!subject) {
+
+                    if (
+                        el.errorState
+                    ) {
+
+                        el.errorState
+                            .classList
+                            .add("show");
+
+                    }
+
+                    return;
+
+                }
+
+
+                const name =
+                    getSubjectName(
+                        subject
+                    );
+
+
+                const description =
+                    getSubjectDescription(
+                        subject
+                    );
+
+
+                const term =
+                    normalizeTerm(
+                        subject?.term ||
+                        subject?.semester ||
+                        subject?.year ||
+                        subject?.level ||
+                        ""
+                    );
+
+
+                const paid =
+                    isPaidSubject(
+                        subject
+                    );
+
+
+                const icon =
+                    getSubjectIcon(
+                        subject
+                    );
+
+
+                document.title =
+                    name +
+                    " | Cap Abdelnaseer";
+
+
+                if (
+                    el.subjectIcon
+                ) {
+
+                    el.subjectIcon.textContent =
+                        icon;
+
+                }
+
+
+                if (
+                    el.subjectTitle
+                ) {
+
+                    el.subjectTitle.textContent =
+                        name;
+
+                }
+
+
+                if (
+                    el.subjectDescription
+                ) {
+
+                    el.subjectDescription
+                        .textContent =
+                        description;
+
+                }
+
+
+                if (
+                    el.subjectTermBadge
+                ) {
+
+                    el.subjectTermBadge
+                        .textContent =
+                        getTermText(
+                            term
+                        );
+
+                }
+
+
+                if (
+                    el.subjectPaidBadge
+                ) {
+
+                    el.subjectPaidBadge.style.display =
+                        paid
+                            ? "inline-flex"
+                            : "none";
+
+                }
+
+
+                if (
+                    el.errorState
+                ) {
+
+                    el.errorState
+                        .classList
+                        .remove(
+                            "show"
+                        );
+
+                }
+
+            }
+
+
+            /* =====================================================
+               RENDER COUNTS
+            ====================================================== */
+
+            function renderCounts() {
+
+                const files =
+                    state.files.length;
+
+                const videos =
+                    state.videos.length;
+
+                const quizzes =
+                    state.quizzes.length;
+
+
+                if (
+                    el.filesCount
+                ) {
+                    el.filesCount.textContent =
+                        files;
+                }
+
+                if (
+                    el.videosCount
+                ) {
+                    el.videosCount.textContent =
+                        videos;
+                }
+
+                if (
+                    el.quizzesCount
+                ) {
+                    el.quizzesCount.textContent =
+                        quizzes;
+                }
+
+
+                if (
+                    el.filesCardCount
+                ) {
+
+                    el.filesCardCount.textContent =
+                        files === 1
+                            ? "ملف واحد متاح"
+                            : `${files} ملفات متاحة`;
+
+                }
+
+
+                if (
+                    el.videosCardCount
+                ) {
+
+                    el.videosCardCount.textContent =
+                        videos === 1
+                            ? "فيديو واحد متاح"
+                            : `${videos} فيديوهات متاحة`;
+
+                }
+
+
+                if (
+                    el.quizzesCardCount
+                ) {
+
+                    el.quizzesCardCount.textContent =
+                        quizzes === 1
+                            ? "اختبار واحد متاح"
+                            : `${quizzes} اختبارات متاحة`;
+
+                }
+
+            }
+
+
+            /* =====================================================
+               BUILD LINKS
+            ====================================================== */
+
+            function buildContentUrl(
+                page
+            ) {
+
+                const params =
+                    new URLSearchParams();
+
+
+                if (
+                    state.subjectId
+                ) {
+
+                    params.set(
+                        "subject",
+                        state.subjectId
+                    );
+
+                    params.set(
+                        "subjectId",
+                        state.subjectId
+                    );
+
+                }
+
+
+                const term =
+                    normalizeTerm(
+                        state.subject?.term
+                    );
+
+
+                if (term) {
+
+                    params.set(
+                        "term",
+                        term
+                    );
+
+                }
+
+
+                return (
+                    page +
+                    "?" +
+                    params.toString()
+                );
+
+            }
+
+
+            function renderLinks() {
+
+                if (
+                    el.filesLink
+                ) {
+
+                    el.filesLink.href =
+                        buildContentUrl(
+                            "files.html"
+                        );
+
+                }
+
+
+                if (
+                    el.videosLink
+                ) {
+
+                    el.videosLink.href =
+                        buildContentUrl(
+                            "videos.html"
+                        );
+
+                }
+
+
+                if (
+                    el.quizzesLink
+                ) {
+
+                    el.quizzesLink.href =
+                        buildContentUrl(
+                            "quizzes.html"
+                        );
+
+                }
+
+            }
+
+
+            /* =====================================================
+               RECENT CONTENT
+            ====================================================== */
+
+            function getRecentItems() {
+
+                const items = [];
+
+
+                state.files
+                    .forEach(
+                        function (
+                            item
+                        ) {
+
+                            items.push({
+
+                                ...item,
+
+                                __type:
+                                    "file"
+
+                            });
+
+                        }
+                    );
+
+
+                state.videos
+                    .forEach(
+                        function (
+                            item
+                        ) {
+
+                            items.push({
+
+                                ...item,
+
+                                __type:
+                                    "video"
+
+                            });
+
+                        }
+                    );
+
+
+                state.quizzes
+                    .forEach(
+                        function (
+                            item
+                        ) {
+
+                            items.push({
+
+                                ...item,
+
+                                __type:
+                                    "quiz"
+
+                            });
+
+                        }
+                    );
+
+
+                items.sort(
+                    function (
+                        a,
+                        b
+                    ) {
+
+                        return (
+                            getItemDate(b) -
+                            getItemDate(a)
+                        );
+
+                    }
+                );
+
+
+                return items.slice(
+                    0,
+                    6
+                );
+
+            }
+
+
+            function getRecentIcon(
+                type
+            ) {
+
+                switch (type) {
+
+                    case "file":
+                        return "📄";
+
+                    case "video":
+                        return "🎬";
+
+                    case "quiz":
+                        return "📝";
+
+                    default:
+                        return "📚";
+
+                }
+
+            }
+
+
+            function getRecentLink(
+                item
+            ) {
+
+                const params =
+                    new URLSearchParams();
+
+
+                params.set(
+                    "subject",
+                    state.subjectId
+                );
+
+
+                params.set(
+                    "subjectId",
+                    state.subjectId
+                );
+
+
+                const itemId =
+                    safeString(
+                        item?.id ||
+                        item?.fileId ||
+                        item?.videoId ||
+                        item?.quizId ||
+                        ""
+                    );
+
+
+                if (itemId) {
+
+                    params.set(
+                        "id",
+                        itemId
+                    );
+
+                }
+
+
+                switch (
+                    item.__type
+                ) {
+
+                    case "file":
+
+                        return (
+                            "files.html?" +
+                            params.toString()
+                        );
+
+                    case "video":
+
+                        return (
+                            "videos.html?" +
+                            params.toString()
+                        );
+
+                    case "quiz":
+
+                        return (
+                            "quizzes.html?" +
+                            params.toString()
+                        );
+
+                    default:
+
+                        return buildContentUrl(
+                            "courses.html"
+                        );
+
+                }
+
+            }
+
+
+            function renderRecent() {
+
+                if (
+                    !el.recentList ||
+                    !el.recentEmpty
+                ) {
+                    return;
+                }
+
+
+                const items =
+                    getRecentItems();
+
+
+                el.recentList.innerHTML =
+                    "";
+
+
+                if (
+                    !items.length
+                ) {
+
+                    el.recentEmpty
+                        .classList
+                        .add(
+                            "show"
+                        );
+
+                    return;
+
+                }
+
+
+                el.recentEmpty
+                    .classList
+                    .remove(
+                        "show"
+                    );
+
+
+                items.forEach(
+                    function (
+                        item
+                    ) {
+
+                        const type =
+                            item.__type;
+
+
+                        const row =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        row.className =
+                            "recent-item";
+
+
+                        row.innerHTML = `
+
+                            <div class="recent-icon">
+                                ${getRecentIcon(type)}
+                            </div>
+
+                            <div class="recent-info">
+
+                                <div class="recent-title">
+                                    ${escapeHtml(
+                                        getItemTitle(
+                                            item
+                                        )
+                                    )}
+                                </div>
+
+                                <div class="recent-meta">
+                                    ${escapeHtml(
+                                        getItemType(
+                                            item
+                                        )
+                                    )}
+                                </div>
+
+                            </div>
+
+                            <a
+                                class="recent-link"
+                                href="${escapeHtml(
+                                    getRecentLink(
+                                        item
+                                    )
+                                )}"
+                            >
+                                فتح
+                            </a>
+
+                        `;
+
+
+                        el.recentList
+                            .appendChild(
+                                row
+                            );
+
+                    }
+                );
+
+            }
+
+
+            /* =====================================================
+               VIEWS COUNT
+            ====================================================== */
+
+            function renderViews() {
+
+                if (
+                    !el.viewsCount
+                ) {
+                    return;
+                }
+
+
+                /*
+                 * Count views associated with this subject.
+                 */
+
+                const wanted =
+                    normalizeId(
+                        state.subjectId
+                    );
+
+
+                const count =
+                    state.views.filter(
+                        function (
+                            view
+                        ) {
+
+                            const subject =
+                                normalizeId(
+                                    view?.subjectId ||
+                                    view?.subject ||
+                                    view?.courseId ||
+                                    ""
+                                );
+
+                            return (
+                                subject ===
+                                wanted
+                            );
+
+                        }
+                    ).length;
+
+
+                el.viewsCount.textContent =
+                    count;
+
+            }
+
+
+            /* =====================================================
+               LOAD ALL
+            ====================================================== */
+
+            async function loadPage() {
+
+                const params =
+                    getUrlParams();
+
+
+                state.subjectId =
+                    params.id;
+
+
+                if (
+                    !state.subjectId
+                ) {
+
+                    renderSubject();
+
+                    return;
+
+                }
+
+
+                state.subject =
+                    await findSubject();
+
+
+                renderSubject();
+
+
+                if (
+                    !state.subject
+                ) {
+
+                    return;
+
+                }
+
+
+                /*
+                 * Content requests are isolated so
+                 * one failed section never freezes
+                 * the entire page.
+                 */
+
+                const results =
+                    await Promise.allSettled([
+
+                        loadFiles(),
+
+                        loadVideos(),
+
+                        loadQuizzes(),
+
+                        loadViews()
+
+                    ]);
+
+
+                state.files =
+                    results[0].status ===
+                    "fulfilled"
+                        ? results[0].value
+                        : [];
+
+                state.videos =
+                    results[1].status ===
+                    "fulfilled"
+                        ? results[1].value
+                        : [];
+
+                state.quizzes =
+                    results[2].status ===
+                    "fulfilled"
+                        ? results[2].value
+                        : [];
+
+                state.views =
+                    results[3].status ===
+                    "fulfilled"
+                        ? results[3].value
+                        : [];
+
+
+                renderCounts();
+
+                renderLinks();
+
+                renderRecent();
+
+                renderViews();
+
+
+                /*
+                 * Track a page/content view only
+                 * when the feature layer supports it.
+                 */
+
+                try {
+
+                    if (
+                        window.FirebaseFeatures &&
+                        typeof
+                        window.FirebaseFeatures
+                            .trackView ===
+                            "function"
+                    ) {
+
+                        await window.FirebaseFeatures
+                            .trackView({
+
+                                type:
+                                    "subject",
+
+                                subjectId:
+                                    state.subjectId,
+
+                                subject:
+                                    getSubjectName(
+                                        state.subject
+                                    )
+
+                            });
+
+                    } else if (
+                        window.FirebaseDatabase &&
+                        window.FirebaseDatabase
+                            .contentViews &&
+                        typeof
+                        window.FirebaseDatabase
+                            .contentViews
+                            .save ===
+                            "function"
+                    ) {
+
+                        await window.FirebaseDatabase
+                            .contentViews
+                            .save({
+
+                                type:
+                                    "subject",
+
+                                subjectId:
+                                    state.subjectId,
+
+                                subject:
+                                    getSubjectName(
+                                        state.subject
+                                    )
+
+                            });
+
+                    }
+
+                } catch (error) {
+
+                    /*
+                     * Tracking must never break
+                     * the subject page.
+                     */
+
+                    console.warn(
+                        "Subject view tracking failed:",
+                        error
+                    );
+
+                }
+
+            }
+
+
+            /* =====================================================
+               INITIALIZE
+            ====================================================== */
+
+            async function initialize() {
+
+                showLoader();
+
+
+                try {
+
+                    setupMobileMenu();
+
+                    setupAuth();
+
+
+                    if (
+                        el.currentYear
+                    ) {
+
+                        el.currentYear.textContent =
+                            new Date()
+                                .getFullYear();
+
+                    }
+
+
+                    await waitForFirebase();
+
+
+                    await loadPage();
+
+
+                    state.loading =
+                        false;
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Subject page error:",
+                        error
+                    );
+
+
+                    if (
+                        el.errorState
+                    ) {
+
+                        el.errorState
+                            .classList
+                            .add(
+                                "show"
+                            );
+
+                    }
+
+
+                    showToast(
+                        "حصلت مشكلة أثناء تحميل المادة.",
+                        "error"
+                    );
+
+                } finally {
+
+                    hideLoader();
+
+                }
+
+            }
+
+
+            /* =====================================================
+               PUBLIC API
+            ====================================================== */
+
+            window.CapSubject = {
+
+                state: state,
+
+                reload:
+                    async function () {
+
+                        await loadPage();
+
+                    },
+
+                getSubject:
+                    function () {
+
+                        return state.subject;
+
+                    },
+
+                getSubjectId:
+                    function () {
+
+                        return state.subjectId;
+
+                    },
+
+                getFiles:
+                    function () {
+
+                        return [
+                            ...state.files
+                        ];
+
+                    },
+
+                getVideos:
+                    function () {
+
+                        return [
+                            ...state.videos
+                        ];
+
+                    },
+
+                getQuizzes:
+                    function () {
+
+                        return [
+                            ...state.quizzes
+                        ];
+
+                    }
+
+            };
+
+
+            /* =====================================================
+               START
+            ====================================================== */
+
+            if (
+                document.readyState ===
+                "loading"
+            ) {
+
+                document.addEventListener(
+                    "DOMContentLoaded",
+                    initialize
+                );
+
+            } else {
+
+                initialize();
+
+            }
+
+        })();
+    </script>
+
+</body>
+</html>

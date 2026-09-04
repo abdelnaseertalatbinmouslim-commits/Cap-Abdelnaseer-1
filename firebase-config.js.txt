@@ -1,0 +1,634 @@
+/*
+ * ============================================================
+ * Cap Abdelnaseer Platform
+ * Firebase Core Configuration
+ * File: firebase-config.js
+ * ============================================================
+ *
+ * وظيفة الملف:
+ * - تهيئة Firebase مرة واحدة فقط.
+ * - ربط المشروع الحالي Firebase Project: abodaa.
+ * - تجهيز Firebase Authentication و Realtime Database.
+ * - توفير إعداد مركزي موحد لكل ملفات Firebase التالية.
+ * - تعريف مسارات قاعدة البيانات المستخدمة في المنصة.
+ * - توفير أدوات مساعدة مشتركة لباقي الملفات.
+ *
+ * ملاحظات مهمة:
+ * - لا يقوم هذا الملف بحذف أي بيانات.
+ * - لا يقوم هذا الملف بتعديل أي بيانات موجودة.
+ * - لا يقوم هذا الملف بعمل Migration للبيانات القديمة.
+ * - البيانات القديمة والجديدة تظل في Firebase كما هي.
+ * - يجب تحميل Firebase SDKs قبل هذا الملف.
+ *
+ * ترتيب التحميل:
+ * 1. firebase-app-compat.js
+ * 2. firebase-auth-compat.js
+ * 3. firebase-database-compat.js
+ * 4. firebase-config.js
+ * 5. firebase-auth.js
+ * 6. firebase-database.js
+ * 7. firebase-content.js
+ * 8. firebase-features.js
+ * ============================================================
+ */
+
+(function (window) {
+    "use strict";
+
+    /*
+     * --------------------------------------------------------
+     * منع تشغيل الملف أكثر من مرة
+     * --------------------------------------------------------
+     */
+    if (window.FirebaseCore) {
+        return;
+    }
+
+    /*
+     * --------------------------------------------------------
+     * التحقق من وجود Firebase SDK
+     * --------------------------------------------------------
+     */
+    if (!window.firebase) {
+        throw new Error(
+            "Firebase SDK لم يتم تحميله قبل firebase-config.js."
+        );
+    }
+
+    if (typeof window.firebase.initializeApp !== "function") {
+        throw new Error(
+            "Firebase App SDK غير متاح أو تم تحميله بطريقة غير صحيحة."
+        );
+    }
+
+    if (typeof window.firebase.app !== "function") {
+        throw new Error(
+            "Firebase App API غير متاحة."
+        );
+    }
+
+    /*
+     * --------------------------------------------------------
+     * إعدادات مشروع Firebase الحالي
+     * --------------------------------------------------------
+     */
+    const firebaseConfig = {
+        apiKey: "AIzaSyD64zup-c8pXmIeoRCUZSltiKJYRfvAYbc",
+        authDomain: "abodaa.firebaseapp.com",
+        databaseURL: "https://abodaa-default-rtdb.firebaseio.com",
+        projectId: "abodaa",
+        storageBucket: "abodaa.firebasestorage.app",
+        messagingSenderId: "489477833785",
+        appId: "1:489477833785:web:cf7451889d7e7a5efdf9e8",
+        measurementId: "G-GQFLS5HEHZ"
+    };
+
+    /*
+     * --------------------------------------------------------
+     * Firebase App
+     *
+     * لو Firebase متعمل له initialize بالفعل:
+     * نستخدم الـ App الموجود.
+     *
+     * غير ذلك:
+     * نعمل initialize مرة واحدة فقط.
+     * --------------------------------------------------------
+     */
+    let app;
+
+    try {
+        app = window.firebase.app();
+    } catch (error) {
+        app = window.firebase.initializeApp(firebaseConfig);
+    }
+
+    /*
+     * --------------------------------------------------------
+     * Firebase Auth
+     *
+     * Authentication متاح للمنصة عند الحاجة،
+     * لكن نظام دخول الطلاب الأساسي يمكن أن يعتمد
+     * على بيانات الطلاب الموجودة في Realtime Database
+     * للحفاظ على التوافق مع الحسابات القديمة.
+     * --------------------------------------------------------
+     */
+    let auth = null;
+
+    if (typeof window.firebase.auth === "function") {
+        auth = window.firebase.auth();
+    }
+
+    /*
+     * --------------------------------------------------------
+     * Firebase Realtime Database
+     * --------------------------------------------------------
+     */
+    if (typeof window.firebase.database !== "function") {
+        throw new Error(
+            "Firebase Realtime Database SDK لم يتم تحميله."
+        );
+    }
+
+    const database = window.firebase.database();
+
+    /*
+     * --------------------------------------------------------
+     * المسارات المركزية لقاعدة البيانات
+     *
+     * هذه المسارات لا تقوم بإنشاء أو حذف أي شيء.
+     * هي مجرد أسماء موحدة تستخدمها الملفات التالية.
+     * --------------------------------------------------------
+     */
+    const PATHS = Object.freeze({
+        students: "students",
+
+        files: "files",
+
+        videos: "videos",
+
+        notifications: "notifications",
+
+        notificationReads: "notificationReads",
+
+        quizzes: "quizzes",
+
+        quizAttempts: "quizAttempts",
+
+        results: "results",
+
+        legacyResults: "quiz_results",
+
+        contentViews: "contentViews",
+
+        support: "settings/support",
+
+        supportTickets: "supportTickets",
+
+        settings: "settings",
+
+        stats: "stats",
+
+        /*
+         * طلبات استعادة كود المرور.
+         *
+         * يتم استخدامها عند الحاجة لطلب استعادة الحساب
+         * بدون تغيير كلمة المرور القديمة مباشرة من صفحة عامة.
+         */
+        passwordResetRequests: "passwordResetRequests"
+    });
+
+    /*
+     * --------------------------------------------------------
+     * معلومات المنصة
+     * --------------------------------------------------------
+     */
+    const PLATFORM = Object.freeze({
+        name: "Cap Abdelnaseer Platform",
+        firebaseProjectId: firebaseConfig.projectId,
+        firebaseVersion: "10.12.5",
+        databaseType: "Realtime Database"
+    });
+
+    /*
+     * --------------------------------------------------------
+     * أدوات مساعدة عامة
+     * --------------------------------------------------------
+     */
+
+    function isObject(value) {
+        return (
+            value !== null &&
+            typeof value === "object" &&
+            !Array.isArray(value)
+        );
+    }
+
+    function isEmptyObject(value) {
+        return (
+            isObject(value) &&
+            Object.keys(value).length === 0
+        );
+    }
+
+    function hasValue(value) {
+        return (
+            value !== undefined &&
+            value !== null &&
+            String(value).trim() !== ""
+        );
+    }
+
+    function firstValue() {
+        for (let i = 0; i < arguments.length; i += 1) {
+            if (hasValue(arguments[i])) {
+                return arguments[i];
+            }
+        }
+
+        return null;
+    }
+
+    /*
+     * --------------------------------------------------------
+     * تحويل أي قيمة إلى Array بطريقة آمنة
+     *
+     * يدعم:
+     * - Array
+     * - Object من Firebase
+     * - قيمة واحدة
+     * - null / undefined
+     * --------------------------------------------------------
+     */
+    function toArray(value) {
+        if (!hasValue(value)) {
+            return [];
+        }
+
+        if (Array.isArray(value)) {
+            return value.slice();
+        }
+
+        if (isObject(value)) {
+            return Object.keys(value).map(function (key) {
+                const item = value[key];
+
+                if (isObject(item)) {
+                    return Object.assign(
+                        {
+                            _key: key
+                        },
+                        item
+                    );
+                }
+
+                return {
+                    _key: key,
+                    value: item
+                };
+            });
+        }
+
+        return [value];
+    }
+
+    /*
+     * --------------------------------------------------------
+     * Clone آمن للبيانات البسيطة
+     * --------------------------------------------------------
+     */
+    function cloneObject(value) {
+        if (value === undefined || value === null) {
+            return value;
+        }
+
+        if (typeof value !== "object") {
+            return value;
+        }
+
+        try {
+            return JSON.parse(JSON.stringify(value));
+        } catch (error) {
+            return value;
+        }
+    }
+
+    /*
+     * --------------------------------------------------------
+     * تنظيف النصوص
+     * --------------------------------------------------------
+     */
+    function safeString(value, fallback) {
+        if (!hasValue(value)) {
+            return fallback || "";
+        }
+
+        return String(value).trim();
+    }
+
+    /*
+     * --------------------------------------------------------
+     * تطبيع Identifier
+     *
+     * يستخدم لمقارنة:
+     * - UID
+     * - Student ID
+     * - Database Key
+     * - Phone
+     * - Email
+     *
+     * بدون تغيير القيمة الأصلية المخزنة في Firebase.
+     * --------------------------------------------------------
+     */
+    function normalizeIdentifier(value) {
+        if (!hasValue(value)) {
+            return "";
+        }
+
+        return String(value)
+            .trim()
+            .toLowerCase();
+    }
+
+    /*
+     * --------------------------------------------------------
+     * تطبيع أرقام الهاتف المصرية
+     *
+     * يدعم مثلًا:
+     * 010xxxxxxxx
+     * 2010xxxxxxxx
+     * +2010xxxxxxxx
+     *
+     * ولا يغير الرقم المخزن في Firebase.
+     *
+     * الهدف:
+     * جعل البحث والمقارنة متوافقين مع الحسابات القديمة.
+     * --------------------------------------------------------
+     */
+    function normalizePhone(value) {
+        if (!hasValue(value)) {
+            return "";
+        }
+
+        let phone = String(value).trim();
+
+        /*
+         * إزالة المسافات والشرطات والأقواس.
+         */
+        phone = phone.replace(/[\s\-().]/g, "");
+
+        /*
+         * تحويل الأرقام العربية إلى إنجليزية.
+         */
+        phone = phone
+            .replace(/٠/g, "0")
+            .replace(/١/g, "1")
+            .replace(/٢/g, "2")
+            .replace(/٣/g, "3")
+            .replace(/٤/g, "4")
+            .replace(/٥/g, "5")
+            .replace(/٦/g, "6")
+            .replace(/٧/g, "7")
+            .replace(/٨/g, "8")
+            .replace(/٩/g, "9");
+
+        /*
+         * إزالة أي + زائدة في البداية مؤقتًا.
+         */
+        phone = phone.replace(/^\+/, "");
+
+        /*
+         * لو الرقم مصري:
+         * 2010xxxxxxxx
+         * نحوله إلى 010xxxxxxxx
+         */
+        if (/^20\d{10}$/.test(phone)) {
+            phone = "0" + phone.slice(2);
+        }
+
+        /*
+         * لو الرقم يبدأ بـ 0020:
+         * 002010xxxxxxxx
+         * نحوله إلى 010xxxxxxxx
+         */
+        if (/^0020\d{10}$/.test(phone)) {
+            phone = "0" + phone.slice(4);
+        }
+
+        return phone;
+    }
+
+    /*
+     * --------------------------------------------------------
+     * Timestamp
+     *
+     * نستخدم ServerValue.TIMESTAMP عندما تكون متاحة.
+     * --------------------------------------------------------
+     */
+    function serverTimestamp() {
+        if (
+            window.firebase.database &&
+            window.firebase.database.ServerValue &&
+            window.firebase.database.ServerValue.TIMESTAMP !== undefined
+        ) {
+            return window.firebase.database.ServerValue.TIMESTAMP;
+        }
+
+        return Date.now();
+    }
+
+    /*
+     * --------------------------------------------------------
+     * Firebase References
+     * --------------------------------------------------------
+     */
+    function ref(path) {
+        if (!hasValue(path)) {
+            return database.ref();
+        }
+
+        return database.ref(String(path));
+    }
+
+    function child(parentRef, path) {
+        if (!parentRef) {
+            return ref(path);
+        }
+
+        return parentRef.child(String(path));
+    }
+
+    /*
+     * --------------------------------------------------------
+     * المستخدم الحالي من Firebase Auth
+     * --------------------------------------------------------
+     */
+    function getCurrentUser() {
+        if (!auth) {
+            return null;
+        }
+
+        return auth.currentUser || null;
+    }
+
+    /*
+     * --------------------------------------------------------
+     * مراقبة حالة Firebase Auth
+     * --------------------------------------------------------
+     */
+    function onAuthStateChanged(callback) {
+        if (
+            !auth ||
+            typeof auth.onAuthStateChanged !== "function"
+        ) {
+            if (typeof callback === "function") {
+                callback(null);
+            }
+
+            return function () {};
+        }
+
+        return auth.onAuthStateChanged(function (user) {
+            if (typeof callback === "function") {
+                callback(user || null);
+            }
+        });
+    }
+
+    /*
+     * --------------------------------------------------------
+     * رسائل أخطاء Firebase
+     * --------------------------------------------------------
+     */
+    function getErrorMessage(error, fallback) {
+        if (!error) {
+            return fallback || "حدث خطأ غير معروف.";
+        }
+
+        if (hasValue(error.message)) {
+            return String(error.message);
+        }
+
+        if (hasValue(error.code)) {
+            return String(error.code);
+        }
+
+        return fallback || "حدث خطأ غير معروف.";
+    }
+
+    function getErrorCode(error) {
+        if (!error) {
+            return "";
+        }
+
+        return hasValue(error.code)
+            ? String(error.code)
+            : "";
+    }
+
+    /*
+     * --------------------------------------------------------
+     * التحقق من Firebase readiness
+     * --------------------------------------------------------
+     */
+    const FirebaseCore = {
+        app: app,
+
+        auth: auth,
+
+        database: database,
+
+        config: Object.freeze(
+            Object.assign({}, firebaseConfig)
+        ),
+
+        paths: PATHS,
+
+        platform: PLATFORM,
+
+        serverTimestamp: serverTimestamp,
+
+        ref: ref,
+
+        child: child,
+
+        getCurrentUser: getCurrentUser,
+
+        onAuthStateChanged: onAuthStateChanged,
+
+        getErrorMessage: getErrorMessage,
+
+        getErrorCode: getErrorCode,
+
+        isObject: isObject,
+
+        isEmptyObject: isEmptyObject,
+
+        hasValue: hasValue,
+
+        firstValue: firstValue,
+
+        normalizeIdentifier: normalizeIdentifier,
+
+        normalizePhone: normalizePhone,
+
+        toArray: toArray,
+
+        cloneObject: cloneObject,
+
+        safeString: safeString
+    };
+
+    /*
+     * --------------------------------------------------------
+     * Registry للملفات الأساسية
+     *
+     * يساعد باقي المشروع على معرفة طبقات النظام
+     * بدون الاعتماد على أسماء عشوائية.
+     * --------------------------------------------------------
+     */
+    const MODULES = Object.freeze({
+        config: "firebase-config.js",
+        auth: "firebase-auth.js",
+        database: "firebase-database.js",
+        content: "firebase-content.js",
+        features: "firebase-features.js"
+    });
+
+    FirebaseCore.modules = MODULES;
+
+    /*
+     * --------------------------------------------------------
+     * تجميد الكائن الرئيسي
+     *
+     * يمنع تغيير الخصائص الأساسية بالخطأ.
+     * --------------------------------------------------------
+     */
+    Object.freeze(FirebaseCore);
+
+    /*
+     * --------------------------------------------------------
+     * توفير Firebase Core عالميًا
+     * --------------------------------------------------------
+     */
+    window.FirebaseCore = FirebaseCore;
+
+    /*
+     * أسماء مختصرة متاحة لباقي المشروع.
+     */
+    window.FirebaseApp = app;
+    window.FirebaseAuth = auth;
+    window.FirebaseDatabase = database;
+
+    /*
+     * --------------------------------------------------------
+     * FirebaseCoreReady
+     *
+     * قيمة Boolean بسيطة لأن الملف نفسه متزامن.
+     * --------------------------------------------------------
+     */
+    window.FirebaseCoreReady = true;
+
+    /*
+     * --------------------------------------------------------
+     * حماية إضافية:
+     * تعريف نسخة المشروع في console للتأكد من التهيئة.
+     * --------------------------------------------------------
+     */
+    try {
+        window.dispatchEvent(
+            new CustomEvent("firebasecore:ready", {
+                detail: {
+                    projectId: firebaseConfig.projectId,
+                    databaseURL: firebaseConfig.databaseURL,
+                    version: PLATFORM.firebaseVersion
+                }
+            })
+        );
+    } catch (error) {
+        /*
+         * عدم إيقاف المشروع إذا كان CustomEvent غير متاح
+         * في بيئة قديمة.
+         */
+    }
+
+})(window);

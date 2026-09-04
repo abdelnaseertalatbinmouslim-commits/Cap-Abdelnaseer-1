@@ -1,0 +1,2063 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <meta
+        name="description"
+        content="تسجيل الدخول إلى منصة Cap Abdelnaseer التعليمية"
+    >
+
+    <meta name="theme-color" content="#080b12">
+
+    <title>تسجيل الدخول | Cap Abdelnaseer</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        /* =========================================================
+           CAP ABDELNASEER
+           LOGIN PAGE
+           ========================================================= */
+
+        :root {
+            --bg: #070a10;
+            --bg-soft: #0b1019;
+            --card: rgba(16, 22, 34, 0.88);
+            --card-border: rgba(255, 255, 255, 0.08);
+
+            --primary: #6c63ff;
+            --primary-dark: #5148e8;
+            --primary-soft: rgba(108, 99, 255, 0.15);
+
+            --text: #ffffff;
+            --text-soft: #aeb7c8;
+            --text-muted: #727d91;
+
+            --success: #31d07c;
+            --danger: #ff5f6d;
+            --warning: #ffbd4a;
+
+            --input: rgba(255, 255, 255, 0.045);
+            --input-border: rgba(255, 255, 255, 0.09);
+
+            --radius-lg: 26px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+
+            --shadow:
+                0 30px 80px rgba(0, 0, 0, 0.42);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Cairo", sans-serif;
+            background:
+                radial-gradient(
+                    circle at 15% 20%,
+                    rgba(108, 99, 255, 0.13),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 85% 80%,
+                    rgba(108, 99, 255, 0.08),
+                    transparent 30%
+                ),
+                var(--bg);
+
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* =========================================================
+           BACKGROUND
+           ========================================================= */
+
+        .background {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.25;
+        }
+
+        .orb-one {
+            width: 320px;
+            height: 320px;
+            background: #6c63ff;
+            top: -130px;
+            right: -80px;
+        }
+
+        .orb-two {
+            width: 260px;
+            height: 260px;
+            background: #5148e8;
+            bottom: -100px;
+            left: -80px;
+        }
+
+        .grid {
+            position: absolute;
+            inset: 0;
+
+            background-image:
+                linear-gradient(
+                    rgba(255,255,255,0.018) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.018) 1px,
+                    transparent 1px
+                );
+
+            background-size: 45px 45px;
+
+            mask-image: linear-gradient(
+                to bottom,
+                black,
+                transparent 85%
+            );
+        }
+
+        /* =========================================================
+           HEADER
+           ========================================================= */
+
+        .topbar {
+            position: relative;
+            z-index: 10;
+
+            width: 100%;
+            padding: 22px 28px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+
+            font-weight: 900;
+            font-size: 20px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #8a83ff
+                );
+
+            box-shadow:
+                0 10px 30px rgba(108, 99, 255, 0.25);
+        }
+
+        .brand-icon span {
+            font-size: 17px;
+            font-weight: 900;
+        }
+
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            color: var(--text-soft);
+
+            font-size: 14px;
+            font-weight: 600;
+
+            transition: 0.25s ease;
+        }
+
+        .back-home:hover {
+            color: white;
+            transform: translateX(-3px);
+        }
+
+        /* =========================================================
+           PAGE
+           ========================================================= */
+
+        .page {
+            position: relative;
+            z-index: 2;
+
+            min-height: calc(100vh - 86px);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px 18px 55px;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 480px;
+
+            animation: pageIn 0.65s ease both;
+        }
+
+        @keyframes pageIn {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* =========================================================
+           LOGIN CARD
+           ========================================================= */
+
+        .login-card {
+            position: relative;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(19, 26, 40, 0.95),
+                    rgba(10, 14, 23, 0.95)
+                );
+
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+
+            padding: 38px;
+
+            box-shadow: var(--shadow);
+
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            right: 15%;
+
+            width: 70%;
+            height: 1px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(108,99,255,0.8),
+                    transparent
+                );
+        }
+
+        .login-card::after {
+            content: "";
+
+            position: absolute;
+
+            width: 180px;
+            height: 180px;
+
+            border-radius: 50%;
+
+            background: rgba(108,99,255,0.07);
+
+            top: -100px;
+            left: -80px;
+
+            filter: blur(10px);
+
+            pointer-events: none;
+        }
+
+        /* =========================================================
+           HEADING
+           ========================================================= */
+
+        .heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .heading-icon {
+            width: 66px;
+            height: 66px;
+
+            margin: 0 auto 17px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 20px;
+
+            background: var(--primary-soft);
+
+            border: 1px solid rgba(108,99,255,0.2);
+
+            color: #8d87ff;
+
+            font-size: 27px;
+
+            box-shadow:
+                0 15px 40px rgba(108,99,255,0.12);
+        }
+
+        .heading h1 {
+            font-size: 28px;
+            line-height: 1.4;
+            font-weight: 900;
+
+            margin-bottom: 7px;
+        }
+
+        .heading p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* =========================================================
+           FORM
+           ========================================================= */
+
+        .form-group {
+            margin-bottom: 19px;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 9px;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            color: #dce2ed;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+
+            top: 50%;
+            right: 15px;
+
+            transform: translateY(-50%);
+
+            color: var(--text-muted);
+
+            font-size: 17px;
+
+            pointer-events: none;
+
+            transition: 0.25s ease;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 55px;
+
+            border-radius: var(--radius-sm);
+
+            border: 1px solid var(--input-border);
+
+            background: var(--input);
+
+            color: white;
+
+            padding:
+                0 46px
+                0 15px;
+
+            outline: none;
+
+            font-size: 14px;
+
+            transition:
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background 0.25s ease;
+        }
+
+        .form-input::placeholder {
+            color: #626d80;
+        }
+
+        .form-input:hover {
+            border-color: rgba(255,255,255,0.14);
+        }
+
+        .form-input:focus {
+            border-color: rgba(108,99,255,0.8);
+
+            background:
+                rgba(108,99,255,0.055);
+
+            box-shadow:
+                0 0 0 4px rgba(108,99,255,0.09);
+        }
+
+        .form-input:focus + .input-icon {
+            color: #8b84ff;
+        }
+
+        .password-toggle {
+            position: absolute;
+
+            left: 13px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            width: 34px;
+            height: 34px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 0;
+            background: transparent;
+
+            color: var(--text-muted);
+
+            border-radius: 9px;
+
+            transition: 0.2s ease;
+        }
+
+        .password-toggle:hover {
+            color: white;
+            background: rgba(255,255,255,0.06);
+        }
+
+        /* =========================================================
+           OPTIONS
+           ========================================================= */
+
+        .form-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin: 5px 0 22px;
+
+            gap: 15px;
+        }
+
+        .remember {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            color: var(--text-muted);
+
+            font-size: 12px;
+
+            cursor: pointer;
+
+            user-select: none;
+        }
+
+        .remember input {
+            width: 16px;
+            height: 16px;
+
+            accent-color: var(--primary);
+
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: #8b84ff;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            transition: 0.2s ease;
+        }
+
+        .forgot-link:hover {
+            color: #aaa5ff;
+        }
+
+        /* =========================================================
+           LOGIN BUTTON
+           ========================================================= */
+
+        .login-button {
+            width: 100%;
+            height: 56px;
+
+            border: 0;
+            border-radius: 15px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #817aff
+                );
+
+            font-size: 15px;
+            font-weight: 800;
+
+            box-shadow:
+                0 14px 32px rgba(108,99,255,0.22);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                opacity 0.2s ease;
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-button::before {
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255,255,255,0.12),
+                    transparent
+                );
+
+            transform: translateX(-100%);
+            transition: 0.5s ease;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 18px 40px rgba(108,99,255,0.3);
+        }
+
+        .login-button:hover::before {
+            transform: translateX(100%);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .login-button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .button-content {
+            position: relative;
+            z-index: 2;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+        }
+
+        /* =========================================================
+           LOADER
+           ========================================================= */
+
+        .spinner {
+            width: 19px;
+            height: 19px;
+
+            border: 2px solid rgba(255,255,255,0.35);
+            border-top-color: white;
+
+            border-radius: 50%;
+
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================================================
+           DIVIDER
+           ========================================================= */
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+
+            margin: 25px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+
+            height: 1px;
+            flex: 1;
+
+            background:
+                rgba(255,255,255,0.07);
+        }
+
+        .divider span {
+            color: #5e6879;
+            font-size: 11px;
+        }
+
+        /* =========================================================
+           REGISTER
+           ========================================================= */
+
+        .register-box {
+            text-align: center;
+
+            padding: 17px;
+
+            border-radius: 14px;
+
+            background:
+                rgba(255,255,255,0.025);
+
+            border: 1px solid rgba(255,255,255,0.05);
+
+            color: var(--text-muted);
+
+            font-size: 13px;
+        }
+
+        .register-box a {
+            color: #8c86ff;
+            font-weight: 800;
+
+            margin-right: 4px;
+
+            transition: 0.2s ease;
+        }
+
+        .register-box a:hover {
+            color: #aaa6ff;
+        }
+
+        /* =========================================================
+           STATUS / ERROR
+           ========================================================= */
+
+        .message-box {
+            display: none;
+
+            margin-bottom: 18px;
+
+            padding: 13px 14px;
+
+            border-radius: 12px;
+
+            font-size: 12px;
+            line-height: 1.8;
+
+            animation: messageIn 0.25s ease;
+        }
+
+        .message-box.show {
+            display: block;
+        }
+
+        .message-box.error {
+            color: #ffb5bc;
+
+            background:
+                rgba(255,95,109,0.08);
+
+            border:
+                1px solid rgba(255,95,109,0.18);
+        }
+
+        .message-box.success {
+            color: #a8efc7;
+
+            background:
+                rgba(49,208,124,0.08);
+
+            border:
+                1px solid rgba(49,208,124,0.18);
+        }
+
+        .message-box.warning {
+            color: #ffe0a2;
+
+            background:
+                rgba(255,189,74,0.08);
+
+            border:
+                1px solid rgba(255,189,74,0.18);
+        }
+
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* =========================================================
+           FOOTER
+           ========================================================= */
+
+        .page-footer {
+            text-align: center;
+
+            margin-top: 20px;
+
+            color: #525d6f;
+
+            font-size: 11px;
+        }
+
+        /* =========================================================
+           TOAST
+           ========================================================= */
+
+        .toast-container {
+            position: fixed;
+
+            left: 20px;
+            bottom: 20px;
+
+            z-index: 9999;
+
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            pointer-events: none;
+        }
+
+        .toast {
+            min-width: 260px;
+            max-width: 360px;
+
+            padding: 13px 16px;
+
+            border-radius: 13px;
+
+            background:
+                rgba(19,26,40,0.96);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            box-shadow:
+                0 15px 45px rgba(0,0,0,0.35);
+
+            color: white;
+
+            font-size: 12px;
+
+            transform: translateY(15px);
+            opacity: 0;
+
+            transition: 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+        @media (max-width: 600px) {
+
+            .topbar {
+                padding:
+                    17px 17px;
+            }
+
+            .brand {
+                font-size: 17px;
+            }
+
+            .brand-icon {
+                width: 38px;
+                height: 38px;
+            }
+
+            .back-home {
+                font-size: 12px;
+            }
+
+            .page {
+                padding:
+                    15px 12px 35px;
+            }
+
+            .login-card {
+                padding: 27px 19px;
+                border-radius: 21px;
+            }
+
+            .heading {
+                margin-bottom: 25px;
+            }
+
+            .heading-icon {
+                width: 58px;
+                height: 58px;
+                border-radius: 17px;
+            }
+
+            .heading h1 {
+                font-size: 24px;
+            }
+
+            .heading p {
+                font-size: 12px;
+            }
+
+            .form-input {
+                height: 53px;
+            }
+
+            .login-button {
+                height: 54px;
+            }
+
+            .toast-container {
+                left: 12px;
+                right: 12px;
+                bottom: 12px;
+            }
+
+            .toast {
+                width: 100%;
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 380px) {
+
+            .form-options {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .login-card {
+                padding:
+                    24px 16px;
+            }
+        }
+
+        /* =========================================================
+           ACCESSIBILITY
+           ========================================================= */
+
+        :focus-visible {
+            outline:
+                2px solid rgba(108,99,255,0.8);
+
+            outline-offset: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================================================
+         BACKGROUND
+         ========================================================= -->
+
+    <div class="background" aria-hidden="true">
+        <div class="orb orb-one"></div>
+        <div class="orb orb-two"></div>
+        <div class="grid"></div>
+    </div>
+
+
+    <!-- =========================================================
+         HEADER
+         ========================================================= -->
+
+    <header class="topbar">
+
+        <a
+            href="index.html"
+            class="brand"
+            aria-label="Cap Abdelnaseer"
+        >
+            <span class="brand-icon">
+                <span>CA</span>
+            </span>
+
+            <span>Cap Abdelnaseer</span>
+        </a>
+
+        <a
+            href="index.html"
+            class="back-home"
+        >
+            <span>العودة للرئيسية</span>
+            <span>←</span>
+        </a>
+
+    </header>
+
+
+    <!-- =========================================================
+         MAIN
+         ========================================================= -->
+
+    <main class="page">
+
+        <div class="login-wrapper">
+
+            <section class="login-card">
+
+                <!-- Heading -->
+
+                <div class="heading">
+
+                    <div
+                        class="heading-icon"
+                        aria-hidden="true"
+                    >
+                        🔐
+                    </div>
+
+                    <h1>
+                        تسجيل الدخول
+                    </h1>
+
+                    <p>
+                        ادخل إلى حسابك للوصول إلى محتوى المنصة
+                    </p>
+
+                </div>
+
+
+                <!-- Message -->
+
+                <div
+                    id="messageBox"
+                    class="message-box"
+                    role="alert"
+                    aria-live="polite"
+                ></div>
+
+
+                <!-- Login Form -->
+
+                <form
+                    id="loginForm"
+                    novalidate
+                    autocomplete="on"
+                >
+
+                    <!-- Phone -->
+
+                    <div class="form-group">
+
+                        <label
+                            class="form-label"
+                            for="phone"
+                        >
+                            <span>رقم الهاتف</span>
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input
+                                id="phone"
+                                name="phone"
+                                class="form-input"
+                                type="tel"
+                                inputmode="tel"
+                                autocomplete="tel"
+                                placeholder="مثال: 01012345678"
+                                maxlength="20"
+                                required
+                            >
+
+                            <span
+                                class="input-icon"
+                                aria-hidden="true"
+                            >
+                                ☎
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Password / PIN -->
+
+                    <div class="form-group">
+
+                        <label
+                            class="form-label"
+                            for="password"
+                        >
+                            <span>كلمة المرور / PIN</span>
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input
+                                id="password"
+                                name="password"
+                                class="form-input"
+                                type="password"
+                                autocomplete="current-password"
+                                placeholder="اكتب كلمة المرور"
+                                minlength="4"
+                                maxlength="128"
+                                required
+                            >
+
+                            <span
+                                class="input-icon"
+                                aria-hidden="true"
+                            >
+                                🔒
+                            </span>
+
+                            <button
+                                type="button"
+                                id="passwordToggle"
+                                class="password-toggle"
+                                aria-label="إظهار كلمة المرور"
+                                title="إظهار كلمة المرور"
+                            >
+                                👁
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Options -->
+
+                    <div class="form-options">
+
+                        <label class="remember">
+
+                            <input
+                                type="checkbox"
+                                id="rememberLogin"
+                                name="rememberLogin"
+                            >
+
+                            <span>
+                                تذكر تسجيل الدخول
+                            </span>
+
+                        </label>
+
+                        <a
+                            href="forgot-password.html"
+                            class="forgot-link"
+                        >
+                            نسيت كلمة المرور؟
+                        </a>
+
+                    </div>
+
+
+                    <!-- Submit -->
+
+                    <button
+                        type="submit"
+                        id="loginButton"
+                        class="login-button"
+                    >
+
+                        <span
+                            id="loginButtonContent"
+                            class="button-content"
+                        >
+                            <span>تسجيل الدخول</span>
+                            <span>→</span>
+                        </span>
+
+                    </button>
+
+                </form>
+
+
+                <!-- Divider -->
+
+                <div class="divider">
+                    <span>أو</span>
+                </div>
+
+
+                <!-- Register -->
+
+                <div class="register-box">
+
+                    <span>
+                        ليس لديك حساب؟
+                    </span>
+
+                    <a href="register.html">
+                        إنشاء حساب جديد
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <div class="page-footer">
+                © <span id="currentYear"></span> Cap Abdelnaseer
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================================================
+         TOAST
+         ========================================================= -->
+
+    <div
+        id="toastContainer"
+        class="toast-container"
+        aria-live="polite"
+        aria-atomic="true"
+    ></div>
+
+
+    <!-- =========================================================
+         FIREBASE SDK
+         ========================================================= -->
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+
+
+    <!-- =========================================================
+         CAP ABDELNASEER FIREBASE LAYERS
+         ========================================================= -->
+
+    <script src="firebase-config.js"></script>
+    <script src="firebase-auth.js"></script>
+    <script src="firebase-database.js"></script>
+    <script src="firebase-content.js"></script>
+    <script src="firebase-features.js"></script>
+
+
+    <!-- =========================================================
+         LOGIN PAGE SCRIPT
+         ========================================================= -->
+
+    <script>
+
+        (function () {
+
+            "use strict";
+
+
+            /* =====================================================
+               ELEMENTS
+               ===================================================== */
+
+            const form =
+                document.getElementById("loginForm");
+
+            const phoneInput =
+                document.getElementById("phone");
+
+            const passwordInput =
+                document.getElementById("password");
+
+            const passwordToggle =
+                document.getElementById("passwordToggle");
+
+            const rememberInput =
+                document.getElementById("rememberLogin");
+
+            const loginButton =
+                document.getElementById("loginButton");
+
+            const loginButtonContent =
+                document.getElementById("loginButtonContent");
+
+            const messageBox =
+                document.getElementById("messageBox");
+
+            const toastContainer =
+                document.getElementById("toastContainer");
+
+            const currentYear =
+                document.getElementById("currentYear");
+
+
+            /* =====================================================
+               YEAR
+               ===================================================== */
+
+            currentYear.textContent =
+                new Date().getFullYear();
+
+
+            /* =====================================================
+               HELPERS
+               ===================================================== */
+
+            function normalizeArabicNumbers(value) {
+
+                return String(value || "")
+                    .replace(/[٠-٩]/g, function (digit) {
+
+                        return String(
+                            "٠١٢٣٤٥٦٧٨٩".indexOf(digit)
+                        );
+
+                    })
+                    .replace(/[۰-۹]/g, function (digit) {
+
+                        return String(
+                            "۰۱۲۳۴۵۶۷۸۹".indexOf(digit)
+                        );
+
+                    });
+
+            }
+
+
+            function normalizePhoneInput(value) {
+
+                let phone =
+                    normalizeArabicNumbers(value);
+
+                phone =
+                    phone
+                    .replace(/[^\d+]/g, "")
+                    .replace(/\+/g, function (match, offset) {
+
+                        return offset === 0 ? "+" : "";
+
+                    });
+
+
+                if (phone.startsWith("+20")) {
+
+                    phone =
+                        "0" + phone.slice(3);
+
+                }
+                else if (phone.startsWith("0020")) {
+
+                    phone =
+                        "0" + phone.slice(4);
+
+                }
+                else if (
+                    phone.startsWith("20") &&
+                    phone.length === 12
+                ) {
+
+                    phone =
+                        "0" + phone.slice(2);
+
+                }
+                else if (
+                    /^\d{10}$/.test(phone)
+                ) {
+
+                    phone =
+                        "0" + phone;
+
+                }
+
+                return phone;
+            }
+
+
+            function showMessage(
+                message,
+                type = "error"
+            ) {
+
+                messageBox.textContent =
+                    message;
+
+                messageBox.className =
+                    "message-box show " + type;
+
+            }
+
+
+            function hideMessage() {
+
+                messageBox.textContent = "";
+
+                messageBox.className =
+                    "message-box";
+
+            }
+
+
+            function showToast(message) {
+
+                if (!toastContainer) {
+                    return;
+                }
+
+                const toast =
+                    document.createElement("div");
+
+                toast.className =
+                    "toast";
+
+                toast.textContent =
+                    message;
+
+                toastContainer.appendChild(toast);
+
+
+                requestAnimationFrame(function () {
+
+                    toast.classList.add("show");
+
+                });
+
+
+                setTimeout(function () {
+
+                    toast.classList.remove("show");
+
+                    setTimeout(function () {
+
+                        toast.remove();
+
+                    }, 300);
+
+                }, 3000);
+
+            }
+
+
+            function setLoading(isLoading) {
+
+                loginButton.disabled =
+                    isLoading;
+
+                if (isLoading) {
+
+                    loginButtonContent.innerHTML =
+                        '<span class="spinner"></span>' +
+                        '<span>جاري تسجيل الدخول...</span>';
+
+                }
+                else {
+
+                    loginButtonContent.innerHTML =
+                        '<span>تسجيل الدخول</span>' +
+                        '<span>→</span>';
+
+                }
+
+            }
+
+
+            function getAuthErrorMessage(error) {
+
+                if (!error) {
+                    return "حدث خطأ غير متوقع، حاول مرة أخرى.";
+                }
+
+                const code =
+                    String(
+                        error.code ||
+                        ""
+                    ).toLowerCase();
+
+
+                if (
+                    code.includes("network") ||
+                    code.includes("offline")
+                ) {
+
+                    return "تعذر الاتصال بالإنترنت. تأكد من اتصالك وحاول مرة أخرى.";
+
+                }
+
+
+                if (
+                    code.includes("permission") ||
+                    code.includes("permission-denied")
+                ) {
+
+                    return "لا يمكن الوصول إلى بيانات الحساب حاليًا. حاول مرة أخرى.";
+
+                }
+
+
+                if (
+                    code.includes("not-found") ||
+                    code.includes("user-not-found")
+                ) {
+
+                    return "رقم الهاتف أو كلمة المرور غير صحيحة.";
+
+                }
+
+
+                if (
+                    code.includes("wrong-password") ||
+                    code.includes("invalid-credential") ||
+                    code.includes("invalid-password")
+                ) {
+
+                    return "رقم الهاتف أو كلمة المرور غير صحيحة.";
+
+                }
+
+
+                if (
+                    code.includes("pending")
+                ) {
+
+                    return "الحساب ما زال قيد المراجعة.";
+
+                }
+
+
+                if (
+                    code.includes("rejected") ||
+                    code.includes("blocked")
+                ) {
+
+                    return "هذا الحساب غير متاح حاليًا.";
+
+                }
+
+
+                if (error.message) {
+
+                    return error.message;
+
+                }
+
+
+                return "تعذر تسجيل الدخول. حاول مرة أخرى.";
+            }
+
+
+            /* =====================================================
+               PASSWORD VISIBILITY
+               ===================================================== */
+
+            passwordToggle.addEventListener(
+                "click",
+                function () {
+
+                    const isPassword =
+                        passwordInput.type === "password";
+
+                    passwordInput.type =
+                        isPassword
+                            ? "text"
+                            : "password";
+
+                    passwordToggle.textContent =
+                        isPassword
+                            ? "🙈"
+                            : "👁";
+
+                    passwordToggle.setAttribute(
+                        "aria-label",
+                        isPassword
+                            ? "إخفاء كلمة المرور"
+                            : "إظهار كلمة المرور"
+                    );
+
+                    passwordToggle.setAttribute(
+                        "title",
+                        isPassword
+                            ? "إخفاء كلمة المرور"
+                            : "إظهار كلمة المرور"
+                    );
+
+                }
+            );
+
+
+            /* =====================================================
+               PHONE NORMALIZATION
+               ===================================================== */
+
+            phoneInput.addEventListener(
+                "blur",
+                function () {
+
+                    phoneInput.value =
+                        normalizePhoneInput(
+                            phoneInput.value
+                        );
+
+                }
+            );
+
+
+            phoneInput.addEventListener(
+                "input",
+                function () {
+
+                    phoneInput.value =
+                        normalizeArabicNumbers(
+                            phoneInput.value
+                        );
+
+                }
+            );
+
+
+            /* =====================================================
+               REMEMBER LOGIN
+               ===================================================== */
+
+            try {
+
+                const savedPhone =
+                    localStorage.getItem(
+                        "cap_remembered_phone"
+                    );
+
+                const remember =
+                    localStorage.getItem(
+                        "cap_remember_login"
+                    );
+
+
+                if (savedPhone) {
+
+                    phoneInput.value =
+                        savedPhone;
+
+                }
+
+
+                if (remember === "true") {
+
+                    rememberInput.checked =
+                        true;
+
+                }
+
+            }
+            catch (error) {
+
+                console.warn(
+                    "Remember login could not be loaded.",
+                    error
+                );
+
+            }
+
+
+            /* =====================================================
+               WAIT FOR FIREBASE
+               ===================================================== */
+
+            async function waitForModules() {
+
+                const timeout =
+                    15000;
+
+                const started =
+                    Date.now();
+
+
+                while (
+                    Date.now() - started <
+                    timeout
+                ) {
+
+                    if (
+                        window.FirebaseAuthReady &&
+                        window.FirebaseDatabaseReady
+                    ) {
+
+                        return true;
+
+                    }
+
+
+                    await new Promise(
+                        function (resolve) {
+
+                            setTimeout(
+                                resolve,
+                                100
+                            );
+
+                        }
+                    );
+
+                }
+
+
+                return !!(
+                    window.FirebaseAuth &&
+                    window.FirebaseDatabase
+                );
+
+            }
+
+
+            /* =====================================================
+               REDIRECT IF ALREADY LOGGED IN
+               ===================================================== */
+
+            async function checkExistingSession() {
+
+                try {
+
+                    const auth =
+                        window.FirebaseAuth;
+
+                    if (
+                        !auth ||
+                        typeof auth.getCurrentUser !==
+                        "function"
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const user =
+                        auth.getCurrentUser();
+
+
+                    if (user) {
+
+                        window.location.replace(
+                            "dashboard.html"
+                        );
+
+                    }
+
+                }
+                catch (error) {
+
+                    console.warn(
+                        "Session check failed.",
+                        error
+                    );
+
+                }
+
+            }
+
+
+            /* =====================================================
+               LOGIN
+               ===================================================== */
+
+            form.addEventListener(
+                "submit",
+                async function (event) {
+
+                    event.preventDefault();
+
+                    hideMessage();
+
+
+                    const phone =
+                        normalizePhoneInput(
+                            phoneInput.value
+                        );
+
+                    const password =
+                        String(
+                            passwordInput.value ||
+                            ""
+                        );
+
+
+                    /* ---------------------------------------------
+                       VALIDATION
+                       --------------------------------------------- */
+
+                    if (!phone) {
+
+                        showMessage(
+                            "من فضلك اكتب رقم الهاتف."
+                        );
+
+                        phoneInput.focus();
+
+                        return;
+
+                    }
+
+
+                    if (
+                        !/^01[0125]\d{8}$/.test(phone)
+                    ) {
+
+                        showMessage(
+                            "اكتب رقم هاتف مصري صحيح مثل 01012345678."
+                        );
+
+                        phoneInput.focus();
+
+                        return;
+
+                    }
+
+
+                    if (!password) {
+
+                        showMessage(
+                            "من فضلك اكتب كلمة المرور أو PIN."
+                        );
+
+                        passwordInput.focus();
+
+                        return;
+
+                    }
+
+
+                    if (
+                        password.length < 4
+                    ) {
+
+                        showMessage(
+                            "كلمة المرور يجب أن تكون 4 أحرف أو أرقام على الأقل."
+                        );
+
+                        passwordInput.focus();
+
+                        return;
+
+                    }
+
+
+                    /* ---------------------------------------------
+                       LOADING
+                       --------------------------------------------- */
+
+                    setLoading(true);
+
+
+                    try {
+
+                        const ready =
+                            await waitForModules();
+
+
+                        if (!ready) {
+
+                            throw new Error(
+                                "تعذر تحميل نظام تسجيل الدخول."
+                            );
+
+                        }
+
+
+                        const auth =
+                            window.FirebaseAuth;
+
+
+                        if (
+                            !auth ||
+                            typeof auth.loginWithPhonePassword !==
+                            "function"
+                        ) {
+
+                            throw new Error(
+                                "نظام تسجيل الدخول غير جاهز."
+                            );
+
+                        }
+
+
+                        /* -----------------------------------------
+                           AUTHENTICATION
+                           ----------------------------------------- */
+
+                        const result =
+                            await auth.loginWithPhonePassword(
+                                phone,
+                                password,
+                                {
+                                    remember:
+                                        rememberInput.checked
+                                }
+                            );
+
+
+                        /* -----------------------------------------
+                           SAVE REMEMBERED PHONE
+                           ----------------------------------------- */
+
+                        try {
+
+                            if (
+                                rememberInput.checked
+                            ) {
+
+                                localStorage.setItem(
+                                    "cap_remembered_phone",
+                                    phone
+                                );
+
+                                localStorage.setItem(
+                                    "cap_remember_login",
+                                    "true"
+                                );
+
+                            }
+                            else {
+
+                                localStorage.removeItem(
+                                    "cap_remembered_phone"
+                                );
+
+                                localStorage.removeItem(
+                                    "cap_remember_login"
+                                );
+
+                            }
+
+                        }
+                        catch (storageError) {
+
+                            console.warn(
+                                "Could not save remember preference.",
+                                storageError
+                            );
+
+                        }
+
+
+                        /* -----------------------------------------
+                           SUCCESS
+                           ----------------------------------------- */
+
+                        const student =
+                            result &&
+                            (
+                                result.student ||
+                                result.user ||
+                                result
+                            );
+
+
+                        const studentName =
+                            student &&
+                            (
+                                student.name ||
+                                student.studentName
+                            );
+
+
+                        showMessage(
+                            studentName
+                                ? "أهلًا " +
+                                  studentName +
+                                  "، تم تسجيل الدخول بنجاح."
+                                : "تم تسجيل الدخول بنجاح.",
+                            "success"
+                        );
+
+
+                        showToast(
+                            "تم تسجيل الدخول بنجاح"
+                        );
+
+
+                        setLoading(true);
+
+
+                        setTimeout(
+                            function () {
+
+                                window.location.replace(
+                                    "dashboard.html"
+                                );
+
+                            },
+                            500
+                        );
+
+                    }
+                    catch (error) {
+
+                        console.error(
+                            "Login error:",
+                            error
+                        );
+
+
+                        showMessage(
+                            getAuthErrorMessage(
+                                error
+                            ),
+                            "error"
+                        );
+
+
+                        setLoading(false);
+
+                    }
+
+                }
+            );
+
+
+            /* =====================================================
+               AUTO CHECK
+               ===================================================== */
+
+            waitForModules()
+                .then(function () {
+
+                    checkExistingSession();
+
+                })
+                .catch(function () {
+                    /* الصفحة تظل قابلة للاستخدام */
+                });
+
+
+            /* =====================================================
+               ENTER KEY UX
+               ===================================================== */
+
+            phoneInput.addEventListener(
+                "keydown",
+                function (event) {
+
+                    if (
+                        event.key === "Enter"
+                    ) {
+
+                        event.preventDefault();
+
+                        passwordInput.focus();
+
+                    }
+
+                }
+            );
+
+
+        })();
+
+    </script>
+
+</body>
+</html>

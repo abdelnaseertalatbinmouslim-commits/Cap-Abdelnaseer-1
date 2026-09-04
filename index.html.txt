@@ -1,0 +1,3271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+
+  <meta
+    name="theme-color"
+    content="#0b1220"
+  >
+
+  <meta
+    name="description"
+    content="منصة كاب عبدالنصير التعليمية - منصة تعليمية متكاملة للطلاب"
+  >
+
+  <meta
+    name="author"
+    content="Cap Abdelnaseer"
+  >
+
+  <title>كاب عبدالنصير | المنصة التعليمية</title>
+
+  <!-- =====================================================
+       GOOGLE FONTS
+  ====================================================== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- =====================================================
+       PAGE STYLE
+  ====================================================== -->
+  <style>
+    :root {
+      --bg: #070b14;
+      --bg-soft: #0b1220;
+      --card: rgba(17, 25, 40, 0.78);
+      --card-strong: #111a2b;
+      --border: rgba(255, 255, 255, 0.08);
+
+      --primary: #4f8cff;
+      --primary-dark: #2563eb;
+      --primary-soft: rgba(79, 140, 255, 0.14);
+
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+
+      --text: #ffffff;
+      --text-soft: #b7c0d0;
+      --text-muted: #7e899d;
+
+      --shadow:
+        0 20px 60px rgba(0, 0, 0, 0.35);
+
+      --radius: 24px;
+      --radius-small: 16px;
+
+      --container: 1180px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Cairo", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(
+          circle at 85% 10%,
+          rgba(37, 99, 235, 0.20),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 10% 40%,
+          rgba(79, 140, 255, 0.08),
+          transparent 28%
+        ),
+        linear-gradient(
+          145deg,
+          #050811 0%,
+          #08101d 50%,
+          #050914 100%
+        );
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.35;
+      background-image:
+        linear-gradient(
+          rgba(255,255,255,0.018) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,0.018) 1px,
+          transparent 1px
+        );
+      background-size: 50px 50px;
+      mask-image: linear-gradient(
+        to bottom,
+        black,
+        transparent 80%
+      );
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .container {
+      width: min(
+        calc(100% - 36px),
+        var(--container)
+      );
+      margin-inline: auto;
+    }
+
+    /* =====================================================
+       LOADING SCREEN
+    ====================================================== */
+
+    #pageLoader {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background:
+        radial-gradient(
+          circle at center,
+          #111d34 0%,
+          #070b14 55%,
+          #03050a 100%
+        );
+
+      transition:
+        opacity 0.45s ease,
+        visibility 0.45s ease;
+    }
+
+    #pageLoader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-box {
+      text-align: center;
+      padding: 30px;
+    }
+
+    .loader-logo {
+      width: 82px;
+      height: 82px;
+      margin: 0 auto 22px;
+
+      border-radius: 24px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          #7aa9ff
+        );
+
+      box-shadow:
+        0 20px 60px rgba(37, 99, 235, 0.35);
+
+      font-size: 32px;
+      font-weight: 900;
+
+      animation: loaderPulse 1.6s infinite;
+    }
+
+    .loader-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .loader-text {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .loader-spinner {
+      width: 28px;
+      height: 28px;
+      margin: 22px auto 0;
+
+      border: 3px solid rgba(255,255,255,0.10);
+      border-top-color: var(--primary);
+
+      border-radius: 50%;
+
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes loaderPulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.06);
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* =====================================================
+       HEADER
+    ====================================================== */
+
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+
+      z-index: 1000;
+
+      border-bottom: 1px solid transparent;
+
+      transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        backdrop-filter 0.3s ease;
+    }
+
+    .site-header.scrolled {
+      background: rgba(5, 9, 18, 0.78);
+      border-color: var(--border);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      min-height: 78px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      flex-shrink: 0;
+    }
+
+    .brand-logo {
+      width: 46px;
+      height: 46px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 14px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          #315fd1
+        );
+
+      box-shadow:
+        0 10px 30px rgba(37, 99, 235, 0.25);
+
+      font-size: 19px;
+      font-weight: 900;
+    }
+
+    .brand-info {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .brand-name {
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .brand-subtitle {
+      margin-top: 4px;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .nav-link {
+      position: relative;
+
+      padding: 9px 13px;
+
+      color: var(--text-soft);
+
+      font-size: 13px;
+      font-weight: 700;
+
+      border-radius: 11px;
+
+      transition:
+        color 0.25s ease,
+        background 0.25s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .header-btn {
+      min-height: 42px;
+
+      padding: 0 17px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      color: var(--text);
+
+      background: rgba(255,255,255,0.035);
+
+      font-size: 12px;
+      font-weight: 800;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .header-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.15);
+    }
+
+    .header-btn.primary {
+      border-color: transparent;
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+
+      box-shadow:
+        0 10px 25px rgba(37, 99, 235, 0.22);
+    }
+
+    .header-btn.primary:hover {
+      background:
+        linear-gradient(
+          135deg,
+          #6199ff,
+          #3472e9
+        );
+    }
+
+    .mobile-menu-btn {
+      display: none;
+
+      width: 43px;
+      height: 43px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      color: var(--text);
+
+      background: rgba(255,255,255,0.04);
+
+      cursor: pointer;
+
+      font-size: 20px;
+    }
+
+    /* =====================================================
+       HERO
+    ====================================================== */
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+
+      padding-top: 130px;
+      padding-bottom: 90px;
+
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      align-items: center;
+      gap: 70px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      width: fit-content;
+
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+
+      padding: 8px 13px;
+
+      border: 1px solid rgba(79,140,255,0.20);
+      border-radius: 999px;
+
+      color: #a9c7ff;
+
+      background: rgba(79,140,255,0.08);
+
+      font-size: 11px;
+      font-weight: 800;
+
+      margin-bottom: 22px;
+    }
+
+    .hero-badge-dot {
+      width: 7px;
+      height: 7px;
+
+      border-radius: 50%;
+      background: var(--success);
+
+      box-shadow:
+        0 0 0 5px rgba(34,197,94,0.10);
+    }
+
+    .hero-title {
+      max-width: 760px;
+
+      font-size: clamp(
+        38px,
+        5.3vw,
+        68px
+      );
+
+      line-height: 1.12;
+
+      font-weight: 900;
+
+      letter-spacing: -1.5px;
+    }
+
+    .hero-title .highlight {
+      color: var(--primary);
+    }
+
+    .hero-description {
+      max-width: 650px;
+
+      margin-top: 23px;
+
+      color: var(--text-soft);
+
+      font-size: 16px;
+      line-height: 2;
+
+      font-weight: 500;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+
+      gap: 12px;
+
+      margin-top: 31px;
+    }
+
+    .main-btn {
+      min-height: 52px;
+
+      padding: 0 23px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+
+      border-radius: 14px;
+
+      border: 1px solid transparent;
+
+      font-size: 13px;
+      font-weight: 900;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+    }
+
+    .main-btn:hover {
+      transform: translateY(-3px);
+    }
+
+    .main-btn.primary {
+      background:
+        linear-gradient(
+          135deg,
+          #5a94ff,
+          #2563eb
+        );
+
+      box-shadow:
+        0 16px 35px rgba(37,99,235,0.28);
+    }
+
+    .main-btn.primary:hover {
+      box-shadow:
+        0 20px 42px rgba(37,99,235,0.38);
+    }
+
+    .main-btn.secondary {
+      border-color: var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+    }
+
+    .main-btn.secondary:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .hero-note {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+
+      margin-top: 20px;
+
+      color: var(--text-muted);
+
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .hero-note-icon {
+      width: 20px;
+      height: 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 7px;
+
+      background: rgba(34,197,94,0.10);
+      color: var(--success);
+
+      font-size: 10px;
+    }
+
+    /* =====================================================
+       HERO VISUAL
+    ====================================================== */
+
+    .hero-visual {
+      position: relative;
+
+      min-height: 500px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-glow {
+      position: absolute;
+
+      width: 370px;
+      height: 370px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(79,140,255,0.26),
+          transparent 68%
+        );
+
+      filter: blur(8px);
+
+      animation: floatGlow 5s ease-in-out infinite;
+    }
+
+    @keyframes floatGlow {
+      0%, 100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-15px);
+      }
+    }
+
+    .dashboard-preview {
+      position: relative;
+
+      width: min(100%, 440px);
+
+      padding: 18px;
+
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 28px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(23,34,55,0.95),
+          rgba(10,17,29,0.92)
+        );
+
+      box-shadow:
+        0 40px 90px rgba(0,0,0,0.45),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+
+      transform:
+        perspective(1000px)
+        rotateY(-5deg)
+        rotateX(3deg);
+
+      transition: transform 0.5s ease;
+    }
+
+    .dashboard-preview:hover {
+      transform:
+        perspective(1000px)
+        rotateY(0deg)
+        rotateX(0deg)
+        translateY(-5px);
+    }
+
+    .preview-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 17px;
+    }
+
+    .preview-brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .preview-logo {
+      width: 36px;
+      height: 36px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 11px;
+
+      background: var(--primary);
+
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .preview-name {
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .preview-menu {
+      display: flex;
+      gap: 4px;
+    }
+
+    .preview-menu span {
+      width: 5px;
+      height: 5px;
+
+      border-radius: 50%;
+
+      background: var(--text-muted);
+    }
+
+    .preview-welcome {
+      padding: 20px;
+
+      border-radius: 20px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(79,140,255,0.19),
+          rgba(37,99,235,0.07)
+        );
+
+      border: 1px solid rgba(79,140,255,0.12);
+    }
+
+    .preview-welcome-small {
+      color: #9ebbf0;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .preview-welcome-title {
+      margin-top: 6px;
+
+      font-size: 19px;
+      line-height: 1.4;
+      font-weight: 900;
+    }
+
+    .preview-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+
+      margin-top: 12px;
+    }
+
+    .preview-card {
+      min-height: 110px;
+
+      padding: 15px;
+
+      border: 1px solid var(--border);
+      border-radius: 17px;
+
+      background: rgba(255,255,255,0.035);
+    }
+
+    .preview-card-icon {
+      width: 30px;
+      height: 30px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 9px;
+
+      background: var(--primary-soft);
+      color: #8db4ff;
+
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .preview-card-number {
+      margin-top: 13px;
+
+      font-size: 19px;
+      font-weight: 900;
+    }
+
+    .preview-card-label {
+      color: var(--text-muted);
+      font-size: 9px;
+      font-weight: 600;
+    }
+
+    .preview-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+
+      margin-top: 12px;
+    }
+
+    .preview-progress {
+      padding: 15px;
+
+      border: 1px solid var(--border);
+      border-radius: 17px;
+
+      background: rgba(255,255,255,0.025);
+    }
+
+    .progress-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .progress-value {
+      color: #7da9ff;
+    }
+
+    .progress-track {
+      height: 6px;
+
+      margin-top: 12px;
+
+      border-radius: 999px;
+
+      background: rgba(255,255,255,0.08);
+
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 76%;
+      height: 100%;
+
+      border-radius: inherit;
+
+      background:
+        linear-gradient(
+          90deg,
+          #4f8cff,
+          #7faeff
+        );
+    }
+
+    .preview-notification {
+      padding: 15px;
+
+      border: 1px solid var(--border);
+      border-radius: 17px;
+
+      background: rgba(255,255,255,0.025);
+    }
+
+    .notification-dot {
+      width: 8px;
+      height: 8px;
+
+      margin-bottom: 9px;
+
+      border-radius: 50%;
+
+      background: var(--success);
+    }
+
+    .notification-title {
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .notification-text {
+      margin-top: 5px;
+
+      color: var(--text-muted);
+
+      font-size: 8px;
+      line-height: 1.7;
+    }
+
+    /* =====================================================
+       STATS
+    ====================================================== */
+
+    .stats-section {
+      padding: 0 0 80px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 13px;
+    }
+
+    .stat-card {
+      position: relative;
+
+      padding: 21px;
+
+      border: 1px solid var(--border);
+      border-radius: 19px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(18,28,45,0.75),
+          rgba(10,16,28,0.68)
+        );
+
+      overflow: hidden;
+
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease;
+    }
+
+    .stat-card::before {
+      content: "";
+
+      position: absolute;
+
+      width: 90px;
+      height: 90px;
+
+      top: -45px;
+      left: -45px;
+
+      border-radius: 50%;
+
+      background: rgba(79,140,255,0.08);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(79,140,255,0.20);
+    }
+
+    .stat-number {
+      font-size: 27px;
+      font-weight: 900;
+    }
+
+    .stat-label {
+      margin-top: 3px;
+
+      color: var(--text-muted);
+
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* =====================================================
+       FEATURES
+    ====================================================== */
+
+    .section {
+      padding: 95px 0;
+    }
+
+    .section-header {
+      max-width: 700px;
+
+      margin: 0 auto 48px;
+
+      text-align: center;
+    }
+
+    .section-kicker {
+      display: inline-block;
+
+      margin-bottom: 12px;
+
+      color: #78a7ff;
+
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+    }
+
+    .section-title {
+      font-size: clamp(
+        28px,
+        4vw,
+        42px
+      );
+
+      line-height: 1.3;
+
+      font-weight: 900;
+    }
+
+    .section-description {
+      margin-top: 14px;
+
+      color: var(--text-soft);
+
+      font-size: 13px;
+      line-height: 2;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .feature-card {
+      padding: 27px;
+
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(18,28,45,0.78),
+          rgba(8,14,25,0.75)
+        );
+
+      transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+
+      border-color:
+        rgba(79,140,255,0.20);
+
+      box-shadow:
+        0 25px 55px rgba(0,0,0,0.20);
+    }
+
+    .feature-icon {
+      width: 50px;
+      height: 50px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 15px;
+
+      color: #91b6ff;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(79,140,255,0.16),
+          rgba(37,99,235,0.06)
+        );
+
+      border: 1px solid rgba(79,140,255,0.10);
+
+      font-size: 19px;
+      font-weight: 900;
+    }
+
+    .feature-title {
+      margin-top: 20px;
+
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .feature-text {
+      margin-top: 9px;
+
+      color: var(--text-muted);
+
+      font-size: 11px;
+      line-height: 1.9;
+      font-weight: 600;
+    }
+
+    /* =====================================================
+       COURSES PREVIEW
+    ====================================================== */
+
+    .courses-section {
+      padding-top: 30px;
+    }
+
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .course-card {
+      position: relative;
+
+      min-height: 220px;
+
+      padding: 23px;
+
+      border: 1px solid var(--border);
+      border-radius: 23px;
+
+      overflow: hidden;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(18,29,48,0.86),
+          rgba(8,14,25,0.80)
+        );
+
+      transition:
+        transform 0.3s ease,
+        border-color 0.3s ease;
+    }
+
+    .course-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(79,140,255,0.20);
+    }
+
+    .course-number {
+      position: absolute;
+
+      top: 14px;
+      left: 17px;
+
+      color: rgba(255,255,255,0.045);
+
+      font-size: 65px;
+      font-weight: 900;
+
+      line-height: 1;
+    }
+
+    .course-icon {
+      position: relative;
+
+      width: 48px;
+      height: 48px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 15px;
+
+      background: rgba(79,140,255,0.11);
+      color: #8fb5ff;
+
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .course-term {
+      margin-top: 18px;
+
+      color: #77a6ff;
+
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .course-title {
+      margin-top: 5px;
+
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .course-text {
+      margin-top: 7px;
+
+      color: var(--text-muted);
+
+      font-size: 10px;
+      line-height: 1.8;
+      font-weight: 600;
+    }
+
+    /* =====================================================
+       HOW IT WORKS
+    ====================================================== */
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .step {
+      position: relative;
+
+      padding: 30px 25px;
+
+      text-align: center;
+    }
+
+    .step-number {
+      width: 55px;
+      height: 55px;
+
+      margin: 0 auto;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 17px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+
+      font-size: 18px;
+      font-weight: 900;
+
+      box-shadow:
+        0 15px 35px rgba(37,99,235,0.20);
+    }
+
+    .step-title {
+      margin-top: 17px;
+
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .step-text {
+      margin-top: 7px;
+
+      color: var(--text-muted);
+
+      font-size: 11px;
+      line-height: 1.9;
+    }
+
+    /* =====================================================
+       CTA
+    ====================================================== */
+
+    .cta-section {
+      padding: 25px 0 100px;
+    }
+
+    .cta-box {
+      position: relative;
+
+      padding: 65px 35px;
+
+      border: 1px solid rgba(79,140,255,0.15);
+      border-radius: 30px;
+
+      text-align: center;
+
+      overflow: hidden;
+
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(79,140,255,0.18),
+          transparent 55%
+        ),
+        linear-gradient(
+          145deg,
+          rgba(20,34,58,0.95),
+          rgba(8,14,25,0.95)
+        );
+
+      box-shadow:
+        0 35px 80px rgba(0,0,0,0.25);
+    }
+
+    .cta-box::before,
+    .cta-box::after {
+      content: "";
+
+      position: absolute;
+
+      width: 180px;
+      height: 180px;
+
+      border-radius: 50%;
+
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .cta-box::before {
+      top: -90px;
+      right: -60px;
+    }
+
+    .cta-box::after {
+      bottom: -100px;
+      left: -70px;
+    }
+
+    .cta-title {
+      position: relative;
+
+      font-size: clamp(
+        27px,
+        4vw,
+        40px
+      );
+
+      font-weight: 900;
+    }
+
+    .cta-text {
+      position: relative;
+
+      max-width: 600px;
+
+      margin: 12px auto 0;
+
+      color: var(--text-soft);
+
+      font-size: 12px;
+      line-height: 2;
+    }
+
+    .cta-actions {
+      position: relative;
+
+      margin-top: 26px;
+
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* =====================================================
+       FOOTER
+    ====================================================== */
+
+    .footer {
+      padding: 35px 0 25px;
+
+      border-top: 1px solid var(--border);
+
+      background:
+        rgba(4,8,15,0.72);
+    }
+
+    .footer-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 25px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-logo {
+      width: 38px;
+      height: 38px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 11px;
+
+      background: var(--primary);
+
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .footer-name {
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .footer-description {
+      margin-top: 3px;
+
+      color: var(--text-muted);
+
+      font-size: 9px;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .footer-link {
+      color: var(--text-muted);
+
+      font-size: 10px;
+      font-weight: 700;
+
+      transition: color 0.2s ease;
+    }
+
+    .footer-link:hover {
+      color: var(--text);
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+
+      margin-top: 27px;
+      padding-top: 18px;
+
+      border-top: 1px solid rgba(255,255,255,0.05);
+
+      color: var(--text-muted);
+
+      font-size: 9px;
+    }
+
+    /* =====================================================
+       NOTIFICATION TOAST
+    ====================================================== */
+
+    #toastContainer {
+      position: fixed;
+
+      bottom: 22px;
+      right: 22px;
+
+      z-index: 10000;
+
+      width: min(
+        calc(100% - 44px),
+        360px
+      );
+
+      pointer-events: none;
+    }
+
+    .toast {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+
+      padding: 14px;
+
+      margin-top: 10px;
+
+      border: 1px solid var(--border);
+      border-radius: 15px;
+
+      background:
+        rgba(13,21,35,0.94);
+
+      box-shadow:
+        0 20px 45px rgba(0,0,0,0.35);
+
+      backdrop-filter: blur(15px);
+
+      animation:
+        toastIn 0.3s ease forwards;
+
+      pointer-events: auto;
+    }
+
+    .toast-icon {
+      width: 31px;
+      height: 31px;
+
+      flex-shrink: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 10px;
+
+      background: rgba(79,140,255,0.12);
+      color: #8fb5ff;
+
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .toast-title {
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .toast-message {
+      margin-top: 3px;
+
+      color: var(--text-muted);
+
+      font-size: 9px;
+      line-height: 1.7;
+    }
+
+    .toast-close {
+      margin-right: auto;
+
+      border: 0;
+
+      color: var(--text-muted);
+
+      background: transparent;
+
+      cursor: pointer;
+
+      font-size: 15px;
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* =====================================================
+       REVEAL ANIMATION
+    ====================================================== */
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(25px);
+
+      transition:
+        opacity 0.7s ease,
+        transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ====================================================== */
+
+    @media (max-width: 1050px) {
+      .hero-grid {
+        gap: 40px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .hero-title {
+        font-size: 48px;
+      }
+    }
+
+    @media (max-width: 850px) {
+      .hero {
+        padding-top: 115px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .hero-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-description {
+        font-size: 14px;
+      }
+
+      .hero-visual {
+        min-height: 430px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .features-grid,
+      .courses-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-main {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-brand {
+        justify-content: center;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        width: min(
+          calc(100% - 26px),
+          var(--container)
+        );
+      }
+
+      .site-header .nav {
+        min-height: 68px;
+      }
+
+      .brand-logo {
+        width: 41px;
+        height: 41px;
+
+        border-radius: 12px;
+      }
+
+      .brand-name {
+        font-size: 13px;
+      }
+
+      .brand-subtitle {
+        font-size: 8px;
+      }
+
+      .nav-actions .header-btn:not(.primary) {
+        display: none;
+      }
+
+      .header-btn {
+        min-height: 39px;
+        padding: 0 13px;
+        font-size: 10px;
+      }
+
+      .hero {
+        padding-top: 105px;
+        padding-bottom: 55px;
+      }
+
+      .hero-title {
+        font-size: 35px;
+        letter-spacing: -0.7px;
+      }
+
+      .hero-description {
+        margin-top: 17px;
+        font-size: 12px;
+        line-height: 1.9;
+      }
+
+      .hero-actions {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .main-btn {
+        min-height: 48px;
+        padding: 0 18px;
+        font-size: 11px;
+      }
+
+      .hero-visual {
+        min-height: 365px;
+      }
+
+      .dashboard-preview {
+        padding: 13px;
+        border-radius: 22px;
+      }
+
+      .preview-welcome {
+        padding: 16px;
+      }
+
+      .preview-welcome-title {
+        font-size: 16px;
+      }
+
+      .preview-card {
+        min-height: 95px;
+        padding: 12px;
+      }
+
+      .preview-card-number {
+        font-size: 16px;
+        margin-top: 10px;
+      }
+
+      .stats-section {
+        padding-bottom: 50px;
+      }
+
+      .stats-grid {
+        gap: 9px;
+      }
+
+      .stat-card {
+        padding: 16px;
+      }
+
+      .stat-number {
+        font-size: 23px;
+      }
+
+      .stat-label {
+        font-size: 9px;
+      }
+
+      .section {
+        padding: 70px 0;
+      }
+
+      .section-header {
+        margin-bottom: 32px;
+      }
+
+      .section-title {
+        font-size: 28px;
+      }
+
+      .section-description {
+        font-size: 11px;
+      }
+
+      .features-grid,
+      .courses-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-card {
+        padding: 22px;
+      }
+
+      .course-card {
+        min-height: 200px;
+      }
+
+      .cta-section {
+        padding-bottom: 70px;
+      }
+
+      .cta-box {
+        padding: 45px 20px;
+        border-radius: 23px;
+      }
+
+      .cta-title {
+        font-size: 27px;
+      }
+
+      .cta-text {
+        font-size: 10px;
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+
+    /* =====================================================
+       MOBILE NAV
+    ====================================================== */
+
+    .mobile-nav {
+      position: fixed;
+
+      top: 68px;
+      left: 12px;
+      right: 12px;
+
+      z-index: 999;
+
+      padding: 10px;
+
+      border: 1px solid var(--border);
+      border-radius: 17px;
+
+      background:
+        rgba(10,17,29,0.97);
+
+      box-shadow:
+        0 25px 60px rgba(0,0,0,0.35);
+
+      backdrop-filter: blur(18px);
+
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+
+      transition:
+        opacity 0.25s ease,
+        visibility 0.25s ease,
+        transform 0.25s ease;
+    }
+
+    .mobile-nav.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .mobile-nav a {
+      display: block;
+
+      padding: 13px;
+
+      border-radius: 11px;
+
+      color: var(--text-soft);
+
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .mobile-nav a:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+    }
+
+    /* =====================================================
+       ACCESSIBILITY
+    ====================================================== */
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =====================================================
+       PAGE LOADER
+  ====================================================== -->
+
+  <div id="pageLoader">
+    <div class="loader-box">
+
+      <div class="loader-logo">
+        ك
+      </div>
+
+      <div class="loader-title">
+        كاب عبدالنصير
+      </div>
+
+      <div class="loader-text">
+        جاري تجهيز المنصة...
+      </div>
+
+      <div class="loader-spinner"></div>
+
+    </div>
+  </div>
+
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header
+    id="siteHeader"
+    class="site-header"
+  >
+
+    <div class="container">
+
+      <nav class="nav">
+
+        <a
+          href="index.html"
+          class="brand"
+          aria-label="الصفحة الرئيسية"
+        >
+
+          <div class="brand-logo">
+            ك
+          </div>
+
+          <div class="brand-info">
+
+            <span class="brand-name">
+              كاب عبدالنصير
+            </span>
+
+            <span class="brand-subtitle">
+              المنصة التعليمية
+            </span>
+
+          </div>
+
+        </a>
+
+
+        <div class="nav-links">
+
+          <a
+            href="#home"
+            class="nav-link"
+          >
+            الرئيسية
+          </a>
+
+          <a
+            href="#features"
+            class="nav-link"
+          >
+            مميزات المنصة
+          </a>
+
+          <a
+            href="#courses"
+            class="nav-link"
+          >
+            المواد
+          </a>
+
+          <a
+            href="#how"
+            class="nav-link"
+          >
+            طريقة الاستخدام
+          </a>
+
+        </div>
+
+
+        <div class="nav-actions">
+
+          <a
+            href="login.html"
+            class="header-btn"
+          >
+            تسجيل الدخول
+          </a>
+
+          <a
+            href="register.html"
+            class="header-btn primary"
+          >
+            إنشاء حساب
+          </a>
+
+          <button
+            type="button"
+            id="mobileMenuButton"
+            class="mobile-menu-btn"
+            aria-label="فتح القائمة"
+            aria-expanded="false"
+          >
+            ☰
+          </button>
+
+        </div>
+
+      </nav>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       MOBILE NAVIGATION
+  ====================================================== -->
+
+  <div
+    id="mobileNav"
+    class="mobile-nav"
+  >
+
+    <a href="#home">
+      الرئيسية
+    </a>
+
+    <a href="#features">
+      مميزات المنصة
+    </a>
+
+    <a href="#courses">
+      المواد
+    </a>
+
+    <a href="#how">
+      طريقة الاستخدام
+    </a>
+
+    <a href="login.html">
+      تسجيل الدخول
+    </a>
+
+    <a href="register.html">
+      إنشاء حساب جديد
+    </a>
+
+  </div>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <main id="home">
+
+
+    <!-- ===================================================
+         HERO
+    ==================================================== -->
+
+    <section class="hero">
+
+      <div class="container">
+
+        <div class="hero-grid">
+
+          <div class="hero-content reveal">
+
+            <div class="hero-badge">
+
+              <span class="hero-badge-dot"></span>
+
+              <span>
+                المنصة التعليمية متاحة الآن
+              </span>
+
+            </div>
+
+
+            <h1 class="hero-title">
+
+              مستقبلك الدراسي
+              <br>
+
+              يبدأ من
+              <span class="highlight">
+                هنا
+              </span>
+
+            </h1>
+
+
+            <p class="hero-description">
+
+              منصة كاب عبدالنصير تجمع لك المواد الدراسية،
+              الملفات، الفيديوهات، الاختبارات، النتائج،
+              الإشعارات وكل أدواتك التعليمية في مكان واحد.
+
+            </p>
+
+
+            <div class="hero-actions">
+
+              <a
+                href="login.html"
+                class="main-btn primary"
+              >
+
+                <span>
+                  دخول المنصة
+                </span>
+
+                <span>
+                  ←
+                </span>
+
+              </a>
+
+
+              <a
+                href="register.html"
+                class="main-btn secondary"
+              >
+
+                <span>
+                  إنشاء حساب جديد
+                </span>
+
+              </a>
+
+            </div>
+
+
+            <div class="hero-note">
+
+              <span class="hero-note-icon">
+                ✓
+              </span>
+
+              <span>
+                بياناتك التعليمية مرتبطة بحسابك داخل المنصة
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- =============================================
+               HERO PREVIEW
+          ============================================== -->
+
+          <div class="hero-visual reveal">
+
+            <div class="hero-glow"></div>
+
+
+            <div class="dashboard-preview">
+
+              <div class="preview-top">
+
+                <div class="preview-brand">
+
+                  <div class="preview-logo">
+                    ك
+                  </div>
+
+                  <div class="preview-name">
+                    لوحة الطالب
+                  </div>
+
+                </div>
+
+
+                <div class="preview-menu">
+
+                  <span></span>
+                  <span></span>
+                  <span></span>
+
+                </div>
+
+              </div>
+
+
+              <div class="preview-welcome">
+
+                <div class="preview-welcome-small">
+                  أهلاً بيك في المنصة
+                </div>
+
+                <div class="preview-welcome-title">
+                  جاهز تكمل رحلتك التعليمية؟
+                </div>
+
+              </div>
+
+
+              <div class="preview-cards">
+
+                <div class="preview-card">
+
+                  <div class="preview-card-icon">
+                    📚
+                  </div>
+
+                  <div class="preview-card-number">
+                    6+
+                  </div>
+
+                  <div class="preview-card-label">
+                    مواد دراسية
+                  </div>
+
+                </div>
+
+
+                <div class="preview-card">
+
+                  <div class="preview-card-icon">
+                    📄
+                  </div>
+
+                  <div class="preview-card-number">
+                    ملفات
+                  </div>
+
+                  <div class="preview-card-label">
+                    محاضرات ومذكرات
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <div class="preview-bottom">
+
+                <div class="preview-progress">
+
+                  <div class="progress-head">
+
+                    <span>
+                      تقدمك الدراسي
+                    </span>
+
+                    <span class="progress-value">
+                      76%
+                    </span>
+
+                  </div>
+
+                  <div class="progress-track">
+
+                    <div class="progress-fill"></div>
+
+                  </div>
+
+                </div>
+
+
+                <div class="preview-notification">
+
+                  <div class="notification-dot"></div>
+
+                  <div class="notification-title">
+                    آخر التحديثات
+                  </div>
+
+                  <div class="notification-text">
+                    تابع أحدث الملفات والاختبارات
+                    والإشعارات الخاصة بيك.
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         QUICK STATS
+    ==================================================== -->
+
+    <section class="stats-section">
+
+      <div class="container">
+
+        <div class="stats-grid">
+
+          <div class="stat-card reveal">
+
+            <div
+              id="statSubjects"
+              class="stat-number"
+            >
+              —
+            </div>
+
+            <div class="stat-label">
+              مادة دراسية
+            </div>
+
+          </div>
+
+
+          <div class="stat-card reveal">
+
+            <div
+              id="statFiles"
+              class="stat-number"
+            >
+              —
+            </div>
+
+            <div class="stat-label">
+              ملف تعليمي
+            </div>
+
+          </div>
+
+
+          <div class="stat-card reveal">
+
+            <div
+              id="statVideos"
+              class="stat-number"
+            >
+              —
+            </div>
+
+            <div class="stat-label">
+              فيديو تعليمي
+            </div>
+
+          </div>
+
+
+          <div class="stat-card reveal">
+
+            <div
+              id="statQuizzes"
+              class="stat-number"
+            >
+              —
+            </div>
+
+            <div class="stat-label">
+              اختبار متاح
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         FEATURES
+    ==================================================== -->
+
+    <section
+      id="features"
+      class="section"
+    >
+
+      <div class="container">
+
+        <div class="section-header reveal">
+
+          <span class="section-kicker">
+            كل اللي تحتاجه في مكان واحد
+          </span>
+
+          <h2 class="section-title">
+            منصة معمولة عشان تسهّل عليك الدراسة
+          </h2>
+
+          <p class="section-description">
+            من أول تسجيل الدخول لحد متابعة النتائج والاختبارات،
+            كل جزء في المنصة مصمم عشان يخلي تجربتك أوضح وأسهل.
+          </p>
+
+        </div>
+
+
+        <div class="features-grid">
+
+          <article class="feature-card reveal">
+
+            <div class="feature-icon">
+              📚
+            </div>
+
+            <h3 class="feature-title">
+              المواد الدراسية
+            </h3>
+
+            <p class="feature-text">
+              الوصول للمواد حسب الترم والتخصص،
+              مع تنظيم المحتوى داخل كل مادة.
+            </p>
+
+          </article>
+
+
+          <article class="feature-card reveal">
+
+            <div class="feature-icon">
+              📄
+            </div>
+
+            <h3 class="feature-title">
+              الملفات والمحاضرات
+            </h3>
+
+            <p class="feature-text">
+              ملفات PDF والمذكرات والمصادر التعليمية
+              في مكان واحد وسهل الوصول إليه.
+            </p>
+
+          </article>
+
+
+          <article class="feature-card reveal">
+
+            <div class="feature-icon">
+              ▶
+            </div>
+
+            <h3 class="feature-title">
+              الفيديوهات
+            </h3>
+
+            <p class="feature-text">
+              تابع المحتوى المرئي المرتبط بالمواد
+              من داخل المنصة.
+            </p>
+
+          </article>
+
+
+          <article class="feature-card reveal">
+
+            <div class="feature-icon">
+              ✓
+            </div>
+
+            <h3 class="feature-title">
+              الاختبارات
+            </h3>
+
+            <p class="feature-text">
+              اختبارات إلكترونية مع تسجيل محاولاتك
+              ونتائجك داخل حسابك.
+            </p>
+
+          </article>
+
+
+          <article class="feature-card reveal">
+
+            <div class="feature-icon">
+              🔔
+            </div>
+
+            <h3 class="feature-title">
+              الإشعارات
+            </h3>
+
+            <p class="feature-text">
+              تابع الأخبار والتنبيهات والتحديثات
+              الخاصة بك داخل المنصة.
+            </p>
+
+          </article>
+
+
+          <article class="feature-card reveal">
+
+            <div class="feature-icon">
+              💬
+            </div>
+
+            <h3 class="feature-title">
+              الدعم والمساعدة
+            </h3>
+
+            <p class="feature-text">
+              تقدر تبعت طلب دعم أو استفسار
+              من خلال حسابك داخل المنصة.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         COURSES
+    ==================================================== -->
+
+    <section
+      id="courses"
+      class="section courses-section"
+    >
+
+      <div class="container">
+
+        <div class="section-header reveal">
+
+          <span class="section-kicker">
+            المحتوى الدراسي
+          </span>
+
+          <h2 class="section-title">
+            المواد اللي تقدر تتابعها
+          </h2>
+
+          <p class="section-description">
+            المواد الأساسية تظهر تلقائيًا حسب المحتوى
+            المتاح في المنصة وحسابك الدراسي.
+          </p>
+
+        </div>
+
+
+        <div
+          id="coursesPreview"
+          class="courses-grid"
+        >
+
+          <!--
+            سيتم تحديث هذه المنطقة من index.js
+            اعتمادًا على FirebaseContent.
+          -->
+
+          <article class="course-card reveal">
+
+            <span class="course-number">
+              01
+            </span>
+
+            <div class="course-icon">
+              A
+            </div>
+
+            <div class="course-term">
+              الترم الأول
+            </div>
+
+            <h3 class="course-title">
+              التشريح
+            </h3>
+
+            <p class="course-text">
+              محتوى المادة والملفات والفيديوهات
+              والاختبارات المرتبطة بها.
+            </p>
+
+          </article>
+
+
+          <article class="course-card reveal">
+
+            <span class="course-number">
+              02
+            </span>
+
+            <div class="course-icon">
+              P
+            </div>
+
+            <div class="course-term">
+              الترم الأول
+            </div>
+
+            <h3 class="course-title">
+              الفسيولوجي
+            </h3>
+
+            <p class="course-text">
+              محتوى المادة والملفات والفيديوهات
+              والاختبارات المرتبطة بها.
+            </p>
+
+          </article>
+
+
+          <article class="course-card reveal">
+
+            <span class="course-number">
+              03
+            </span>
+
+            <div class="course-icon">
+              E
+            </div>
+
+            <div class="course-term">
+              الترم الأول
+            </div>
+
+            <h3 class="course-title">
+              اللغة الإنجليزية
+            </h3>
+
+            <p class="course-text">
+              محتوى المادة والملفات والفيديوهات
+              والاختبارات المرتبطة بها.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         HOW IT WORKS
+    ==================================================== -->
+
+    <section
+      id="how"
+      class="section"
+    >
+
+      <div class="container">
+
+        <div class="section-header reveal">
+
+          <span class="section-kicker">
+            بسيطة وسهلة
+          </span>
+
+          <h2 class="section-title">
+            ابدأ في 3 خطوات
+          </h2>
+
+          <p class="section-description">
+            مش محتاج خطوات معقدة عشان تبدأ تستخدم المنصة.
+          </p>
+
+        </div>
+
+
+        <div class="steps-grid">
+
+          <div class="step reveal">
+
+            <div class="step-number">
+              1
+            </div>
+
+            <h3 class="step-title">
+              اعمل حساب
+            </h3>
+
+            <p class="step-text">
+              أنشئ حسابك باستخدام بياناتك الأساسية
+              ورقم الهاتف.
+            </p>
+
+          </div>
+
+
+          <div class="step reveal">
+
+            <div class="step-number">
+              2
+            </div>
+
+            <h3 class="step-title">
+              ادخل المنصة
+            </h3>
+
+            <p class="step-text">
+              بعد قبول الحساب، سجل الدخول
+              للوصول إلى لوحة الطالب.
+            </p>
+
+          </div>
+
+
+          <div class="step reveal">
+
+            <div class="step-number">
+              3
+            </div>
+
+            <h3 class="step-title">
+              ابدأ مذاكرتك
+            </h3>
+
+            <p class="step-text">
+              افتح المواد والملفات والفيديوهات
+              والاختبارات وابدأ.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         CTA
+    ==================================================== -->
+
+    <section class="cta-section">
+
+      <div class="container">
+
+        <div class="cta-box reveal">
+
+          <h2 class="cta-title">
+            جاهز تبدأ؟
+          </h2>
+
+          <p class="cta-text">
+            ادخل حسابك الحالي أو أنشئ حساب جديد
+            وابدأ استخدام المنصة التعليمية.
+          </p>
+
+
+          <div class="cta-actions">
+
+            <a
+              href="login.html"
+              class="main-btn primary"
+            >
+              تسجيل الدخول
+            </a>
+
+            <a
+              href="register.html"
+              class="main-btn secondary"
+            >
+              إنشاء حساب
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <footer class="footer">
+
+    <div class="container">
+
+      <div class="footer-main">
+
+        <div>
+
+          <div class="footer-brand">
+
+            <div class="footer-logo">
+              ك
+            </div>
+
+            <div>
+
+              <div class="footer-name">
+                كاب عبدالنصير
+              </div>
+
+              <div class="footer-description">
+                المنصة التعليمية
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="footer-links">
+
+          <a
+            href="login.html"
+            class="footer-link"
+          >
+            تسجيل الدخول
+          </a>
+
+          <a
+            href="register.html"
+            class="footer-link"
+          >
+            إنشاء حساب
+          </a>
+
+          <a
+            href="support.html"
+            class="footer-link"
+          >
+            الدعم
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <div class="footer-bottom">
+
+        <span>
+          © 2026 كاب عبدالنصير — جميع الحقوق محفوظة
+        </span>
+
+        <span>
+          المنصة التعليمية
+        </span>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- =====================================================
+       TOAST CONTAINER
+  ====================================================== -->
+
+  <div id="toastContainer"></div>
+
+
+  <!-- =====================================================
+       FIREBASE SDK
+       VERSION: 10.12.5
+  ====================================================== -->
+
+  <script
+    src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"
+  ></script>
+
+  <script
+    src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"
+  ></script>
+
+  <script
+    src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"
+  ></script>
+
+
+  <!-- =====================================================
+       PROJECT CORE FILES
+       ORDER IS IMPORTANT
+  ====================================================== -->
+
+  <script src="firebase-config.js"></script>
+
+  <script src="firebase-auth.js"></script>
+
+  <script src="firebase-database.js"></script>
+
+  <script src="firebase-content.js"></script>
+
+  <script src="firebase-features.js"></script>
+
+
+  <!-- =====================================================
+       PAGE LOGIC
+       NEXT FILE: index.js
+  ====================================================== -->
+
+  <script src="index.js"></script>
+
+
+  <!-- =====================================================
+       BASIC UI FALLBACK
+       index.js can extend/override these behaviors.
+  ====================================================== -->
+
+  <script>
+    (function () {
+      "use strict";
+
+      const header = document.getElementById("siteHeader");
+      const mobileButton =
+        document.getElementById("mobileMenuButton");
+      const mobileNav =
+        document.getElementById("mobileNav");
+
+      function updateHeader() {
+        if (!header) return;
+
+        if (window.scrollY > 20) {
+          header.classList.add("scrolled");
+        } else {
+          header.classList.remove("scrolled");
+        }
+      }
+
+      window.addEventListener(
+        "scroll",
+        updateHeader,
+        { passive: true }
+      );
+
+      updateHeader();
+
+
+      if (mobileButton && mobileNav) {
+
+        mobileButton.addEventListener(
+          "click",
+          function () {
+
+            const opened =
+              mobileNav.classList.toggle("open");
+
+            mobileButton.setAttribute(
+              "aria-expanded",
+              String(opened)
+            );
+
+            mobileButton.textContent =
+              opened ? "×" : "☰";
+          }
+        );
+
+
+        mobileNav
+          .querySelectorAll("a")
+          .forEach(function (link) {
+
+            link.addEventListener(
+              "click",
+              function () {
+
+                mobileNav.classList.remove("open");
+
+                mobileButton.setAttribute(
+                  "aria-expanded",
+                  "false"
+                );
+
+                mobileButton.textContent = "☰";
+
+              }
+            );
+
+          });
+
+      }
+
+
+      /* ===============================================
+         REVEAL
+      ================================================ */
+
+      const revealItems =
+        document.querySelectorAll(".reveal");
+
+      if ("IntersectionObserver" in window) {
+
+        const observer =
+          new IntersectionObserver(
+            function (entries) {
+
+              entries.forEach(
+                function (entry) {
+
+                  if (entry.isIntersecting) {
+
+                    entry.target.classList.add(
+                      "visible"
+                    );
+
+                    observer.unobserve(
+                      entry.target
+                    );
+
+                  }
+
+                }
+              );
+
+            },
+            {
+              threshold: 0.10
+            }
+          );
+
+        revealItems.forEach(
+          function (item) {
+            observer.observe(item);
+          }
+        );
+
+      } else {
+
+        revealItems.forEach(
+          function (item) {
+            item.classList.add("visible");
+          }
+        );
+
+      }
+
+
+      /* ===============================================
+         SMOOTH INTERNAL LINKS
+      ================================================ */
+
+      document
+        .querySelectorAll('a[href^="#"]')
+        .forEach(function (link) {
+
+          link.addEventListener(
+            "click",
+            function (event) {
+
+              const targetId =
+                link.getAttribute("href");
+
+              if (
+                !targetId ||
+                targetId === "#"
+              ) {
+                return;
+              }
+
+              const target =
+                document.querySelector(targetId);
+
+              if (!target) return;
+
+              event.preventDefault();
+
+              target.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+              });
+
+            }
+          );
+
+        });
+
+
+      /* ===============================================
+         TOAST HELPER
+      ================================================ */
+
+      window.showIndexToast =
+        function (
+          message,
+          title
+        ) {
+
+          const container =
+            document.getElementById(
+              "toastContainer"
+            );
+
+          if (!container) return;
+
+          const toast =
+            document.createElement("div");
+
+          toast.className = "toast";
+
+          toast.innerHTML = `
+            <div class="toast-icon">✓</div>
+
+            <div style="flex:1;min-width:0;">
+
+              <div class="toast-title">
+                ${
+                  title ||
+                  "تنبيه"
+                }
+              </div>
+
+              <div class="toast-message">
+                ${
+                  message ||
+                  ""
+                }
+              </div>
+
+            </div>
+
+            <button
+              type="button"
+              class="toast-close"
+              aria-label="إغلاق"
+            >
+              ×
+            </button>
+          `;
+
+          container.appendChild(toast);
+
+          const closeButton =
+            toast.querySelector(
+              ".toast-close"
+            );
+
+          function removeToast() {
+
+            toast.style.opacity = "0";
+            toast.style.transform =
+              "translateY(10px)";
+
+            setTimeout(
+              function () {
+                toast.remove();
+              },
+              250
+            );
+
+          }
+
+          if (closeButton) {
+            closeButton.addEventListener(
+              "click",
+              removeToast
+            );
+          }
+
+          setTimeout(
+            removeToast,
+            4500
+          );
+
+        };
+
+
+      /* ===============================================
+         LOADER FALLBACK
+      ================================================ */
+
+      window.hideIndexLoader =
+        function () {
+
+          const loader =
+            document.getElementById(
+              "pageLoader"
+            );
+
+          if (!loader) return;
+
+          loader.classList.add("hidden");
+
+        };
+
+
+      /*
+       * index.js is responsible for the real
+       * Firebase-powered page initialization.
+       *
+       * This fallback prevents the page from
+       * remaining frozen if index.js takes time
+       * to initialize.
+       */
+
+      window.setTimeout(
+        function () {
+
+          const loader =
+            document.getElementById(
+              "pageLoader"
+            );
+
+          if (
+            loader &&
+            !loader.classList.contains(
+              "hidden"
+            )
+          ) {
+
+            loader.classList.add(
+              "hidden"
+            );
+
+          }
+
+        },
+        3500
+      );
+
+    })();
+  </script>
+
+</body>
+</html>

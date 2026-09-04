@@ -1,0 +1,3265 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <meta
+        name="description"
+        content="Cap Abdelnaseer - جميع المواد والكورسات الدراسية"
+    >
+
+    <meta name="theme-color" content="#0b1020">
+
+    <title>المواد الدراسية | Cap Abdelnaseer</title>
+
+    <!-- =========================
+         GOOGLE FONT
+    ========================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        /* =========================================================
+           RESET
+        ========================================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Cairo", sans-serif;
+            background:
+                radial-gradient(
+                    circle at 15% 10%,
+                    rgba(77, 124, 255, 0.10),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 25%,
+                    rgba(139, 92, 246, 0.08),
+                    transparent 30%
+                ),
+                #080c18;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        select {
+            font-family: inherit;
+        }
+
+        button {
+            border: 0;
+            cursor: pointer;
+        }
+
+        ::selection {
+            background: rgba(99, 102, 241, 0.35);
+            color: #fff;
+        }
+
+        /* =========================================================
+           SCROLLBAR
+        ========================================================= */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #080c18;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.25);
+            border-radius: 20px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.4);
+        }
+
+        /* =========================================================
+           PAGE LOADER
+        ========================================================= */
+
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #080c18;
+            transition:
+                opacity 0.35s ease,
+                visibility 0.35s ease;
+        }
+
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-box {
+            text-align: center;
+        }
+
+        .loader-spinner {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 14px;
+            border: 4px solid rgba(255, 255, 255, 0.08);
+            border-top-color: #6366f1;
+            border-right-color: #8b5cf6;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+
+        .loader-text {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: 76px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(8, 12, 24, 0.82);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        .header-inner {
+            width: min(1180px, calc(100% - 36px));
+            height: 100%;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-width: 0;
+        }
+
+        .brand-logo {
+            width: 43px;
+            height: 43px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #8b5cf6
+                );
+            box-shadow:
+                0 8px 28px rgba(99, 102, 241, 0.28);
+            color: #fff;
+            font-weight: 900;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+
+        .brand-text {
+            min-width: 0;
+        }
+
+        .brand-title {
+            font-size: 16px;
+            font-weight: 900;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .brand-subtitle {
+            margin-top: 2px;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-link {
+            padding: 9px 13px;
+            border-radius: 10px;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 700;
+            transition:
+                color 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #fff;
+            background: rgba(99, 102, 241, 0.12);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-user {
+            display: none;
+            align-items: center;
+            gap: 9px;
+            padding: 6px 10px 6px 7px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.035);
+        }
+
+        .header-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(
+                135deg,
+                #6366f1,
+                #8b5cf6
+            );
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .header-user-name {
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #e2e8f0;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .auth-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 0 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 800;
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .login-btn {
+            color: #cbd5e1;
+            background: rgba(255, 255, 255, 0.055);
+        }
+
+        .register-btn {
+            color: #fff;
+            background: linear-gradient(
+                135deg,
+                #6366f1,
+                #8b5cf6
+            );
+        }
+
+        .mobile-menu-button {
+            width: 42px;
+            height: 42px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border-radius: 11px;
+            background: rgba(255, 255, 255, 0.055);
+            color: #fff;
+            font-size: 21px;
+        }
+
+        /* =========================================================
+           MOBILE NAV
+        ========================================================= */
+
+        .mobile-nav {
+            position: fixed;
+            top: 76px;
+            right: 18px;
+            left: 18px;
+            z-index: 999;
+            display: none;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.97);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+        }
+
+        .mobile-nav.open {
+            display: block;
+            animation: mobileNavIn 0.22s ease;
+        }
+
+        @keyframes mobileNavIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mobile-nav a {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 10px;
+            color: #cbd5e1;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .mobile-nav a:hover,
+        .mobile-nav a.active {
+            color: #fff;
+            background: rgba(99, 102, 241, 0.12);
+        }
+
+        /* =========================================================
+           MAIN
+        ========================================================= */
+
+        .main {
+            width: min(1180px, calc(100% - 36px));
+            margin: 0 auto;
+            padding: 52px 0 80px;
+        }
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .page-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 38px;
+            border: 1px solid rgba(255, 255, 255, 0.065);
+            border-radius: 24px;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(99, 102, 241, 0.12),
+                    rgba(139, 92, 246, 0.045) 48%,
+                    rgba(255, 255, 255, 0.025)
+                );
+            box-shadow:
+                0 20px 70px rgba(0, 0, 0, 0.16);
+        }
+
+        .page-hero::before {
+            content: "";
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            top: -150px;
+            left: -100px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.12);
+            filter: blur(20px);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 760px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 15px;
+            padding: 7px 12px;
+            border: 1px solid rgba(99, 102, 241, 0.18);
+            border-radius: 999px;
+            background: rgba(99, 102, 241, 0.09);
+            color: #a5b4fc;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .hero-badge-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #818cf8;
+            box-shadow: 0 0 12px rgba(129, 140, 248, 0.8);
+        }
+
+        .page-title {
+            font-size: clamp(28px, 5vw, 44px);
+            line-height: 1.25;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .page-title span {
+            color: #818cf8;
+        }
+
+        .page-description {
+            max-width: 650px;
+            margin-top: 13px;
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 2;
+            font-weight: 500;
+        }
+
+        /* =========================================================
+           CONTROLS
+        ========================================================= */
+
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-heading-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.12);
+            color: #a5b4fc;
+            font-size: 17px;
+        }
+
+        .section-heading-text h2 {
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .section-heading-text p {
+            margin-top: 1px;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .filters {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-button {
+            min-height: 38px;
+            padding: 0 13px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.035);
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 800;
+            transition:
+                color 0.2s ease,
+                background 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .filter-button:hover,
+        .filter-button.active {
+            border-color: rgba(99, 102, 241, 0.28);
+            background: rgba(99, 102, 241, 0.12);
+            color: #c7d2fe;
+        }
+
+        /* =========================================================
+           TERMS
+        ========================================================= */
+
+        .terms-wrapper {
+            margin-top: 24px;
+        }
+
+        .terms {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .terms::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .term-button {
+            flex: 0 0 auto;
+            min-width: 112px;
+            min-height: 42px;
+            padding: 0 15px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 11px;
+            background: rgba(255, 255, 255, 0.03);
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 800;
+            transition: 0.2s ease;
+        }
+
+        .term-button:hover {
+            background: rgba(255, 255, 255, 0.055);
+            color: #fff;
+        }
+
+        .term-button.active {
+            border-color: rgba(99, 102, 241, 0.3);
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(99, 102, 241, 0.18),
+                    rgba(139, 92, 246, 0.1)
+                );
+            color: #c7d2fe;
+        }
+
+        /* =========================================================
+           SUBJECTS GRID
+        ========================================================= */
+
+        .subjects-section {
+            margin-top: 22px;
+        }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        /* =========================================================
+           SUBJECT CARD
+        ========================================================= */
+
+        .subject-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 285px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.065);
+            border-radius: 20px;
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.045),
+                    rgba(255, 255, 255, 0.018)
+                );
+            box-shadow:
+                0 12px 45px rgba(0, 0, 0, 0.12);
+            transition:
+                transform 0.28s ease,
+                border-color 0.28s ease,
+                box-shadow 0.28s ease;
+            animation: cardIn 0.45s ease both;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.22);
+            box-shadow:
+                0 20px 55px rgba(0, 0, 0, 0.24);
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .subject-card-top {
+            position: relative;
+            min-height: 112px;
+            padding: 20px;
+            overflow: hidden;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(99, 102, 241, 0.15),
+                    rgba(139, 92, 246, 0.06)
+                );
+        }
+
+        .subject-card-top::after {
+            content: "";
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            left: -50px;
+            top: -70px;
+            border-radius: 50%;
+            background: rgba(129, 140, 248, 0.08);
+            filter: blur(4px);
+        }
+
+        .subject-icon {
+            position: relative;
+            z-index: 1;
+            width: 52px;
+            height: 52px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #c7d2fe;
+            font-size: 23px;
+            font-weight: 900;
+        }
+
+        .subject-number {
+            position: absolute;
+            z-index: 1;
+            top: 19px;
+            left: 19px;
+            min-width: 30px;
+            height: 27px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(8, 12, 24, 0.45);
+            color: #94a3b8;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .subject-body {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            padding: 18px 20px 20px;
+        }
+
+        .subject-name {
+            color: #f8fafc;
+            font-size: 16px;
+            font-weight: 900;
+            line-height: 1.55;
+        }
+
+        .subject-description {
+            min-height: 39px;
+            margin-top: 5px;
+            color: #64748b;
+            font-size: 11px;
+            line-height: 1.8;
+            font-weight: 600;
+        }
+
+        .subject-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: auto;
+            padding-top: 14px;
+        }
+
+        .meta-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            min-height: 27px;
+            padding: 0 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.035);
+            color: #94a3b8;
+            font-size: 9px;
+            font-weight: 800;
+        }
+
+        .meta-chip.paid {
+            background: rgba(245, 158, 11, 0.09);
+            color: #fbbf24;
+        }
+
+        .subject-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .open-subject {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            width: 100%;
+            min-height: 42px;
+            border-radius: 11px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #7c3aed
+                );
+            color: #fff;
+            font-size: 11px;
+            font-weight: 900;
+            transition:
+                transform 0.2s ease,
+                filter 0.2s ease;
+        }
+
+        .open-subject:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.08);
+        }
+
+        /* =========================================================
+           EMPTY STATE
+        ========================================================= */
+
+        .empty-state {
+            display: none;
+            padding: 55px 20px;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.018);
+        }
+
+        .empty-state.show {
+            display: block;
+        }
+
+        .empty-icon {
+            width: 62px;
+            height: 62px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            background: rgba(99, 102, 241, 0.09);
+            color: #818cf8;
+            font-size: 25px;
+        }
+
+        .empty-title {
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .empty-description {
+            max-width: 420px;
+            margin: 7px auto 0;
+            color: #64748b;
+            font-size: 11px;
+            line-height: 1.9;
+        }
+
+        /* =========================================================
+           LOADING SUBJECTS
+        ========================================================= */
+
+        .subjects-loading {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .skeleton-card {
+            height: 285px;
+            overflow: hidden;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.025);
+            position: relative;
+        }
+
+        .skeleton-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            transform: translateX(-100%);
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.045),
+                    transparent
+                );
+            animation: skeleton 1.2s infinite;
+        }
+
+        @keyframes skeleton {
+            to {
+                transform: translateX(100%);
+            }
+        }
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        .site-footer {
+            margin-top: 70px;
+            padding: 30px 0 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .footer-copy {
+            color: #475569;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .footer-link {
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .footer-link:hover {
+            color: #a5b4fc;
+        }
+
+        /* =========================================================
+           TOAST
+        ========================================================= */
+
+        .toast-container {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 99998;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            width: min(360px, calc(100% - 40px));
+        }
+
+        .toast {
+            padding: 13px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 13px;
+            background: rgba(15, 23, 42, 0.96);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.3);
+            color: #e2e8f0;
+            font-size: 11px;
+            line-height: 1.7;
+            font-weight: 700;
+            animation: toastIn 0.25s ease;
+        }
+
+        .toast.error {
+            border-color: rgba(239, 68, 68, 0.22);
+        }
+
+        .toast.success {
+            border-color: rgba(34, 197, 94, 0.22);
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 1050px) {
+            .subjects-grid,
+            .subjects-loading {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .desktop-nav {
+                display: none;
+            }
+
+            .mobile-menu-button {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .site-header {
+                height: 68px;
+            }
+
+            .header-inner {
+                width: min(100% - 24px, 1180px);
+            }
+
+            .brand-logo {
+                width: 39px;
+                height: 39px;
+                border-radius: 11px;
+            }
+
+            .brand-title {
+                font-size: 14px;
+            }
+
+            .brand-subtitle {
+                font-size: 9px;
+            }
+
+            .header-actions .auth-btn {
+                display: none;
+            }
+
+            .mobile-nav {
+                top: 68px;
+            }
+
+            .main {
+                width: min(100% - 24px, 1180px);
+                padding-top: 28px;
+            }
+
+            .page-hero {
+                padding: 25px 20px;
+                border-radius: 20px;
+            }
+
+            .page-title {
+                font-size: 27px;
+            }
+
+            .page-description {
+                font-size: 12px;
+                line-height: 1.9;
+            }
+
+            .controls {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .filters {
+                width: 100%;
+            }
+
+            .filter-button {
+                flex: 1;
+            }
+
+            .subjects-grid,
+            .subjects-loading {
+                grid-template-columns: 1fr;
+            }
+
+            .subject-card {
+                min-height: 270px;
+            }
+
+            .footer-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .brand-subtitle {
+                display: none;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .hero-badge {
+                font-size: 9px;
+            }
+
+            .section-heading-text h2 {
+                font-size: 16px;
+            }
+
+            .terms {
+                margin-right: -2px;
+            }
+        }
+
+        /* =========================================================
+           REDUCED MOTION
+        ========================================================== */
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================================================
+         PAGE LOADER
+    ========================================================== -->
+
+    <div
+        id="pageLoader"
+        class="page-loader"
+        aria-live="polite"
+        aria-label="جاري تحميل الصفحة"
+    >
+        <div class="loader-box">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">جاري تحميل المواد...</div>
+        </div>
+    </div>
+
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <header id="siteHeader" class="site-header">
+
+        <div class="header-inner">
+
+            <a
+                href="index.html"
+                class="brand"
+                aria-label="Cap Abdelnaseer"
+            >
+
+                <div class="brand-logo">
+                    CA
+                </div>
+
+                <div class="brand-text">
+
+                    <div class="brand-title">
+                        Cap Abdelnaseer
+                    </div>
+
+                    <div class="brand-subtitle">
+                        Student Learning Platform
+                    </div>
+
+                </div>
+
+            </a>
+
+
+            <nav class="desktop-nav" aria-label="التنقل الرئيسي">
+
+                <a
+                    href="index.html"
+                    class="nav-link"
+                >
+                    الرئيسية
+                </a>
+
+                <a
+                    href="dashboard.html"
+                    class="nav-link"
+                >
+                    لوحة التحكم
+                </a>
+
+                <a
+                    href="courses.html"
+                    class="nav-link active"
+                >
+                    المواد
+                </a>
+
+                <a
+                    href="files.html"
+                    class="nav-link"
+                >
+                    الملفات
+                </a>
+
+                <a
+                    href="videos.html"
+                    class="nav-link"
+                >
+                    الفيديوهات
+                </a>
+
+                <a
+                    href="quizzes.html"
+                    class="nav-link"
+                >
+                    الاختبارات
+                </a>
+
+            </nav>
+
+
+            <div class="header-actions">
+
+                <div
+                    id="headerUser"
+                    class="header-user"
+                >
+
+                    <div
+                        id="headerUserAvatar"
+                        class="header-user-avatar"
+                    >
+                        ط
+                    </div>
+
+                    <div
+                        id="headerUserName"
+                        class="header-user-name"
+                    >
+                        الطالب
+                    </div>
+
+                </div>
+
+
+                <a
+                    id="loginButton"
+                    href="login.html"
+                    class="auth-btn login-btn"
+                >
+                    تسجيل الدخول
+                </a>
+
+                <a
+                    id="registerButton"
+                    href="register.html"
+                    class="auth-btn register-btn"
+                >
+                    إنشاء حساب
+                </a>
+
+
+                <button
+                    id="mobileMenuButton"
+                    class="mobile-menu-button"
+                    type="button"
+                    aria-label="فتح القائمة"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+         MOBILE NAV
+    ========================================================== -->
+
+    <nav
+        id="mobileNav"
+        class="mobile-nav"
+        aria-label="قائمة الهاتف"
+    >
+
+        <a href="index.html">
+            الرئيسية
+        </a>
+
+        <a href="dashboard.html">
+            لوحة التحكم
+        </a>
+
+        <a
+            href="courses.html"
+            class="active"
+        >
+            المواد الدراسية
+        </a>
+
+        <a href="files.html">
+            الملفات
+        </a>
+
+        <a href="videos.html">
+            الفيديوهات
+        </a>
+
+        <a href="quizzes.html">
+            الاختبارات
+        </a>
+
+        <a href="results.html">
+            النتائج
+        </a>
+
+        <a href="notifications.html">
+            الإشعارات
+        </a>
+
+        <a href="profile.html">
+            الملف الشخصي
+        </a>
+
+        <a href="support.html">
+            الدعم
+        </a>
+
+    </nav>
+
+
+    <!-- =========================================================
+         MAIN
+    ========================================================== -->
+
+    <main class="main">
+
+        <!-- =====================================================
+             HERO
+        ====================================================== -->
+
+        <section class="page-hero">
+
+            <div class="hero-content">
+
+                <div class="hero-badge">
+
+                    <span class="hero-badge-dot"></span>
+
+                    المنصة التعليمية
+
+                </div>
+
+
+                <h1 class="page-title">
+                    المواد <span>الدراسية</span>
+                </h1>
+
+
+                <p class="page-description">
+                    اختار المادة اللي عايز تذاكرها واستعرض الملفات
+                    والفيديوهات والاختبارات والمحتوى المتاح ليك.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             CONTROLS
+        ====================================================== -->
+
+        <section class="controls">
+
+            <div class="section-heading">
+
+                <div class="section-heading-icon">
+                    📚
+                </div>
+
+                <div class="section-heading-text">
+
+                    <h2>
+                        جميع المواد
+                    </h2>
+
+                    <p id="subjectsCountText">
+                        جاري تحميل المواد...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="filters"
+                class="filters"
+            >
+
+                <button
+                    type="button"
+                    class="filter-button active"
+                    data-filter="all"
+                >
+                    الكل
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-button"
+                    data-filter="free"
+                >
+                    مجاني
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-button"
+                    data-filter="paid"
+                >
+                    مدفوع
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             TERMS
+        ====================================================== -->
+
+        <section class="terms-wrapper">
+
+            <div
+                id="terms"
+                class="terms"
+            >
+
+                <button
+                    type="button"
+                    class="term-button active"
+                    data-term="all"
+                >
+                    كل الترمات
+                </button>
+
+                <button
+                    type="button"
+                    class="term-button"
+                    data-term="1"
+                >
+                    الترم الأول
+                </button>
+
+                <button
+                    type="button"
+                    class="term-button"
+                    data-term="2"
+                >
+                    الترم الثاني
+                </button>
+
+                <button
+                    type="button"
+                    class="term-button"
+                    data-term="3"
+                >
+                    الترم الثالث
+                </button>
+
+                <button
+                    type="button"
+                    class="term-button"
+                    data-term="4"
+                >
+                    الترم الرابع
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             SUBJECTS
+        ====================================================== -->
+
+        <section class="subjects-section">
+
+            <div
+                id="subjectsLoading"
+                class="subjects-loading"
+            >
+
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+
+            </div>
+
+
+            <div
+                id="subjectsGrid"
+                class="subjects-grid"
+                style="display:none;"
+            >
+            </div>
+
+
+            <div
+                id="emptyState"
+                class="empty-state"
+            >
+
+                <div class="empty-icon">
+                    📚
+                </div>
+
+                <div class="empty-title">
+                    مفيش مواد متاحة
+                </div>
+
+                <p class="empty-description">
+                    مفيش مواد مطابقة للفلاتر الحالية.
+                    جرّب تختار ترم أو فلتر مختلف.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             FOOTER
+        ====================================================== -->
+
+        <footer class="site-footer">
+
+            <div class="footer-inner">
+
+                <div class="footer-copy">
+                    © <span id="currentYear"></span>
+                    Cap Abdelnaseer — جميع الحقوق محفوظة
+                </div>
+
+
+                <div class="footer-links">
+
+                    <a
+                        href="support.html"
+                        class="footer-link"
+                    >
+                        الدعم
+                    </a>
+
+                    <a
+                        href="profile.html"
+                        class="footer-link"
+                    >
+                        الملف الشخصي
+                    </a>
+
+                </div>
+
+            </div>
+
+        </footer>
+
+    </main>
+
+
+    <!-- =========================================================
+         TOAST
+    ========================================================== -->
+
+    <div
+        id="toastContainer"
+        class="toast-container"
+        aria-live="polite"
+        aria-atomic="true"
+    ></div>
+
+
+    <!-- =========================================================
+         FIREBASE CDN
+    ========================================================== -->
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+
+
+    <!-- =========================================================
+         PROJECT FIREBASE LAYERS
+    ========================================================== -->
+
+    <script src="firebase-config.js"></script>
+    <script src="firebase-auth.js"></script>
+    <script src="firebase-database.js"></script>
+    <script src="firebase-content.js"></script>
+    <script src="firebase-features.js"></script>
+
+
+    <!-- =========================================================
+         COURSES PAGE SCRIPT
+    ========================================================== -->
+
+    <script>
+        (function () {
+
+            "use strict";
+
+
+            /* =====================================================
+               GLOBALS
+            ====================================================== */
+
+            const state = {
+                subjects: [],
+                filteredSubjects: [],
+                activeTerm: "all",
+                activeFilter: "all",
+                currentUser: null,
+                loading: true
+            };
+
+
+            const elements = {
+                loader: document.getElementById("pageLoader"),
+                mobileMenuButton:
+                    document.getElementById("mobileMenuButton"),
+                mobileNav:
+                    document.getElementById("mobileNav"),
+                headerUser:
+                    document.getElementById("headerUser"),
+                headerUserAvatar:
+                    document.getElementById("headerUserAvatar"),
+                headerUserName:
+                    document.getElementById("headerUserName"),
+                loginButton:
+                    document.getElementById("loginButton"),
+                registerButton:
+                    document.getElementById("registerButton"),
+                subjectsLoading:
+                    document.getElementById("subjectsLoading"),
+                subjectsGrid:
+                    document.getElementById("subjectsGrid"),
+                emptyState:
+                    document.getElementById("emptyState"),
+                subjectsCountText:
+                    document.getElementById("subjectsCountText"),
+                filters:
+                    document.getElementById("filters"),
+                terms:
+                    document.getElementById("terms"),
+                toastContainer:
+                    document.getElementById("toastContainer"),
+                currentYear:
+                    document.getElementById("currentYear")
+            };
+
+
+            /* =====================================================
+               BASIC HELPERS
+            ====================================================== */
+
+            function safeString(value) {
+
+                if (
+                    value === null ||
+                    value === undefined
+                ) {
+                    return "";
+                }
+
+                return String(value).trim();
+
+            }
+
+
+            function escapeHtml(value) {
+
+                return safeString(value)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+
+            }
+
+
+            function normalizeTerm(value) {
+
+                if (
+                    value === null ||
+                    value === undefined ||
+                    value === ""
+                ) {
+                    return "";
+                }
+
+                const text = safeString(value)
+                    .toLowerCase()
+                    .replace(
+                        /الترم|الفصل|semester|term/g,
+                        ""
+                    )
+                    .trim();
+
+                const arabicNumbers = {
+                    "الأول": "1",
+                    "الاول": "1",
+                    "الأولى": "1",
+                    "الاولى": "1",
+                    "one": "1",
+
+                    "الثاني": "2",
+                    "الثانى": "2",
+                    "الثانية": "2",
+                    "الثانيه": "2",
+                    "two": "2",
+
+                    "الثالث": "3",
+                    "الثالثة": "3",
+                    "three": "3",
+
+                    "الرابع": "4",
+                    "الرابعة": "4",
+                    "four": "4"
+                };
+
+                if (arabicNumbers[text]) {
+                    return arabicNumbers[text];
+                }
+
+                const numberMatch =
+                    text.match(/[1-4]/);
+
+                if (numberMatch) {
+                    return numberMatch[0];
+                }
+
+                return text;
+
+            }
+
+
+            function getSubjectId(subject) {
+
+                return safeString(
+                    subject?.id ||
+                    subject?.subjectId ||
+                    subject?.key ||
+                    subject?.code
+                );
+
+            }
+
+
+            function getSubjectName(subject) {
+
+                return safeString(
+                    subject?.name ||
+                    subject?.title ||
+                    subject?.subjectName ||
+                    subject?.label ||
+                    "مادة دراسية"
+                );
+
+            }
+
+
+            function getSubjectDescription(subject) {
+
+                return safeString(
+                    subject?.description ||
+                    subject?.desc ||
+                    subject?.details ||
+                    "استعرض محتوى المادة والملفات والفيديوهات والاختبارات."
+                );
+
+            }
+
+
+            function isPaidSubject(subject) {
+
+                const value = safeString(
+                    subject?.paid ??
+                    subject?.isPaid ??
+                    subject?.premium ??
+                    subject?.requiredPayment ??
+                    ""
+                ).toLowerCase();
+
+                if (
+                    value === "true" ||
+                    value === "yes" ||
+                    value === "paid" ||
+                    value === "premium" ||
+                    value === "مدفوع"
+                ) {
+                    return true;
+                }
+
+                if (
+                    value === "false" ||
+                    value === "no" ||
+                    value === "free" ||
+                    value === "مجاني"
+                ) {
+                    return false;
+                }
+
+                return false;
+
+            }
+
+
+            function getInitials(name) {
+
+                const text = safeString(name);
+
+                if (!text) {
+                    return "ط";
+                }
+
+                const words = text
+                    .split(/\s+/)
+                    .filter(Boolean);
+
+                if (words.length === 1) {
+                    return words[0].charAt(0);
+                }
+
+                return (
+                    words[0].charAt(0) +
+                    words[1].charAt(0)
+                );
+
+            }
+
+
+            function getSubjectIcon(subject) {
+
+                const id = safeString(
+                    getSubjectId(subject)
+                ).toLowerCase();
+
+                const icons = {
+                    anatomy: "🦴",
+                    physiology: "❤️",
+                    english: "🇬🇧",
+                    fencing: "🤺",
+                    "sport-anatomy": "🏃",
+                    sport_anatomy: "🏃",
+                    communication: "💬",
+                    movement: "🏃",
+                    training: "🏋️",
+                    psychology: "🧠"
+                };
+
+                return (
+                    subject?.icon ||
+                    icons[id] ||
+                    "📚"
+                );
+
+            }
+
+
+            /* =====================================================
+               TOAST
+            ====================================================== */
+
+            function showToast(
+                message,
+                type = "success"
+            ) {
+
+                if (!elements.toastContainer) {
+                    return;
+                }
+
+                const toast =
+                    document.createElement("div");
+
+                toast.className =
+                    "toast " + type;
+
+                toast.textContent =
+                    safeString(message);
+
+                elements.toastContainer.appendChild(
+                    toast
+                );
+
+                window.setTimeout(function () {
+
+                    toast.style.opacity = "0";
+                    toast.style.transform =
+                        "translateY(8px)";
+
+                    window.setTimeout(function () {
+
+                        toast.remove();
+
+                    }, 250);
+
+                }, 3000);
+
+            }
+
+
+            window.showCoursesToast = showToast;
+
+
+            /* =====================================================
+               LOADER
+            ====================================================== */
+
+            function hideLoader() {
+
+                if (!elements.loader) {
+                    return;
+                }
+
+                elements.loader.classList.add(
+                    "hidden"
+                );
+
+            }
+
+
+            function showLoader() {
+
+                if (!elements.loader) {
+                    return;
+                }
+
+                elements.loader.classList.remove(
+                    "hidden"
+                );
+
+            }
+
+
+            /* =====================================================
+               MOBILE MENU
+            ====================================================== */
+
+            function setupMobileMenu() {
+
+                if (
+                    !elements.mobileMenuButton ||
+                    !elements.mobileNav
+                ) {
+                    return;
+                }
+
+                elements.mobileMenuButton
+                    .addEventListener(
+                        "click",
+                        function () {
+
+                            const isOpen =
+                                elements.mobileNav
+                                    .classList
+                                    .toggle("open");
+
+                            elements.mobileMenuButton
+                                .setAttribute(
+                                    "aria-expanded",
+                                    String(isOpen)
+                                );
+
+                        }
+                    );
+
+
+                elements.mobileNav
+                    .querySelectorAll("a")
+                    .forEach(function (link) {
+
+                        link.addEventListener(
+                            "click",
+                            function () {
+
+                                elements.mobileNav
+                                    .classList
+                                    .remove("open");
+
+                                elements.mobileMenuButton
+                                    .setAttribute(
+                                        "aria-expanded",
+                                        "false"
+                                    );
+
+                            }
+                        );
+
+                    });
+
+            }
+
+
+            /* =====================================================
+               AUTH / HEADER
+            ====================================================== */
+
+            function getCurrentIdentity() {
+
+                try {
+
+                    if (
+                        window.FirebaseAuth &&
+                        typeof window.FirebaseAuth
+                            .getCurrentUser === "function"
+                    ) {
+
+                        return window.FirebaseAuth
+                            .getCurrentUser();
+
+                    }
+
+                } catch (error) {
+                    console.warn(
+                        "Auth getCurrentUser failed:",
+                        error
+                    );
+                }
+
+
+                try {
+
+                    if (
+                        window.FirebaseDatabase &&
+                        typeof window.FirebaseDatabase
+                            .getCurrentUser === "function"
+                    ) {
+
+                        return window.FirebaseDatabase
+                            .getCurrentUser();
+
+                    }
+
+                } catch (error) {
+                    console.warn(
+                        "Database getCurrentUser failed:",
+                        error
+                    );
+                }
+
+
+                return null;
+
+            }
+
+
+            function updateHeader(identity) {
+
+                state.currentUser =
+                    identity || null;
+
+
+                if (
+                    !elements.headerUser ||
+                    !elements.loginButton ||
+                    !elements.registerButton
+                ) {
+                    return;
+                }
+
+
+                if (identity) {
+
+                    elements.headerUser.style.display =
+                        "flex";
+
+                    elements.loginButton.style.display =
+                        "none";
+
+                    elements.registerButton.textContent =
+                        "لوحة التحكم";
+
+                    elements.registerButton.href =
+                        "dashboard.html";
+
+
+                    const name =
+                        safeString(
+                            identity.name ||
+                            identity.studentName ||
+                            identity.fullName ||
+                            "الطالب"
+                        );
+
+
+                    elements.headerUserName.textContent =
+                        name;
+
+
+                    elements.headerUserAvatar.textContent =
+                        getInitials(name);
+
+                } else {
+
+                    elements.headerUser.style.display =
+                        "none";
+
+                    elements.loginButton.style.display =
+                        "inline-flex";
+
+                    elements.registerButton.style.display =
+                        "inline-flex";
+
+                    elements.registerButton.textContent =
+                        "إنشاء حساب";
+
+                    elements.registerButton.href =
+                        "register.html";
+
+                }
+
+            }
+
+
+            async function setupAuth() {
+
+                const identity =
+                    getCurrentIdentity();
+
+                updateHeader(identity);
+
+
+                try {
+
+                    if (
+                        window.FirebaseAuth &&
+                        typeof window.FirebaseAuth
+                            .onAuthStateChanged === "function"
+                    ) {
+
+                        window.FirebaseAuth
+                            .onAuthStateChanged(
+                                function (user) {
+
+                                    updateHeader(user);
+
+                                }
+                            );
+
+                    }
+
+                } catch (error) {
+
+                    console.warn(
+                        "Auth listener failed:",
+                        error
+                    );
+
+                }
+
+            }
+
+
+            /* =====================================================
+               GET SUBJECTS
+            ====================================================== */
+
+            async function loadSubjects() {
+
+                let subjects = [];
+
+
+                /*
+                 * First choice:
+                 * FirebaseContent
+                 */
+
+                try {
+
+                    if (
+                        window.FirebaseContent &&
+                        typeof window.FirebaseContent
+                            .getSubjects === "function"
+                    ) {
+
+                        subjects =
+                            await window.FirebaseContent
+                                .getSubjects();
+
+                    }
+
+                } catch (error) {
+
+                    console.warn(
+                        "FirebaseContent.getSubjects failed:",
+                        error
+                    );
+
+                }
+
+
+                /*
+                 * Second choice:
+                 * FirebaseFeatures
+                 */
+
+                if (
+                    !Array.isArray(subjects) ||
+                    subjects.length === 0
+                ) {
+
+                    try {
+
+                        if (
+                            window.FirebaseFeatures &&
+                            typeof window.FirebaseFeatures
+                                .getCourses === "function"
+                        ) {
+
+                            const result =
+                                await window.FirebaseFeatures
+                                    .getCourses();
+
+                            if (
+                                Array.isArray(result)
+                            ) {
+                                subjects = result;
+                            } else if (
+                                Array.isArray(
+                                    result?.subjects
+                                )
+                            ) {
+                                subjects =
+                                    result.subjects;
+                            }
+
+                        }
+
+                    } catch (error) {
+
+                        console.warn(
+                            "FirebaseFeatures.getCourses failed:",
+                            error
+                        );
+
+                    }
+
+                }
+
+
+                /*
+                 * Third choice:
+                 * Direct database subjects.
+                 */
+
+                if (
+                    !Array.isArray(subjects) ||
+                    subjects.length === 0
+                ) {
+
+                    try {
+
+                        if (
+                            window.FirebaseDatabase &&
+                            typeof window.FirebaseDatabase
+                                .get === "function"
+                        ) {
+
+                            const raw =
+                                await window.FirebaseDatabase
+                                    .get("subjects");
+
+                            if (
+                                raw &&
+                                typeof raw === "object"
+                            ) {
+
+                                subjects =
+                                    Object.keys(raw)
+                                        .map(function (key) {
+
+                                            return {
+                                                id: key,
+                                                ...(
+                                                    raw[key] || {}
+                                                )
+                                            };
+
+                                        });
+
+                            }
+
+                        }
+
+                    } catch (error) {
+
+                        console.warn(
+                            "Direct subjects read failed:",
+                            error
+                        );
+
+                    }
+
+                }
+
+
+                /*
+                 * Normalize result.
+                 */
+
+                if (
+                    !Array.isArray(subjects)
+                ) {
+                    subjects = [];
+                }
+
+
+                subjects = subjects
+                    .filter(function (subject) {
+
+                        return (
+                            subject &&
+                            getSubjectId(subject)
+                        );
+
+                    })
+                    .map(function (subject) {
+
+                        return {
+                            ...subject,
+
+                            id:
+                                getSubjectId(
+                                    subject
+                                ),
+
+                            name:
+                                getSubjectName(
+                                    subject
+                                ),
+
+                            description:
+                                getSubjectDescription(
+                                    subject
+                                ),
+
+                            term:
+                                normalizeTerm(
+                                    subject?.term ||
+                                    subject?.semester ||
+                                    subject?.year ||
+                                    subject?.level ||
+                                    ""
+                                ),
+
+                            paid:
+                                isPaidSubject(
+                                    subject
+                                )
+
+                        };
+
+                    });
+
+
+                /*
+                 * Remove duplicate IDs.
+                 */
+
+                const unique =
+                    new Map();
+
+
+                subjects.forEach(function (subject) {
+
+                    const id =
+                        getSubjectId(subject);
+
+                    if (!unique.has(id)) {
+                        unique.set(id, subject);
+                    }
+
+                });
+
+
+                state.subjects =
+                    Array.from(unique.values());
+
+
+                return state.subjects;
+
+            }
+
+
+            /* =====================================================
+               FILTERING
+            ====================================================== */
+
+            function applyFilters() {
+
+                let result =
+                    [...state.subjects];
+
+
+                /*
+                 * Term filter
+                 */
+
+                if (
+                    state.activeTerm !== "all"
+                ) {
+
+                    result =
+                        result.filter(
+                            function (subject) {
+
+                                return (
+                                    normalizeTerm(
+                                        subject.term
+                                    ) ===
+                                    state.activeTerm
+                                );
+
+                            }
+                        );
+
+                }
+
+
+                /*
+                 * Paid / free filter
+                 */
+
+                if (
+                    state.activeFilter === "paid"
+                ) {
+
+                    result =
+                        result.filter(
+                            function (subject) {
+
+                                return (
+                                    subject.paid === true
+                                );
+
+                            }
+                        );
+
+                } else if (
+                    state.activeFilter === "free"
+                ) {
+
+                    result =
+                        result.filter(
+                            function (subject) {
+
+                                return (
+                                    subject.paid !== true
+                                );
+
+                            }
+                        );
+
+                }
+
+
+                /*
+                 * Preserve Firebase / configured order.
+                 * If order exists, sort numerically.
+                 */
+
+                result.sort(
+                    function (a, b) {
+
+                        const aOrder =
+                            Number(
+                                a.order ??
+                                a.sortOrder ??
+                                999999
+                            );
+
+                        const bOrder =
+                            Number(
+                                b.order ??
+                                b.sortOrder ??
+                                999999
+                            );
+
+                        if (
+                            !Number.isNaN(aOrder) &&
+                            !Number.isNaN(bOrder) &&
+                            aOrder !== bOrder
+                        ) {
+
+                            return (
+                                aOrder -
+                                bOrder
+                            );
+
+                        }
+
+                        return getSubjectName(a)
+                            .localeCompare(
+                                getSubjectName(b),
+                                "ar"
+                            );
+
+                    }
+                );
+
+
+                state.filteredSubjects =
+                    result;
+
+
+                renderSubjects();
+
+            }
+
+
+            /* =====================================================
+               RENDER SUBJECTS
+            ====================================================== */
+
+            function renderSubjects() {
+
+                if (
+                    !elements.subjectsGrid ||
+                    !elements.emptyState
+                ) {
+                    return;
+                }
+
+
+                elements.subjectsGrid.innerHTML =
+                    "";
+
+
+                if (
+                    !state.filteredSubjects.length
+                ) {
+
+                    elements.subjectsGrid.style.display =
+                        "none";
+
+                    elements.emptyState.classList.add(
+                        "show"
+                    );
+
+                } else {
+
+                    elements.emptyState.classList.remove(
+                        "show"
+                    );
+
+                    elements.subjectsGrid.style.display =
+                        "grid";
+
+
+                    state.filteredSubjects
+                        .forEach(
+                            function (
+                                subject,
+                                index
+                            ) {
+
+                                const card =
+                                    createSubjectCard(
+                                        subject,
+                                        index
+                                    );
+
+                                elements.subjectsGrid
+                                    .appendChild(
+                                        card
+                                    );
+
+                            }
+                        );
+
+                }
+
+
+                updateCountText();
+
+            }
+
+
+            function createSubjectCard(
+                subject,
+                index
+            ) {
+
+                const card =
+                    document.createElement("article");
+
+
+                card.className =
+                    "subject-card";
+
+
+                card.style.animationDelay =
+                    Math.min(
+                        index * 0.06,
+                        0.5
+                    ) + "s";
+
+
+                const id =
+                    getSubjectId(subject);
+
+
+                const name =
+                    getSubjectName(subject);
+
+
+                const description =
+                    getSubjectDescription(subject);
+
+
+                const icon =
+                    getSubjectIcon(subject);
+
+
+                const term =
+                    normalizeTerm(
+                        subject?.term
+                    );
+
+
+                const paid =
+                    subject?.paid === true;
+
+
+                const order =
+                    index + 1;
+
+
+                const termText =
+                    term === "1"
+                        ? "الترم الأول"
+                        : term === "2"
+                            ? "الترم الثاني"
+                            : term === "3"
+                                ? "الترم الثالث"
+                                : term === "4"
+                                    ? "الترم الرابع"
+                                    : "مادة دراسية";
+
+
+                card.innerHTML = `
+
+                    <div class="subject-card-top">
+
+                        <div class="subject-icon">
+                            ${escapeHtml(icon)}
+                        </div>
+
+                        <div class="subject-number">
+                            ${order}
+                        </div>
+
+                    </div>
+
+
+                    <div class="subject-body">
+
+                        <h3 class="subject-name">
+                            ${escapeHtml(name)}
+                        </h3>
+
+
+                        <p class="subject-description">
+                            ${escapeHtml(description)}
+                        </p>
+
+
+                        <div class="subject-meta">
+
+                            <span class="meta-chip">
+                                📚 ${escapeHtml(termText)}
+                            </span>
+
+                            <span class="meta-chip ${
+                                paid ? "paid" : ""
+                            }">
+
+                                ${
+                                    paid
+                                        ? "⭐ مدفوعة"
+                                        : "✓ مجانية"
+                                }
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="subject-footer">
+
+                            <a
+                                class="open-subject"
+                                href="subject.html?id=${encodeURIComponent(id)}"
+                                aria-label="فتح مادة ${escapeHtml(name)}"
+                            >
+
+                                دخول إلى المادة
+
+                                <span>
+                                    ←
+                                </span>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+
+                return card;
+
+            }
+
+
+            /* =====================================================
+               COUNT
+            ====================================================== */
+
+            function updateCountText() {
+
+                if (
+                    !elements.subjectsCountText
+                ) {
+                    return;
+                }
+
+
+                const total =
+                    state.filteredSubjects.length;
+
+
+                const all =
+                    state.subjects.length;
+
+
+                if (
+                    state.activeFilter === "all" &&
+                    state.activeTerm === "all"
+                ) {
+
+                    elements.subjectsCountText.textContent =
+                        total === 1
+                            ? "مادة واحدة متاحة"
+                            : `${total} مواد متاحة`;
+
+                    return;
+
+                }
+
+
+                elements.subjectsCountText.textContent =
+                    `${total} من ${all} مادة`;
+
+            }
+
+
+            /* =====================================================
+               FILTER BUTTONS
+            ====================================================== */
+
+            function setupFilters() {
+
+                if (!elements.filters) {
+                    return;
+                }
+
+
+                elements.filters
+                    .querySelectorAll(
+                        ".filter-button"
+                    )
+                    .forEach(
+                        function (button) {
+
+                            button.addEventListener(
+                                "click",
+                                function () {
+
+                                    elements.filters
+                                        .querySelectorAll(
+                                            ".filter-button"
+                                        )
+                                        .forEach(
+                                            function (
+                                                item
+                                            ) {
+
+                                                item.classList
+                                                    .remove(
+                                                        "active"
+                                                    );
+
+                                            }
+                                        );
+
+
+                                    button.classList.add(
+                                        "active"
+                                    );
+
+
+                                    state.activeFilter =
+                                        safeString(
+                                            button.dataset
+                                                .filter
+                                        ) ||
+                                        "all";
+
+
+                                    applyFilters();
+
+                                }
+                            );
+
+                        }
+                    );
+
+            }
+
+
+            /* =====================================================
+               TERM BUTTONS
+            ====================================================== */
+
+            function setupTerms() {
+
+                if (!elements.terms) {
+                    return;
+                }
+
+
+                elements.terms
+                    .querySelectorAll(
+                        ".term-button"
+                    )
+                    .forEach(
+                        function (button) {
+
+                            button.addEventListener(
+                                "click",
+                                function () {
+
+                                    elements.terms
+                                        .querySelectorAll(
+                                            ".term-button"
+                                        )
+                                        .forEach(
+                                            function (
+                                                item
+                                            ) {
+
+                                                item.classList
+                                                    .remove(
+                                                        "active"
+                                                    );
+
+                                            }
+                                        );
+
+
+                                    button.classList.add(
+                                        "active"
+                                    );
+
+
+                                    state.activeTerm =
+                                        safeString(
+                                            button.dataset
+                                                .term
+                                        ) ||
+                                        "all";
+
+
+                                    applyFilters();
+
+                                }
+                            );
+
+                        }
+                    );
+
+            }
+
+
+            /* =====================================================
+               DYNAMIC TERMS
+            ====================================================== */
+
+            function updateAvailableTerms() {
+
+                if (!elements.terms) {
+                    return;
+                }
+
+
+                const available =
+                    new Set();
+
+
+                state.subjects.forEach(
+                    function (subject) {
+
+                        const term =
+                            normalizeTerm(
+                                subject?.term
+                            );
+
+                        if (term) {
+                            available.add(term);
+                        }
+
+                    }
+                );
+
+
+                elements.terms
+                    .querySelectorAll(
+                        ".term-button"
+                    )
+                    .forEach(
+                        function (button) {
+
+                            const term =
+                                safeString(
+                                    button.dataset.term
+                                );
+
+
+                            if (
+                                term === "all"
+                            ) {
+                                return;
+                            }
+
+
+                            /*
+                             * We keep all four terms visible
+                             * so the future subjects can appear
+                             * without changing the UI.
+                             */
+
+                            if (
+                                available.has(term)
+                            ) {
+
+                                button.style.opacity =
+                                    "1";
+
+                                button.style.pointerEvents =
+                                    "auto";
+
+                            } else {
+
+                                button.style.opacity =
+                                    "0.55";
+
+                            }
+
+                        }
+                    );
+
+            }
+
+
+            /* =====================================================
+               LOAD
+            ====================================================== */
+
+            async function initialize() {
+
+                showLoader();
+
+
+                try {
+
+                    setupMobileMenu();
+
+                    setupFilters();
+
+                    setupTerms();
+
+                    setupAuth();
+
+
+                    if (
+                        elements.currentYear
+                    ) {
+
+                        elements.currentYear
+                            .textContent =
+                            new Date()
+                                .getFullYear();
+
+                    }
+
+
+                    /*
+                     * Wait for Firebase modules if the
+                     * readiness promises exist.
+                     */
+
+                    try {
+
+                        if (
+                            window.FirebaseCoreReadyPromise
+                        ) {
+
+                            await Promise.resolve(
+                                window.FirebaseCoreReadyPromise
+                            );
+
+                        }
+
+                    } catch (error) {
+                        console.warn(
+                            "Firebase core wait failed:",
+                            error
+                        );
+                    }
+
+
+                    try {
+
+                        if (
+                            window.FirebaseAuthReadyPromise
+                        ) {
+
+                            await Promise.resolve(
+                                window.FirebaseAuthReadyPromise
+                            );
+
+                        }
+
+                    } catch (error) {
+                        console.warn(
+                            "Firebase auth wait failed:",
+                            error
+                        );
+                    }
+
+
+                    try {
+
+                        if (
+                            window.FirebaseDatabaseReadyPromise
+                        ) {
+
+                            await Promise.resolve(
+                                window.FirebaseDatabaseReadyPromise
+                            );
+
+                        }
+
+                    } catch (error) {
+                        console.warn(
+                            "Firebase database wait failed:",
+                            error
+                        );
+                    }
+
+
+                    try {
+
+                        if (
+                            window.FirebaseContentReadyPromise
+                        ) {
+
+                            await Promise.resolve(
+                                window.FirebaseContentReadyPromise
+                            );
+
+                        }
+
+                    } catch (error) {
+                        console.warn(
+                            "Firebase content wait failed:",
+                            error
+                        );
+                    }
+
+
+                    /*
+                     * Load subjects.
+                     */
+
+                    await loadSubjects();
+
+
+                    /*
+                     * Update available terms.
+                     */
+
+                    updateAvailableTerms();
+
+
+                    /*
+                     * Apply initial filters.
+                     */
+
+                    applyFilters();
+
+
+                    state.loading = false;
+
+
+                    if (
+                        state.subjects.length === 0
+                    ) {
+
+                        showToast(
+                            "لم يتم العثور على مواد منشورة حاليًا.",
+                            "error"
+                        );
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Courses initialization error:",
+                        error
+                    );
+
+
+                    state.subjects = [];
+                    state.filteredSubjects = [];
+
+
+                    renderSubjects();
+
+
+                    showToast(
+                        "حصلت مشكلة أثناء تحميل المواد. حاول تحديث الصفحة.",
+                        "error"
+                    );
+
+                } finally {
+
+                    hideLoader();
+
+                }
+
+            }
+
+
+            /* =====================================================
+               PUBLIC API
+            ====================================================== */
+
+            window.CapCourses = {
+
+                state: state,
+
+                reload: async function () {
+
+                    await loadSubjects();
+
+                    updateAvailableTerms();
+
+                    applyFilters();
+
+                },
+
+                filterByTerm: function (term) {
+
+                    state.activeTerm =
+                        normalizeTerm(term) ||
+                        "all";
+
+                    applyFilters();
+
+                },
+
+                filterByType: function (type) {
+
+                    const value =
+                        safeString(type)
+                            .toLowerCase();
+
+                    if (
+                        value === "paid"
+                    ) {
+
+                        state.activeFilter =
+                            "paid";
+
+                    } else if (
+                        value === "free"
+                    ) {
+
+                        state.activeFilter =
+                            "free";
+
+                    } else {
+
+                        state.activeFilter =
+                            "all";
+
+                    }
+
+                    applyFilters();
+
+                },
+
+                getSubjects: function () {
+
+                    return [
+                        ...state.subjects
+                    ];
+
+                },
+
+                getFilteredSubjects:
+                    function () {
+
+                        return [
+                            ...state.filteredSubjects
+                        ];
+
+                    }
+
+            };
+
+
+            /* =====================================================
+               START
+            ====================================================== */
+
+            if (
+                document.readyState ===
+                "loading"
+            ) {
+
+                document.addEventListener(
+                    "DOMContentLoaded",
+                    initialize
+                );
+
+            } else {
+
+                initialize();
+
+            }
+
+        })();
+    </script>
+
+</body>
+</html>

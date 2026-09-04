@@ -1,0 +1,2964 @@
+/* =========================================================
+   firebase-database.js
+   CAP ABDELNASEER
+   Central Firebase Realtime Database Layer
+
+   Compatible with:
+   - firebase-config.js
+   - firebase-auth.js
+   - firebase-content.js
+   - firebase-features.js
+   - Existing / legacy Firebase data
+   ========================================================= */
+
+(function (window) {
+  "use strict";
+
+  /* =========================================================
+     DEPENDENCIES
+     ========================================================= */
+
+  if (!window.FirebaseCoreReady || !window.FirebaseCore) {
+    console.error(
+      "firebase-database.js: firebase-config.js must be loaded first."
+    );
+    return;
+  }
+
+  const Core = window.FirebaseCore;
+  const db = Core.database;
+
+  if (!db) {
+    console.error(
+      "firebase-database.js: Firebase Realtime Database is not available."
+    );
+    return;
+  }
+
+  /* =========================================================
+     PATHS
+     ========================================================= */
+
+  const PATHS = Object.freeze(
+    Object.assign(
+      {},
+      Core.PATHS || {},
+      {
+        students: "students",
+        files: "files",
+        videos: "videos",
+        notifications: "notifications",
+        notificationReads: "notificationReads",
+        quizzes: "quizzes",
+        quizAttempts: "quizAttempts",
+        results: "results",
+        legacyResults: "quiz_results",
+        contentViews: "contentViews",
+        support: "settings/support",
+        supportTickets: "supportTickets",
+        settings: "settings",
+        stats: "stats",
+        passwordResetRequests: "passwordResetRequests"
+      }
+    )
+  );
+
+  /* =========================================================
+     BASIC HELPERS
+     ========================================================= */
+
+  function isObject(value) {
+    return (
+      value !== null &&
+      typeof value === "object" &&
+      !Array.isArray(value)
+    );
+  }
+
+  function hasValue(value) {
+    return value !== undefined && value !== null;
+  }
+
+  function safeString(value, fallback) {
+    if (value === undefined || value === null) {
+      return fallback !== undefined ? String(fallback) : "";
+    }
+
+    try {
+      return String(value);
+    } catch (error) {
+      return fallback !== undefined ? String(fallback) : "";
+    }
+  }
+
+  function cloneObject(value) {
+    if (!hasValue(value)) {
+      return value;
+    }
+
+    try {
+      return JSON.parse(JSON.stringify(value));
+    } catch (error) {
+      return value;
+    }
+  }
+
+  function normalizeIdentifier(value) {
+    return safeString(value, "")
+      .trim()
+      .toLowerCase();
+  }
+
+  function normalizePhone(value) {
+    let phone = safeString(value, "").trim();
+
+    if (!phone) {
+      return "";
+    }
+
+    const arabicDigits = "٠١٢٣٤٥٦٧٨٩";
+    const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
+
+    phone = phone.replace(/[٠-٩]/g, function (digit) {
+      return String(arabicDigits.indexOf(digit));
+    });
+
+    phone = phone.replace(/[۰-۹]/g, function (digit) {
+      return String(persianDigits.indexOf(digit));
+    });
+
+    phone = phone.replace(/[^\d+]/g, "");
+
+    if (phone.indexOf("00") === 0) {
+      phone = "+" + phone.substring(2);
+    }
+
+    if (phone.indexOf("+20") === 0) {
+      phone = phone.substring(3);
+    } else if (phone.indexOf("20") === 0 && phone.length >= 12) {
+      phone = phone.substring(2);
+    }
+
+    if (phone.charAt(0) === "1" && phone.length === 10) {
+      phone = "0" + phone;
+    }
+
+    if (phone.length === 10 && phone.indexOf("01") !== 0) {
+      phone = "0" + phone;
+    }
+
+    return phone;
+  }
+
+  function toArray(value) {
+    if (Array.isArray(value)) {
+      return value.map(function (item, index) {
+        if (isObject(item)) {
+          return Object.assign(
+            {
+              _key: String(index),
+              key: String(index)
+            },
+            item
+          );
+        }
+
+        return {
+          _key: String(index),
+          key: String(index),
+          value: item
+        };
+      });
+    }
+
+    if (isObject(value)) {
+      return Object.keys(value).map(function (key) {
+        const item = value[key];
+
+        if (isObject(item)) {
+          return Object.assign(
+            {
+              _key: key,
+              key: key
+            },
+            item
+          );
+        }
+
+        return {
+          _key: key,
+          key: key,
+          value: item
+        };
+      });
+    }
+
+    return [];
+  }
+
+  function firstValue() {
+    for (let i = 0; i < arguments.length; i++) {
+      const value = arguments[i];
+
+      if (
+        value !== undefined &&
+        value !== null &&
+        value !== ""
+      ) {
+        return value;
+      }
+    }
+
+    return "";
+  }
+
+  function timestampValue() {
+    if (
+      Core &&
+      typeof Core.serverTimestamp === "function"
+    ) {
+      return Core.serverTimestamp();
+    }
+
+    if (
+      window.firebase &&
+      window.firebase.database &&
+      window.firebase.database.ServerValue
+    ) {
+      return window.firebase.database.ServerValue.TIMESTAMP;
+    }
+
+    return Date.now();
+  }
+
+  function getErrorMessage(error) {
+    if (Core && typeof Core.getErrorMessage === "function") {
+      return Core.getErrorMessage(error);
+    }
+
+    return safeString(
+      error && (error.message || error.code),
+      "حدث خطأ غير متوقع."
+    );
+  }
+
+  function makeError(message, code) {
+    const error = new Error(message);
+
+    if (code) {
+      error.code = code;
+    }
+
+    return error;
+  }
+
+  function normalizeStatus(value) {
+    return safeString(value, "")
+      .trim()
+      .toLowerCase();
+  }
+
+  function isPublished(value) {
+    if (value === true) {
+      return true;
+    }
+
+    if (value === false) {
+      return false;
+    }
+
+    const status = normalizeStatus(value);
+
+    if (!status) {
+      return true;
+    }
+
+    return ![
+      "false",
+      "0",
+      "draft",
+      "unpublished",
+      "inactive",
+      "disabled",
+      "مسودة",
+      "غير منشور",
+      "غير منشورة"
+    ].includes(status);
+  }
+
+  function numericValue(value, fallback) {
+    const number = Number(value);
+
+    return Number.isFinite(number)
+      ? number
+      : fallback;
+  }
+
+  function dateValue(item) {
+    if (!item) {
+      return 0;
+    }
+
+    return numericValue(
+      firstValue(
+        item.createdAt,
+        item.updatedAt,
+        item.publishedAt,
+        item.date,
+        item.timestamp
+      ),
+      0
+    );
+  }
+
+  function orderValue(item) {
+    if (!item) {
+      return 999999;
+    }
+
+    return numericValue(
+      firstValue(
+        item.order,
+        item.sortOrder,
+        item.position,
+        item.index
+      ),
+      999999
+    );
+  }
+
+  function sortByOrderAndDate(a, b) {
+    const orderDifference =
+      orderValue(a) - orderValue(b);
+
+    if (orderDifference !== 0) {
+      return orderDifference;
+    }
+
+    return dateValue(b) - dateValue(a);
+  }
+
+  function sortNewestFirst(a, b) {
+    return dateValue(b) - dateValue(a);
+  }
+
+  function stripInternalKeys(data) {
+    if (!isObject(data)) {
+      return data;
+    }
+
+    const result = cloneObject(data);
+
+    delete result._key;
+    delete result.key;
+
+    return result;
+  }
+
+  /* =========================================================
+     CURRENT USER / IDENTITY
+     ========================================================= */
+
+  function getCurrentUser() {
+    if (
+      window.FirebaseAuth &&
+      typeof window.FirebaseAuth.getCurrentUser === "function"
+    ) {
+      return window.FirebaseAuth.getCurrentUser();
+    }
+
+    if (Core && typeof Core.getCurrentUser === "function") {
+      return Core.getCurrentUser();
+    }
+
+    return null;
+  }
+
+  function getLocalIdentity() {
+    const keys = [
+      "currentUser",
+      "student",
+      "currentStudent"
+    ];
+
+    const result = {
+      raw: null,
+      key: "",
+      uid: "",
+      id: "",
+      studentId: "",
+      userId: "",
+      phone: "",
+      email: "",
+      name: ""
+    };
+
+    for (let i = 0; i < keys.length; i++) {
+      try {
+        const raw = localStorage.getItem(keys[i]);
+
+        if (!raw) {
+          continue;
+        }
+
+        const parsed = JSON.parse(raw);
+
+        if (isObject(parsed)) {
+          result.raw = parsed;
+          break;
+        }
+      } catch (error) {
+        // Ignore malformed local storage.
+      }
+    }
+
+    try {
+      result.key =
+        localStorage.getItem("currentStudentKey") || "";
+    } catch (error) {
+      result.key = "";
+    }
+
+    const source = result.raw || {};
+
+    result.uid = safeString(
+      firstValue(
+        source.uid,
+        source.authUid,
+        source.firebaseUid
+      )
+    );
+
+    result.id = safeString(
+      firstValue(
+        source.id,
+        source.studentId,
+        source.userId
+      )
+    );
+
+    result.studentId = safeString(
+      source.studentId
+    );
+
+    result.userId = safeString(
+      source.userId
+    );
+
+    result.phone = normalizePhone(
+      firstValue(
+        source.phone,
+        source.mobile,
+        source.phoneNumber
+      )
+    );
+
+    result.email = normalizeIdentifier(
+      source.email
+    );
+
+    result.name = safeString(
+      firstValue(
+        source.name,
+        source.studentName,
+        source.fullName
+      )
+    );
+
+    return result;
+  }
+
+  function getIdentityCandidates() {
+    const candidates = [];
+
+    function addCandidate(type, value) {
+      if (!hasValue(value) || value === "") {
+        return;
+      }
+
+      candidates.push({
+        type: type,
+        value: safeString(value).trim(),
+        normalized:
+          type === "phone"
+            ? normalizePhone(value)
+            : normalizeIdentifier(value)
+      });
+    }
+
+    const local = getLocalIdentity();
+
+    addCandidate("key", local.key);
+    addCandidate("uid", local.uid);
+    addCandidate("id", local.id);
+    addCandidate("studentId", local.studentId);
+    addCandidate("userId", local.userId);
+    addCandidate("phone", local.phone);
+    addCandidate("email", local.email);
+
+    const firebaseUser = getCurrentUser();
+
+    if (firebaseUser) {
+      addCandidate("uid", firebaseUser.uid);
+      addCandidate("email", firebaseUser.email);
+      addCandidate("phone", firebaseUser.phoneNumber);
+    }
+
+    return candidates;
+  }
+
+  function studentStatusRank(student) {
+    const status = normalizeStatus(
+      student && student.status
+    );
+
+    if (
+      [
+        "approved",
+        "active",
+        "مقبول",
+        "نشط"
+      ].includes(status)
+    ) {
+      return 3;
+    }
+
+    if (
+      [
+        "pending",
+        "waiting",
+        "قيد المراجعة",
+        "قيد الانتظار"
+      ].includes(status)
+    ) {
+      return 2;
+    }
+
+    if (
+      [
+        "rejected",
+        "blocked",
+        "مرفوض",
+        "محظور"
+      ].includes(status)
+    ) {
+      return 1;
+    }
+
+    return 0;
+  }
+
+  function studentMatchesCandidate(student, key, candidate) {
+    if (!isObject(student) || !candidate) {
+      return false;
+    }
+
+    const type = candidate.type;
+    const value = candidate.normalized;
+
+    if (!value) {
+      return false;
+    }
+
+    if (type === "key") {
+      return (
+        normalizeIdentifier(key) === value
+      );
+    }
+
+    if (type === "uid") {
+      return (
+        normalizeIdentifier(student.uid) === value ||
+        normalizeIdentifier(student.authUid) === value ||
+        normalizeIdentifier(student.firebaseUid) === value
+      );
+    }
+
+    if (
+      type === "id" ||
+      type === "studentId" ||
+      type === "userId"
+    ) {
+      return (
+        normalizeIdentifier(student.id) === value ||
+        normalizeIdentifier(student.studentId) === value ||
+        normalizeIdentifier(student.userId) === value
+      );
+    }
+
+    if (type === "phone") {
+      return (
+        normalizePhone(student.phone) === value ||
+        normalizePhone(student.mobile) === value ||
+        normalizePhone(student.phoneNumber) === value
+      );
+    }
+
+    if (type === "email") {
+      return (
+        normalizeIdentifier(student.email) === value
+      );
+    }
+
+    return false;
+  }
+
+  function chooseBestStudent(matches) {
+    if (!matches || !matches.length) {
+      return null;
+    }
+
+    return matches.sort(function (a, b) {
+      const aExact =
+        a.exactKey ? 1 : 0;
+
+      const bExact =
+        b.exactKey ? 1 : 0;
+
+      if (aExact !== bExact) {
+        return bExact - aExact;
+      }
+
+      const statusDifference =
+        studentStatusRank(b.student) -
+        studentStatusRank(a.student);
+
+      if (statusDifference !== 0) {
+        return statusDifference;
+      }
+
+      return (
+        dateValue(b.student) -
+        dateValue(a.student)
+      );
+    })[0];
+  }
+
+  /* =========================================================
+     GENERIC DATABASE OPERATIONS
+     ========================================================= */
+
+  async function ready() {
+    return true;
+  }
+
+  function ref(path) {
+    if (!path) {
+      return db.ref();
+    }
+
+    return db.ref(String(path));
+  }
+
+  async function get(path) {
+    try {
+      const snapshot = await ref(path).once("value");
+
+      return snapshot.exists()
+        ? snapshot.val()
+        : null;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function exists(path) {
+    try {
+      const snapshot = await ref(path).once("value");
+
+      return snapshot.exists();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  function listen(path, callback, errorCallback) {
+    const databaseRef = ref(path);
+
+    const handler = function (snapshot) {
+      if (typeof callback === "function") {
+        callback(
+          snapshot.exists()
+            ? snapshot.val()
+            : null,
+          snapshot
+        );
+      }
+    };
+
+    const errorHandler = function (error) {
+      if (typeof errorCallback === "function") {
+        errorCallback(error);
+      } else {
+        console.error(
+          "Firebase listener error:",
+          error
+        );
+      }
+    };
+
+    databaseRef.on(
+      "value",
+      handler,
+      errorHandler
+    );
+
+    return function unsubscribe() {
+      databaseRef.off(
+        "value",
+        handler
+      );
+    };
+  }
+
+  async function update(path, data) {
+    if (!path) {
+      throw makeError(
+        "مسار Firebase غير صالح.",
+        "invalid-path"
+      );
+    }
+
+    if (!isObject(data)) {
+      throw makeError(
+        "بيانات التحديث غير صالحة.",
+        "invalid-data"
+      );
+    }
+
+    return ref(path).update(data);
+  }
+
+  async function set(path, data) {
+    if (!path) {
+      throw makeError(
+        "مسار Firebase غير صالح.",
+        "invalid-path"
+      );
+    }
+
+    return ref(path).set(data);
+  }
+
+  async function push(path, data) {
+    if (!path) {
+      throw makeError(
+        "مسار Firebase غير صالح.",
+        "invalid-path"
+      );
+    }
+
+    const childRef = ref(path).push();
+
+    if (data === undefined) {
+      await childRef.set(null);
+    } else {
+      await childRef.set(data);
+    }
+
+    return {
+      key: childRef.key,
+      ref: childRef
+    };
+  }
+
+  function section(path) {
+    return ref(path);
+  }
+
+  /* =========================================================
+     STUDENTS
+     ========================================================= */
+
+  async function getStudentsRaw() {
+    return get(PATHS.students);
+  }
+
+  async function getStudents() {
+    const data = await getStudentsRaw();
+
+    return toArray(data);
+  }
+
+  async function getStudentByKey(key) {
+    if (!key) {
+      return null;
+    }
+
+    const data = await get(
+      PATHS.students + "/" + key
+    );
+
+    if (!isObject(data)) {
+      return null;
+    }
+
+    return Object.assign(
+      {
+        _key: String(key),
+        key: String(key)
+      },
+      data
+    );
+  }
+
+  async function findStudent() {
+    const data = await getStudentsRaw();
+
+    if (!data) {
+      return null;
+    }
+
+    const candidates =
+      getIdentityCandidates();
+
+    if (!candidates.length) {
+      return null;
+    }
+
+    const students = toArray(data);
+    const matches = [];
+
+    students.forEach(function (student) {
+      const key = firstValue(
+        student._key,
+        student.key
+      );
+
+      let matched = false;
+      let exactKey = false;
+
+      for (let i = 0; i < candidates.length; i++) {
+        if (
+          studentMatchesCandidate(
+            student,
+            key,
+            candidates[i]
+          )
+        ) {
+          matched = true;
+
+          if (
+            candidates[i].type === "key" &&
+            normalizeIdentifier(key) ===
+              candidates[i].normalized
+          ) {
+            exactKey = true;
+          }
+
+          break;
+        }
+      }
+
+      if (matched) {
+        matches.push({
+          student: student,
+          exactKey: exactKey
+        });
+      }
+    });
+
+    const selected =
+      chooseBestStudent(matches);
+
+    return selected
+      ? selected.student
+      : null;
+  }
+
+  async function findStudentByPhone(phone) {
+    const normalized =
+      normalizePhone(phone);
+
+    if (!normalized) {
+      return null;
+    }
+
+    const data = await getStudentsRaw();
+
+    if (!data) {
+      return null;
+    }
+
+    const matches = [];
+
+    toArray(data).forEach(function (student) {
+      const studentPhone =
+        normalizePhone(
+          firstValue(
+            student.phone,
+            student.mobile,
+            student.phoneNumber
+          )
+        );
+
+      if (
+        studentPhone &&
+        studentPhone === normalized
+      ) {
+        matches.push({
+          student: student,
+          exactKey: false
+        });
+      }
+    });
+
+    const selected =
+      chooseBestStudent(matches);
+
+    return selected
+      ? selected.student
+      : null;
+  }
+
+  async function getCurrentStudent() {
+    return findStudent();
+  }
+
+  async function linkStudentToAuth(
+    student,
+    user
+  ) {
+    if (!student || !user) {
+      return student;
+    }
+
+    const key = firstValue(
+      student._key,
+      student.key
+    );
+
+    if (!key) {
+      return student;
+    }
+
+    const updates = {};
+
+    if (
+      user.uid &&
+      !student.uid &&
+      !student.authUid &&
+      !student.firebaseUid
+    ) {
+      updates.uid = user.uid;
+    }
+
+    if (
+      user.email &&
+      !student.email
+    ) {
+      updates.email = user.email;
+    }
+
+    if (
+      user.phoneNumber &&
+      !student.phone &&
+      !student.mobile &&
+      !student.phoneNumber
+    ) {
+      updates.phone =
+        normalizePhone(user.phoneNumber);
+    }
+
+    if (!Object.keys(updates).length) {
+      return student;
+    }
+
+    try {
+      await update(
+        PATHS.students + "/" + key,
+        updates
+      );
+
+      return Object.assign(
+        {},
+        student,
+        updates
+      );
+    } catch (error) {
+      /*
+       * Linking is intentionally non-blocking.
+       * Existing student data must remain usable
+       * even if this optional update is denied.
+       */
+      return student;
+    }
+  }
+
+  async function updateStudent(
+    studentKey,
+    data
+  ) {
+    if (!studentKey) {
+      throw makeError(
+        "معرّف الطالب غير موجود.",
+        "invalid-student-key"
+      );
+    }
+
+    if (!isObject(data)) {
+      throw makeError(
+        "بيانات الطالب غير صالحة.",
+        "invalid-student-data"
+      );
+    }
+
+    const safeData =
+      stripInternalKeys(data);
+
+    return update(
+      PATHS.students + "/" + studentKey,
+      safeData
+    );
+  }
+
+  /* =========================================================
+     FILES
+     ========================================================= */
+
+  function normalizeFile(item) {
+    if (!isObject(item)) {
+      return null;
+    }
+
+    const result = cloneObject(item);
+
+    result._key = firstValue(
+      item._key,
+      item.key,
+      item.id,
+      ""
+    );
+
+    result.key = result._key;
+
+    result.id = firstValue(
+      item.id,
+      result._key
+    );
+
+    result.title = firstValue(
+      item.title,
+      item.name,
+      item.fileName,
+      item.filename,
+      "ملف"
+    );
+
+    result.name = firstValue(
+      item.name,
+      item.title,
+      result.title
+    );
+
+    result.url = firstValue(
+      item.pdfUrl,
+      item.fileUrl,
+      item.url,
+      item.link,
+      item.downloadURL,
+      item.downloadUrl
+    );
+
+    result.subject = firstValue(
+      item.subject,
+      item.subjectId,
+      item.course,
+      ""
+    );
+
+    result.term = firstValue(
+      item.term,
+      item.semester,
+      ""
+    );
+
+    result.grade = firstValue(
+      item.grade,
+      item.year,
+      item.level,
+      ""
+    );
+
+    return result;
+  }
+
+  function matchesFilterValue(
+    itemValue,
+    filterValue
+  ) {
+    if (
+      filterValue === undefined ||
+      filterValue === null ||
+      filterValue === ""
+    ) {
+      return true;
+    }
+
+    if (
+      itemValue === undefined ||
+      itemValue === null
+    ) {
+      return false;
+    }
+
+    return (
+      normalizeIdentifier(itemValue) ===
+        normalizeIdentifier(filterValue) ||
+      safeString(itemValue) ===
+        safeString(filterValue)
+    );
+  }
+
+  async function getFiles(filters) {
+    const data = await get(PATHS.files);
+
+    let files = toArray(data)
+      .map(normalizeFile)
+      .filter(Boolean);
+
+    filters = filters || {};
+
+    files = files.filter(function (file) {
+      const published =
+        firstValue(
+          file.published,
+          file.active,
+          file.isPublished,
+          file.status
+        );
+
+      if (
+        filters.published !== false &&
+        published !== undefined &&
+        published !== null &&
+        !isPublished(published)
+      ) {
+        return false;
+      }
+
+      if (
+        !matchesFilterValue(
+          file.subject,
+          firstValue(
+            filters.subject,
+            filters.subjectId,
+            filters.course
+          )
+        )
+      ) {
+        return false;
+      }
+
+      if (
+        !matchesFilterValue(
+          file.term,
+          firstValue(
+            filters.term,
+            filters.semester
+          )
+        )
+      ) {
+        return false;
+      }
+
+      if (
+        !matchesFilterValue(
+          file.grade,
+          firstValue(
+            filters.grade,
+            filters.year,
+            filters.level
+          )
+        )
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+
+    files.sort(sortByOrderAndDate);
+
+    return files;
+  }
+
+  /* =========================================================
+     VIDEOS
+     ========================================================= */
+
+  function normalizeVideo(item) {
+    if (!isObject(item)) {
+      return null;
+    }
+
+    const result = cloneObject(item);
+
+    result._key = firstValue(
+      item._key,
+      item.key,
+      item.id,
+      ""
+    );
+
+    result.key = result._key;
+
+    result.id = firstValue(
+      item.id,
+      result._key
+    );
+
+    result.title = firstValue(
+      item.title,
+      item.name,
+      item.videoTitle,
+      "فيديو"
+    );
+
+    result.url = firstValue(
+      item.url,
+      item.videoUrl,
+      item.link,
+      item.sourceUrl,
+      item.embedUrl,
+      item.video
+    );
+
+    result.subject = firstValue(
+      item.subject,
+      item.subjectId,
+      item.course,
+      ""
+    );
+
+    result.term = firstValue(
+      item.term,
+      item.semester,
+      ""
+    );
+
+    result.grade = firstValue(
+      item.grade,
+      item.year,
+      item.level,
+      ""
+    );
+
+    return result;
+  }
+
+  function getVideoUrlType(url) {
+    const value = safeString(url, "")
+      .trim()
+      .toLowerCase();
+
+    if (!value) {
+      return "unknown";
+    }
+
+    if (
+      value.indexOf("youtube.com") !== -1 ||
+      value.indexOf("youtu.be") !== -1
+    ) {
+      return "youtube";
+    }
+
+    if (
+      value.indexOf("vimeo.com") !== -1
+    ) {
+      return "vimeo";
+    }
+
+    if (
+      value.indexOf("<iframe") !== -1
+    ) {
+      return "iframe";
+    }
+
+    return "direct";
+  }
+
+  async function getVideos(filters) {
+    const data = await get(PATHS.videos);
+
+    let videos = toArray(data)
+      .map(normalizeVideo)
+      .filter(Boolean);
+
+    filters = filters || {};
+
+    videos = videos.filter(function (video) {
+      const published =
+        firstValue(
+          video.published,
+          video.active,
+          video.isPublished,
+          video.status
+        );
+
+      if (
+        filters.published !== false &&
+        published !== undefined &&
+        published !== null &&
+        !isPublished(published)
+      ) {
+        return false;
+      }
+
+      if (
+        !matchesFilterValue(
+          video.subject,
+          firstValue(
+            filters.subject,
+            filters.subjectId,
+            filters.course
+          )
+        )
+      ) {
+        return false;
+      }
+
+      if (
+        !matchesFilterValue(
+          video.term,
+          firstValue(
+            filters.term,
+            filters.semester
+          )
+        )
+      ) {
+        return false;
+      }
+
+      if (
+        !matchesFilterValue(
+          video.grade,
+          firstValue(
+            filters.grade,
+            filters.year,
+            filters.level
+          )
+        )
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+
+    videos.forEach(function (video) {
+      video.urlType =
+        getVideoUrlType(video.url);
+    });
+
+    videos.sort(sortByOrderAndDate);
+
+    return videos;
+  }
+
+  /* =========================================================
+     QUIZZES
+     ========================================================= */
+
+  function normalizeQuestion(question, index) {
+    if (!isObject(question)) {
+      return {
+        id: String(index),
+        key: String(index),
+        text: safeString(question),
+        question: safeString(question),
+        options: [],
+        correctAnswer: "",
+        answer: ""
+      };
+    }
+
+    const result = cloneObject(question);
+
+    result.id = firstValue(
+      question.id,
+      question.key,
+      String(index)
+    );
+
+    result.key = result.id;
+
+    result.text = firstValue(
+      question.text,
+      question.question,
+      question.title,
+      ""
+    );
+
+    result.question = firstValue(
+      question.question,
+      question.text,
+      result.text
+    );
+
+    let options = firstValue(
+      question.options,
+      question.choices,
+      question.answers,
+      []
+    );
+
+    if (isObject(options)) {
+      options = toArray(options);
+    }
+
+    if (!Array.isArray(options)) {
+      options = [];
+    }
+
+    result.options = options.map(
+      function (option, optionIndex) {
+        if (isObject(option)) {
+          return Object.assign(
+            {},
+            option,
+            {
+              id: firstValue(
+                option.id,
+                option.key,
+                String(optionIndex)
+              ),
+              text: firstValue(
+                option.text,
+                option.label,
+                option.name,
+                option.value,
+                ""
+              ),
+              value: firstValue(
+                option.value,
+                option.id,
+                option.key,
+                option.text,
+                ""
+              )
+            }
+          );
+        }
+
+        return {
+          id: String(optionIndex),
+          text: safeString(option),
+          value: safeString(option)
+        };
+      }
+    );
+
+    result.correctAnswer =
+      firstValue(
+        question.correctAnswer,
+        question.correct,
+        question.answer,
+        question.correctOption,
+        ""
+      );
+
+    result.answer =
+      firstValue(
+        question.answer,
+        question.correctAnswer,
+        ""
+      );
+
+    return result;
+  }
+
+  function normalizeQuiz(item) {
+    if (!isObject(item)) {
+      return null;
+    }
+
+    const result = cloneObject(item);
+
+    result._key = firstValue(
+      item._key,
+      item.key,
+      item.id,
+      ""
+    );
+
+    result.key = result._key;
+
+    result.id = firstValue(
+      item.id,
+      result._key
+    );
+
+    result.title = firstValue(
+      item.title,
+      item.name,
+      "اختبار"
+    );
+
+    result.name = firstValue(
+      item.name,
+      item.title,
+      result.title
+    );
+
+    result.description =
+      firstValue(
+        item.description,
+        item.desc,
+        ""
+      );
+
+    result.subject = firstValue(
+      item.subject,
+      item.subjectId,
+      item.course,
+      ""
+    );
+
+    result.term = firstValue(
+      item.term,
+      item.semester,
+      ""
+    );
+
+    result.grade = firstValue(
+      item.grade,
+      item.year,
+      item.level,
+      ""
+    );
+
+    result.durationMinutes =
+      numericValue(
+        firstValue(
+          item.durationMinutes,
+          item.duration,
+          item.timeLimit,
+          0
+        ),
+        0
+      );
+
+    result.passScore =
+      numericValue(
+        firstValue(
+          item.passScore,
+          item.passingScore,
+          item.passPercentage,
+          0
+        ),
+        0
+      );
+
+    let questions =
+      firstValue(
+        item.questions,
+        item.items,
+        []
+      );
+
+    if (isObject(questions)) {
+      questions = toArray(questions);
+    }
+
+    if (!Array.isArray(questions)) {
+      questions = [];
+    }
+
+    result.questions =
+      questions.map(normalizeQuestion);
+
+    result.questionCount =
+      result.questions.length;
+
+    return result;
+  }
+
+  async function getQuizzes(filters) {
+    const data = await get(PATHS.quizzes);
+
+    let quizzes = toArray(data)
+      .map(normalizeQuiz)
+      .filter(Boolean);
+
+    filters = filters || {};
+
+    quizzes = quizzes.filter(
+      function (quiz) {
+        const published =
+          firstValue(
+            quiz.published,
+            quiz.active,
+            quiz.isPublished,
+            quiz.status
+          );
+
+        if (
+          filters.published !== false &&
+          published !== undefined &&
+          published !== null &&
+          !isPublished(published)
+        ) {
+          return false;
+        }
+
+        if (
+          !matchesFilterValue(
+            quiz.subject,
+            firstValue(
+              filters.subject,
+              filters.subjectId,
+              filters.course
+            )
+          )
+        ) {
+          return false;
+        }
+
+        if (
+          !matchesFilterValue(
+            quiz.term,
+            firstValue(
+              filters.term,
+              filters.semester
+            )
+          )
+        ) {
+          return false;
+        }
+
+        if (
+          !matchesFilterValue(
+            quiz.grade,
+            firstValue(
+              filters.grade,
+              filters.year,
+              filters.level
+            )
+          )
+        ) {
+          return false;
+        }
+
+        return true;
+      }
+    );
+
+    quizzes.sort(sortByOrderAndDate);
+
+    return quizzes;
+  }
+
+  async function getQuizById(quizId) {
+    if (!quizId) {
+      return null;
+    }
+
+    const direct = await get(
+      PATHS.quizzes + "/" + quizId
+    );
+
+    if (isObject(direct)) {
+      const normalized =
+        normalizeQuiz(
+          Object.assign(
+            {
+              _key: String(quizId),
+              key: String(quizId)
+            },
+            direct
+          )
+        );
+
+      return normalized;
+    }
+
+    const quizzes = await getQuizzes({
+      published: false
+    });
+
+    return (
+      quizzes.find(function (quiz) {
+        return (
+          normalizeIdentifier(quiz.id) ===
+          normalizeIdentifier(quizId)
+        );
+      }) || null
+    );
+  }
+
+  /* =========================================================
+     QUIZ ATTEMPTS
+     ========================================================= */
+
+  function normalizeAttempt(item) {
+    if (!isObject(item)) {
+      return null;
+    }
+
+    const result = cloneObject(item);
+
+    result._key = firstValue(
+      item._key,
+      item.key,
+      item.id,
+      ""
+    );
+
+    result.key = result._key;
+
+    result.id = firstValue(
+      item.id,
+      result._key
+    );
+
+    result.quizId =
+      firstValue(
+        item.quizId,
+        item.quizID,
+        item.quiz,
+        ""
+      );
+
+    result.title =
+      firstValue(
+        item.title,
+        item.quizTitle,
+        "اختبار"
+      );
+
+    result.subject =
+      firstValue(
+        item.subject,
+        item.subjectId,
+        ""
+      );
+
+    result.term =
+      firstValue(
+        item.term,
+        item.semester,
+        ""
+      );
+
+    result.grade =
+      firstValue(
+        item.grade,
+        item.year,
+        item.level,
+        ""
+      );
+
+    result.answers =
+      isObject(item.answers)
+        ? cloneObject(item.answers)
+        : {};
+
+    result.totalQuestions =
+      numericValue(
+        item.totalQuestions,
+        0
+      );
+
+    result.answeredQuestions =
+      numericValue(
+        item.answeredQuestions,
+        0
+      );
+
+    result.score =
+      hasValue(item.score)
+        ? numericValue(item.score, 0)
+        : null;
+
+    result.percentage =
+      hasValue(item.percentage)
+        ? numericValue(item.percentage, 0)
+        : null;
+
+    result.passed =
+      hasValue(item.passed)
+        ? Boolean(item.passed)
+        : null;
+
+    result.passScore =
+      hasValue(item.passScore)
+        ? numericValue(item.passScore, 0)
+        : null;
+
+    result.status =
+      firstValue(
+        item.status,
+        "submitted"
+      );
+
+    return result;
+  }
+
+  async function getQuizAttempts(
+    studentKey
+  ) {
+    if (!studentKey) {
+      return [];
+    }
+
+    const data = await get(
+      PATHS.quizAttempts +
+        "/" +
+        studentKey
+    );
+
+    return toArray(data)
+      .map(normalizeAttempt)
+      .filter(Boolean)
+      .sort(sortNewestFirst);
+  }
+
+  async function getQuizAttempt(
+    studentKey,
+    attemptId
+  ) {
+    if (!studentKey || !attemptId) {
+      return null;
+    }
+
+    const data = await get(
+      PATHS.quizAttempts +
+        "/" +
+        studentKey +
+        "/" +
+        attemptId
+    );
+
+    if (!isObject(data)) {
+      return null;
+    }
+
+    return normalizeAttempt(
+      Object.assign(
+        {
+          _key: String(attemptId),
+          key: String(attemptId)
+        },
+        data
+      )
+    );
+  }
+
+  async function saveQuizAttempt(
+    studentKey,
+    attempt
+  ) {
+    if (!studentKey) {
+      throw makeError(
+        "معرّف الطالب غير موجود.",
+        "invalid-student-key"
+      );
+    }
+
+    if (!isObject(attempt)) {
+      throw makeError(
+        "بيانات محاولة الاختبار غير صالحة.",
+        "invalid-attempt"
+      );
+    }
+
+    const safeAttempt =
+      stripInternalKeys(attempt);
+
+    if (
+      !hasValue(safeAttempt.createdAt) &&
+      !hasValue(safeAttempt.startedAt)
+    ) {
+      safeAttempt.startedAt =
+        timestampValue();
+    }
+
+    safeAttempt.updatedAt =
+      timestampValue();
+
+    const result = await push(
+      PATHS.quizAttempts +
+        "/" +
+        studentKey,
+      safeAttempt
+    );
+
+    return result.key;
+  }
+
+  async function updateQuizAttempt(
+    studentKey,
+    attemptId,
+    data
+  ) {
+    if (!studentKey || !attemptId) {
+      throw makeError(
+        "بيانات محاولة الاختبار غير مكتملة.",
+        "invalid-attempt-id"
+      );
+    }
+
+    const safeData =
+      stripInternalKeys(data || {});
+
+    safeData.updatedAt =
+      timestampValue();
+
+    return update(
+      PATHS.quizAttempts +
+        "/" +
+        studentKey +
+        "/" +
+        attemptId,
+      safeData
+    );
+  }
+
+  /* =========================================================
+     RESULTS
+     ========================================================= */
+
+  function resultMatchesStudent(
+    result,
+    key,
+    student
+  ) {
+    if (!isObject(result)) {
+      return false;
+    }
+
+    const candidates = [];
+
+    if (student) {
+      candidates.push(
+        {
+          type: "key",
+          value: firstValue(
+            student._key,
+            student.key
+          )
+        },
+        {
+          type: "uid",
+          value: firstValue(
+            student.uid,
+            student.authUid
+          )
+        },
+        {
+          type: "id",
+          value: firstValue(
+            student.id,
+            student.studentId
+          )
+        },
+        {
+          type: "phone",
+          value: firstValue(
+            student.phone,
+            student.mobile,
+            student.phoneNumber
+          )
+        },
+        {
+          type: "email",
+          value: student.email
+        }
+      );
+    }
+
+    candidates.push({
+      type: "key",
+      value: key
+    });
+
+    return candidates.some(
+      function (candidate) {
+        const candidateValue =
+          candidate.type === "phone"
+            ? normalizePhone(
+                candidate.value
+              )
+            : normalizeIdentifier(
+                candidate.value
+              );
+
+        if (!candidateValue) {
+          return false;
+        }
+
+        if (candidate.type === "key") {
+          return (
+            normalizeIdentifier(
+              key
+            ) === candidateValue ||
+            normalizeIdentifier(
+              result.studentKey
+            ) === candidateValue ||
+            normalizeIdentifier(
+              result.studentId
+            ) === candidateValue ||
+            normalizeIdentifier(
+              result.userId
+            ) === candidateValue
+          );
+        }
+
+        if (candidate.type === "uid") {
+          return (
+            normalizeIdentifier(
+              result.uid
+            ) === candidateValue ||
+            normalizeIdentifier(
+              result.userId
+            ) === candidateValue
+          );
+        }
+
+        if (candidate.type === "id") {
+          return (
+            normalizeIdentifier(
+              result.id
+            ) === candidateValue ||
+            normalizeIdentifier(
+              result.studentId
+            ) === candidateValue ||
+            normalizeIdentifier(
+              result.userId
+            ) === candidateValue
+          );
+        }
+
+        if (candidate.type === "phone") {
+          return (
+            normalizePhone(
+              result.phone
+            ) === candidateValue ||
+            normalizePhone(
+              result.mobile
+            ) === candidateValue ||
+            normalizePhone(
+              result.phoneNumber
+            ) === candidateValue
+          );
+        }
+
+        if (candidate.type === "email") {
+          return (
+            normalizeIdentifier(
+              result.email
+            ) === candidateValue
+          );
+        }
+
+        return false;
+      }
+    );
+  }
+
+  function normalizeResult(item) {
+    if (!isObject(item)) {
+      return null;
+    }
+
+    const result = cloneObject(item);
+
+    result._key = firstValue(
+      item._key,
+      item.key,
+      item.id,
+      ""
+    );
+
+    result.key = result._key;
+
+    result.id = firstValue(
+      item.id,
+      result._key
+    );
+
+    result.title =
+      firstValue(
+        item.title,
+        item.quizTitle,
+        item.name,
+        "نتيجة"
+      );
+
+    result.quizId =
+      firstValue(
+        item.quizId,
+        item.quizID,
+        item.quiz,
+        ""
+      );
+
+    result.score =
+      hasValue(item.score)
+        ? numericValue(item.score, 0)
+        : null;
+
+    result.percentage =
+      hasValue(item.percentage)
+        ? numericValue(item.percentage, 0)
+        : null;
+
+    result.passed =
+      hasValue(item.passed)
+        ? Boolean(item.passed)
+        : null;
+
+    return result;
+  }
+
+  async function getLegacyResults(
+    student
+  ) {
+    const data =
+      await get(PATHS.legacyResults);
+
+    if (!data) {
+      return [];
+    }
+
+    return toArray(data)
+      .filter(function (item) {
+        const key =
+          firstValue(
+            item._key,
+            item.key
+          );
+
+        return resultMatchesStudent(
+          item,
+          key,
+          student
+        );
+      })
+      .map(normalizeResult)
+      .filter(Boolean)
+      .sort(sortNewestFirst);
+  }
+
+  async function getResults(
+    student
+  ) {
+    const data =
+      await get(PATHS.results);
+
+    if (!data) {
+      return [];
+    }
+
+    return toArray(data)
+      .filter(function (item) {
+        const key =
+          firstValue(
+            item._key,
+            item.key
+          );
+
+        return resultMatchesStudent(
+          item,
+          key,
+          student
+        );
+      })
+      .map(normalizeResult)
+      .filter(Boolean)
+      .sort(sortNewestFirst);
+  }
+
+  async function getAllResultsForStudent(
+    student
+  ) {
+    const current =
+      await getResults(student);
+
+    const legacy =
+      await getLegacyResults(student);
+
+    const combined =
+      current.concat(legacy);
+
+    const seen = {};
+    const unique = [];
+
+    combined.forEach(function (item) {
+      const identifier =
+        firstValue(
+          item.id,
+          item._key,
+          item.quizId +
+            "_" +
+            item.createdAt
+        );
+
+      if (!seen[identifier]) {
+        seen[identifier] = true;
+        unique.push(item);
+      }
+    });
+
+    return unique.sort(sortNewestFirst);
+  }
+
+  /* =========================================================
+     NOTIFICATIONS
+     ========================================================= */
+
+  function notificationMatchesStudent(
+    notification,
+    student
+  ) {
+    if (!isObject(notification)) {
+      return false;
+    }
+
+    if (!student) {
+      return true;
+    }
+
+    const target =
+      normalizeIdentifier(
+        firstValue(
+          notification.target,
+          notification.audience,
+          notification.targetType,
+          "all"
+        )
+      );
+
+    if (
+      [
+        "all",
+        "everyone",
+        "public",
+        "all_students",
+        "الكل",
+        "الجميع"
+      ].includes(target)
+    ) {
+      return true;
+    }
+
+    const studentKey =
+      firstValue(
+        student._key,
+        student.key
+      );
+
+    const studentId =
+      firstValue(
+        student.id,
+        student.studentId,
+        student.userId
+      );
+
+    const studentPhone =
+      normalizePhone(
+        firstValue(
+          student.phone,
+          student.mobile,
+          student.phoneNumber
+        )
+      );
+
+    const notificationStudent =
+      firstValue(
+        notification.studentId,
+        notification.studentKey,
+        notification.userId,
+        notification.uid,
+        notification.phone
+      );
+
+    if (notificationStudent) {
+      const normalizedTarget =
+        notification.phone
+          ? normalizePhone(
+              notification.phone
+            )
+          : normalizeIdentifier(
+              notificationStudent
+            );
+
+      if (
+        normalizedTarget ===
+          normalizeIdentifier(studentKey) ||
+        normalizedTarget ===
+          normalizeIdentifier(studentId) ||
+        normalizedTarget ===
+          normalizeIdentifier(student.uid) ||
+        normalizedTarget ===
+          normalizeIdentifier(student.email) ||
+        normalizedTarget ===
+          studentPhone
+      ) {
+        return true;
+      }
+
+      return false;
+    }
+
+    const notificationGrade =
+      firstValue(
+        notification.grade,
+        notification.year,
+        notification.level
+      );
+
+    if (
+      notificationGrade &&
+      student.grade
+    ) {
+      return (
+        normalizeIdentifier(
+          notificationGrade
+        ) ===
+        normalizeIdentifier(
+          student.grade
+        )
+      );
+    }
+
+    if (
+      notification.grade ||
+      notification.year ||
+      notification.level
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  async function getNotifications(
+    student
+  ) {
+    const data =
+      await get(PATHS.notifications);
+
+    if (!data) {
+      return [];
+    }
+
+    const notifications =
+      toArray(data)
+        .filter(function (item) {
+          return notificationMatchesStudent(
+            item,
+            student
+          );
+        })
+        .map(function (item) {
+          const result =
+            cloneObject(item);
+
+          result._key =
+            firstValue(
+              item._key,
+              item.key,
+              item.id,
+              ""
+            );
+
+          result.key =
+            result._key;
+
+          result.id =
+            firstValue(
+              item.id,
+              result._key
+            );
+
+          result.title =
+            firstValue(
+              item.title,
+              item.name,
+              "إشعار"
+            );
+
+          result.message =
+            firstValue(
+              item.message,
+              item.body,
+              item.description,
+              item.text,
+              ""
+            );
+
+          return result;
+        });
+
+    notifications.sort(
+      sortNewestFirst
+    );
+
+    return notifications;
+  }
+
+  async function isNotificationRead(
+    studentKey,
+    notificationId
+  ) {
+    if (
+      !studentKey ||
+      !notificationId
+    ) {
+      return false;
+    }
+
+    const data =
+      await get(
+        PATHS.notificationReads +
+          "/" +
+          studentKey +
+          "/" +
+          notificationId
+      );
+
+    return Boolean(
+      data &&
+        (
+          data.read === true ||
+          data === true
+        )
+    );
+  }
+
+  async function markNotificationRead(
+    studentKey,
+    notificationId
+  ) {
+    if (
+      !studentKey ||
+      !notificationId
+    ) {
+      throw makeError(
+        "بيانات الإشعار غير مكتملة.",
+        "invalid-notification"
+      );
+    }
+
+    return set(
+      PATHS.notificationReads +
+        "/" +
+        studentKey +
+        "/" +
+        notificationId,
+      {
+        read: true,
+        readAt: timestampValue()
+      }
+    );
+  }
+
+  async function getUnreadNotifications(
+    student
+  ) {
+    const notifications =
+      await getNotifications(student);
+
+    const studentKey =
+      student &&
+      firstValue(
+        student._key,
+        student.key
+      );
+
+    if (!studentKey) {
+      return notifications;
+    }
+
+    const result = [];
+
+    for (
+      let i = 0;
+      i < notifications.length;
+      i++
+    ) {
+      const notification =
+        notifications[i];
+
+      const read =
+        await isNotificationRead(
+          studentKey,
+          firstValue(
+            notification.id,
+            notification._key
+          )
+        );
+
+      if (!read) {
+        result.push(notification);
+      }
+    }
+
+    return result;
+  }
+
+  /* =========================================================
+     SUPPORT
+     ========================================================= */
+
+  async function getSupportSettings() {
+    const data =
+      await get(PATHS.support);
+
+    if (!isObject(data)) {
+      return {};
+    }
+
+    return cloneObject(data);
+  }
+
+  async function createSupportTicket(
+    ticket
+  ) {
+    if (!isObject(ticket)) {
+      throw makeError(
+        "بيانات طلب الدعم غير صالحة.",
+        "invalid-ticket"
+      );
+    }
+
+    const safeTicket =
+      stripInternalKeys(ticket);
+
+    safeTicket.status =
+      firstValue(
+        safeTicket.status,
+        "open"
+      );
+
+    safeTicket.createdAt =
+      firstValue(
+        safeTicket.createdAt,
+        timestampValue()
+      );
+
+    safeTicket.updatedAt =
+      timestampValue();
+
+    const result =
+      await push(
+        PATHS.supportTickets,
+        safeTicket
+      );
+
+    return result.key;
+  }
+
+  async function getSupportTickets(
+    student
+  ) {
+    const data =
+      await get(PATHS.supportTickets);
+
+    if (!data) {
+      return [];
+    }
+
+    const studentKey =
+      student &&
+      firstValue(
+        student._key,
+        student.key
+      );
+
+    const studentPhone =
+      student &&
+      normalizePhone(
+        firstValue(
+          student.phone,
+          student.mobile,
+          student.phoneNumber
+        )
+      );
+
+    const studentEmail =
+      student &&
+      normalizeIdentifier(
+        student.email
+      );
+
+    return toArray(data)
+      .filter(function (ticket) {
+        if (!student) {
+          return true;
+        }
+
+        const ticketStudent =
+          normalizeIdentifier(
+            firstValue(
+              ticket.studentId,
+              ticket.studentKey,
+              ticket.userId
+            )
+          );
+
+        const ticketPhone =
+          normalizePhone(
+            ticket.phone
+          );
+
+        const ticketEmail =
+          normalizeIdentifier(
+            ticket.email
+          );
+
+        return (
+          ticketStudent ===
+            normalizeIdentifier(
+              studentKey
+            ) ||
+          ticketStudent ===
+            normalizeIdentifier(
+              student.id
+            ) ||
+          ticketStudent ===
+            normalizeIdentifier(
+              student.studentId
+            ) ||
+          ticketStudent ===
+            normalizeIdentifier(
+              student.userId
+            ) ||
+          (
+            ticketPhone &&
+            ticketPhone ===
+              studentPhone
+          ) ||
+          (
+            ticketEmail &&
+            ticketEmail ===
+              studentEmail
+          )
+        );
+      })
+      .sort(sortNewestFirst);
+  }
+
+  /* =========================================================
+     CONTENT VIEWS
+     ========================================================= */
+
+  async function getContentViews(
+    studentKey
+  ) {
+    if (!studentKey) {
+      return {};
+    }
+
+    const data =
+      await get(
+        PATHS.contentViews +
+          "/" +
+          studentKey
+      );
+
+    return isObject(data)
+      ? data
+      : {};
+  }
+
+  async function saveContentView(
+    studentKey,
+    contentId,
+    data
+  ) {
+    if (
+      !studentKey ||
+      !contentId
+    ) {
+      throw makeError(
+        "بيانات المشاهدة غير مكتملة.",
+        "invalid-content-view"
+      );
+    }
+
+    const payload =
+      isObject(data)
+        ? stripInternalKeys(data)
+        : {};
+
+    payload.updatedAt =
+      timestampValue();
+
+    if (!hasValue(payload.viewedAt)) {
+      payload.viewedAt =
+        timestampValue();
+    }
+
+    return update(
+      PATHS.contentViews +
+        "/" +
+        studentKey +
+        "/" +
+        contentId,
+      payload
+    );
+  }
+
+  /* =========================================================
+     SETTINGS / STATS
+     ========================================================= */
+
+  async function getSettings() {
+    const data =
+      await get(PATHS.settings);
+
+    return isObject(data)
+      ? data
+      : {};
+  }
+
+  async function getStats() {
+    const data =
+      await get(PATHS.stats);
+
+    return isObject(data)
+      ? data
+      : {};
+  }
+
+  /* =========================================================
+     PASSWORD RESET REQUESTS
+     ========================================================= */
+
+  async function createPasswordResetRequest(
+    data
+  ) {
+    if (!isObject(data)) {
+      throw makeError(
+        "بيانات طلب إعادة تعيين كلمة المرور غير صالحة.",
+        "invalid-reset-request"
+      );
+    }
+
+    const payload =
+      stripInternalKeys(data);
+
+    payload.createdAt =
+      firstValue(
+        payload.createdAt,
+        timestampValue()
+      );
+
+    payload.status =
+      firstValue(
+        payload.status,
+        "pending"
+      );
+
+    return push(
+      PATHS.passwordResetRequests,
+      payload
+    );
+  }
+
+  /* =========================================================
+     GENERIC CHILD HELPERS
+     ========================================================= */
+
+  async function getChild(
+    path,
+    childPath
+  ) {
+    const fullPath =
+      String(path).replace(/\/+$/, "") +
+      "/" +
+      String(childPath).replace(/^\/+/, "");
+
+    return get(fullPath);
+  }
+
+  async function updateChild(
+    path,
+    childPath,
+    data
+  ) {
+    const fullPath =
+      String(path).replace(/\/+$/, "") +
+      "/" +
+      String(childPath).replace(/^\/+/, "");
+
+    return update(fullPath, data);
+  }
+
+  /* =========================================================
+     PUBLIC API
+     ========================================================= */
+
+  const FirebaseDatabase = {
+    version: "1.0.0",
+
+    paths: PATHS,
+
+    ready: ready,
+
+    ref: ref,
+    section: section,
+
+    get: get,
+    exists: exists,
+    listen: listen,
+    set: set,
+    update: update,
+    push: push,
+    getChild: getChild,
+    updateChild: updateChild,
+
+    getCurrentUser: getCurrentUser,
+
+    getLocalIdentity:
+      getLocalIdentity,
+
+    getIdentityCandidates:
+      getIdentityCandidates,
+
+    students: {
+      getAll: getStudents,
+      getRaw: getStudentsRaw,
+      getByKey: getStudentByKey,
+      find: findStudent,
+      findByPhone: findStudentByPhone,
+      getCurrent: getCurrentStudent,
+      update: updateStudent,
+      linkToAuth: linkStudentToAuth
+    },
+
+    files: {
+      getAll: getFiles,
+      normalize: normalizeFile
+    },
+
+    videos: {
+      getAll: getVideos,
+      normalize: normalizeVideo,
+      getUrlType: getVideoUrlType
+    },
+
+    quizzes: {
+      getAll: getQuizzes,
+      getById: getQuizById,
+      normalize: normalizeQuiz,
+      normalizeQuestion:
+        normalizeQuestion
+    },
+
+    attempts: {
+      getAll: getQuizAttempts,
+      getById: getQuizAttempt,
+      create: saveQuizAttempt,
+      update: updateQuizAttempt,
+      normalize: normalizeAttempt
+    },
+
+    results: {
+      getAll: getResults,
+      getLegacy: getLegacyResults,
+      getCombined:
+        getAllResultsForStudent,
+      normalize: normalizeResult
+    },
+
+    notifications: {
+      getAll: getNotifications,
+      getUnread:
+        getUnreadNotifications,
+      isRead:
+        isNotificationRead,
+      markRead:
+        markNotificationRead
+    },
+
+    support: {
+      getSettings:
+        getSupportSettings,
+      createTicket:
+        createSupportTicket,
+      getTickets:
+        getSupportTickets
+    },
+
+    contentViews: {
+      getAll:
+        getContentViews,
+      save:
+        saveContentView
+    },
+
+    settings: {
+      getAll:
+        getSettings
+    },
+
+    stats: {
+      getAll:
+        getStats
+    },
+
+    passwordResetRequests: {
+      create:
+        createPasswordResetRequest
+    },
+
+    helpers: {
+      isObject,
+      hasValue,
+      safeString,
+      cloneObject,
+      normalizeIdentifier,
+      normalizePhone,
+      toArray,
+      firstValue,
+      timestampValue,
+      getErrorMessage,
+      makeError,
+      normalizeStatus,
+      isPublished,
+      numericValue,
+      dateValue,
+      orderValue,
+      sortByOrderAndDate,
+      sortNewestFirst
+    }
+  };
+
+  /* =========================================================
+     REGISTER MODULE
+     ========================================================= */
+
+  if (
+    Core.modules &&
+    typeof Core.modules === "object"
+  ) {
+    Core.modules.database =
+      FirebaseDatabase;
+  }
+
+  window.FirebaseDatabase =
+    FirebaseDatabase;
+
+  window.FirebaseDatabaseReady = true;
+
+  /* =========================================================
+     OPTIONAL GLOBAL READY PROMISE
+     ========================================================= */
+
+  window.FirebaseDatabaseReadyPromise =
+    Promise.resolve(
+      FirebaseDatabase
+    );
+
+  console.log(
+    "Firebase Database Layer initialized successfully."
+  );
+  console.log(
+    "Firebase Database: legacy + new data compatibility enabled."
+  );
+
+})(window);

@@ -1,0 +1,2301 @@
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d1a">
+  <title>الملخصات | Cap Abdelnaseer</title>  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #080d1a;
+      --card: rgba(18, 27, 48, .92);
+      --card2: #111a2e;
+      --border: rgba(255,255,255,.08);
+      --text: #f7f9ff;
+      --muted: #98a4bd;
+      --primary: #6c63ff;
+      --primary2: #8b7cff;
+      --success: #28c76f;
+      --danger: #ff5570;
+      --warning: #ffb020;
+      --info: #00b8ff;
+      --radius: 22px;
+      --shadow: 0 20px 60px rgba(0,0,0,.30);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Cairo", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(108,99,255,.18), transparent 28%),
+        radial-gradient(circle at 90% 15%, rgba(0,200,255,.10), transparent 24%),
+        linear-gradient(135deg, #070b16 0%, #0b1020 48%, #0a1020 100%);
+    }
+
+    button,
+    input,
+    select {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #080d1a;
+      transition: .35s ease;
+    }
+
+    .page-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-box {
+      text-align: center;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 14px;
+      border: 4px solid rgba(255,255,255,.10);
+      border-top-color: var(--primary2);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    .loader-box span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 270px;
+      padding: 24px 18px;
+      background: rgba(9,14,27,.94);
+      border-left: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      z-index: 100;
+      transition: .3s ease;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 10px 25px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .brand-logo {
+      width: 45px;
+      height: 45px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 17px;
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      box-shadow: 0 10px 30px rgba(108,99,255,.30);
+    }
+
+    .brand-text strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .brand-text span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .nav-title {
+      color: #68758f;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 0 12px 8px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 7px;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 48px;
+      padding: 10px 13px;
+      border-radius: 14px;
+      color: #aeb8ce;
+      transition: .2s ease;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      color: #fff;
+      background: rgba(108,99,255,.13);
+    }
+
+    .nav-icon {
+      width: 28px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .sidebar-bottom {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .logout-btn {
+      width: 100%;
+      border: 0;
+      background: rgba(255,85,112,.08);
+      color: #ff7890;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .main {
+      width: calc(100% - 270px);
+      margin-right: 270px;
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .mobile-menu {
+      display: none;
+      width: 45px;
+      height: 45px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: #fff;
+      border-radius: 13px;
+      font-size: 20px;
+    }
+
+    .page-title h1 {
+      font-size: 27px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .page-title p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .top-user {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      background: rgba(18,27,48,.65);
+      border-radius: 16px;
+    }
+
+    .avatar-small {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), #00b8ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+    }
+
+    .top-user-text strong {
+      display: block;
+      font-size: 12px;
+    }
+
+    .top-user-text span {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 29px;
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 85% 20%, rgba(108,99,255,.24), transparent 30%),
+        linear-gradient(135deg, rgba(19,29,51,.95), rgba(11,19,36,.95));
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+    }
+
+    .hero-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 27px;
+      background: rgba(108,99,255,.13);
+      border: 1px solid rgba(108,99,255,.20);
+      margin-bottom: 16px;
+    }
+
+    .hero h2 {
+      font-size: 23px;
+      font-weight: 900;
+      margin-bottom: 7px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 2;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px,1fr) auto;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-icon {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: #72809a;
+      font-size: 16px;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      min-height: 51px;
+      border-radius: 15px;
+      border: 1px solid var(--border);
+      outline: none;
+      background: rgba(15,23,42,.78);
+      color: #fff;
+      padding: 12px 43px 12px 14px;
+      font-size: 12px;
+      transition: .2s ease;
+    }
+
+    .search-input:focus {
+      border-color: rgba(108,99,255,.75);
+      box-shadow: 0 0 0 4px rgba(108,99,255,.09);
+    }
+
+    .term-tabs {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+
+    .term-btn {
+      min-height: 51px;
+      border-radius: 14px;
+      padding: 9px 16px;
+      color: #aeb8ce;
+      background: rgba(15,23,42,.78);
+      border: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 800;
+      transition: .2s ease;
+    }
+
+    .term-btn:hover,
+    .term-btn.active {
+      color: #fff;
+      background: rgba(108,99,255,.15);
+      border-color: rgba(108,99,255,.30);
+    }
+
+    .summary-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .result-count {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .result-count strong {
+      color: #fff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: 17px;
+    }
+
+    .summary-card {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 260px;
+      padding: 20px;
+      border-radius: 19px;
+      background: linear-gradient(145deg, rgba(19,29,51,.92), rgba(12,20,36,.90));
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: .22s ease;
+    }
+
+    .summary-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(108,99,255,.27);
+    }
+
+    .summary-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .summary-icon {
+      width: 49px;
+      height: 49px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(108,99,255,.11);
+      border: 1px solid rgba(108,99,255,.13);
+      font-size: 21px;
+      flex: 0 0 49px;
+    }
+
+    .summary-badge {
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 9px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .summary-badge.free {
+      color: #5ee898;
+      background: rgba(40,199,111,.09);
+    }
+
+    .summary-badge.paid {
+      color: #ffc45c;
+      background: rgba(255,176,32,.09);
+    }
+
+    .summary-card h3 {
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.7;
+      margin-bottom: 6px;
+    }
+
+    .summary-description {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.9;
+      min-height: 39px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .summary-meta {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin: 14px 0;
+    }
+
+    .meta-item {
+      padding: 5px 8px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.035);
+      color: #8f9bb3;
+      font-size: 9px;
+    }
+
+    .summary-footer {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .summary-date {
+      color: #68758f;
+      font-size: 9px;
+    }
+
+    .open-btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 8px 12px;
+      background: rgba(108,99,255,.12);
+      color: #aaa3ff;
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .open-btn:hover {
+      background: rgba(108,99,255,.20);
+    }
+
+    .skeleton {
+      min-height: 260px;
+      border-radius: 19px;
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.035) 25%,
+          rgba(255,255,255,.07) 50%,
+          rgba(255,255,255,.035) 75%
+        );
+      background-size: 200% 100%;
+      animation: shimmer 1.3s infinite;
+    }
+
+    @keyframes shimmer {
+      from {
+        background-position: 200% 0;
+      }
+
+      to {
+        background-position: -200% 0;
+      }
+    }
+
+    .state {
+      display: none;
+      padding: 45px 20px;
+      text-align: center;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: rgba(18,27,48,.60);
+    }
+
+    .state.show {
+      display: block;
+    }
+
+    .state-icon {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 13px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(108,99,255,.10);
+      font-size: 24px;
+    }
+
+    .state h3 {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .state p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.9;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 35px 10px 10px;
+      color: #56627a;
+      font-size: 10px;
+    }
+
+    .toast-container {
+      position: fixed;
+      left: 22px;
+      bottom: 22px;
+      z-index: 10000;
+      display: grid;
+      gap: 10px;
+      max-width: min(380px,calc(100vw - 44px));
+    }
+
+    .toast {
+      padding: 13px 16px;
+      border-radius: 14px;
+      background: #141e34;
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      font-size: 12px;
+      animation: toastIn .25s ease;
+    }
+
+    .toast.error {
+      border-color: rgba(255,85,112,.25);
+    }
+
+    .toast.success {
+      border-color: rgba(40,199,111,.25);
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 90;
+    }
+
+    @media (max-width: 1100px) {
+      .grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 850px) {
+      .sidebar {
+        transform: translateX(100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .mobile-overlay.show {
+        display: block;
+      }
+
+      .main {
+        width: 100%;
+        margin-right: 0;
+        padding: 20px 15px;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .top-user {
+        display: none;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .page-title h1 {
+        font-size: 22px;
+      }
+
+      .hero {
+        padding: 22px 19px;
+      }
+
+      .hero h2 {
+        font-size: 20px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .term-tabs {
+        width: 100%;
+      }
+
+      .term-btn {
+        flex: 1;
+        min-width: 70px;
+      }
+
+      .summary-bar {
+        align-items: flex-start;
+      }
+    }
+  </style></head><body>  <div class="page-loader" id="pageLoader">
+    <div class="loader-box">
+      <div class="spinner"></div>
+      <span>جاري تحميل الملخصات...</span>
+    </div>
+  </div>  <div class="mobile-overlay" id="mobileOverlay"></div>  <div class="app"><aside class="sidebar" id="sidebar">
+
+  <div class="brand">
+    <div class="brand-logo">CA</div>
+
+    <div class="brand-text">
+      <strong>Cap Abdelnaseer</strong>
+      <span>المنصة التعليمية</span>
+    </div>
+  </div>
+
+  <div class="nav-title">القائمة الرئيسية</div>
+
+  <nav class="nav">
+
+    <a href="dashboard.html">
+      <span class="nav-icon">⌂</span>
+      <span>الرئيسية</span>
+    </a>
+
+    <a href="courses.html">
+      <span class="nav-icon">▣</span>
+      <span>المواد الدراسية</span>
+    </a>
+
+    <a href="files.html">
+      <span class="nav-icon">▤</span>
+      <span>الملفات</span>
+    </a>
+
+    <a href="videos.html">
+      <span class="nav-icon">▶</span>
+      <span>الفيديوهات</span>
+    </a>
+
+    <a href="quizzes.html">
+      <span class="nav-icon">✓</span>
+      <span>الاختبارات</span>
+    </a>
+
+    <a href="results.html">
+      <span class="nav-icon">◈</span>
+      <span>النتائج</span>
+    </a>
+
+    <a href="notifications.html">
+      <span class="nav-icon">♢</span>
+      <span>الإشعارات</span>
+    </a>
+
+    <a href="profile.html">
+      <span class="nav-icon">♙</span>
+      <span>الملف الشخصي</span>
+    </a>
+
+    <a href="support.html">
+      <span class="nav-icon">?</span>
+      <span>الدعم والمساعدة</span>
+    </a>
+
+    <a href="summaries.html" class="active">
+      <span class="nav-icon">☰</span>
+      <span>الملخصات</span>
+    </a>
+
+  </nav>
+
+  <div class="sidebar-bottom">
+    <button class="logout-btn" id="logoutButton">
+      تسجيل الخروج
+    </button>
+  </div>
+
+</aside>
+
+<main class="main">
+
+  <header class="topbar">
+
+    <div style="display:flex;align-items:center;gap:13px;">
+
+      <button class="mobile-menu" id="mobileMenuButton">
+        ☰
+      </button>
+
+      <div class="page-title">
+        <h1>الملخصات</h1>
+        <p>كل الملخصات والمراجعات الخاصة بالمواد الدراسية.</p>
+      </div>
+
+    </div>
+
+    <div class="top-user">
+
+      <div class="avatar-small" id="topAvatar">
+        ؟
+      </div>
+
+      <div class="top-user-text">
+        <strong id="topUserName">جاري التحميل...</strong>
+        <span>حساب الطالب</span>
+      </div>
+
+    </div>
+
+  </header>
+
+  <section class="hero">
+
+    <div class="hero-content">
+
+      <div class="hero-icon">
+        📚
+      </div>
+
+      <h2>
+        راجع دروسك بشكل أسرع
+      </h2>
+
+      <p>
+        هنا هتلاقي الملخصات المتاحة ليك حسب المادة والترم.
+        استخدم البحث واختار الترم للوصول للمحتوى المطلوب بسهولة.
+      </p>
+
+    </div>
+
+  </section>
+
+  <section class="toolbar">
+
+    <div class="search-box">
+
+      <span class="search-icon">
+        ⌕
+      </span>
+
+      <input
+        class="search-input"
+        id="searchInput"
+        type="search"
+        placeholder="ابحث باسم الملخص أو المادة..."
+        autocomplete="off"
+      >
+
+    </div>
+
+    <div class="term-tabs">
+
+      <button class="term-btn active" data-term="all">
+        الكل
+      </button>
+
+      <button class="term-btn" data-term="1">
+        الترم الأول
+      </button>
+
+      <button class="term-btn" data-term="2">
+        الترم الثاني
+      </button>
+
+      <button class="term-btn" data-term="3">
+        الترم الثالث
+      </button>
+
+      <button class="term-btn" data-term="4">
+        الترم الرابع
+      </button>
+
+    </div>
+
+  </section>
+
+  <div class="summary-bar">
+    <div class="result-count" id="resultCount">
+      جاري تحميل الملخصات...
+    </div>
+  </div>
+
+  <section id="loadingGrid" class="grid">
+
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+
+  </section>
+
+  <section
+    class="grid"
+    id="summaryGrid"
+    style="display:none;"
+  ></section>
+
+  <section
+    class="state"
+    id="emptyState"
+  >
+
+    <div class="state-icon">
+      📭
+    </div>
+
+    <h3>
+      مفيش ملخصات
+    </h3>
+
+    <p>
+      لم يتم العثور على ملخصات مطابقة للبحث أو الترم المختار.
+    </p>
+
+  </section>
+
+  <section
+    class="state"
+    id="errorState"
+  >
+
+    <div class="state-icon">
+      ⚠️
+    </div>
+
+    <h3>
+      تعذر تحميل الملخصات
+    </h3>
+
+    <p>
+      حصلت مشكلة أثناء تحميل المحتوى. حاول تحديث الصفحة مرة أخرى.
+    </p>
+
+  </section>
+
+  <footer class="footer">
+    Cap Abdelnaseer © 2026 — جميع الحقوق محفوظة
+  </footer>
+
+</main>
+
+  </div>  <div class="toast-container" id="toastContainer"></div>  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>  <script src="firebase-config.js"></script>  <script src="firebase-auth.js"></script>  <script src="firebase-database.js"></script>  <script src="firebase-content.js"></script>  <script src="firebase-features.js"></script>  <script>
+    (() => {
+      "use strict";
+
+      const $ = id => document.getElementById(id);
+
+      const loader = $("pageLoader");
+      const sidebar = $("sidebar");
+      const overlay = $("mobileOverlay");
+      const mobileMenuButton = $("mobileMenuButton");
+
+      const topAvatar = $("topAvatar");
+      const topUserName = $("topUserName");
+
+      const searchInput = $("searchInput");
+      const summaryGrid = $("summaryGrid");
+      const loadingGrid = $("loadingGrid");
+      const emptyState = $("emptyState");
+      const errorState = $("errorState");
+      const resultCount = $("resultCount");
+
+      const toastContainer = $("toastContainer");
+      const logoutButton = $("logoutButton");
+
+      let currentStudent = null;
+      let allSummaries = [];
+      let activeTerm = "all";
+
+      function safeString(value) {
+        if (
+          value === null ||
+          value === undefined
+        ) {
+          return "";
+        }
+
+        return String(value).trim();
+      }
+
+      function firstValue(...values) {
+        for (const value of values) {
+          if (
+            value !== null &&
+            value !== undefined &&
+            safeString(value) !== ""
+          ) {
+            return value;
+          }
+        }
+
+        return "";
+      }
+
+      function hideLoader() {
+        loader?.classList.add("hidden");
+      }
+
+      function toast(message, type = "success") {
+        if (!toastContainer) return;
+
+        const item =
+          document.createElement("div");
+
+        item.className =
+          `toast ${type}`;
+
+        item.textContent = message;
+
+        toastContainer.appendChild(item);
+
+        setTimeout(() => {
+
+          item.style.opacity = "0";
+          item.style.transform =
+            "translateY(10px)";
+
+          setTimeout(() => {
+            item.remove();
+          }, 250);
+
+        }, 3200);
+      }
+
+      function getInitials(name) {
+        const value =
+          safeString(name);
+
+        if (!value) {
+          return "؟";
+        }
+
+        const parts =
+          value
+            .split(/\s+/)
+            .filter(Boolean);
+
+        if (parts.length === 1) {
+          return parts[0].slice(0, 2);
+        }
+
+        return (
+          (parts[0][0] || "") +
+          (parts[1][0] || "")
+        );
+      }
+
+      async function waitForFirebase() {
+        const start =
+          Date.now();
+
+        const timeout =
+          12000;
+
+        while (
+          Date.now() - start <
+          timeout
+        ) {
+
+          const ready =
+            window.FirebaseCoreReady &&
+            window.FirebaseAuthReady &&
+            window.FirebaseDatabaseReady &&
+            window.FirebaseContentReady &&
+            window.FirebaseFeaturesReady;
+
+          if (ready) {
+            return true;
+          }
+
+          await new Promise(
+            resolve =>
+              setTimeout(resolve, 100)
+          );
+        }
+
+        return false;
+      }
+
+      async function getCurrentStudent() {
+        let student = null;
+
+        try {
+
+          if (
+            window.FirebaseFeatures &&
+            typeof window.FirebaseFeatures.getProfile ===
+              "function"
+          ) {
+            student =
+              await window.FirebaseFeatures.getProfile();
+          }
+
+        } catch (error) {
+          console.warn(
+            "Features profile failed:",
+            error
+          );
+        }
+
+        if (!student) {
+
+          try {
+
+            if (
+              window.FirebaseAuth &&
+              typeof window.FirebaseAuth.getCurrentUser ===
+                "function"
+            ) {
+              student =
+                await window.FirebaseAuth.getCurrentUser();
+            }
+
+          } catch (error) {
+            console.warn(
+              "Auth current user failed:",
+              error
+            );
+          }
+        }
+
+        if (!student) {
+
+          try {
+
+            const raw =
+              localStorage.getItem(
+                "currentUser"
+              );
+
+            if (raw) {
+              student =
+                JSON.parse(raw);
+            }
+
+          } catch (_) {}
+        }
+
+        if (!student) {
+
+          try {
+
+            const raw =
+              localStorage.getItem(
+                "student"
+              );
+
+            if (raw) {
+              student =
+                JSON.parse(raw);
+            }
+
+          } catch (_) {}
+        }
+
+        if (!student) {
+
+          try {
+
+            if (
+              window.FirebaseDatabase &&
+              typeof window.FirebaseDatabase.students?.getCurrent ===
+                "function"
+            ) {
+              student =
+                await window.FirebaseDatabase.students.getCurrent();
+            }
+
+          } catch (error) {
+            console.warn(
+              "Database student failed:",
+              error
+            );
+          }
+        }
+
+        return student;
+      }
+
+      function fillStudent(student) {
+
+        currentStudent =
+          student || {};
+
+        const name =
+          firstValue(
+            currentStudent.name,
+            currentStudent.fullName,
+            currentStudent.studentName,
+            currentStudent.displayName,
+            "طالب"
+          );
+
+        topUserName.textContent =
+          name;
+
+        topAvatar.textContent =
+          getInitials(name);
+      }
+
+      function normalizeTerm(value) {
+
+        const raw =
+          safeString(value)
+            .toLowerCase();
+
+        if (!raw) {
+          return "";
+        }
+
+        if (
+          raw.includes("first") ||
+          raw.includes("term 1") ||
+          raw.includes("الاول") ||
+          raw.includes("الأول")
+        ) {
+          return "1";
+        }
+
+        if (
+          raw.includes("second") ||
+          raw.includes("term 2") ||
+          raw.includes("الثاني")
+        ) {
+          return "2";
+        }
+
+        if (
+          raw.includes("third") ||
+          raw.includes("term 3") ||
+          raw.includes("الثالث")
+        ) {
+          return "3";
+        }
+
+        if (
+          raw.includes("fourth") ||
+          raw.includes("term 4") ||
+          raw.includes("الرابع")
+        ) {
+          return "4";
+        }
+
+        const match =
+          raw.match(/[1-4]/);
+
+        return match
+          ? match[0]
+          : raw;
+      }
+
+      function normalizeSummary(item, key = "") {
+
+        const source =
+          item &&
+          typeof item === "object"
+            ? item
+            : {};
+
+        const id =
+          firstValue(
+            source.id,
+            source.summaryId,
+            source.fileId,
+            source.contentId,
+            key
+          );
+
+        const title =
+          firstValue(
+            source.title,
+            source.name,
+            source.summaryTitle,
+            source.fileName,
+            "ملخص"
+          );
+
+        const description =
+          firstValue(
+            source.description,
+            source.details,
+            source.shortDescription,
+            source.about,
+            "ملخص دراسي للمراجعة."
+          );
+
+        const subject =
+          firstValue(
+            source.subject,
+            source.subjectName,
+            source.course,
+            source.courseName,
+            ""
+          );
+
+        const subjectId =
+          firstValue(
+            source.subjectId,
+            source.courseId,
+            source.subjectKey,
+            ""
+          );
+
+        const term =
+          normalizeTerm(
+            firstValue(
+              source.term,
+              source.semester,
+              source.termNumber,
+              source.studyTerm
+            )
+          );
+
+        const grade =
+          firstValue(
+            source.grade,
+            source.year,
+            source.level,
+            source.studyYear,
+            ""
+          );
+
+        const url =
+          firstValue(
+            source.pdfUrl,
+            source.fileUrl,
+            source.downloadURL,
+            source.downloadUrl,
+            source.url,
+            source.link
+          );
+
+        const type =
+          safeString(
+            firstValue(
+              source.type,
+              source.fileType,
+              source.contentType,
+              "pdf"
+            )
+          ).toLowerCase();
+
+        const published =
+          source.published !== false &&
+          source.active !== false &&
+          safeString(source.status)
+            .toLowerCase() !==
+            "hidden";
+
+        const isPaid =
+          source.paid === true ||
+          source.isPaid === true ||
+          safeString(
+            source.access
+          ).toLowerCase() === "paid" ||
+          safeString(
+            source.type
+          ).toLowerCase() === "paid";
+
+        const createdAt =
+          firstValue(
+            source.createdAt,
+            source.updatedAt,
+            source.timestamp,
+            source.date,
+            0
+          );
+
+        return {
+          ...source,
+          id: safeString(id),
+          title: safeString(title),
+          description: safeString(description),
+          subject: safeString(subject),
+          subjectId: safeString(subjectId),
+          term,
+          grade: safeString(grade),
+          url: safeString(url),
+          type,
+          published,
+          isPaid,
+          createdAt
+        };
+      }
+
+      function looksLikeSummary(item) {
+
+        const source =
+          item &&
+          typeof item === "object"
+            ? item
+            : {};
+
+        const type =
+          safeString(
+            firstValue(
+              source.type,
+              source.fileType,
+              source.contentType
+            )
+          ).toLowerCase();
+
+        const category =
+          safeString(
+            firstValue(
+              source.category,
+              source.contentCategory,
+              source.kind
+            )
+          ).toLowerCase();
+
+        const title =
+          safeString(
+            firstValue(
+              source.title,
+              source.name
+            )
+          ).toLowerCase();
+
+        const explicitSummary =
+          source.summary === true ||
+          source.isSummary === true ||
+          source.summaryType === true;
+
+        if (explicitSummary) {
+          return true;
+        }
+
+        if (
+          category.includes("summary") ||
+          category.includes("ملخص")
+        ) {
+          return true;
+        }
+
+        if (
+          type.includes("summary") ||
+          type.includes("ملخص")
+        ) {
+          return true;
+        }
+
+        if (
+          title.includes("summary") ||
+          title.includes("ملخص") ||
+          title.includes("مراجعة")
+        ) {
+          return true;
+        }
+
+        return false;
+      }
+
+      function objectToArray(data) {
+
+        if (!data) {
+          return [];
+        }
+
+        if (Array.isArray(data)) {
+          return data.map(
+            (item, index) =>
+              normalizeSummary(
+                item,
+                String(index)
+              )
+          );
+        }
+
+        if (
+          typeof data === "object"
+        ) {
+
+          return Object.entries(data)
+            .map(
+              ([key, value]) =>
+                normalizeSummary(
+                  value,
+                  key
+                )
+            );
+        }
+
+        return [];
+      }
+
+      function dedupe(items) {
+
+        const map =
+          new Map();
+
+        for (const item of items) {
+
+          const identity =
+            safeString(
+              item.id
+            ) ||
+            [
+              item.title,
+              item.subject,
+              item.term,
+              item.url
+            ]
+              .map(safeString)
+              .join("|");
+
+          if (!identity) {
+            continue;
+          }
+
+          if (!map.has(identity)) {
+            map.set(
+              identity,
+              item
+            );
+          }
+        }
+
+        return Array.from(
+          map.values()
+        );
+      }
+
+      function sortSummaries(items) {
+
+        return items.sort(
+          (a, b) => {
+
+            const aDate =
+              Number(
+                a.createdAt
+              ) || 0;
+
+            const bDate =
+              Number(
+                b.createdAt
+              ) || 0;
+
+            if (
+              aDate !== bDate
+            ) {
+              return bDate - aDate;
+            }
+
+            return a.title.localeCompare(
+              b.title,
+              "ar"
+            );
+          }
+        );
+      }
+
+      async function loadSummaries() {
+
+        const collected = [];
+
+        try {
+
+          if (
+            window.FirebaseFeatures &&
+            typeof window.FirebaseFeatures.getFiles ===
+              "function"
+          ) {
+
+            const data =
+              await window.FirebaseFeatures.getFiles();
+
+            const items =
+              objectToArray(data)
+                .filter(
+                  item =>
+                    item.published &&
+                    looksLikeSummary(
+                      item
+                    )
+                );
+
+            collected.push(
+              ...items
+            );
+          }
+
+        } catch (error) {
+
+          console.warn(
+            "Features summaries failed:",
+            error
+          );
+
+        }
+
+        if (
+          collected.length === 0
+        ) {
+
+          try {
+
+            if (
+              window.FirebaseContent &&
+              typeof window.FirebaseContent.getFiles ===
+                "function"
+            ) {
+
+              const data =
+                await window.FirebaseContent.getFiles();
+
+              const items =
+                objectToArray(data)
+                  .filter(
+                    item =>
+                      item.published &&
+                      looksLikeSummary(
+                        item
+                      )
+                  );
+
+              collected.push(
+                ...items
+              );
+            }
+
+          } catch (error) {
+
+            console.warn(
+              "Content summaries failed:",
+              error
+            );
+
+          }
+        }
+
+        if (
+          collected.length === 0
+        ) {
+
+          try {
+
+            if (
+              window.FirebaseDatabase &&
+              typeof window.FirebaseDatabase.files?.getAll ===
+                "function"
+            ) {
+
+              const data =
+                await window.FirebaseDatabase.files.getAll();
+
+              const items =
+                objectToArray(data)
+                  .filter(
+                    item =>
+                      item.published &&
+                      looksLikeSummary(
+                        item
+                      )
+                  );
+
+              collected.push(
+                ...items
+              );
+            }
+
+          } catch (error) {
+
+            console.warn(
+              "Database summaries failed:",
+              error
+            );
+
+          }
+        }
+
+        allSummaries =
+          sortSummaries(
+            dedupe(
+              collected
+            )
+          );
+
+        render();
+      }
+
+      function matchesSearch(item) {
+
+        const query =
+          safeString(
+            searchInput.value
+          ).toLowerCase();
+
+        if (!query) {
+          return true;
+        }
+
+        const haystack =
+          [
+            item.title,
+            item.description,
+            item.subject,
+            item.grade,
+            item.term
+          ]
+            .map(
+              value =>
+                safeString(
+                  value
+                ).toLowerCase()
+            )
+            .join(" ");
+
+        return haystack.includes(
+          query
+        );
+      }
+
+      function matchesTerm(item) {
+
+        if (
+          activeTerm === "all"
+        ) {
+          return true;
+        }
+
+        return (
+          normalizeTerm(
+            item.term
+          ) === activeTerm
+        );
+      }
+
+      function getFiltered() {
+
+        return allSummaries.filter(
+          item =>
+            item.published &&
+            matchesSearch(item) &&
+            matchesTerm(item)
+        );
+      }
+
+      function formatDate(value) {
+
+        if (!value) {
+          return "";
+        }
+
+        let date;
+
+        if (
+          typeof value === "number"
+        ) {
+
+          date =
+            new Date(
+              value < 10000000000
+                ? value * 1000
+                : value
+            );
+
+        } else {
+
+          date =
+            new Date(value);
+        }
+
+        if (
+          Number.isNaN(
+            date.getTime()
+          )
+        ) {
+          return "";
+        }
+
+        return date.toLocaleDateString(
+          "ar-EG",
+          {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+          }
+        );
+      }
+
+      function termLabel(term) {
+
+        switch (
+          normalizeTerm(term)
+        ) {
+
+          case "1":
+            return "الترم الأول";
+
+          case "2":
+            return "الترم الثاني";
+
+          case "3":
+            return "الترم الثالث";
+
+          case "4":
+            return "الترم الرابع";
+
+          default:
+            return "ملخص";
+        }
+      }
+
+      function escapeHTML(value) {
+
+        return safeString(value)
+          .replace(
+            /&/g,
+            "&amp;"
+          )
+          .replace(
+            /</g,
+            "&lt;"
+          )
+          .replace(
+            />/g,
+            "&gt;"
+          )
+          .replace(
+            /"/g,
+            "&quot;"
+          )
+          .replace(
+            /'/g,
+            "&#039;"
+          );
+      }
+
+      function getOpenUrl(item) {
+
+        if (!item.url) {
+          return "";
+        }
+
+        return item.url;
+      }
+
+      function render() {
+
+        const filtered =
+          getFiltered();
+
+        summaryGrid.innerHTML =
+          "";
+
+        emptyState.classList.remove(
+          "show"
+        );
+
+        errorState.classList.remove(
+          "show"
+        );
+
+        loadingGrid.style.display =
+          "none";
+
+        summaryGrid.style.display =
+          "grid";
+
+        resultCount.innerHTML =
+          `عدد الملخصات: <strong>${filtered.length}</strong>`;
+
+        if (
+          filtered.length === 0
+        ) {
+
+          summaryGrid.style.display =
+            "none";
+
+          emptyState.classList.add(
+            "show"
+          );
+
+          return;
+        }
+
+        filtered.forEach(
+          item => {
+
+            const card =
+              document.createElement(
+                "article"
+              );
+
+            card.className =
+              "summary-card";
+
+            const paidClass =
+              item.isPaid
+                ? "paid"
+                : "free";
+
+            const paidText =
+              item.isPaid
+                ? "مدفوع"
+                : "مجاني";
+
+            const date =
+              formatDate(
+                item.createdAt
+              );
+
+            const subjectText =
+              item.subject ||
+              "مادة دراسية";
+
+            const termText =
+              termLabel(
+                item.term
+              );
+
+            const url =
+              getOpenUrl(item);
+
+            card.innerHTML = `
+
+              <div class="summary-top">
+
+                <div class="summary-icon">
+                  📄
+                </div>
+
+                <span class="summary-badge ${paidClass}">
+                  ${paidText}
+                </span>
+
+              </div>
+
+              <h3>
+                ${escapeHTML(
+                  item.title
+                )}
+              </h3>
+
+              <div class="summary-description">
+                ${escapeHTML(
+                  item.description
+                )}
+              </div>
+
+              <div class="summary-meta">
+
+                <span class="meta-item">
+                  ${escapeHTML(
+                    subjectText
+                  )}
+                </span>
+
+                <span class="meta-item">
+                  ${escapeHTML(
+                    termText
+                  )}
+                </span>
+
+                ${
+                  item.grade
+                    ? `
+                      <span class="meta-item">
+                        ${escapeHTML(
+                          item.grade
+                        )}
+                      </span>
+                    `
+                    : ""
+                }
+
+              </div>
+
+              <div class="summary-footer">
+
+                <span class="summary-date">
+                  ${
+                    date
+                      ? escapeHTML(
+                          date
+                        )
+                      : "متاح الآن"
+                  }
+                </span>
+
+                ${
+                  url
+                    ? `
+                      <button
+                        class="open-btn"
+                        type="button"
+                        data-url="${escapeHTML(
+                          url
+                        )}"
+                      >
+                        فتح الملخص
+                      </button>
+                    `
+                    : `
+                      <button
+                        class="open-btn"
+                        type="button"
+                        disabled
+                        style="opacity:.45;cursor:not-allowed;"
+                      >
+                        غير متاح
+                      </button>
+                    `
+                }
+
+              </div>
+            `;
+
+            const openButton =
+              card.querySelector(
+                "[data-url]"
+              );
+
+            if (openButton) {
+
+              openButton.addEventListener(
+                "click",
+                () => {
+
+                  const target =
+                    openButton.dataset.url;
+
+                  if (!target) {
+                    return;
+                  }
+
+                  window.open(
+                    target,
+                    "_blank",
+                    "noopener,noreferrer"
+                  );
+
+                }
+              );
+
+            }
+
+            summaryGrid.appendChild(
+              card
+            );
+
+          }
+        );
+      }
+
+      function setupFilters() {
+
+        document
+          .querySelectorAll(
+            ".term-btn"
+          )
+          .forEach(button => {
+
+            button.addEventListener(
+              "click",
+              () => {
+
+                document
+                  .querySelectorAll(
+                    ".term-btn"
+                  )
+                  .forEach(
+                    other =>
+                      other.classList.remove(
+                        "active"
+                      )
+                  );
+
+                button.classList.add(
+                  "active"
+                );
+
+                activeTerm =
+                  safeString(
+                    button.dataset.term
+                  ) || "all";
+
+                render();
+
+              }
+            );
+
+          });
+
+        searchInput?.addEventListener(
+          "input",
+          render
+        );
+      }
+
+      async function logout() {
+
+        try {
+
+          if (
+            window.FirebaseAuth &&
+            typeof window.FirebaseAuth.signOut ===
+              "function"
+          ) {
+
+            await window.FirebaseAuth.signOut();
+
+          } else {
+
+            localStorage.removeItem(
+              "currentUser"
+            );
+
+            localStorage.removeItem(
+              "student"
+            );
+
+            localStorage.removeItem(
+              "currentStudent"
+            );
+
+            localStorage.removeItem(
+              "currentStudentKey"
+            );
+          }
+
+        } catch (_) {
+
+          localStorage.removeItem(
+            "currentUser"
+          );
+
+          localStorage.removeItem(
+            "student"
+          );
+
+          localStorage.removeItem(
+            "currentStudent"
+          );
+
+          localStorage.removeItem(
+            "currentStudentKey"
+          );
+        }
+
+        window.location.href =
+          "login.html";
+      }
+
+      function openSidebar() {
+
+        sidebar?.classList.add(
+          "open"
+        );
+
+        overlay?.classList.add(
+          "show"
+        );
+      }
+
+      function closeSidebar() {
+
+        sidebar?.classList.remove(
+          "open"
+        );
+
+        overlay?.classList.remove(
+          "show"
+        );
+      }
+
+      async function init() {
+
+        try {
+
+          await waitForFirebase();
+
+          const student =
+            await getCurrentStudent();
+
+          if (!student) {
+
+            window.location.href =
+              "login.html?redirect=" +
+              encodeURIComponent(
+                "summaries.html"
+              );
+
+            return;
+          }
+
+          fillStudent(
+            student
+          );
+
+          await loadSummaries();
+
+        } catch (error) {
+
+          console.error(
+            "Summaries initialization failed:",
+            error
+          );
+
+          loadingGrid.style.display =
+            "none";
+
+          summaryGrid.style.display =
+            "none";
+
+          errorState.classList.add(
+            "show"
+          );
+
+          resultCount.textContent =
+            "تعذر تحميل الملخصات.";
+
+          toast(
+            "تعذر تحميل الملخصات.",
+            "error"
+          );
+
+        } finally {
+
+          hideLoader();
+
+        }
+      }
+
+      mobileMenuButton?.addEventListener(
+        "click",
+        () => {
+
+          if (
+            sidebar?.classList.contains(
+              "open"
+            )
+          ) {
+
+            closeSidebar();
+
+          } else {
+
+            openSidebar();
+
+          }
+
+        }
+      );
+
+      overlay?.addEventListener(
+        "click",
+        closeSidebar
+      );
+
+      sidebar
+        ?.querySelectorAll("a")
+        .forEach(link => {
+
+          link.addEventListener(
+            "click",
+            closeSidebar
+          );
+
+        });
+
+      logoutButton?.addEventListener(
+        "click",
+        logout
+      );
+
+      setupFilters();
+
+      window.CapSummaries = {
+        getAll: () =>
+          allSummaries,
+
+        getFiltered: () =>
+          getFiltered(),
+
+        reload: init,
+
+        render
+      };
+
+      init();
+
+    })();
+  </script></body>
+</html>

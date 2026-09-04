@@ -1,0 +1,1942 @@
+/* =========================================================
+   firebase-features.js
+   CAP ABDELNASEER
+
+   Application Features Layer
+
+   Depends on:
+   - firebase-config.js
+   - firebase-auth.js
+   - firebase-database.js
+   - firebase-content.js
+
+   This layer provides ready-to-use application functions
+   for all HTML/JS pages.
+   ========================================================= */
+
+(function (window) {
+  "use strict";
+
+  /* =========================================================
+     DEPENDENCY CHECK
+     ========================================================= */
+
+  if (
+    !window.FirebaseCoreReady ||
+    !window.FirebaseCore
+  ) {
+    console.error(
+      "firebase-features.js: firebase-config.js must be loaded first."
+    );
+    return;
+  }
+
+  if (
+    !window.FirebaseDatabaseReady ||
+    !window.FirebaseDatabase
+  ) {
+    console.error(
+      "firebase-features.js: firebase-database.js must be loaded first."
+    );
+    return;
+  }
+
+  if (
+    !window.FirebaseContentReady ||
+    !window.FirebaseContent
+  ) {
+    console.error(
+      "firebase-features.js: firebase-content.js must be loaded first."
+    );
+    return;
+  }
+
+  const Core = window.FirebaseCore;
+  const Auth = window.FirebaseAuth;
+  const DB = window.FirebaseDatabase;
+  const Content = window.FirebaseContent;
+
+  /* =========================================================
+     CONSTANTS
+     ========================================================= */
+
+  const VERSION = "1.0.0";
+
+  const STORAGE_KEYS = {
+    currentUser: "currentUser",
+    student: "student",
+    currentStudent: "currentStudent",
+    currentStudentKey: "currentStudentKey",
+    rememberPhone: "rememberedPhone",
+    rememberLogin: "rememberLogin"
+  };
+
+  /* =========================================================
+     BASIC HELPERS
+     ========================================================= */
+
+  function isObject(value) {
+    return (
+      value !== null &&
+      typeof value === "object" &&
+      !Array.isArray(value)
+    );
+  }
+
+  function safeString(value, fallback) {
+    if (
+      value === undefined ||
+      value === null
+    ) {
+      return fallback !== undefined
+        ? String(fallback)
+        : "";
+    }
+
+    try {
+      return String(value);
+    } catch (error) {
+      return fallback !== undefined
+        ? String(fallback)
+        : "";
+    }
+  }
+
+  function firstValue() {
+    if (
+      DB.helpers &&
+      typeof DB.helpers.firstValue ===
+        "function"
+    ) {
+      return DB.helpers.firstValue.apply(
+        null,
+        arguments
+      );
+    }
+
+    for (
+      let i = 0;
+      i < arguments.length;
+      i++
+    ) {
+      if (
+        arguments[i] !== undefined &&
+        arguments[i] !== null &&
+        arguments[i] !== ""
+      ) {
+        return arguments[i];
+      }
+    }
+
+    return "";
+  }
+
+  function clone(value) {
+    if (
+      DB.helpers &&
+      typeof DB.helpers.cloneObject ===
+        "function"
+    ) {
+      return DB.helpers.cloneObject(
+        value
+      );
+    }
+
+    try {
+      return JSON.parse(
+        JSON.stringify(value)
+      );
+    } catch (error) {
+      return value;
+    }
+  }
+
+  function normalizeIdentifier(value) {
+    if (
+      DB.helpers &&
+      typeof DB.helpers.normalizeIdentifier ===
+        "function"
+    ) {
+      return DB.helpers.normalizeIdentifier(
+        value
+      );
+    }
+
+    return safeString(value, "")
+      .trim()
+      .toLowerCase();
+  }
+
+  function normalizePhone(value) {
+    if (
+      DB.helpers &&
+      typeof DB.helpers.normalizePhone ===
+        "function"
+    ) {
+      return DB.helpers.normalizePhone(
+        value
+      );
+    }
+
+    return safeString(value, "")
+      .replace(/[^\d]/g, "");
+  }
+
+  function timestamp() {
+    if (
+      DB.helpers &&
+      typeof DB.helpers.timestampValue ===
+        "function"
+    ) {
+      return DB.helpers.timestampValue();
+    }
+
+    return Date.now();
+  }
+
+  function getErrorMessage(error) {
+    if (
+      DB.helpers &&
+      typeof DB.helpers.getErrorMessage ===
+        "function"
+    ) {
+      return DB.helpers.getErrorMessage(
+        error
+      );
+    }
+
+    return safeString(
+      error &&
+        (
+          error.message ||
+          error.code
+        ),
+      "حدث خطأ غير متوقع."
+    );
+  }
+
+  /* =========================================================
+     LOCAL STORAGE HELPERS
+     ========================================================= */
+
+  function storageGet(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function storageSet(key, value) {
+    try {
+      localStorage.setItem(
+        key,
+        value
+      );
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function storageRemove(key) {
+    try {
+      localStorage.removeItem(key);
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function storageGetJSON(key) {
+    const raw =
+      storageGet(key);
+
+    if (!raw) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(raw);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function storageSetJSON(
+    key,
+    value
+  ) {
+    try {
+      return storageSet(
+        key,
+        JSON.stringify(value)
+      );
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /* =========================================================
+     SESSION
+     ========================================================= */
+
+  async function getCurrentStudent() {
+    try {
+      const student =
+        await DB.students.getCurrent();
+
+      if (student) {
+        return student;
+      }
+    } catch (error) {
+      console.warn(
+        "Could not refresh student from Firebase:",
+        error
+      );
+    }
+
+    const local =
+      storageGetJSON(
+        STORAGE_KEYS.currentUser
+      ) ||
+      storageGetJSON(
+        STORAGE_KEYS.student
+      ) ||
+      storageGetJSON(
+        STORAGE_KEYS.currentStudent
+      );
+
+    return local || null;
+  }
+
+  function getCurrentStudentKey(
+    student
+  ) {
+    student =
+      student ||
+      storageGetJSON(
+        STORAGE_KEYS.currentUser
+      );
+
+    if (!student) {
+      return (
+        storageGet(
+          STORAGE_KEYS.currentStudentKey
+        ) || ""
+      );
+    }
+
+    return firstValue(
+      student._key,
+      student.key,
+      student.studentKey,
+      student.id,
+      student.studentId,
+      storageGet(
+        STORAGE_KEYS.currentStudentKey
+      )
+    );
+  }
+
+  async function requireStudent() {
+    const student =
+      await getCurrentStudent();
+
+    if (!student) {
+      throw new Error(
+        "يجب تسجيل الدخول أولاً."
+      );
+    }
+
+    return student;
+  }
+
+  function isLoggedIn() {
+    return Boolean(
+      storageGet(
+        STORAGE_KEYS.currentUser
+      ) ||
+      storageGet(
+        STORAGE_KEYS.student
+      ) ||
+      storageGet(
+        STORAGE_KEYS.currentStudent
+      )
+    );
+  }
+
+  async function refreshSession() {
+    const student =
+      await getCurrentStudent();
+
+    if (!student) {
+      return null;
+    }
+
+    storageSetJSON(
+      STORAGE_KEYS.currentUser,
+      student
+    );
+
+    storageSetJSON(
+      STORAGE_KEYS.student,
+      student
+    );
+
+    storageSetJSON(
+      STORAGE_KEYS.currentStudent,
+      student
+    );
+
+    const key =
+      getCurrentStudentKey(
+        student
+      );
+
+    if (key) {
+      storageSet(
+        STORAGE_KEYS.currentStudentKey,
+        key
+      );
+    }
+
+    return student;
+  }
+
+  async function logout() {
+    if (
+      Auth &&
+      typeof Auth.signOut ===
+        "function"
+    ) {
+      return Auth.signOut();
+    }
+
+    Object.keys(
+      STORAGE_KEYS
+    ).forEach(function (key) {
+      storageRemove(
+        STORAGE_KEYS[key]
+      );
+    });
+
+    return true;
+  }
+
+  /* =========================================================
+     AUTHENTICATION WRAPPERS
+     ========================================================= */
+
+  async function login(
+    phone,
+    password,
+    options
+  ) {
+    if (
+      !Auth ||
+      typeof Auth.loginWithPhonePassword !==
+        "function"
+    ) {
+      throw new Error(
+        "نظام تسجيل الدخول غير متاح."
+      );
+    }
+
+    const result =
+      await Auth.loginWithPhonePassword(
+        phone,
+        password,
+        options || {}
+      );
+
+    if (
+      result &&
+      result.student
+    ) {
+      storageSetJSON(
+        STORAGE_KEYS.currentUser,
+        result.student
+      );
+
+      storageSetJSON(
+        STORAGE_KEYS.student,
+        result.student
+      );
+
+      storageSetJSON(
+        STORAGE_KEYS.currentStudent,
+        result.student
+      );
+
+      const key =
+        firstValue(
+          result.student._key,
+          result.student.key,
+          result.student.id,
+          result.student.studentId
+        );
+
+      if (key) {
+        storageSet(
+          STORAGE_KEYS.currentStudentKey,
+          key
+        );
+      }
+    }
+
+    return result;
+  }
+
+  async function register(
+    data
+  ) {
+    if (
+      !Auth ||
+      typeof Auth.registerStudent !==
+        "function"
+    ) {
+      throw new Error(
+        "نظام التسجيل غير متاح."
+      );
+    }
+
+    return Auth.registerStudent(
+      data
+    );
+  }
+
+  async function requestPasswordReset(
+    phone,
+    extra
+  ) {
+    if (
+      !Auth ||
+      typeof Auth.requestPasswordReset !==
+        "function"
+    ) {
+      throw new Error(
+        "خدمة استعادة كلمة المرور غير متاحة."
+      );
+    }
+
+    return Auth.requestPasswordReset(
+      phone,
+      extra || {}
+    );
+  }
+
+  /* =========================================================
+     PROFILE
+     ========================================================= */
+
+  async function getProfile() {
+    const student =
+      await requireStudent();
+
+    const fresh =
+      await DB.students.getCurrent();
+
+    if (fresh) {
+      return fresh;
+    }
+
+    return student;
+  }
+
+  async function updateProfile(
+    data
+  ) {
+    const student =
+      await requireStudent();
+
+    const key =
+      getCurrentStudentKey(
+        student
+      );
+
+    if (!key) {
+      throw new Error(
+        "تعذر تحديد حساب الطالب."
+      );
+    }
+
+    const payload =
+      isObject(data)
+        ? clone(data)
+        : {};
+
+    /*
+     * Security-sensitive fields are intentionally
+     * not modified through the normal profile updater.
+     */
+    delete payload.pin;
+    delete payload.pinHash;
+    delete payload.password;
+    delete payload.passwordHash;
+    delete payload.status;
+    delete payload.role;
+    delete payload.admin;
+    delete payload.isAdmin;
+
+    payload.updatedAt =
+      timestamp();
+
+    await DB.students.update(
+      key,
+      payload
+    );
+
+    const updated =
+      Object.assign(
+        {},
+        student,
+        payload
+      );
+
+    storageSetJSON(
+      STORAGE_KEYS.currentUser,
+      updated
+    );
+
+    storageSetJSON(
+      STORAGE_KEYS.student,
+      updated
+    );
+
+    storageSetJSON(
+      STORAGE_KEYS.currentStudent,
+      updated
+    );
+
+    return updated;
+  }
+
+  /* =========================================================
+     COURSES
+     ========================================================= */
+
+  async function getCourses(
+    options
+  ) {
+    return Content.getSubjects(
+      options || {}
+    );
+  }
+
+  async function getCourse(
+    subjectId,
+    options
+  ) {
+    const resolved =
+      Content.resolveSubjectId(
+        subjectId
+      );
+
+    return Content.getSubjectById(
+      resolved,
+      options || {}
+    );
+  }
+
+  async function getCourseCounts(
+    subjectId,
+    options
+  ) {
+    const resolved =
+      Content.resolveSubjectId(
+        subjectId
+      );
+
+    return Content.getSubjectCounts(
+      resolved,
+      options || {}
+    );
+  }
+
+  async function getCourseContent(
+    subjectId,
+    options
+  ) {
+    const resolved =
+      Content.resolveSubjectId(
+        subjectId
+      );
+
+    return Content.getSubjectContent(
+      resolved,
+      options || {}
+    );
+  }
+
+  async function getTerms(
+    options
+  ) {
+    return Content.getTerms(
+      options || {}
+    );
+  }
+
+  async function getTermContent(
+    termId,
+    options
+  ) {
+    return Content.getTermContent(
+      termId,
+      options || {}
+    );
+  }
+
+  /* =========================================================
+     FILES
+     ========================================================= */
+
+  async function getFiles(
+    filters
+  ) {
+    return DB.files.getAll(
+      filters || {}
+    );
+  }
+
+  async function getFilesForCourse(
+    subjectId,
+    options
+  ) {
+    return Content.getFilesForSubject(
+      Content.resolveSubjectId(
+        subjectId
+      ),
+      options || {}
+    );
+  }
+
+  /* =========================================================
+     VIDEOS
+     ========================================================= */
+
+  async function getVideos(
+    filters
+  ) {
+    return DB.videos.getAll(
+      filters || {}
+    );
+  }
+
+  async function getVideosForCourse(
+    subjectId,
+    options
+  ) {
+    return Content.getVideosForSubject(
+      Content.resolveSubjectId(
+        subjectId
+      ),
+      options || {}
+    );
+  }
+
+  /* =========================================================
+     QUIZZES
+     ========================================================= */
+
+  async function getQuizzes(
+    filters
+  ) {
+    return DB.quizzes.getAll(
+      filters || {}
+    );
+  }
+
+  async function getQuiz(
+    quizId
+  ) {
+    return DB.quizzes.getById(
+      quizId
+    );
+  }
+
+  async function getQuizzesForCourse(
+    subjectId,
+    options
+  ) {
+    return Content.getQuizzesForSubject(
+      Content.resolveSubjectId(
+        subjectId
+      ),
+      options || {}
+    );
+  }
+
+  /* =========================================================
+     QUIZ ATTEMPTS
+     ========================================================= */
+
+  async function getAttempts() {
+    const student =
+      await requireStudent();
+
+    const key =
+      getCurrentStudentKey(
+        student
+      );
+
+    if (!key) {
+      return [];
+    }
+
+    return DB.attempts.getAll(
+      key
+    );
+  }
+
+  async function getAttempt(
+    attemptId
+  ) {
+    const student =
+      await requireStudent();
+
+    const key =
+      getCurrentStudentKey(
+        student
+      );
+
+    if (!key) {
+      return null;
+    }
+
+    return DB.attempts.getById(
+      key,
+      attemptId
+    );
+  }
+
+  async function startQuiz(
+    quiz,
+    metadata
+  ) {
+    const student =
+      await requireStudent();
+
+    const studentKey =
+      getCurrentStudentKey(
+        student
+      );
+
+    if (!studentKey) {
+      throw new Error(
+        "تعذر تحديد حساب الطالب."
+      );
+    }
+
+    const quizData =
+      isObject(quiz)
+        ? quiz
+        : await getQuiz(
+            quiz
+          );
+
+    if (!quizData) {
+      throw new Error(
+        "الاختبار غير موجود."
+      );
+    }
+
+    const attempt = {
+      quizId:
+        firstValue(
+          quizData.id,
+          quizData._key,
+          quizData.key
+        ),
+
+      title:
+        firstValue(
+          quizData.title,
+          quizData.name,
+          "اختبار"
+        ),
+
+      subject:
+        firstValue(
+          quizData.subject,
+          quizData.subjectId,
+          ""
+        ),
+
+      term:
+        firstValue(
+          quizData.term,
+          quizData.semester,
+          ""
+        ),
+
+      grade:
+        firstValue(
+          quizData.grade,
+          quizData.year,
+          quizData.level,
+          ""
+        ),
+
+      answers: {},
+
+      totalQuestions:
+        Array.isArray(
+          quizData.questions
+        )
+          ? quizData.questions.length
+          : Number(
+              quizData.questionCount || 0
+            ),
+
+      answeredQuestions: 0,
+
+      startedAt:
+        timestamp(),
+
+      status:
+        "started",
+
+      metadata:
+        isObject(metadata)
+          ? clone(metadata)
+          : {}
+    };
+
+    return DB.attempts.create(
+      studentKey,
+      attempt
+    );
+  }
+
+  async function submitQuiz(
+    attemptId,
+    answers,
+    quiz
+  ) {
+    const student =
+      await requireStudent();
+
+    const studentKey =
+      getCurrentStudentKey(
+        student
+      );
+
+    if (!studentKey) {
+      throw new Error(
+        "تعذر تحديد حساب الطالب."
+      );
+    }
+
+    const attempt =
+      await DB.attempts.getById(
+        studentKey,
+        attemptId
+      );
+
+    if (!attempt) {
+      throw new Error(
+        "محاولة الاختبار غير موجودة."
+      );
+    }
+
+    const answerData =
+      isObject(answers)
+        ? clone(answers)
+        : {};
+
+    const answered =
+      Object.keys(
+        answerData
+      ).filter(function (key) {
+        const value =
+          answerData[key];
+
+        return (
+          value !== undefined &&
+          value !== null &&
+          value !== ""
+        );
+      }).length;
+
+    const payload = {
+      answers:
+        answerData,
+
+      answeredQuestions:
+        answered,
+
+      submittedAt:
+        timestamp(),
+
+      status:
+        "submitted",
+
+      updatedAt:
+        timestamp()
+    };
+
+    /*
+     * If a quiz object is available, calculate score only
+     * when the actual correct answers are present.
+     */
+    if (
+      isObject(quiz) &&
+      Array.isArray(
+        quiz.questions
+      )
+    ) {
+      const questions =
+        quiz.questions;
+
+      let correct = 0;
+      let total = 0;
+
+      questions.forEach(
+        function (question, index) {
+          const correctAnswer =
+            firstValue(
+              question.correctAnswer,
+              question.correct,
+              question.answer,
+              question.correctOption
+            );
+
+          if (
+            correctAnswer === ""
+          ) {
+            return;
+          }
+
+          total++;
+
+          const questionId =
+            firstValue(
+              question.id,
+              question.key,
+              String(index)
+            );
+
+          const userAnswer =
+            answerData[
+              questionId
+            ];
+
+          if (
+            normalizeIdentifier(
+              userAnswer
+            ) ===
+            normalizeIdentifier(
+              correctAnswer
+            )
+          ) {
+            correct++;
+          }
+        }
+      );
+
+      if (total > 0) {
+        payload.score =
+          correct;
+
+        payload.totalQuestions =
+          total;
+
+        payload.percentage =
+          (correct / total) * 100;
+
+        const passScore =
+          Number(
+            firstValue(
+              quiz.passScore,
+              quiz.passingScore,
+              0
+            )
+          );
+
+        if (
+          Number.isFinite(
+            passScore
+          ) &&
+          passScore > 0
+        ) {
+          payload.passScore =
+            passScore;
+
+          payload.passed =
+            payload.percentage >=
+            passScore;
+        }
+      }
+    }
+
+    await DB.attempts.update(
+      studentKey,
+      attemptId,
+      payload
+    );
+
+    return DB.attempts.getById(
+      studentKey,
+      attemptId
+    );
+  }
+
+  /* =========================================================
+     RESULTS
+     ========================================================= */
+
+  async function getResults() {
+    const student =
+      await requireStudent();
+
+    return DB.results.getCombined(
+      student
+    );
+  }
+
+  async function getCurrentResults() {
+    const student =
+      await requireStudent();
+
+    return DB.results.getAll(
+      student
+    );
+  }
+
+  async function getLegacyResults() {
+    const student =
+      await requireStudent();
+
+    return DB.results.getLegacy(
+      student
+    );
+  }
+
+  /* =========================================================
+     NOTIFICATIONS
+     ========================================================= */
+
+  async function getNotifications() {
+    const student =
+      await requireStudent();
+
+    const notifications =
+      await DB.notifications.getAll(
+        student
+      );
+
+    const key =
+      getCurrentStudentKey(
+        student
+      );
+
+    if (!key) {
+      return notifications.map(
+        function (item) {
+          return Object.assign(
+            {},
+            item,
+            {
+              read: false
+            }
+          );
+        }
+      );
+    }
+
+    const result = [];
+
+    for (
+      let i = 0;
+      i < notifications.length;
+      i++
+    ) {
+      const notification =
+        notifications[i];
+
+      const id =
+        firstValue(
+          notification.id,
+          notification._key,
+          notification.key
+        );
+
+      let read = false;
+
+      try {
+        read =
+          await DB.notifications.isRead(
+            key,
+            id
+          );
+      } catch (error) {
+        read = false;
+      }
+
+      result.push(
+        Object.assign(
+          {},
+          notification,
+          {
+            read: read
+          }
+        )
+      );
+    }
+
+    return result;
+  }
+
+  async function getUnreadNotifications() {
+    const student =
+      await requireStudent();
+
+    return DB.notifications.getUnread(
+      student
+    );
+  }
+
+  async function markNotificationRead(
+    notificationId
+  ) {
+    const student =
+      await requireStudent();
+
+    const key =
+      getCurrentStudentKey(
+        student
+      );
+
+    if (!key) {
+      throw new Error(
+        "تعذر تحديد حساب الطالب."
+      );
+    }
+
+    return DB.notifications.markRead(
+      key,
+      notificationId
+    );
+  }
+
+  /* =========================================================
+     SUPPORT
+     ========================================================= */
+
+  async function getSupportSettings() {
+    return DB.support.getSettings();
+  }
+
+  async function createSupportTicket(
+    data
+  ) {
+    const student =
+      await requireStudent();
+
+    const payload =
+      isObject(data)
+        ? clone(data)
+        : {};
+
+    const studentKey =
+      getCurrentStudentKey(
+        student
+      );
+
+    const ticket =
+      Object.assign(
+        {},
+        payload,
+        {
+          studentId:
+            firstValue(
+              payload.studentId,
+              student.id,
+              student.studentId,
+              studentKey
+            ),
+
+          studentKey:
+            firstValue(
+              payload.studentKey,
+              studentKey
+            ),
+
+          studentName:
+            firstValue(
+              payload.studentName,
+              student.name,
+              student.studentName,
+              student.fullName
+            ),
+
+          phone:
+            firstValue(
+              payload.phone,
+              student.phone,
+              student.mobile,
+              student.phoneNumber
+            ),
+
+          email:
+            firstValue(
+              payload.email,
+              student.email
+            ),
+
+          status:
+            firstValue(
+              payload.status,
+              "open"
+            ),
+
+          createdAt:
+            timestamp(),
+
+          updatedAt:
+            timestamp()
+        }
+      );
+
+    return DB.support.createTicket(
+      ticket
+    );
+  }
+
+  async function getMySupportTickets() {
+    const student =
+      await requireStudent();
+
+    return DB.support.getTickets(
+      student
+    );
+  }
+
+  /* =========================================================
+     CONTENT VIEWS
+     ========================================================= */
+
+  async function markViewed(
+    type,
+    contentId,
+    extra
+  ) {
+    return Content.markViewed(
+      type,
+      contentId,
+      extra || {}
+    );
+  }
+
+  async function getViewedContent() {
+    return Content.getViewed();
+  }
+
+  /* =========================================================
+     SEARCH
+     ========================================================= */
+
+  async function search(
+    query,
+    options
+  ) {
+    return Content.search(
+      query,
+      options || {}
+    );
+  }
+
+  /* =========================================================
+     DASHBOARD
+     ========================================================= */
+
+  async function getDashboard(
+    options
+  ) {
+    const student =
+      await getCurrentStudent();
+
+    const content =
+      await Content.getDashboardContent(
+        options || {}
+      );
+
+    let notifications = [];
+    let unreadNotifications = 0;
+    let attempts = [];
+    let results = [];
+
+    if (student) {
+      try {
+        notifications =
+          await getNotifications();
+      } catch (error) {
+        notifications = [];
+      }
+
+      unreadNotifications =
+        notifications.filter(
+          function (item) {
+            return item.read !== true;
+          }
+        ).length;
+
+      try {
+        attempts =
+          await getAttempts();
+      } catch (error) {
+        attempts = [];
+      }
+
+      try {
+        results =
+          await getResults();
+      } catch (error) {
+        results = [];
+      }
+    }
+
+    return {
+      student:
+        student,
+
+      content:
+        content,
+
+      notifications:
+        notifications,
+
+      unreadNotifications:
+        unreadNotifications,
+
+      attempts:
+        attempts,
+
+      results:
+        results,
+
+      counts: {
+        subjects:
+          content.counts.subjects,
+
+        files:
+          content.counts.files,
+
+        videos:
+          content.counts.videos,
+
+        quizzes:
+          content.counts.quizzes,
+
+        attempts:
+          attempts.length,
+
+        results:
+          results.length,
+
+        unreadNotifications:
+          unreadNotifications
+      }
+    };
+  }
+
+  /* =========================================================
+     STATISTICS
+     ========================================================= */
+
+  async function getStudentStatistics() {
+    const student =
+      await requireStudent();
+
+    const [
+      results,
+      attempts,
+      notifications
+    ] = await Promise.all([
+      getResults(),
+      getAttempts(),
+      getNotifications()
+    ]);
+
+    let totalScore = 0;
+    let scoredResults = 0;
+    let passed = 0;
+
+    results.forEach(
+      function (result) {
+        if (
+          result.percentage !==
+            null &&
+          result.percentage !==
+            undefined
+        ) {
+          totalScore +=
+            Number(
+              result.percentage
+            ) || 0;
+
+          scoredResults++;
+        }
+
+        if (
+          result.passed === true
+        ) {
+          passed++;
+        }
+      }
+    );
+
+    const average =
+      scoredResults > 0
+        ? totalScore /
+          scoredResults
+        : 0;
+
+    return {
+      student:
+        student,
+
+      attempts:
+        attempts.length,
+
+      results:
+        results.length,
+
+      notifications:
+        notifications.length,
+
+      unreadNotifications:
+        notifications.filter(
+          function (item) {
+            return item.read !== true;
+          }
+        ).length,
+
+      passed:
+        passed,
+
+      scoredResults:
+        scoredResults,
+
+      averagePercentage:
+        average
+    };
+  }
+
+  /* =========================================================
+     APP INITIALIZATION
+     ========================================================= */
+
+  async function initialize() {
+    const student =
+      await getCurrentStudent();
+
+    return {
+      ready: true,
+      loggedIn:
+        Boolean(student),
+      student:
+        student
+    };
+  }
+
+  /* =========================================================
+     PAGE GUARD
+     ========================================================= */
+
+  function redirectIfNotLoggedIn(
+    loginUrl
+  ) {
+    if (isLoggedIn()) {
+      return true;
+    }
+
+    const target =
+      loginUrl ||
+      "login.html";
+
+    try {
+      window.location.href =
+        target;
+    } catch (error) {
+      // Ignore navigation errors.
+    }
+
+    return false;
+  }
+
+  /* =========================================================
+     SIMPLE UI HELPERS
+     ========================================================= */
+
+  function formatDate(
+    value,
+    options
+  ) {
+    if (
+      value === undefined ||
+      value === null ||
+      value === ""
+    ) {
+      return "";
+    }
+
+    const date =
+      new Date(
+        Number(value)
+      );
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+      return safeString(
+        value
+      );
+    }
+
+    const formatter =
+      new Intl.DateTimeFormat(
+        "ar-EG",
+        Object.assign(
+          {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          },
+          options || {}
+        )
+      );
+
+    return formatter.format(
+      date
+    );
+  }
+
+  function formatNumber(
+    value,
+    digits
+  ) {
+    const number =
+      Number(value);
+
+    if (
+      !Number.isFinite(number)
+    ) {
+      return "0";
+    }
+
+    return number.toLocaleString(
+      "ar-EG",
+      {
+        maximumFractionDigits:
+          Number.isFinite(
+            Number(digits)
+          )
+            ? Number(digits)
+            : 2
+      }
+    );
+  }
+
+  function getStudentDisplayName(
+    student
+  ) {
+    student =
+      student ||
+      storageGetJSON(
+        STORAGE_KEYS.currentUser
+      );
+
+    if (!student) {
+      return "الطالب";
+    }
+
+    return firstValue(
+      student.name,
+      student.studentName,
+      student.fullName,
+      "الطالب"
+    );
+  }
+
+  /* =========================================================
+     SAFE ERROR OBJECT
+     ========================================================= */
+
+  function normalizeError(
+    error
+  ) {
+    return {
+      message:
+        getErrorMessage(
+          error
+        ),
+
+      code:
+        safeString(
+          error &&
+            error.code,
+          ""
+        ),
+
+      original:
+        error || null
+    };
+  }
+
+  /* =========================================================
+     PUBLIC API
+     ========================================================= */
+
+  const FirebaseFeatures = {
+    version:
+      VERSION,
+
+    ready:
+      initialize,
+
+    auth: {
+      login:
+        login,
+
+      register:
+        register,
+
+      logout:
+        logout,
+
+      requestPasswordReset:
+        requestPasswordReset,
+
+      isLoggedIn:
+        isLoggedIn,
+
+      getCurrentStudent:
+        getCurrentStudent,
+
+      getCurrentStudentKey:
+        getCurrentStudentKey,
+
+      refreshSession:
+        refreshSession,
+
+      requireStudent:
+        requireStudent,
+
+      redirectIfNotLoggedIn:
+        redirectIfNotLoggedIn
+    },
+
+    profile: {
+      get:
+        getProfile,
+
+      update:
+        updateProfile
+    },
+
+    courses: {
+      getAll:
+        getCourses,
+
+      getById:
+        getCourse,
+
+      getCounts:
+        getCourseCounts,
+
+      getContent:
+        getCourseContent,
+
+      getTerms:
+        getTerms,
+
+      getTermContent:
+        getTermContent
+    },
+
+    files: {
+      getAll:
+        getFiles,
+
+      getForCourse:
+        getFilesForCourse
+    },
+
+    videos: {
+      getAll:
+        getVideos,
+
+      getForCourse:
+        getVideosForCourse
+    },
+
+    quizzes: {
+      getAll:
+        getQuizzes,
+
+      getById:
+        getQuiz,
+
+      getForCourse:
+        getQuizzesForCourse,
+
+      start:
+        startQuiz,
+
+      submit:
+        submitQuiz,
+
+      getAttempts:
+        getAttempts,
+
+      getAttempt:
+        getAttempt
+    },
+
+    results: {
+      getAll:
+        getResults,
+
+      getCurrent:
+        getCurrentResults,
+
+      getLegacy:
+        getLegacyResults
+    },
+
+    notifications: {
+      getAll:
+        getNotifications,
+
+      getUnread:
+        getUnreadNotifications,
+
+      markRead:
+        markNotificationRead
+    },
+
+    support: {
+      getSettings:
+        getSupportSettings,
+
+      createTicket:
+        createSupportTicket,
+
+      getMyTickets:
+        getMySupportTickets
+    },
+
+    views: {
+      markViewed:
+        markViewed,
+
+      getViewed:
+        getViewedContent
+    },
+
+    search: {
+      all:
+        search
+    },
+
+    dashboard: {
+      get:
+        getDashboard
+    },
+
+    statistics: {
+      getStudent:
+        getStudentStatistics
+    },
+
+    ui: {
+      formatDate:
+        formatDate,
+
+      formatNumber:
+        formatNumber,
+
+      getStudentDisplayName:
+        getStudentDisplayName
+    },
+
+    helpers: {
+      isObject:
+        isObject,
+
+      safeString:
+        safeString,
+
+      clone:
+        clone,
+
+      firstValue:
+        firstValue,
+
+      normalizeIdentifier:
+        normalizeIdentifier,
+
+      normalizePhone:
+        normalizePhone,
+
+      timestamp:
+        timestamp,
+
+      getErrorMessage:
+        getErrorMessage,
+
+      normalizeError:
+        normalizeError,
+
+      storageGet:
+        storageGet,
+
+      storageSet:
+        storageSet,
+
+      storageGetJSON:
+        storageGetJSON,
+
+      storageSetJSON:
+        storageSetJSON,
+
+      storageRemove:
+        storageRemove
+    }
+  };
+
+  /* =========================================================
+     REGISTER MODULE
+     ========================================================= */
+
+  if (
+    Core.modules &&
+    typeof Core.modules ===
+      "object"
+  ) {
+    Core.modules.features =
+      FirebaseFeatures;
+  }
+
+  window.FirebaseFeatures =
+    FirebaseFeatures;
+
+  window.FirebaseFeaturesReady =
+    true;
+
+  window.FirebaseFeaturesReadyPromise =
+    Promise.resolve(
+      FirebaseFeatures
+    );
+
+  console.log(
+    "Firebase Features Layer initialized successfully."
+  );
+
+})(window);

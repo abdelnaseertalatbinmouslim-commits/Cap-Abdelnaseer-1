@@ -1,0 +1,6182 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <meta name="theme-color" content="#080b12">
+
+    <title>الفيديوهات | CAP Abdelnaseer</title>
+
+    <meta
+        name="description"
+        content="الفيديوهات والمحاضرات المرئية في منصة CAP Abdelnaseer"
+    >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        /* =========================================================
+           CAP ABDELNASEER
+           VIDEOS PAGE
+           ========================================================= */
+
+        :root {
+            --bg: #080b12;
+            --bg-soft: #0d111a;
+
+            --card: #111722;
+            --card-2: #151c28;
+
+            --border: rgba(255, 255, 255, .08);
+
+            --text: #f7f9fc;
+            --muted: #9aa5b5;
+            --muted-2: #717c8d;
+
+            --primary: #6c63ff;
+            --primary-2: #8b85ff;
+
+            --success: #2ecc71;
+            --warning: #f5b942;
+            --danger: #ff5c6c;
+
+            --shadow:
+                0 18px 60px rgba(0, 0, 0, .30);
+
+            --radius: 22px;
+            --radius-sm: 14px;
+
+            --container: 1200px;
+        }
+
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at 80% 0%,
+                    rgba(108, 99, 255, .10),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 10% 25%,
+                    rgba(46, 204, 113, .035),
+                    transparent 25%
+                ),
+                var(--bg);
+
+            color: var(--text);
+
+            font-family: "Cairo", sans-serif;
+
+            line-height: 1.7;
+
+            overflow-x: hidden;
+        }
+
+
+        body.menu-open {
+            overflow: hidden;
+        }
+
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+
+        button,
+        input,
+        select {
+            font-family: inherit;
+        }
+
+
+        button {
+            border: 0;
+            cursor: pointer;
+        }
+
+
+        .container {
+            width: min(
+                calc(100% - 32px),
+                var(--container)
+            );
+
+            margin: 0 auto;
+        }
+
+
+        /* =========================================================
+           PAGE LOADER
+           ========================================================= */
+
+        .page-loader {
+            position: fixed;
+            inset: 0;
+
+            z-index: 9999;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: var(--bg);
+
+            transition:
+                opacity .35s ease,
+                visibility .35s ease;
+        }
+
+
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+
+        .loader-box {
+            text-align: center;
+        }
+
+
+        .loader-spinner {
+            width: 48px;
+            height: 48px;
+
+            margin: 0 auto 15px;
+
+            border:
+                4px solid rgba(255, 255, 255, .08);
+
+            border-top-color: var(--primary);
+
+            border-radius: 50%;
+
+            animation:
+                spin .8s linear infinite;
+        }
+
+
+        .loader-text {
+            color: var(--muted);
+
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+
+        /* =========================================================
+           HEADER
+           ========================================================= */
+
+        .site-header {
+            position: sticky;
+            top: 0;
+
+            z-index: 1000;
+
+            background:
+                rgba(8, 11, 18, .84);
+
+            border-bottom:
+                1px solid var(--border);
+
+            backdrop-filter:
+                blur(18px);
+
+            -webkit-backdrop-filter:
+                blur(18px);
+        }
+
+
+        .header-inner {
+            min-height: 76px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+
+            gap: 11px;
+
+            font-weight: 900;
+
+            white-space: nowrap;
+        }
+
+
+        .brand-mark {
+            width: 42px;
+            height: 42px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #4b45c7
+                );
+
+            box-shadow:
+                0 10px 28px
+                rgba(108, 99, 255, .22);
+
+            font-size: 17px;
+        }
+
+
+        .brand-text {
+            font-size: 17px;
+        }
+
+
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+
+            gap: 6px;
+        }
+
+
+        .nav-link {
+            padding: 9px 13px;
+
+            border-radius: 10px;
+
+            color: var(--muted);
+
+            font-size: 13px;
+            font-weight: 700;
+
+            transition:
+                color .2s ease,
+                background .2s ease;
+        }
+
+
+        .nav-link:hover {
+            color: var(--text);
+
+            background:
+                rgba(255, 255, 255, .045);
+        }
+
+
+        .nav-link.active {
+            color: var(--text);
+
+            background:
+                rgba(108, 99, 255, .12);
+        }
+
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+
+            gap: 9px;
+        }
+
+
+        .header-btn {
+            min-height: 40px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 7px;
+
+            padding: 0 14px;
+
+            border-radius: 11px;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            transition:
+                transform .2s ease,
+                background .2s ease;
+        }
+
+
+        .header-btn:hover {
+            transform: translateY(-1px);
+        }
+
+
+        .header-btn.secondary {
+            color: var(--muted);
+
+            border:
+                1px solid var(--border);
+
+            background:
+                rgba(255, 255, 255, .025);
+        }
+
+
+        .header-btn.primary {
+            color: #fff;
+
+            background:
+                var(--primary);
+
+            box-shadow:
+                0 8px 24px
+                rgba(108, 99, 255, .18);
+        }
+
+
+        .mobile-menu-button {
+            width: 42px;
+            height: 42px;
+
+            display: none;
+            place-items: center;
+
+            color: var(--text);
+
+            background:
+                var(--card);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 12px;
+
+            font-size: 21px;
+        }
+
+
+        /* =========================================================
+           MOBILE NAV
+           ========================================================= */
+
+        .mobile-nav {
+            display: none;
+
+            position: fixed;
+
+            inset: 76px 0 0;
+
+            z-index: 999;
+
+            padding: 20px;
+
+            background:
+                rgba(8, 11, 18, .97);
+
+            backdrop-filter:
+                blur(18px);
+
+            -webkit-backdrop-filter:
+                blur(18px);
+
+            overflow-y: auto;
+        }
+
+
+        .mobile-nav.open {
+            display: block;
+        }
+
+
+        .mobile-nav-inner {
+            width: min(100%, 500px);
+
+            margin: 0 auto;
+
+            display: grid;
+
+            gap: 8px;
+        }
+
+
+        .mobile-nav a {
+            padding: 14px 16px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
+            background:
+                rgba(255, 255, 255, .025);
+
+            color: var(--muted);
+
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+
+        .mobile-nav a.active {
+            color: var(--text);
+
+            border-color:
+                rgba(108, 99, 255, .25);
+
+            background:
+                rgba(108, 99, 255, .10);
+        }
+
+
+        /* =========================================================
+           MAIN
+           ========================================================= */
+
+        main {
+            padding: 38px 0 70px;
+        }
+
+
+        .page-heading {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+
+            gap: 24px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .heading-content {
+            max-width: 760px;
+        }
+
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+
+            gap: 8px;
+
+            margin-bottom: 8px;
+
+            color: var(--primary-2);
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background:
+                var(--primary);
+
+            box-shadow:
+                0 0 14px
+                rgba(108, 99, 255, .65);
+        }
+
+
+        .page-title {
+            font-size:
+                clamp(27px, 4vw, 42px);
+
+            line-height: 1.25;
+
+            font-weight: 900;
+
+            letter-spacing: -.7px;
+        }
+
+
+        .page-description {
+            margin-top: 9px;
+
+            color: var(--muted);
+
+            font-size: 14px;
+
+            max-width: 700px;
+        }
+
+
+        .back-btn {
+            flex-shrink: 0;
+
+            min-height: 44px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            padding: 0 16px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 12px;
+
+            background:
+                rgba(255, 255, 255, .025);
+
+            color: var(--muted);
+
+            font-size: 13px;
+            font-weight: 800;
+
+            transition:
+                color .2s ease,
+                background .2s ease,
+                transform .2s ease;
+        }
+
+
+        .back-btn:hover {
+            color: var(--text);
+
+            background:
+                rgba(255, 255, 255, .05);
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        /* =========================================================
+           FILTER PANEL
+           ========================================================= */
+
+        .filters-panel {
+            padding: 17px;
+
+            margin-bottom: 26px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: var(--radius);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, .035),
+                    rgba(255, 255, 255, .018)
+                );
+
+            box-shadow:
+                var(--shadow);
+        }
+
+
+        .filters-row {
+            display: grid;
+
+            grid-template-columns:
+                minmax(220px, 1fr)
+                auto
+                auto;
+
+            gap: 10px;
+        }
+
+
+        .search-box {
+            position: relative;
+        }
+
+
+        .search-icon {
+            position: absolute;
+
+            top: 50%;
+            right: 15px;
+
+            transform:
+                translateY(-50%);
+
+            color: var(--muted-2);
+
+            pointer-events: none;
+
+            font-size: 16px;
+        }
+
+
+        .search-input {
+            width: 100%;
+            height: 46px;
+
+            padding:
+                0 43px 0 15px;
+
+            color: var(--text);
+
+            background:
+                rgba(0, 0, 0, .18);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 12px;
+
+            outline: none;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            transition:
+                border-color .2s ease,
+                background .2s ease;
+        }
+
+
+        .search-input::placeholder {
+            color: var(--muted-2);
+        }
+
+
+        .search-input:focus {
+            border-color:
+                rgba(108, 99, 255, .55);
+
+            background:
+                rgba(0, 0, 0, .25);
+        }
+
+
+        .filter-select {
+            min-width: 170px;
+            height: 46px;
+
+            padding: 0 14px;
+
+            color: var(--text);
+
+            background:
+                rgba(0, 0, 0, .18);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 12px;
+
+            outline: none;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+
+        .filter-select option {
+            background: #111722;
+            color: #fff;
+        }
+
+
+        .clear-filters {
+            height: 46px;
+
+            padding: 0 15px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 12px;
+
+            color: var(--muted);
+
+            background:
+                rgba(255, 255, 255, .025);
+
+            font-size: 12px;
+            font-weight: 800;
+
+            transition:
+                color .2s ease,
+                background .2s ease;
+        }
+
+
+        .clear-filters:hover {
+            color: var(--text);
+
+            background:
+                rgba(255, 255, 255, .055);
+        }
+
+
+        .filter-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-top: 13px;
+            padding-top: 13px;
+
+            border-top:
+                1px solid rgba(255, 255, 255, .05);
+        }
+
+
+        .results-count {
+            color: var(--muted);
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+
+        .results-count strong {
+            color: var(--text);
+        }
+
+
+        .active-subject {
+            display: none;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: var(--primary-2);
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+
+        .active-subject.visible {
+            display: inline-flex;
+        }
+
+
+        .subject-remove {
+            width: 22px;
+            height: 22px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 7px;
+
+            color: var(--muted);
+
+            background:
+                rgba(255, 255, 255, .06);
+        }
+
+
+        /* =========================================================
+           VIDEO GRID
+           ========================================================= */
+
+        .videos-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 17px;
+        }
+
+
+        .video-card {
+            position: relative;
+
+            min-width: 0;
+
+            overflow: hidden;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: var(--radius);
+
+            background:
+                linear-gradient(
+                    150deg,
+                    rgba(255, 255, 255, .035),
+                    rgba(255, 255, 255, .015)
+                );
+
+            box-shadow:
+                0 12px 35px
+                rgba(0, 0, 0, .16);
+
+            transition:
+                transform .25s ease,
+                border-color .25s ease,
+                box-shadow .25s ease;
+        }
+
+
+        .video-card:hover {
+            transform:
+                translateY(-5px);
+
+            border-color:
+                rgba(108, 99, 255, .22);
+
+            box-shadow:
+                0 20px 45px
+                rgba(0, 0, 0, .24);
+        }
+
+
+        .video-thumbnail {
+            position: relative;
+
+            aspect-ratio: 16 / 9;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #171d2a,
+                    #0c1018
+                );
+        }
+
+
+        .video-thumbnail::before {
+            content: "";
+
+            position: absolute;
+            inset: 0;
+
+            background:
+                radial-gradient(
+                    circle at 50% 50%,
+                    rgba(108, 99, 255, .20),
+                    transparent 40%
+                );
+        }
+
+
+        .thumbnail-image {
+            width: 100%;
+            height: 100%;
+
+            display: block;
+
+            object-fit: cover;
+
+            opacity: .82;
+
+            transition:
+                transform .35s ease,
+                opacity .35s ease;
+        }
+
+
+        .video-card:hover
+        .thumbnail-image {
+            transform: scale(1.045);
+
+            opacity: .95;
+        }
+
+
+        .thumbnail-fallback {
+            position: absolute;
+            inset: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 46px;
+
+            opacity: .9;
+        }
+
+
+        .play-button {
+            position: absolute;
+
+            top: 50%;
+            left: 50%;
+
+            transform:
+                translate(-50%, -50%);
+
+            width: 58px;
+            height: 58px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 50%;
+
+            color: #fff;
+
+            background:
+                rgba(108, 99, 255, .92);
+
+            border:
+                4px solid
+                rgba(255, 255, 255, .17);
+
+            box-shadow:
+                0 12px 30px
+                rgba(0, 0, 0, .30);
+
+            font-size: 21px;
+
+            transition:
+                transform .25s ease,
+                background .25s ease;
+        }
+
+
+        .video-card:hover
+        .play-button {
+            transform:
+                translate(-50%, -50%)
+                scale(1.08);
+
+            background:
+                var(--primary-2);
+        }
+
+
+        .video-duration {
+            position: absolute;
+
+            bottom: 9px;
+            left: 9px;
+
+            min-height: 24px;
+
+            display: inline-flex;
+            align-items: center;
+
+            padding: 0 8px;
+
+            border-radius: 7px;
+
+            color: #fff;
+
+            background:
+                rgba(0, 0, 0, .72);
+
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+
+        .video-badge {
+            position: absolute;
+
+            top: 10px;
+            right: 10px;
+
+            min-height: 25px;
+
+            display: inline-flex;
+            align-items: center;
+
+            padding: 0 8px;
+
+            border-radius: 8px;
+
+            color: #fff;
+
+            background:
+                rgba(108, 99, 255, .86);
+
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+
+        .video-content {
+            padding: 18px;
+        }
+
+
+        .video-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+
+            gap: 6px;
+
+            margin-bottom: 9px;
+        }
+
+
+        .meta-item {
+            display: inline-flex;
+            align-items: center;
+
+            gap: 5px;
+
+            min-height: 24px;
+
+            padding: 0 8px;
+
+            border-radius: 8px;
+
+            color: var(--muted-2);
+
+            background:
+                rgba(255, 255, 255, .035);
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+
+        .video-title {
+            display: -webkit-box;
+
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+
+            overflow: hidden;
+
+            margin-bottom: 7px;
+
+            font-size: 17px;
+
+            line-height: 1.5;
+
+            font-weight: 900;
+        }
+
+
+        .video-description {
+            display: -webkit-box;
+
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+
+            overflow: hidden;
+
+            min-height: 43px;
+
+            color: var(--muted);
+
+            font-size: 12px;
+
+            line-height: 1.8;
+        }
+
+
+        .video-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 10px;
+
+            margin-top: 16px;
+            padding-top: 14px;
+
+            border-top:
+                1px solid rgba(255, 255, 255, .055);
+        }
+
+
+        .video-date {
+            color: var(--muted-2);
+
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+
+        .watch-video {
+            min-height: 38px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 7px;
+
+            padding: 0 13px;
+
+            border-radius: 10px;
+
+            color: #fff;
+
+            background:
+                var(--primary);
+
+            box-shadow:
+                0 8px 22px
+                rgba(108, 99, 255, .16);
+
+            font-size: 11px;
+            font-weight: 800;
+
+            transition:
+                transform .2s ease,
+                background .2s ease;
+        }
+
+
+        .watch-video:hover {
+            transform:
+                translateY(-1px);
+
+            background:
+                var(--primary-2);
+        }
+
+
+        .watch-video.disabled {
+            cursor: not-allowed;
+
+            color: var(--muted);
+
+            background:
+                rgba(255, 255, 255, .06);
+
+            box-shadow: none;
+        }
+
+
+        /* =========================================================
+           VIDEO PLAYER MODAL
+           ========================================================= */
+
+        .video-modal {
+            position: fixed;
+            inset: 0;
+
+            z-index: 11000;
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 18px;
+
+            background:
+                rgba(0, 0, 0, .82);
+
+            backdrop-filter:
+                blur(8px);
+
+            -webkit-backdrop-filter:
+                blur(8px);
+        }
+
+
+        .video-modal.open {
+            display: flex;
+        }
+
+
+        .modal-box {
+            width: min(
+                100%,
+                980px
+            );
+
+            max-height:
+                calc(100vh - 36px);
+
+            overflow: auto;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                20px;
+
+            background:
+                #0d121b;
+
+            box-shadow:
+                0 30px 100px
+                rgba(0, 0, 0, .55);
+        }
+
+
+        .modal-header {
+            min-height: 60px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            padding: 10px 15px;
+
+            border-bottom:
+                1px solid var(--border);
+        }
+
+
+        .modal-title {
+            overflow: hidden;
+
+            color: var(--text);
+
+            font-size: 14px;
+            font-weight: 900;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+        }
+
+
+        .modal-close {
+            width: 38px;
+            height: 38px;
+
+            flex-shrink: 0;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 10px;
+
+            color: var(--muted);
+
+            background:
+                rgba(255, 255, 255, .05);
+
+            font-size: 20px;
+        }
+
+
+        .modal-close:hover {
+            color: #fff;
+
+            background:
+                rgba(255, 255, 255, .09);
+        }
+
+
+        .player-container {
+            position: relative;
+
+            width: 100%;
+
+            aspect-ratio: 16 / 9;
+
+            background:
+                #000;
+        }
+
+
+        .player-container iframe,
+        .player-container video {
+            width: 100%;
+            height: 100%;
+
+            display: block;
+
+            border: 0;
+        }
+
+
+        .direct-video {
+            background:
+                #000;
+        }
+
+
+        .modal-info {
+            padding: 15px 18px 18px;
+        }
+
+
+        .modal-info-title {
+            margin-bottom: 5px;
+
+            font-size: 15px;
+            font-weight: 900;
+        }
+
+
+        .modal-info-description {
+            color: var(--muted);
+
+            font-size: 11px;
+
+            line-height: 1.8;
+        }
+
+
+        /* =========================================================
+           SKELETON
+           ========================================================= */
+
+        .skeleton-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 17px;
+        }
+
+
+        .skeleton-card {
+            height: 360px;
+
+            border-radius:
+                var(--radius);
+
+            border:
+                1px solid var(--border);
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, .025) 25%,
+                    rgba(255, 255, 255, .065) 50%,
+                    rgba(255, 255, 255, .025) 75%
+                );
+
+            background-size:
+                200% 100%;
+
+            animation:
+                skeleton 1.4s ease-in-out infinite;
+        }
+
+
+        @keyframes skeleton {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+
+        /* =========================================================
+           EMPTY / ERROR
+           ========================================================= */
+
+        .state-box {
+            display: none;
+
+            padding: 55px 25px;
+
+            text-align: center;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                var(--radius);
+
+            background:
+                rgba(255, 255, 255, .018);
+        }
+
+
+        .state-box.visible {
+            display: block;
+        }
+
+
+        .state-icon {
+            width: 64px;
+            height: 64px;
+
+            display: grid;
+            place-items: center;
+
+            margin:
+                0 auto 15px;
+
+            border-radius: 19px;
+
+            background:
+                rgba(108, 99, 255, .09);
+
+            border:
+                1px solid
+                rgba(108, 99, 255, .12);
+
+            font-size: 28px;
+        }
+
+
+        .state-title {
+            margin-bottom: 6px;
+
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+
+        .state-description {
+            max-width: 520px;
+
+            margin: 0 auto;
+
+            color: var(--muted);
+
+            font-size: 12px;
+
+            line-height: 1.9;
+        }
+
+
+        .state-action {
+            min-height: 40px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            margin-top: 17px;
+
+            padding: 0 15px;
+
+            border-radius: 10px;
+
+            color: #fff;
+
+            background:
+                var(--primary);
+
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+
+        /* =========================================================
+           FOOTER
+           ========================================================= */
+
+        footer {
+            border-top:
+                1px solid var(--border);
+
+            background:
+                rgba(0, 0, 0, .12);
+        }
+
+
+        .footer-inner {
+            min-height: 82px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+
+        .footer-copy {
+            color: var(--muted-2);
+
+            font-size: 11px;
+        }
+
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+        }
+
+
+        .footer-links a {
+            color: var(--muted-2);
+
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+
+        .footer-links a:hover {
+            color: var(--text);
+        }
+
+
+        /* =========================================================
+           TOAST
+           ========================================================= */
+
+        .toast-container {
+            position: fixed;
+
+            left: 18px;
+            bottom: 18px;
+
+            z-index: 12000;
+
+            width:
+                min(
+                    calc(100% - 36px),
+                    360px
+                );
+
+            display: grid;
+
+            gap: 9px;
+
+            pointer-events: none;
+        }
+
+
+        .toast {
+            display: flex;
+            align-items: flex-start;
+
+            gap: 10px;
+
+            padding: 13px 14px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 13px;
+
+            background:
+                rgba(17, 23, 34, .95);
+
+            box-shadow:
+                0 18px 40px
+                rgba(0, 0, 0, .3);
+
+            pointer-events: auto;
+
+            animation:
+                toastIn .25s ease forwards;
+        }
+
+
+        .toast.hide {
+            animation:
+                toastOut .25s ease forwards;
+        }
+
+
+        .toast-icon {
+            width: 28px;
+            height: 28px;
+
+            flex-shrink: 0;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 9px;
+
+            background:
+                rgba(108, 99, 255, .10);
+
+            font-size: 13px;
+        }
+
+
+        .toast-content {
+            min-width: 0;
+        }
+
+
+        .toast-title {
+            margin-bottom: 2px;
+
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+
+        .toast-message {
+            color: var(--muted);
+
+            font-size: 10px;
+
+            line-height: 1.7;
+        }
+
+
+        @keyframes toastIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+
+        @keyframes toastOut {
+
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+        @media (max-width: 1050px) {
+
+            .desktop-nav {
+                display: none;
+            }
+
+
+            .mobile-menu-button {
+                display: grid;
+            }
+
+
+            .header-actions
+            .header-btn.secondary {
+                display: none;
+            }
+
+
+            .videos-grid,
+            .skeleton-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+        }
+
+
+        @media (max-width: 760px) {
+
+            .container {
+                width:
+                    min(
+                        calc(100% - 24px),
+                        var(--container)
+                    );
+            }
+
+
+            .header-inner {
+                min-height: 68px;
+            }
+
+
+            .mobile-nav {
+                inset: 68px 0 0;
+            }
+
+
+            main {
+                padding-top: 27px;
+            }
+
+
+            .page-heading {
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                margin-bottom: 20px;
+            }
+
+
+            .back-btn {
+                width: 100%;
+            }
+
+
+            .filters-row {
+                grid-template-columns: 1fr;
+            }
+
+
+            .filter-select {
+                width: 100%;
+            }
+
+
+            .clear-filters {
+                width: 100%;
+            }
+
+
+            .filter-info {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+
+            .videos-grid,
+            .skeleton-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .footer-inner {
+                min-height: 100px;
+
+                align-items: flex-start;
+                justify-content: center;
+
+                flex-direction: column;
+
+                padding: 20px 0;
+            }
+
+
+            .video-modal {
+                padding: 8px;
+            }
+
+
+            .modal-box {
+                max-height:
+                    calc(100vh - 16px);
+
+                border-radius: 16px;
+            }
+
+        }
+
+
+        @media (max-width: 450px) {
+
+            .brand-text {
+                font-size: 14px;
+            }
+
+
+            .brand-mark {
+                width: 39px;
+                height: 39px;
+            }
+
+
+            .header-actions
+            .header-btn.primary {
+                padding: 0 10px;
+
+                font-size: 10px;
+            }
+
+
+            .page-title {
+                font-size: 27px;
+            }
+
+
+            .video-content {
+                padding: 15px;
+            }
+
+
+            .play-button {
+                width: 52px;
+                height: 52px;
+            }
+
+        }
+
+
+        /* =========================================================
+           ACCESSIBILITY
+           ========================================================= */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            html {
+                scroll-behavior: auto;
+            }
+
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+
+                animation-iteration-count: 1 !important;
+
+                transition-duration: .01ms !important;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <!-- =========================================================
+         PAGE LOADER
+         ========================================================= -->
+
+    <div
+        class="page-loader"
+        id="pageLoader"
+        aria-hidden="false"
+    >
+
+        <div class="loader-box">
+
+            <div class="loader-spinner"></div>
+
+            <div class="loader-text">
+                جاري تحميل الفيديوهات...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         HEADER
+         ========================================================= -->
+
+    <header
+        class="site-header"
+        id="siteHeader"
+    >
+
+        <div class="container header-inner">
+
+            <a
+                href="index.html"
+                class="brand"
+                aria-label="CAP Abdelnaseer"
+            >
+
+                <span class="brand-mark">
+                    CA
+                </span>
+
+                <span class="brand-text">
+                    CAP Abdelnaseer
+                </span>
+
+            </a>
+
+
+            <nav
+                class="desktop-nav"
+                aria-label="التنقل الرئيسي"
+            >
+
+                <a
+                    href="dashboard.html"
+                    class="nav-link"
+                >
+                    الرئيسية
+                </a>
+
+                <a
+                    href="courses.html"
+                    class="nav-link"
+                >
+                    المواد
+                </a>
+
+                <a
+                    href="files.html"
+                    class="nav-link"
+                >
+                    الملفات
+                </a>
+
+                <a
+                    href="videos.html"
+                    class="nav-link active"
+                >
+                    الفيديوهات
+                </a>
+
+                <a
+                    href="quizzes.html"
+                    class="nav-link"
+                >
+                    الاختبارات
+                </a>
+
+                <a
+                    href="results.html"
+                    class="nav-link"
+                >
+                    النتائج
+                </a>
+
+            </nav>
+
+
+            <div class="header-actions">
+
+                <a
+                    href="login.html"
+                    class="header-btn secondary"
+                    id="loginHeaderButton"
+                >
+                    تسجيل الدخول
+                </a>
+
+                <a
+                    href="dashboard.html"
+                    class="header-btn primary"
+                    id="dashboardHeaderButton"
+                >
+                    لوحة التحكم
+                </a>
+
+                <button
+                    type="button"
+                    class="mobile-menu-button"
+                    id="mobileMenuButton"
+                    aria-label="فتح القائمة"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+         MOBILE NAV
+         ========================================================= -->
+
+    <nav
+        class="mobile-nav"
+        id="mobileNav"
+        aria-label="قائمة الهاتف"
+    >
+
+        <div class="mobile-nav-inner">
+
+            <a href="dashboard.html">
+                الرئيسية
+            </a>
+
+            <a href="courses.html">
+                المواد
+            </a>
+
+            <a href="files.html">
+                الملفات
+            </a>
+
+            <a
+                href="videos.html"
+                class="active"
+            >
+                الفيديوهات
+            </a>
+
+            <a href="quizzes.html">
+                الاختبارات
+            </a>
+
+            <a href="results.html">
+                النتائج
+            </a>
+
+            <a href="notifications.html">
+                الإشعارات
+            </a>
+
+            <a href="profile.html">
+                الملف الشخصي
+            </a>
+
+            <a href="support.html">
+                الدعم
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =========================================================
+         MAIN
+         ========================================================= -->
+
+    <main>
+
+        <div class="container">
+
+            <!-- PAGE HEADING -->
+
+            <section class="page-heading">
+
+                <div class="heading-content">
+
+                    <div class="eyebrow">
+
+                        <span class="eyebrow-dot"></span>
+
+                        المحتوى المرئي
+
+                    </div>
+
+
+                    <h1
+                        class="page-title"
+                        id="pageTitle"
+                    >
+                        الفيديوهات والمحاضرات
+                    </h1>
+
+
+                    <p
+                        class="page-description"
+                        id="pageDescription"
+                    >
+                        كل الفيديوهات والمحاضرات المرئية المتاحة
+                        للطلاب في مكان واحد.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="courses.html"
+                    class="back-btn"
+                    id="backToCourses"
+                >
+                    <span>→</span>
+                    العودة للمواد
+                </a>
+
+            </section>
+
+
+            <!-- =================================================
+                 FILTERS
+                 ================================================= -->
+
+            <section class="filters-panel">
+
+                <div class="filters-row">
+
+                    <div class="search-box">
+
+                        <span
+                            class="search-icon"
+                            aria-hidden="true"
+                        >
+                            🔎
+                        </span>
+
+                        <input
+                            type="search"
+                            id="searchInput"
+                            class="search-input"
+                            placeholder="ابحث عن فيديو أو محاضرة..."
+                            autocomplete="off"
+                            aria-label="البحث عن فيديو"
+                        >
+
+                    </div>
+
+
+                    <select
+                        id="termFilter"
+                        class="filter-select"
+                        aria-label="اختيار الترم"
+                    >
+
+                        <option value="all">
+                            كل الترمات
+                        </option>
+
+                        <option value="1">
+                            الترم الأول
+                        </option>
+
+                        <option value="2">
+                            الترم الثاني
+                        </option>
+
+                        <option value="3">
+                            الترم الثالث
+                        </option>
+
+                        <option value="4">
+                            الترم الرابع
+                        </option>
+
+                    </select>
+
+
+                    <select
+                        id="subjectFilter"
+                        class="filter-select"
+                        aria-label="اختيار المادة"
+                    >
+
+                        <option value="all">
+                            كل المواد
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="filter-info">
+
+                    <div
+                        class="results-count"
+                        id="resultsCount"
+                    >
+                        جاري التحميل...
+                    </div>
+
+
+                    <div
+                        class="active-subject"
+                        id="activeSubject"
+                    >
+
+                        <span>
+                            المادة:
+                        </span>
+
+                        <strong
+                            id="activeSubjectName"
+                        ></strong>
+
+                        <button
+                            type="button"
+                            class="subject-remove"
+                            id="removeSubjectFilter"
+                            aria-label="إلغاء فلتر المادة"
+                        >
+                            ×
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SKELETON
+                 ================================================= -->
+
+            <section
+                class="skeleton-grid"
+                id="skeletonGrid"
+                aria-hidden="true"
+            >
+
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+
+            </section>
+
+
+            <!-- =================================================
+                 VIDEOS
+                 ================================================= -->
+
+            <section
+                class="videos-grid"
+                id="videosGrid"
+                aria-live="polite"
+            ></section>
+
+
+            <!-- =================================================
+                 EMPTY
+                 ================================================= -->
+
+            <section
+                class="state-box"
+                id="emptyState"
+            >
+
+                <div class="state-icon">
+                    🎬
+                </div>
+
+
+                <h2 class="state-title">
+                    مفيش فيديوهات متاحة
+                </h2>
+
+
+                <p class="state-description">
+                    مفيش فيديوهات مطابقة للبحث أو الفلاتر الحالية.
+                    جرّب تغيير كلمة البحث أو اختيار مادة أو ترم مختلف.
+                </p>
+
+
+                <button
+                    type="button"
+                    class="state-action"
+                    id="emptyResetButton"
+                >
+                    عرض كل الفيديوهات
+                </button>
+
+            </section>
+
+
+            <!-- =================================================
+                 ERROR
+                 ================================================= -->
+
+            <section
+                class="state-box"
+                id="errorState"
+            >
+
+                <div class="state-icon">
+                    ⚠️
+                </div>
+
+
+                <h2 class="state-title">
+                    حصلت مشكلة في تحميل الفيديوهات
+                </h2>
+
+
+                <p
+                    class="state-description"
+                    id="errorDescription"
+                >
+                    تعذر الاتصال ببيانات الفيديوهات حاليًا.
+                    حاول مرة أخرى.
+                </p>
+
+
+                <button
+                    type="button"
+                    class="state-action"
+                    id="retryButton"
+                >
+                    إعادة المحاولة
+                </button>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================================================
+         VIDEO MODAL
+         ========================================================= -->
+
+    <div
+        class="video-modal"
+        id="videoModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+    >
+
+        <div class="modal-box">
+
+            <div class="modal-header">
+
+                <div
+                    class="modal-title"
+                    id="modalTitle"
+                >
+                    الفيديو
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    id="modalClose"
+                    aria-label="إغلاق الفيديو"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div
+                class="player-container"
+                id="playerContainer"
+            ></div>
+
+
+            <div class="modal-info">
+
+                <h3
+                    class="modal-info-title"
+                    id="modalInfoTitle"
+                ></h3>
+
+
+                <p
+                    class="modal-info-description"
+                    id="modalInfoDescription"
+                ></p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+
+    <footer>
+
+        <div class="container footer-inner">
+
+            <div class="footer-copy">
+
+                ©
+                <span id="currentYear"></span>
+
+                CAP Abdelnaseer — جميع الحقوق محفوظة
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <a href="dashboard.html">
+                    الرئيسية
+                </a>
+
+                <a href="support.html">
+                    الدعم
+                </a>
+
+                <a href="profile.html">
+                    الحساب
+                </a>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =========================================================
+         TOAST
+         ========================================================= -->
+
+    <div
+        class="toast-container"
+        id="toastContainer"
+        aria-live="polite"
+        aria-atomic="true"
+    ></div>
+
+
+    <!-- =========================================================
+         FIREBASE CDN
+         ========================================================= -->
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+
+
+    <!-- =========================================================
+         PROJECT FIREBASE LAYERS
+         ========================================================= -->
+
+    <script src="firebase-config.js"></script>
+    <script src="firebase-auth.js"></script>
+    <script src="firebase-database.js"></script>
+    <script src="firebase-content.js"></script>
+    <script src="firebase-features.js"></script>
+
+
+    <!-- =========================================================
+         VIDEOS PAGE LOGIC
+         ========================================================= -->
+
+    <script>
+
+        (function () {
+
+            "use strict";
+
+
+            /* =====================================================
+               STATE
+               ===================================================== */
+
+            const state = {
+
+                videos: [],
+
+                subjects: [],
+
+                filteredVideos: [],
+
+                loading: true,
+
+                error: null,
+
+                search: "",
+
+                term: "all",
+
+                subject: "all",
+
+                subjectFromUrl: "",
+
+                termFromUrl: "",
+
+                currentUser: null,
+
+                activeVideo: null
+
+            };
+
+
+            /* =====================================================
+               DOM
+               ===================================================== */
+
+            const pageLoader =
+                document.getElementById(
+                    "pageLoader"
+                );
+
+
+            const skeletonGrid =
+                document.getElementById(
+                    "skeletonGrid"
+                );
+
+
+            const videosGrid =
+                document.getElementById(
+                    "videosGrid"
+                );
+
+
+            const emptyState =
+                document.getElementById(
+                    "emptyState"
+                );
+
+
+            const errorState =
+                document.getElementById(
+                    "errorState"
+                );
+
+
+            const errorDescription =
+                document.getElementById(
+                    "errorDescription"
+                );
+
+
+            const retryButton =
+                document.getElementById(
+                    "retryButton"
+                );
+
+
+            const emptyResetButton =
+                document.getElementById(
+                    "emptyResetButton"
+                );
+
+
+            const searchInput =
+                document.getElementById(
+                    "searchInput"
+                );
+
+
+            const termFilter =
+                document.getElementById(
+                    "termFilter"
+                );
+
+
+            const subjectFilter =
+                document.getElementById(
+                    "subjectFilter"
+                );
+
+
+            const resultsCount =
+                document.getElementById(
+                    "resultsCount"
+                );
+
+
+            const activeSubject =
+                document.getElementById(
+                    "activeSubject"
+                );
+
+
+            const activeSubjectName =
+                document.getElementById(
+                    "activeSubjectName"
+                );
+
+
+            const removeSubjectFilter =
+                document.getElementById(
+                    "removeSubjectFilter"
+                );
+
+
+            const mobileMenuButton =
+                document.getElementById(
+                    "mobileMenuButton"
+                );
+
+
+            const mobileNav =
+                document.getElementById(
+                    "mobileNav"
+                );
+
+
+            const toastContainer =
+                document.getElementById(
+                    "toastContainer"
+                );
+
+
+            const currentYear =
+                document.getElementById(
+                    "currentYear"
+                );
+
+
+            const videoModal =
+                document.getElementById(
+                    "videoModal"
+                );
+
+
+            const modalClose =
+                document.getElementById(
+                    "modalClose"
+                );
+
+
+            const modalTitle =
+                document.getElementById(
+                    "modalTitle"
+                );
+
+
+            const modalInfoTitle =
+                document.getElementById(
+                    "modalInfoTitle"
+                );
+
+
+            const modalInfoDescription =
+                document.getElementById(
+                    "modalInfoDescription"
+                );
+
+
+            const playerContainer =
+                document.getElementById(
+                    "playerContainer"
+                );
+
+
+            /* =====================================================
+               HELPERS
+               ===================================================== */
+
+            function safeString(value) {
+
+                if (
+                    value === null ||
+                    value === undefined
+                ) {
+                    return "";
+                }
+
+                return String(value).trim();
+            }
+
+
+            function normalizeText(value) {
+
+                return safeString(value)
+                    .toLowerCase()
+                    .replace(/[أإآ]/g, "ا")
+                    .replace(/ة/g, "ه")
+                    .replace(/ى/g, "ي")
+                    .replace(/\s+/g, " ")
+                    .trim();
+            }
+
+
+            function normalizeId(value) {
+
+                return safeString(value)
+                    .toLowerCase()
+                    .replace(/\s+/g, "-");
+            }
+
+
+            function escapeHtml(value) {
+
+                return safeString(value)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+
+            function firstValue() {
+
+                for (
+                    let i = 0;
+                    i < arguments.length;
+                    i++
+                ) {
+
+                    const value =
+                        arguments[i];
+
+                    if (
+                        value !== undefined &&
+                        value !== null &&
+                        safeString(value) !== ""
+                    ) {
+
+                        return value;
+                    }
+
+                }
+
+                return "";
+            }
+
+
+            function toArray(value) {
+
+                if (Array.isArray(value)) {
+                    return value;
+                }
+
+
+                if (
+                    value &&
+                    typeof value === "object"
+                ) {
+
+                    return Object.keys(value)
+                        .map(function (key) {
+
+                            const item =
+                                value[key];
+
+                            if (
+                                item &&
+                                typeof item === "object"
+                            ) {
+
+                                return Object.assign(
+                                    {},
+                                    item,
+                                    {
+                                        key:
+                                            item.key ||
+                                            key
+                                    }
+                                );
+
+                            }
+
+                            return item;
+
+                        });
+                }
+
+
+                return [];
+            }
+
+
+            function timestampValue(value) {
+
+                if (
+                    value === null ||
+                    value === undefined ||
+                    value === ""
+                ) {
+                    return 0;
+                }
+
+
+                if (
+                    typeof value === "number" &&
+                    isFinite(value)
+                ) {
+                    return value;
+                }
+
+
+                if (
+                    value &&
+                    typeof value === "object"
+                ) {
+
+                    if (
+                        typeof value.toMillis ===
+                        "function"
+                    ) {
+
+                        return value.toMillis();
+                    }
+
+
+                    if (
+                        typeof value.seconds ===
+                        "number"
+                    ) {
+
+                        return value.seconds * 1000;
+                    }
+
+
+                    if (
+                        typeof value.timestamp ===
+                        "number"
+                    ) {
+
+                        return value.timestamp;
+                    }
+                }
+
+
+                const parsed =
+                    Date.parse(
+                        String(value)
+                    );
+
+
+                return isNaN(parsed)
+                    ? 0
+                    : parsed;
+            }
+
+
+            function formatDate(value) {
+
+                const timestamp =
+                    timestampValue(value);
+
+
+                if (!timestamp) {
+                    return "";
+                }
+
+
+                try {
+
+                    return new Intl.DateTimeFormat(
+                        "ar-EG",
+                        {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric"
+                        }
+                    ).format(
+                        new Date(timestamp)
+                    );
+
+                } catch (error) {
+
+                    return "";
+                }
+            }
+
+
+            function normalizeTerm(value) {
+
+                const text =
+                    normalizeText(value);
+
+
+                if (!text) {
+                    return "";
+                }
+
+
+                if (
+                    text === "1" ||
+                    text.includes("اول")
+                ) {
+                    return "1";
+                }
+
+
+                if (
+                    text === "2" ||
+                    text.includes("ثاني")
+                ) {
+                    return "2";
+                }
+
+
+                if (
+                    text === "3" ||
+                    text.includes("ثالث")
+                ) {
+                    return "3";
+                }
+
+
+                if (
+                    text === "4" ||
+                    text.includes("رابع")
+                ) {
+                    return "4";
+                }
+
+
+                return safeString(value);
+            }
+
+
+            function isPublished(item) {
+
+                if (!item) {
+                    return true;
+                }
+
+
+                const value =
+                    firstValue(
+                        item.published,
+                        item.isPublished,
+                        item.active,
+                        item.enabled,
+                        item.visible,
+                        item.status
+                    );
+
+
+                if (
+                    value === "" ||
+                    value === undefined ||
+                    value === null
+                ) {
+                    return true;
+                }
+
+
+                if (
+                    typeof value === "boolean"
+                ) {
+                    return value;
+                }
+
+
+                const text =
+                    normalizeText(value);
+
+
+                if (
+                    [
+                        "false",
+                        "0",
+                        "no",
+                        "draft",
+                        "hidden",
+                        "inactive",
+                        "disabled",
+                        "unpublished",
+                        "مخفي",
+                        "غير منشور"
+                    ].includes(text)
+                ) {
+
+                    return false;
+                }
+
+
+                return true;
+            }
+
+
+            /* =====================================================
+               VIDEO URL
+               ===================================================== */
+
+            function getVideoUrl(video) {
+
+                if (!video) {
+                    return "";
+                }
+
+
+                return safeString(
+                    firstValue(
+                        video.url,
+                        video.videoUrl,
+                        video.link,
+                        video.sourceUrl,
+                        video.embedUrl,
+                        video.video
+                    )
+                );
+            }
+
+
+            function detectVideoType(url) {
+
+                const value =
+                    safeString(url)
+                        .toLowerCase();
+
+
+                if (!value) {
+                    return "unknown";
+                }
+
+
+                if (
+                    value.includes("youtube.com") ||
+                    value.includes("youtu.be")
+                ) {
+
+                    return "youtube";
+                }
+
+
+                if (
+                    value.includes("vimeo.com")
+                ) {
+
+                    return "vimeo";
+                }
+
+
+                if (
+                    value.includes("<iframe") ||
+                    value.includes("iframe")
+                ) {
+
+                    return "iframe";
+                }
+
+
+                if (
+                    /\.(mp4|webm|ogg)(\?|#|$)/i
+                        .test(value)
+                ) {
+
+                    return "direct";
+                }
+
+
+                return "external";
+            }
+
+
+            function getYoutubeEmbedUrl(url) {
+
+                const value =
+                    safeString(url);
+
+
+                try {
+
+                    const parsed =
+                        new URL(value);
+
+
+                    let id = "";
+
+
+                    if (
+                        parsed.hostname.includes(
+                            "youtu.be"
+                        )
+                    ) {
+
+                        id =
+                            parsed.pathname
+                                .replace("/", "")
+                                .split("/")[0];
+
+                    } else {
+
+                        id =
+                            parsed.searchParams.get(
+                                "v"
+                            ) || "";
+
+                        if (
+                            !id &&
+                            parsed.pathname.includes(
+                                "/embed/"
+                            )
+                        ) {
+
+                            id =
+                                parsed.pathname
+                                    .split("/embed/")[1]
+                                    .split("/")[0];
+
+                        }
+
+                    }
+
+
+                    if (!id) {
+                        return "";
+                    }
+
+
+                    return (
+                        "https://www.youtube.com/embed/" +
+                        encodeURIComponent(id) +
+                        "?rel=0"
+                    );
+
+                } catch (error) {
+
+                    return "";
+                }
+            }
+
+
+            function getVimeoEmbedUrl(url) {
+
+                const value =
+                    safeString(url);
+
+
+                const match =
+                    value.match(
+                        /vimeo\.com\/(?:video\/)?(\d+)/i
+                    );
+
+
+                if (!match) {
+                    return "";
+                }
+
+
+                return (
+                    "https://player.vimeo.com/video/" +
+                    encodeURIComponent(match[1])
+                );
+            }
+
+
+            function isProbablyIframe(value) {
+
+                const text =
+                    safeString(value);
+
+
+                return (
+                    text.includes("<iframe") ||
+                    text.includes("iframe")
+                );
+            }
+
+
+            /* =====================================================
+               NORMALIZE VIDEO
+               ===================================================== */
+
+            function normalizeVideo(
+                video,
+                index
+            ) {
+
+                const item =
+                    video &&
+                    typeof video === "object"
+                        ? video
+                        : {};
+
+
+                const id =
+                    safeString(
+                        firstValue(
+                            item.id,
+                            item.videoId,
+                            item.key,
+                            item.uid
+                        )
+                    ) ||
+                    "video-" + index;
+
+
+                const title =
+                    safeString(
+                        firstValue(
+                            item.title,
+                            item.name,
+                            item.videoTitle,
+                            item.label
+                        )
+                    ) ||
+                    "فيديو تعليمي";
+
+
+                const description =
+                    safeString(
+                        firstValue(
+                            item.description,
+                            item.desc,
+                            item.details,
+                            item.note
+                        )
+                    );
+
+
+                const subjectId =
+                    normalizeId(
+                        firstValue(
+                            item.subjectId,
+                            item.subject,
+                            item.courseId,
+                            item.course
+                        )
+                    );
+
+
+                const subjectName =
+                    safeString(
+                        firstValue(
+                            item.subjectName,
+                            item.subjectTitle,
+                            typeof item.subject ===
+                            "object"
+                                ? item.subject.name
+                                : "",
+                            item.courseName
+                        )
+                    );
+
+
+                const term =
+                    normalizeTerm(
+                        firstValue(
+                            item.term,
+                            item.semester,
+                            item.termId
+                        )
+                    );
+
+
+                const url =
+                    getVideoUrl(item);
+
+
+                const createdAt =
+                    firstValue(
+                        item.createdAt,
+                        item.uploadedAt,
+                        item.date,
+                        item.timestamp,
+                        item.updatedAt
+                    );
+
+
+                const duration =
+                    safeString(
+                        firstValue(
+                            item.duration,
+                            item.durationText,
+                            item.videoDuration
+                        )
+                    );
+
+
+                const order =
+                    Number(
+                        firstValue(
+                            item.order,
+                            item.sortOrder,
+                            item.position,
+                            999999
+                        )
+                    );
+
+
+                return Object.assign(
+                    {},
+                    item,
+                    {
+                        id: id,
+
+                        title: title,
+
+                        description:
+                            description,
+
+                        subjectId:
+                            subjectId,
+
+                        subjectName:
+                            subjectName,
+
+                        term:
+                            term,
+
+                        url:
+                            url,
+
+                        urlType:
+                            detectVideoType(
+                                url
+                            ),
+
+                        duration:
+                            duration,
+
+                        createdAt:
+                            createdAt,
+
+                        order:
+                            isFinite(order)
+                                ? order
+                                : 999999,
+
+                        published:
+                            isPublished(item)
+                    }
+                );
+            }
+
+
+            /* =====================================================
+               SUBJECTS
+               ===================================================== */
+
+            function normalizeSubject(
+                subject,
+                index
+            ) {
+
+                const item =
+                    subject &&
+                    typeof subject === "object"
+                        ? subject
+                        : {};
+
+
+                const id =
+                    normalizeId(
+                        firstValue(
+                            item.id,
+                            item.subjectId,
+                            item.key,
+                            item.slug
+                        )
+                    ) ||
+                    "subject-" + index;
+
+
+                const name =
+                    safeString(
+                        firstValue(
+                            item.name,
+                            item.title,
+                            item.subjectName,
+                            item.label
+                        )
+                    ) ||
+                    id;
+
+
+                const term =
+                    normalizeTerm(
+                        firstValue(
+                            item.term,
+                            item.semester,
+                            item.termId
+                        )
+                    );
+
+
+                return Object.assign(
+                    {},
+                    item,
+                    {
+                        id: id,
+                        name: name,
+                        term: term
+                    }
+                );
+            }
+
+
+            async function loadSubjects() {
+
+                let subjects = [];
+
+
+                try {
+
+                    if (
+                        window.FirebaseContent &&
+                        typeof
+                        window.FirebaseContent
+                            .getSubjects ===
+                        "function"
+                    ) {
+
+                        subjects =
+                            await window.FirebaseContent
+                                .getSubjects();
+
+                    }
+
+                } catch (error) {
+
+                    console.warn(
+                        "Content subjects failed:",
+                        error
+                    );
+                }
+
+
+                if (
+                    (!subjects ||
+                    !subjects.length) &&
+                    window.FirebaseDatabase
+                ) {
+
+                    try {
+
+                        const raw =
+                            await window.FirebaseDatabase
+                                .get("subjects");
+
+                        subjects =
+                            toArray(raw);
+
+                    } catch (error) {
+
+                        console.warn(
+                            "Direct subjects failed:",
+                            error
+                        );
+                    }
+                }
+
+
+                state.subjects =
+                    toArray(subjects)
+                        .map(
+                            normalizeSubject
+                        )
+                        .filter(
+                            function (subject) {
+
+                                return (
+                                    subject &&
+                                    subject.id &&
+                                    subject.name
+                                );
+
+                            }
+                        );
+
+
+                const map = {};
+
+
+                state.subjects.forEach(
+                    function (subject) {
+
+                        if (!map[subject.id]) {
+
+                            map[subject.id] =
+                                subject;
+
+                        }
+
+                    }
+                );
+
+
+                state.subjects =
+                    Object.keys(map)
+                        .map(function (key) {
+
+                            return map[key];
+
+                        });
+
+
+                populateSubjectFilter();
+            }
+
+
+            function populateSubjectFilter() {
+
+                if (!subjectFilter) {
+                    return;
+                }
+
+
+                const current =
+                    state.subject;
+
+
+                subjectFilter.innerHTML = `
+                    <option value="all">
+                        كل المواد
+                    </option>
+                `;
+
+
+                state.subjects
+                    .slice()
+                    .sort(function (a, b) {
+
+                        return a.name.localeCompare(
+                            b.name,
+                            "ar"
+                        );
+
+                    })
+                    .forEach(
+                        function (subject) {
+
+                            const option =
+                                document.createElement(
+                                    "option"
+                                );
+
+
+                            option.value =
+                                subject.id;
+
+
+                            option.textContent =
+                                subject.name;
+
+
+                            subjectFilter
+                                .appendChild(
+                                    option
+                                );
+
+                        }
+                    );
+
+
+                if (
+                    current &&
+                    current !== "all"
+                ) {
+
+                    const exists =
+                        state.subjects.some(
+                            function (subject) {
+
+                                return (
+                                    subject.id ===
+                                    current
+                                );
+
+                            }
+                        );
+
+
+                    if (exists) {
+
+                        subjectFilter.value =
+                            current;
+
+                    } else {
+
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+
+                        option.value =
+                            current;
+
+
+                        option.textContent =
+                            state.subjectFromUrl ||
+                            current;
+
+
+                        subjectFilter
+                            .appendChild(
+                                option
+                            );
+
+
+                        subjectFilter.value =
+                            current;
+                    }
+
+                } else {
+
+                    subjectFilter.value =
+                        "all";
+                }
+
+
+                updateActiveSubject();
+            }
+
+
+            /* =====================================================
+               LOAD VIDEOS
+               ===================================================== */
+
+            async function loadVideos() {
+
+                state.loading = true;
+
+                state.error = null;
+
+                hideStateBoxes();
+
+                showSkeleton();
+
+
+                try {
+
+                    let videos = [];
+
+
+                    /*
+                     * PRIMARY
+                     */
+
+                    if (
+                        window.FirebaseContent &&
+                        typeof
+                        window.FirebaseContent
+                            .getVideos ===
+                        "function"
+                    ) {
+
+                        videos =
+                            await window.FirebaseContent
+                                .getVideos();
+
+                    }
+
+
+                    /*
+                     * FALLBACK
+                     */
+
+                    if (
+                        (!videos ||
+                        !videos.length) &&
+                        window.FirebaseFeatures &&
+                        typeof
+                        window.FirebaseFeatures
+                            .getVideos ===
+                        "function"
+                    ) {
+
+                        videos =
+                            await window.FirebaseFeatures
+                                .getVideos();
+
+                    }
+
+
+                    /*
+                     * DATABASE FALLBACK
+                     */
+
+                    if (
+                        (!videos ||
+                        !videos.length) &&
+                        window.FirebaseDatabase &&
+                        window.FirebaseDatabase.videos &&
+                        typeof
+                        window.FirebaseDatabase
+                            .videos
+                            .getAll ===
+                        "function"
+                    ) {
+
+                        videos =
+                            await window.FirebaseDatabase
+                                .videos
+                                .getAll();
+
+                    }
+
+
+                    state.videos =
+                        toArray(videos)
+                            .map(
+                                normalizeVideo
+                            )
+                            .filter(
+                                function (video) {
+
+                                    return (
+                                        video &&
+                                        video.published !==
+                                        false
+                                    );
+
+                                }
+                            );
+
+
+                    state.loading = false;
+
+                    hideSkeleton();
+
+                    applyFilters();
+
+                } catch (error) {
+
+                    console.error(
+                        "Videos loading error:",
+                        error
+                    );
+
+
+                    state.loading = false;
+
+                    state.error =
+                        error;
+
+                    hideSkeleton();
+
+                    showError(
+                        getFriendlyError(
+                            error
+                        )
+                    );
+                }
+            }
+
+
+            function getFriendlyError(error) {
+
+                if (!error) {
+
+                    return (
+                        "تعذر تحميل الفيديوهات حاليًا."
+                    );
+                }
+
+
+                if (
+                    window.FirebaseCore &&
+                    typeof
+                    window.FirebaseCore
+                        .getErrorMessage ===
+                    "function"
+                ) {
+
+                    try {
+
+                        const message =
+                            window.FirebaseCore
+                                .getErrorMessage(
+                                    error
+                                );
+
+
+                        if (message) {
+                            return message;
+                        }
+
+                    } catch (ignored) {}
+                }
+
+
+                if (error.message) {
+                    return error.message;
+                }
+
+
+                return (
+                    "تعذر تحميل الفيديوهات حاليًا."
+                );
+            }
+
+
+            /* =====================================================
+               FILTERS
+               ===================================================== */
+
+            function applyFilters() {
+
+                const search =
+                    normalizeText(
+                        state.search
+                    );
+
+
+                state.filteredVideos =
+                    state.videos.filter(
+                        function (video) {
+
+                            if (search) {
+
+                                const searchable =
+                                    normalizeText(
+                                        [
+                                            video.title,
+                                            video.description,
+                                            video.subjectName,
+                                            video.urlType
+                                        ].join(" ")
+                                    );
+
+
+                                if (
+                                    !searchable.includes(
+                                        search
+                                    )
+                                ) {
+
+                                    return false;
+                                }
+                            }
+
+
+                            if (
+                                state.term !== "all" &&
+                                state.term
+                            ) {
+
+                                if (
+                                    normalizeTerm(
+                                        video.term
+                                    ) !==
+                                    state.term
+                                ) {
+
+                                    return false;
+                                }
+                            }
+
+
+                            if (
+                                state.subject !==
+                                "all" &&
+                                state.subject
+                            ) {
+
+                                if (
+                                    normalizeId(
+                                        video.subjectId
+                                    ) !==
+                                    normalizeId(
+                                        state.subject
+                                    )
+                                ) {
+
+                                    return false;
+                                }
+                            }
+
+
+                            return true;
+
+                        }
+                    );
+
+
+                sortVideos();
+
+                renderVideos();
+
+                updateResultsCount();
+
+                updateActiveSubject();
+
+                updatePageText();
+            }
+
+
+            function sortVideos() {
+
+                state.filteredVideos.sort(
+                    function (a, b) {
+
+                        const orderA =
+                            Number(
+                                a.order ||
+                                999999
+                            );
+
+
+                        const orderB =
+                            Number(
+                                b.order ||
+                                999999
+                            );
+
+
+                        if (
+                            orderA !== orderB
+                        ) {
+
+                            return (
+                                orderA -
+                                orderB
+                            );
+                        }
+
+
+                        const dateA =
+                            timestampValue(
+                                a.createdAt
+                            );
+
+
+                        const dateB =
+                            timestampValue(
+                                b.createdAt
+                            );
+
+
+                        return (
+                            dateB -
+                            dateA
+                        );
+
+                    }
+                );
+            }
+
+
+            /* =====================================================
+               RENDER VIDEOS
+               ===================================================== */
+
+            function renderVideos() {
+
+                if (!videosGrid) {
+                    return;
+                }
+
+
+                videosGrid.innerHTML =
+                    "";
+
+
+                if (
+                    !state.filteredVideos.length
+                ) {
+
+                    videosGrid.style.display =
+                        "none";
+
+                    showEmpty();
+
+                    return;
+                }
+
+
+                hideEmpty();
+
+
+                videosGrid.style.display =
+                    "grid";
+
+
+                const fragment =
+                    document.createDocumentFragment();
+
+
+                state.filteredVideos.forEach(
+                    function (video) {
+
+                        fragment.appendChild(
+                            createVideoCard(
+                                video
+                            )
+                        );
+
+                    }
+                );
+
+
+                videosGrid.appendChild(
+                    fragment
+                );
+            }
+
+
+            function createVideoCard(video) {
+
+                const card =
+                    document.createElement(
+                        "article"
+                    );
+
+
+                card.className =
+                    "video-card";
+
+
+                const title =
+                    escapeHtml(
+                        video.title
+                    );
+
+
+                const description =
+                    escapeHtml(
+                        video.description ||
+                        "محاضرة مرئية متاحة للطلاب."
+                    );
+
+
+                const subjectName =
+                    escapeHtml(
+                        video.subjectName ||
+                        getSubjectName(
+                            video.subjectId
+                        ) ||
+                        "مادة تعليمية"
+                    );
+
+
+                const date =
+                    escapeHtml(
+                        formatDate(
+                            video.createdAt
+                        )
+                    );
+
+
+                const duration =
+                    escapeHtml(
+                        video.duration
+                    );
+
+
+                const url =
+                    safeString(
+                        video.url
+                    );
+
+
+                const youtube =
+                    getYoutubeEmbedUrl(
+                        url
+                    );
+
+
+                const thumbnail =
+                    youtube
+                        ? youtube
+                            .replace(
+                                "/embed/",
+                                "/embed/"
+                            )
+                        : "";
+
+
+                const youtubeId =
+                    extractYoutubeId(
+                        url
+                    );
+
+
+                const thumbnailUrl =
+                    youtubeId
+                        ? (
+                            "https://img.youtube.com/vi/" +
+                            encodeURIComponent(
+                                youtubeId
+                            ) +
+                            "/hqdefault.jpg"
+                        )
+                        : "";
+
+
+                const thumbnailHtml =
+                    thumbnailUrl
+                        ? `
+                            <img
+                                class="thumbnail-image"
+                                src="${escapeHtml(thumbnailUrl)}"
+                                alt=""
+                                loading="lazy"
+                                onerror="this.style.display='none';"
+                            >
+                          `
+                        : `
+                            <div class="thumbnail-fallback">
+                                🎬
+                            </div>
+                          `;
+
+
+                const durationHtml =
+                    duration
+                        ? `
+                            <span class="video-duration">
+                                ${duration}
+                            </span>
+                          `
+                        : "";
+
+
+                const typeLabel =
+                    getVideoTypeLabel(
+                        video.urlType
+                    );
+
+
+                const watchButton =
+                    url
+                        ? `
+                            <button
+                                type="button"
+                                class="watch-video"
+                                data-video-id="${escapeHtml(video.id)}"
+                            >
+                                مشاهدة
+                                <span>▶</span>
+                            </button>
+                          `
+                        : `
+                            <button
+                                type="button"
+                                class="watch-video disabled"
+                                disabled
+                            >
+                                الرابط غير متاح
+                            </button>
+                          `;
+
+
+                card.innerHTML = `
+
+                    <div class="video-thumbnail">
+
+                        ${thumbnailHtml}
+
+                        <span class="video-badge">
+                            ${escapeHtml(typeLabel)}
+                        </span>
+
+                        <button
+                            type="button"
+                            class="play-button"
+                            aria-label="تشغيل الفيديو"
+                            data-play-video="${escapeHtml(video.id)}"
+                            ${url ? "" : "disabled"}
+                        >
+                            ▶
+                        </button>
+
+                        ${durationHtml}
+
+                    </div>
+
+
+                    <div class="video-content">
+
+                        <div class="video-meta">
+
+                            <span class="meta-item">
+                                📘
+                                ${subjectName}
+                            </span>
+
+                            ${
+                                video.term
+                                    ? `
+                                        <span class="meta-item">
+                                            📚 ترم
+                                            ${escapeHtml(video.term)}
+                                        </span>
+                                      `
+                                    : ""
+                            }
+
+                        </div>
+
+
+                        <h2 class="video-title">
+                            ${title}
+                        </h2>
+
+
+                        <p class="video-description">
+                            ${description}
+                        </p>
+
+
+                        <div class="video-bottom">
+
+                            <span class="video-date">
+                                ${
+                                    date ||
+                                    "فيديو تعليمي"
+                                }
+                            </span>
+
+                            ${watchButton}
+
+                        </div>
+
+                    </div>
+                `;
+
+
+                const watchButtons =
+                    card.querySelectorAll(
+                        "[data-video-id]"
+                    );
+
+
+                watchButtons.forEach(
+                    function (button) {
+
+                        button.addEventListener(
+                            "click",
+                            function () {
+
+                                openVideo(
+                                    video
+                                );
+
+                            }
+                        );
+
+                    }
+                );
+
+
+                const playButton =
+                    card.querySelector(
+                        "[data-play-video]"
+                    );
+
+
+                if (playButton) {
+
+                    playButton.addEventListener(
+                        "click",
+                        function () {
+
+                            openVideo(
+                                video
+                            );
+
+                        }
+                    );
+                }
+
+
+                return card;
+            }
+
+
+            function extractYoutubeId(url) {
+
+                const value =
+                    safeString(url);
+
+
+                if (!value) {
+                    return "";
+                }
+
+
+                try {
+
+                    const parsed =
+                        new URL(value);
+
+
+                    if (
+                        parsed.hostname.includes(
+                            "youtu.be"
+                        )
+                    ) {
+
+                        return (
+                            parsed.pathname
+                                .replace("/", "")
+                                .split("/")[0]
+                        );
+                    }
+
+
+                    const queryId =
+                        parsed.searchParams.get(
+                            "v"
+                        );
+
+
+                    if (queryId) {
+                        return queryId;
+                    }
+
+
+                    const match =
+                        parsed.pathname.match(
+                            /\/(?:embed|shorts)\/([^/?]+)/i
+                        );
+
+
+                    return match
+                        ? match[1]
+                        : "";
+
+                } catch (error) {
+
+                    return "";
+                }
+            }
+
+
+            function getVideoTypeLabel(type) {
+
+                switch (type) {
+
+                    case "youtube":
+                        return "YouTube";
+
+                    case "vimeo":
+                        return "Vimeo";
+
+                    case "direct":
+                        return "فيديو";
+
+                    case "iframe":
+                        return "مشغل";
+
+                    case "external":
+                        return "رابط فيديو";
+
+                    default:
+                        return "فيديو";
+
+                }
+            }
+
+
+            function getSubjectName(id) {
+
+                const normalized =
+                    normalizeId(id);
+
+
+                if (!normalized) {
+                    return "";
+                }
+
+
+                const found =
+                    state.subjects.find(
+                        function (subject) {
+
+                            return (
+                                normalizeId(
+                                    subject.id
+                                ) === normalized
+                            );
+
+                        }
+                    );
+
+
+                return found
+                    ? found.name
+                    : "";
+            }
+
+
+            /* =====================================================
+               VIDEO PLAYER
+               ===================================================== */
+
+            function openVideo(video) {
+
+                if (!video) {
+                    return;
+                }
+
+
+                const url =
+                    safeString(
+                        video.url
+                    );
+
+
+                if (!url) {
+
+                    showToast(
+                        "الفيديو ده مفيش له رابط متاح حاليًا.",
+                        "الرابط غير متاح",
+                        "⚠️"
+                    );
+
+                    return;
+                }
+
+
+                state.activeVideo =
+                    video;
+
+
+                if (modalTitle) {
+
+                    modalTitle.textContent =
+                        video.title ||
+                        "الفيديو";
+
+                }
+
+
+                if (modalInfoTitle) {
+
+                    modalInfoTitle.textContent =
+                        video.title ||
+                        "";
+
+                }
+
+
+                if (modalInfoDescription) {
+
+                    modalInfoDescription.textContent =
+                        video.description ||
+                        "";
+
+                }
+
+
+                renderPlayer(video);
+
+
+                if (videoModal) {
+
+                    videoModal.classList.add(
+                        "open"
+                    );
+
+                    document.body.classList.add(
+                        "menu-open"
+                    );
+
+                }
+
+
+                trackVideoView(
+                    video
+                );
+            }
+
+
+            function renderPlayer(video) {
+
+                if (!playerContainer) {
+                    return;
+                }
+
+
+                playerContainer.innerHTML =
+                    "";
+
+
+                const url =
+                    safeString(
+                        video.url
+                    );
+
+
+                const type =
+                    video.urlType ||
+                    detectVideoType(
+                        url
+                    );
+
+
+                /*
+                 * YouTube
+                 */
+
+                if (type === "youtube") {
+
+                    const embed =
+                        getYoutubeEmbedUrl(
+                            url
+                        );
+
+
+                    if (embed) {
+
+                        const iframe =
+                            document.createElement(
+                                "iframe"
+                            );
+
+
+                        iframe.src =
+                            embed;
+
+                        iframe.title =
+                            video.title ||
+                            "فيديو تعليمي";
+
+                        iframe.allow =
+                            "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+
+                        iframe.allowFullscreen =
+                            true;
+
+
+                        playerContainer
+                            .appendChild(
+                                iframe
+                            );
+
+                        return;
+                    }
+                }
+
+
+                /*
+                 * Vimeo
+                 */
+
+                if (type === "vimeo") {
+
+                    const embed =
+                        getVimeoEmbedUrl(
+                            url
+                        );
+
+
+                    if (embed) {
+
+                        const iframe =
+                            document.createElement(
+                                "iframe"
+                            );
+
+
+                        iframe.src =
+                            embed;
+
+                        iframe.title =
+                            video.title ||
+                            "فيديو تعليمي";
+
+                        iframe.allow =
+                            "autoplay; fullscreen; picture-in-picture";
+
+                        iframe.allowFullscreen =
+                            true;
+
+
+                        playerContainer
+                            .appendChild(
+                                iframe
+                            );
+
+                        return;
+                    }
+                }
+
+
+                /*
+                 * iframe code
+                 */
+
+                if (
+                    type === "iframe" ||
+                    isProbablyIframe(url)
+                ) {
+
+                    const wrapper =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    wrapper.innerHTML =
+                        url;
+
+
+                    const iframe =
+                        wrapper.querySelector(
+                            "iframe"
+                        );
+
+
+                    if (iframe) {
+
+                        iframe.removeAttribute(
+                            "width"
+                        );
+
+                        iframe.removeAttribute(
+                            "height"
+                        );
+
+                        iframe.style.width =
+                            "100%";
+
+                        iframe.style.height =
+                            "100%";
+
+                        iframe.style.border =
+                            "0";
+
+
+                        playerContainer
+                            .appendChild(
+                                iframe
+                            );
+
+                        return;
+                    }
+                }
+
+
+                /*
+                 * Direct video
+                 */
+
+                if (type === "direct") {
+
+                    const videoElement =
+                        document.createElement(
+                            "video"
+                        );
+
+
+                    videoElement.className =
+                        "direct-video";
+
+
+                    videoElement.src =
+                        url;
+
+
+                    videoElement.controls =
+                        true;
+
+
+                    videoElement.autoplay =
+                        true;
+
+
+                    videoElement.playsInline =
+                        true;
+
+
+                    videoElement.preload =
+                        "metadata";
+
+
+                    playerContainer
+                        .appendChild(
+                            videoElement
+                        );
+
+
+                    return;
+                }
+
+
+                /*
+                 * External fallback
+                 */
+
+                const wrapper =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                wrapper.style.cssText = `
+                    width:100%;
+                    height:100%;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    flex-direction:column;
+                    gap:15px;
+                    padding:25px;
+                    text-align:center;
+                    background:#080b12;
+                `;
+
+
+                wrapper.innerHTML = `
+
+                    <div style="
+                        font-size:42px;
+                    ">
+                        🎬
+                    </div>
+
+                    <div style="
+                        color:#f7f9fc;
+                        font-size:15px;
+                        font-weight:800;
+                    ">
+                        الفيديو متاح من خلال رابط خارجي
+                    </div>
+
+                    <a
+                        href="${escapeHtml(url)}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style="
+                            min-height:42px;
+                            display:inline-flex;
+                            align-items:center;
+                            justify-content:center;
+                            padding:0 18px;
+                            border-radius:10px;
+                            background:#6c63ff;
+                            color:#fff;
+                            font-size:12px;
+                            font-weight:800;
+                        "
+                    >
+                        فتح الفيديو
+                        ↗
+                    </a>
+                `;
+
+
+                playerContainer
+                    .appendChild(
+                        wrapper
+                    );
+            }
+
+
+            function closeVideo() {
+
+                if (playerContainer) {
+
+                    playerContainer.innerHTML =
+                        "";
+                }
+
+
+                if (videoModal) {
+
+                    videoModal.classList.remove(
+                        "open"
+                    );
+                }
+
+
+                document.body.classList.remove(
+                    "menu-open"
+                );
+
+
+                state.activeVideo =
+                    null;
+            }
+
+
+            /* =====================================================
+               VIEW TRACKING
+               ===================================================== */
+
+            async function trackVideoView(video) {
+
+                try {
+
+                    if (
+                        window.FirebaseFeatures &&
+                        typeof
+                        window.FirebaseFeatures
+                            .trackView ===
+                        "function"
+                    ) {
+
+                        await window.FirebaseFeatures
+                            .trackView(
+                                "video",
+                                video.id,
+                                {
+                                    title:
+                                        video.title,
+
+                                    subjectId:
+                                        video.subjectId,
+
+                                    term:
+                                        video.term
+                                }
+                            );
+
+                        return;
+                    }
+
+
+                    if (
+                        window.FirebaseDatabase &&
+                        window.FirebaseDatabase
+                            .contentViews &&
+                        typeof
+                        window.FirebaseDatabase
+                            .contentViews
+                            .save ===
+                        "function"
+                    ) {
+
+                        await window.FirebaseDatabase
+                            .contentViews
+                            .save(
+                                "video",
+                                video.id,
+                                {
+                                    title:
+                                        video.title,
+
+                                    subjectId:
+                                        video.subjectId,
+
+                                    term:
+                                        video.term
+                                }
+                            );
+                    }
+
+                } catch (error) {
+
+                    /*
+                     * View tracking optional.
+                     * لا يمنع تشغيل الفيديو.
+                     */
+
+                    console.warn(
+                        "Video tracking failed:",
+                        error
+                    );
+                }
+            }
+
+
+            /* =====================================================
+               TOAST
+               ===================================================== */
+
+            function showToast(
+                message,
+                title,
+                icon
+            ) {
+
+                if (!toastContainer) {
+                    return;
+                }
+
+
+                const toast =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                toast.className =
+                    "toast";
+
+
+                toast.innerHTML = `
+
+                    <div class="toast-icon">
+                        ${escapeHtml(
+                            icon || "ℹ️"
+                        )}
+                    </div>
+
+                    <div class="toast-content">
+
+                        <div class="toast-title">
+                            ${escapeHtml(
+                                title ||
+                                "تنبيه"
+                            )}
+                        </div>
+
+                        <div class="toast-message">
+                            ${escapeHtml(
+                                message ||
+                                ""
+                            )}
+                        </div>
+
+                    </div>
+                `;
+
+
+                toastContainer
+                    .appendChild(
+                        toast
+                    );
+
+
+                window.setTimeout(
+                    function () {
+
+                        toast.classList.add(
+                            "hide"
+                        );
+
+
+                        window.setTimeout(
+                            function () {
+
+                                if (
+                                    toast.parentNode
+                                ) {
+
+                                    toast.parentNode
+                                        .removeChild(
+                                            toast
+                                        );
+                                }
+
+                            },
+                            260
+                        );
+
+                    },
+                    3500
+                );
+            }
+
+
+            window.showVideosToast =
+                showToast;
+
+
+            /* =====================================================
+               UI STATES
+               ===================================================== */
+
+            function hideStateBoxes() {
+
+                if (emptyState) {
+
+                    emptyState.classList
+                        .remove(
+                            "visible"
+                        );
+                }
+
+
+                if (errorState) {
+
+                    errorState.classList
+                        .remove(
+                            "visible"
+                        );
+                }
+            }
+
+
+            function showEmpty() {
+
+                if (errorState) {
+
+                    errorState.classList
+                        .remove(
+                            "visible"
+                        );
+                }
+
+
+                if (emptyState) {
+
+                    emptyState.classList
+                        .add(
+                            "visible"
+                        );
+                }
+            }
+
+
+            function hideEmpty() {
+
+                if (emptyState) {
+
+                    emptyState.classList
+                        .remove(
+                            "visible"
+                        );
+                }
+            }
+
+
+            function showError(message) {
+
+                if (videosGrid) {
+
+                    videosGrid.innerHTML =
+                        "";
+
+                    videosGrid.style.display =
+                        "none";
+                }
+
+
+                if (emptyState) {
+
+                    emptyState.classList
+                        .remove(
+                            "visible"
+                        );
+                }
+
+
+                if (errorDescription) {
+
+                    errorDescription.textContent =
+                        message ||
+                        "تعذر تحميل الفيديوهات حاليًا.";
+                }
+
+
+                if (errorState) {
+
+                    errorState.classList
+                        .add(
+                            "visible"
+                        );
+                }
+
+
+                if (resultsCount) {
+
+                    resultsCount.textContent =
+                        "تعذر تحميل الفيديوهات";
+                }
+            }
+
+
+            function updateResultsCount() {
+
+                if (!resultsCount) {
+                    return;
+                }
+
+
+                const count =
+                    state.filteredVideos.length;
+
+
+                const total =
+                    state.videos.length;
+
+
+                if (
+                    state.search ||
+                    state.term !== "all" ||
+                    state.subject !== "all"
+                ) {
+
+                    resultsCount.innerHTML = `
+                        عرض
+                        <strong>
+                            ${count}
+                        </strong>
+                        من
+                        <strong>
+                            ${total}
+                        </strong>
+                        فيديو
+                    `;
+
+                } else {
+
+                    resultsCount.innerHTML = `
+                        إجمالي الفيديوهات:
+                        <strong>
+                            ${count}
+                        </strong>
+                    `;
+                }
+            }
+
+
+            function updateActiveSubject() {
+
+                if (
+                    !activeSubject ||
+                    !activeSubjectName
+                ) {
+                    return;
+                }
+
+
+                if (
+                    state.subject &&
+                    state.subject !== "all"
+                ) {
+
+                    activeSubjectName.textContent =
+                        getSubjectName(
+                            state.subject
+                        ) ||
+                        state.subjectFromUrl ||
+                        state.subject;
+
+
+                    activeSubject.classList.add(
+                        "visible"
+                    );
+
+                } else {
+
+                    activeSubject.classList
+                        .remove(
+                            "visible"
+                        );
+
+                    activeSubjectName.textContent =
+                        "";
+                }
+            }
+
+
+            function updatePageText() {
+
+                const pageTitle =
+                    document.getElementById(
+                        "pageTitle"
+                    );
+
+
+                const pageDescription =
+                    document.getElementById(
+                        "pageDescription"
+                    );
+
+
+                if (
+                    state.subject &&
+                    state.subject !== "all"
+                ) {
+
+                    const subjectName =
+                        getSubjectName(
+                            state.subject
+                        ) ||
+                        state.subjectFromUrl ||
+                        state.subject;
+
+
+                    if (pageTitle) {
+
+                        pageTitle.textContent =
+                            "فيديوهات " +
+                            subjectName;
+                    }
+
+
+                    if (pageDescription) {
+
+                        pageDescription.textContent =
+                            "كل الفيديوهات والمحاضرات المرئية المتاحة لمادة " +
+                            subjectName +
+                            " في مكان واحد.";
+                    }
+
+                } else {
+
+                    if (pageTitle) {
+
+                        pageTitle.textContent =
+                            "الفيديوهات والمحاضرات";
+                    }
+
+
+                    if (pageDescription) {
+
+                        pageDescription.textContent =
+                            "كل الفيديوهات والمحاضرات المرئية المتاحة للطلاب في مكان واحد.";
+                    }
+                }
+            }
+
+
+            /* =====================================================
+               RESET
+               ===================================================== */
+
+            function resetFilters() {
+
+                state.search =
+                    "";
+
+                state.term =
+                    "all";
+
+                state.subject =
+                    "all";
+
+                state.subjectFromUrl =
+                    "";
+
+                state.termFromUrl =
+                    "";
+
+
+                if (searchInput) {
+
+                    searchInput.value =
+                        "";
+                }
+
+
+                if (termFilter) {
+
+                    termFilter.value =
+                        "all";
+                }
+
+
+                if (subjectFilter) {
+
+                    subjectFilter.value =
+                        "all";
+                }
+
+
+                applyFilters();
+
+
+                try {
+
+                    const url =
+                        new URL(
+                            window.location.href
+                        );
+
+
+                    [
+                        "subject",
+                        "subjectId",
+                        "course",
+                        "term",
+                        "semester"
+                    ].forEach(
+                        function (key) {
+
+                            url.searchParams.delete(
+                                key
+                            );
+
+                        }
+                    );
+
+
+                    window.history.replaceState(
+                        {},
+                        "",
+                        url.toString()
+                    );
+
+                } catch (error) {
+
+                    console.warn(
+                        "URL reset failed:",
+                        error
+                    );
+                }
+            }
+
+
+            function removeSubjectFilterHandler() {
+
+                state.subject =
+                    "all";
+
+                state.subjectFromUrl =
+                    "";
+
+
+                if (subjectFilter) {
+
+                    subjectFilter.value =
+                        "all";
+                }
+
+
+                try {
+
+                    const url =
+                        new URL(
+                            window.location.href
+                        );
+
+
+                    url.searchParams.delete(
+                        "subject"
+                    );
+
+                    url.searchParams.delete(
+                        "subjectId"
+                    );
+
+                    url.searchParams.delete(
+                        "course"
+                    );
+
+
+                    window.history.replaceState(
+                        {},
+                        "",
+                        url.toString()
+                    );
+
+                } catch (error) {
+
+                    console.warn(
+                        "URL update failed:",
+                        error
+                    );
+                }
+
+
+                applyFilters();
+            }
+
+
+            /* =====================================================
+               URL
+               ===================================================== */
+
+            function readUrlParams() {
+
+                const params =
+                    new URLSearchParams(
+                        window.location.search
+                    );
+
+
+                state.subjectFromUrl =
+                    safeString(
+                        firstValue(
+                            params.get(
+                                "subjectId"
+                            ),
+                            params.get(
+                                "subject"
+                            ),
+                            params.get(
+                                "course"
+                            )
+                        )
+                    );
+
+
+                state.termFromUrl =
+                    normalizeTerm(
+                        firstValue(
+                            params.get(
+                                "term"
+                            ),
+                            params.get(
+                                "semester"
+                            )
+                        )
+                    );
+
+
+                if (
+                    state.subjectFromUrl
+                ) {
+
+                    state.subject =
+                        normalizeId(
+                            state.subjectFromUrl
+                        );
+                }
+
+
+                if (
+                    state.termFromUrl
+                ) {
+
+                    state.term =
+                        state.termFromUrl;
+                }
+            }
+
+
+            /* =====================================================
+               AUTH
+               ===================================================== */
+
+            async function loadCurrentUser() {
+
+                try {
+
+                    if (
+                        window.FirebaseAuth &&
+                        typeof
+                        window.FirebaseAuth
+                            .getCurrentUser ===
+                        "function"
+                    ) {
+
+                        state.currentUser =
+                            window.FirebaseAuth
+                                .getCurrentUser();
+
+                    } else if (
+                        window.FirebaseDatabase &&
+                        typeof
+                        window.FirebaseDatabase
+                            .getCurrentUser ===
+                        "function"
+                    ) {
+
+                        state.currentUser =
+                            window.FirebaseDatabase
+                                .getCurrentUser();
+                    }
+
+                } catch (error) {
+
+                    console.warn(
+                        "Current user failed:",
+                        error
+                    );
+                }
+
+
+                updateHeader();
+            }
+
+
+            function updateHeader() {
+
+                const loginButton =
+                    document.getElementById(
+                        "loginHeaderButton"
+                    );
+
+
+                const dashboardButton =
+                    document.getElementById(
+                        "dashboardHeaderButton"
+                    );
+
+
+                if (
+                    state.currentUser
+                ) {
+
+                    if (loginButton) {
+
+                        loginButton.textContent =
+                            "الملف الشخصي";
+
+                        loginButton.href =
+                            "profile.html";
+                    }
+
+
+                    if (dashboardButton) {
+
+                        dashboardButton.textContent =
+                            "لوحة التحكم";
+
+                        dashboardButton.href =
+                            "dashboard.html";
+                    }
+
+                } else {
+
+                    if (loginButton) {
+
+                        loginButton.textContent =
+                            "تسجيل الدخول";
+
+                        loginButton.href =
+                            "login.html";
+                    }
+
+
+                    if (dashboardButton) {
+
+                        dashboardButton.textContent =
+                            "إنشاء حساب";
+
+                        dashboardButton.href =
+                            "register.html";
+                    }
+                }
+            }
+
+
+            function listenForAuthChanges() {
+
+                try {
+
+                    if (
+                        window.FirebaseAuth &&
+                        typeof
+                        window.FirebaseAuth
+                            .onAuthStateChanged ===
+                        "function"
+                    ) {
+
+                        window.FirebaseAuth
+                            .onAuthStateChanged(
+                                function (user) {
+
+                                    if (user) {
+
+                                        state.currentUser =
+                                            user;
+                                    }
+
+                                    updateHeader();
+
+                                }
+                            );
+                    }
+
+                } catch (error) {
+
+                    console.warn(
+                        "Auth listener failed:",
+                        error
+                    );
+                }
+            }
+
+
+            /* =====================================================
+               MOBILE MENU
+               ===================================================== */
+
+            function closeMobileMenu() {
+
+                if (!mobileNav) {
+                    return;
+                }
+
+
+                mobileNav.classList.remove(
+                    "open"
+                );
+
+
+                document.body.classList.remove(
+                    "menu-open"
+                );
+
+
+                if (mobileMenuButton) {
+
+                    mobileMenuButton
+                        .setAttribute(
+                            "aria-expanded",
+                            "false"
+                        );
+
+
+                    mobileMenuButton.textContent =
+                        "☰";
+                }
+            }
+
+
+            function toggleMobileMenu() {
+
+                if (!mobileNav) {
+                    return;
+                }
+
+
+                const open =
+                    mobileNav.classList.toggle(
+                        "open"
+                    );
+
+
+                document.body.classList.toggle(
+                    "menu-open",
+                    open
+                );
+
+
+                if (mobileMenuButton) {
+
+                    mobileMenuButton
+                        .setAttribute(
+                            "aria-expanded",
+                            String(open)
+                        );
+
+
+                    mobileMenuButton.textContent =
+                        open
+                            ? "×"
+                            : "☰";
+                }
+            }
+
+
+            /* =====================================================
+               EVENTS
+               ===================================================== */
+
+            function bindEvents() {
+
+                if (mobileMenuButton) {
+
+                    mobileMenuButton
+                        .addEventListener(
+                            "click",
+                            toggleMobileMenu
+                        );
+                }
+
+
+                if (mobileNav) {
+
+                    mobileNav
+                        .querySelectorAll("a")
+                        .forEach(
+                            function (link) {
+
+                                link.addEventListener(
+                                    "click",
+                                    closeMobileMenu
+                                );
+
+                            }
+                        );
+                }
+
+
+                if (searchInput) {
+
+                    searchInput
+                        .addEventListener(
+                            "input",
+                            function (event) {
+
+                                state.search =
+                                    event.target.value;
+
+                                applyFilters();
+
+                            }
+                        );
+                }
+
+
+                if (termFilter) {
+
+                    termFilter
+                        .addEventListener(
+                            "change",
+                            function (event) {
+
+                                state.term =
+                                    normalizeTerm(
+                                        event.target.value
+                                    ) ||
+                                    "all";
+
+                                applyFilters();
+
+                            }
+                        );
+                }
+
+
+                if (subjectFilter) {
+
+                    subjectFilter
+                        .addEventListener(
+                            "change",
+                            function (event) {
+
+                                state.subject =
+                                    normalizeId(
+                                        event.target.value
+                                    ) ||
+                                    "all";
+
+
+                                try {
+
+                                    const url =
+                                        new URL(
+                                            window.location.href
+                                        );
+
+
+                                    if (
+                                        state.subject ===
+                                        "all"
+                                    ) {
+
+                                        url.searchParams
+                                            .delete(
+                                                "subject"
+                                            );
+
+                                        url.searchParams
+                                            .delete(
+                                                "subjectId"
+                                            );
+
+                                        url.searchParams
+                                            .delete(
+                                                "course"
+                                            );
+
+                                    } else {
+
+                                        url.searchParams
+                                            .set(
+                                                "subjectId",
+                                                state.subject
+                                            );
+                                    }
+
+
+                                    window.history
+                                        .replaceState(
+                                            {},
+                                            "",
+                                            url.toString()
+                                        );
+
+                                } catch (error) {
+
+                                    console.warn(
+                                        "URL filter failed:",
+                                        error
+                                    );
+                                }
+
+
+                                applyFilters();
+
+                            }
+                        );
+                }
+
+
+                if (removeSubjectFilter) {
+
+                    removeSubjectFilter
+                        .addEventListener(
+                            "click",
+                            removeSubjectFilterHandler
+                        );
+                }
+
+
+                if (emptyResetButton) {
+
+                    emptyResetButton
+                        .addEventListener(
+                            "click",
+                            resetFilters
+                        );
+                }
+
+
+                if (retryButton) {
+
+                    retryButton
+                        .addEventListener(
+                            "click",
+                            loadVideos
+                        );
+                }
+
+
+                if (modalClose) {
+
+                    modalClose
+                        .addEventListener(
+                            "click",
+                            closeVideo
+                        );
+                }
+
+
+                if (videoModal) {
+
+                    videoModal
+                        .addEventListener(
+                            "click",
+                            function (event) {
+
+                                if (
+                                    event.target ===
+                                    videoModal
+                                ) {
+
+                                    closeVideo();
+                                }
+
+                            }
+                        );
+                }
+
+
+                document.addEventListener(
+                    "keydown",
+                    function (event) {
+
+                        if (
+                            event.key ===
+                            "Escape"
+                        ) {
+
+                            if (
+                                videoModal &&
+                                videoModal.classList
+                                    .contains(
+                                        "open"
+                                    )
+                            ) {
+
+                                closeVideo();
+
+                            } else {
+
+                                closeMobileMenu();
+                            }
+                        }
+
+                    }
+                );
+
+
+                window.addEventListener(
+                    "resize",
+                    function () {
+
+                        if (
+                            window.innerWidth >
+                            1050
+                        ) {
+
+                            closeMobileMenu();
+                        }
+
+                    }
+                );
+            }
+
+
+            /* =====================================================
+               FIREBASE WAIT
+               ===================================================== */
+
+            async function waitForFirebaseModules() {
+
+                const maxWait =
+                    15000;
+
+
+                const started =
+                    Date.now();
+
+
+                while (
+                    Date.now() - started <
+                    maxWait
+                ) {
+
+                    if (
+                        window.FirebaseCoreReady &&
+                        window.FirebaseAuthReady &&
+                        window.FirebaseDatabaseReady &&
+                        window.FirebaseContentReady &&
+                        window.FirebaseFeaturesReady
+                    ) {
+
+                        return true;
+                    }
+
+
+                    if (
+                        window.FirebaseDatabase &&
+                        window.FirebaseContent &&
+                        window.FirebaseFeatures
+                    ) {
+
+                        return true;
+                    }
+
+
+                    await new Promise(
+                        function (resolve) {
+
+                            setTimeout(
+                                resolve,
+                                80
+                            );
+
+                        }
+                    );
+                }
+
+
+                return false;
+            }
+
+
+            /* =====================================================
+               INITIALIZE
+               ===================================================== */
+
+            async function init() {
+
+                if (currentYear) {
+
+                    currentYear.textContent =
+                        new Date()
+                            .getFullYear();
+                }
+
+
+                bindEvents();
+
+                readUrlParams();
+
+                await waitForFirebaseModules();
+
+                await loadCurrentUser();
+
+                listenForAuthChanges();
+
+
+                try {
+
+                    await loadSubjects();
+
+                } catch (error) {
+
+                    console.warn(
+                        "Subjects init failed:",
+                        error
+                    );
+                }
+
+
+                await loadVideos();
+
+
+                hidePageLoader();
+            }
+
+
+            /* =====================================================
+               GLOBAL API
+               ===================================================== */
+
+            window.CapVideos = {
+
+                getState:
+                    function () {
+
+                        return state;
+
+                    },
+
+
+                reload:
+                    function () {
+
+                        return loadVideos();
+
+                    },
+
+
+                resetFilters:
+                    function () {
+
+                        resetFilters();
+
+                    },
+
+
+                getVideos:
+                    function () {
+
+                        return state.videos.slice();
+
+                    },
+
+
+                getFilteredVideos:
+                    function () {
+
+                        return state
+                            .filteredVideos
+                            .slice();
+
+                    },
+
+
+                getSubjects:
+                    function () {
+
+                        return state
+                            .subjects
+                            .slice();
+
+                    },
+
+
+                openVideo:
+                    function (id) {
+
+                        const video =
+                            state.videos.find(
+                                function (item) {
+
+                                    return (
+                                        String(
+                                            item.id
+                                        ) ===
+                                        String(id)
+                                    );
+
+                                }
+                            );
+
+
+                        if (video) {
+
+                            openVideo(
+                                video
+                            );
+                        }
+
+                    },
+
+
+                closeVideo:
+                    function () {
+
+                        closeVideo();
+
+                    },
+
+
+                setSearch:
+                    function (value) {
+
+                        state.search =
+                            safeString(
+                                value
+                            );
+
+
+                        if (searchInput) {
+
+                            searchInput.value =
+                                state.search;
+                        }
+
+
+                        applyFilters();
+
+                    },
+
+
+                setTerm:
+                    function (value) {
+
+                        state.term =
+                            normalizeTerm(
+                                value
+                            ) ||
+                            "all";
+
+
+                        if (termFilter) {
+
+                            termFilter.value =
+                                state.term;
+                        }
+
+
+                        applyFilters();
+
+                    },
+
+
+                setSubject:
+                    function (value) {
+
+                        state.subject =
+                            normalizeId(
+                                value
+                            ) ||
+                            "all";
+
+
+                        if (subjectFilter) {
+
+                            subjectFilter.value =
+                                state.subject;
+                        }
+
+
+                        applyFilters();
+
+                    }
+
+            };
+
+
+            /* =====================================================
+               START
+               ===================================================== */
+
+            if (
+                document.readyState ===
+                "loading"
+            ) {
+
+                document.addEventListener(
+                    "DOMContentLoaded",
+                    init
+                );
+
+            } else {
+
+                init();
+            }
+
+        })();
+
+    </script>
+
+</body>
+
+</html>
