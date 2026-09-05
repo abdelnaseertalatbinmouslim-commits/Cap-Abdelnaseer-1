@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0d12">
+  <meta name="application-name" content="الكوتش">
+  <meta name="firebase-project" content="abodaa">
+  <meta name="description" content="الكوتش | المنصة التعليمية">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>الكوتش | المنصة التعليمية</title>
+  <link rel="icon" type="image/jpeg" href="1783950091830.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div id="pageLoader" class="page-loader" aria-label="جاري تحميل المنصة">
+    <div class="loader-orbit"><span></span><span></span><span></span></div>
+    <div class="loader-brand">منصة الكوتش</div>
+  </div>
+
+  <div class="background-decoration" aria-hidden="true">
+    <span class="background-orb background-orb-one"></span>
+    <span class="background-orb background-orb-two"></span>
+    <span class="background-grid"></span>
+    <span class="background-noise"></span>
+  </div>
+
+  <header id="siteHeader" class="site-header">
+    <div class="container header-container">
+      <a href="#home" class="brand" aria-label="الكوتش">
+        <span class="brand-mark"><span></span><span></span><span></span></span>
+        <span class="brand-text"><strong>الكوتش</strong><small>المنصة التعليمية</small></span>
+      </a>
+
+      <nav class="desktop-navigation desktop-nav" aria-label="التنقل الرئيسي">
+        <a href="#home" class="nav-link active">الرئيسية</a>
+        <a href="#subjects" class="nav-link">المواد</a>
+        <a href="#features" class="nav-link">المميزات</a>
+        <a href="#about" class="nav-link">عن المنصة</a>
+        <a href="#support" class="nav-link">الدعم</a>
+      </nav>
+
+      <div class="header-actions">
+        <button id="themeToggle" type="button" class="theme-toggle" aria-label="تفعيل الوضع الفاتح" aria-pressed="false">☼</button>
+        <a id="headerLogin" href="login.html" class="header-login-button">تسجيل الدخول</a>
+        <a id="headerRegister" href="register.html" class="header-register-button">إنشاء حساب</a>
+        <button id="mobileMenuButton" type="button" class="mobile-menu-button" aria-label="فتح القائمة" aria-expanded="false">☰</button>
+      </div>
+    </div>
+
+    <nav id="mobileNav" class="mobile-menu" aria-label="قائمة الهاتف">
+      <div class="mobile-menu-inner">
+        <a href="#home" class="mobile-nav-link">الرئيسية</a>
+        <a href="#subjects" class="mobile-nav-link">المواد</a>
+        <a href="#features" class="mobile-nav-link">المميزات</a>
+        <a href="#about" class="mobile-nav-link">عن المنصة</a>
+        <a href="#support" class="mobile-nav-link">الدعم</a>
+        <div class="mobile-menu-actions">
+          <a href="login.html" class="mobile-login-button">تسجيل الدخول</a>
+          <a href="register.html" class="mobile-register-button">إنشاء حساب</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="hero-section">
+      <div class="container hero-container">
+        <div class="hero-content">
+          <div class="hero-badge reveal"><span class="hero-badge-dot"></span>منصة تعليمية متكاملة</div>
+          <div class="hero-title-wrap reveal">
+            <span class="hero-mini-title">أهلاً بيك في</span>
+            <h1 class="hero-title"><span class="hero-title-line">منصة</span><span class="hero-title-main">الكوتش</span></h1>
+            <div class="hero-title-line-decoration"><span></span><span></span><span></span></div>
+          </div>
+          <p id="welcomeText" class="hero-description reveal">مكانك المخصص للتعلم والتطوير والوصول لمحتوى دراسي منظم في تجربة بسيطة وسريعة ومختلفة.</p>
+          <div class="hero-actions reveal">
+            <a id="heroPrimary" href="register.html" class="primary-action"><span class="action-icon">↪</span><span>إنشاء حساب</span><span class="action-arrow">←</span></a>
+            <a id="heroSecondary" href="#subjects" class="secondary-action"><span class="action-icon">◈</span><span>استكشف المواد</span><span class="action-arrow">↓</span></a>
+          </div>
+          <div class="hero-mini-stats reveal">
+            <div class="mini-stat"><strong id="statSubjects">—</strong><span>مواد</span></div>
+            <div class="mini-stat"><strong id="statFiles">—</strong><span>ملفات</span></div>
+            <div class="mini-stat"><strong id="statVideos">—</strong><span>فيديوهات</span></div>
+            <div class="mini-stat"><strong id="statQuizzes">—</strong><span>اختبارات</span></div>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal" aria-label="صورة الكوتش">
+          <div class="visual-glow"></div>
+          <div class="profile-orbit orbit-one"></div>
+          <div class="profile-orbit orbit-two"></div>
+          <div class="profile-badge profile-badge-top">COACH</div>
+          <div class="profile-image-wrap">
+            <div class="profile-image-ring ring-one"></div>
+            <div class="profile-image-ring ring-two"></div>
+            <div class="profile-image"><img class="hero-image" src="1783950091830.jpg" alt="صورة الكوتش" loading="eager" decoding="async" fetchpriority="high" width="185" height="185"></div>
+            <span class="profile-status"></span>
+          </div>
+          <div class="profile-floating-card card-one"><span class="floating-icon">✦</span><div><strong>تعلم</strong><small>بشكل أذكى</small></div></div>
+          <div class="profile-floating-card card-two"><span class="floating-icon">◈</span><div><strong>محتوى</strong><small>منظم ومميز</small></div></div>
+          <div class="profile-floating-card card-three"><span class="floating-icon">✓</span><div><strong>تقدم</strong><small>خطوة بخطوة</small></div></div>
+          <div class="visual-particles" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="subjects" class="section">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-kicker">المحتوى الدراسي</span>
+          <h2>اختار <span>مادتك</span> وابدأ</h2>
+          <p>المواد بتتسحب من قاعدة بيانات الكوتش مباشرة مع الحفاظ على توافق البيانات القديمة.</p>
+        </div>
+        <div id="subjectsGrid" class="subject-grid" aria-live="polite">
+          <div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>
+        </div>
+        <div class="center-action"><a class="text-action" href="courses.html">عرض كل المواد <span>←</span></a></div>
+      </div>
+    </section>
+
+    <section id="features" class="section section-alt">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-kicker">تجربة الكوتش</span>
+          <h2>كل اللي تحتاجه <span>للدراسة</span></h2>
+          <p>واجهة واحدة للمواد والملفات والفيديوهات والاختبارات والنتائج والإشعارات والدعم.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card reveal"><span class="feature-number">01</span><div class="feature-icon">▣</div><h3>ملفات ومحاضرات</h3><p>الوصول السريع للملفات التعليمية والروابط المتاحة حسب المادة والفرقة.</p></article>
+          <article class="feature-card reveal"><span class="feature-number">02</span><div class="feature-icon">▶</div><h3>فيديوهات</h3><p>عرض محتوى الفيديو من الروابط المسجلة داخل قاعدة البيانات.</p></article>
+          <article class="feature-card reveal"><span class="feature-number">03</span><div class="feature-icon">✓</div><h3>اختبارات ونتائج</h3><p>اختبارات بوقت ودرجات ونتائج مبنية على البيانات الفعلية.</p></article>
+          <article class="feature-card reveal"><span class="feature-number">04</span><div class="feature-icon">◉</div><h3>إشعارات ودعم</h3><p>تابع التنبيهات وافتح طلب دعم بدون الاعتماد على بيانات وهمية.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section about-section">
+      <div class="container about-container">
+        <div class="about-content reveal">
+          <span class="section-kicker">عن الكوتش</span>
+          <h2>تعليم أبسط.<br><span>تركيز أكبر.</span></h2>
+          <p>المنصة معمولة عشان تكون سريعة وواضحة على الموبايل والكمبيوتر وتحافظ على بيانات المنصة القديمة.</p>
+          <div class="about-points">
+            <div class="about-point"><span>01</span><div><strong>بيانات قديمة محفوظة</strong><p>لا يوجد حذف أو Reset أو Migration إجباري.</p></div></div>
+            <div class="about-point"><span>02</span><div><strong>بدون Firebase Auth للطلاب</strong><p>نظام دخول الطالب منفصل عن Firebase Authentication.</p></div></div>
+            <div class="about-point"><span>03</span><div><strong>تجربة سريعة</strong><p>قراءات الصفحة الرئيسية محدودة ومخزنة مؤقتًا أثناء الجلسة.</p></div></div>
+          </div>
+        </div>
+        <div class="about-card-wrap reveal">
+          <div class="about-card">
+            <div class="about-card-top"><span>COACH PLATFORM</span><span>2026</span></div>
+            <div class="about-card-center"><div class="about-symbol"><span></span><span></span><span></span></div><strong>الكوتش</strong><small>LEARN • GROW • ACHIEVE</small></div>
+            <div class="about-card-bottom"><span></span><span></span><span></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="support" class="support-section">
+      <div class="container">
+        <div class="support-panel reveal">
+          <div class="support-content">
+            <span class="section-kicker">NEED HELP?</span>
+            <h2>محتاج مساعدة؟</h2>
+            <p>لو واجهتك مشكلة في الحساب أو المحتوى، استخدم مركز الدعم أو إحدى القنوات المتاحة.</p>
+          </div>
+          <div class="support-actions">
+            <a href="support.html" class="support-action"><span class="support-action-icon">?</span><span>مركز الدعم</span></a>
+            <a href="notifications.html" class="support-action"><span class="support-action-icon">◌</span><span>الإشعارات</span></a>
+            <a href="https://wa.me/201098227150" class="support-action" data-support-link="whatsapp" target="_blank" rel="noopener noreferrer"><span class="support-action-icon">W</span><span>واتساب</span></a>
+            <a href="https://t.me/CapAbdo1" class="support-action" data-support-link="telegram" target="_blank" rel="noopener noreferrer"><span class="support-action-icon">T</span><span>تيليجرام</span></a>
+            <button type="button" class="support-action" data-open-report><span class="support-action-icon">!</span><span>بلاغ عن مشكلة</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="install-section">
+      <div class="container">
+        <div class="install-card reveal">
+          <div class="install-icon"><span></span><span></span><span></span></div>
+          <div class="install-content">
+            <span class="section-kicker">MOBILE EXPERIENCE</span>
+            <h2>خلي المنصة معاك <span>في أي وقت</span></h2>
+            <p>لو المتصفح يدعم التثبيت، تقدر تضيف الكوتش للشاشة الرئيسية كأنها تطبيق.</p>
+          </div>
+          <button id="installAppButton" type="button" class="install-button" data-install-app>تثبيت التطبيق ↓</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta-section">
+      <div class="container">
+        <div class="final-cta reveal">
+          <div class="final-cta-decoration"><span></span><span></span><span></span></div>
+          <div class="final-cta-content">
+            <span class="section-kicker">YOUR JOURNEY STARTS HERE</span>
+            <h2>جاهز تبدأ؟</h2>
+            <p>ادخل حسابك أو أنشئ حساب جديد وابدأ رحلتك داخل الكوتش.</p>
+            <div class="final-cta-actions">
+              <a id="finalPrimary" href="login.html" class="primary-action">تسجيل الدخول <span>←</span></a>
+              <a href="register.html" class="secondary-action">إنشاء حساب <span>←</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-brand"><div class="footer-brand-mark"><span></span><span></span><span></span></div><div><strong>منصة الكوتش</strong><small>Learn • Grow • Achieve</small></div></div>
+      <div class="footer-links"><a href="#home">الرئيسية</a><a href="#subjects">المواد</a><a href="#features">المميزات</a><a href="#about">عن المنصة</a><a href="#support">الدعم</a></div>
+      <div class="footer-copy">© <span id="currentYear"></span> الكوتش. جميع الحقوق محفوظة.</div>
+    </div>
+  </footer>
+
+  <div id="reportModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle">
+    <div class="modal-overlay"></div>
+    <div class="modal-container">
+      <div class="modal-card">
+        <button type="button" class="modal-close" data-close-modal aria-label="إغلاق">×</button>
+        <div class="modal-header">
+          <span class="modal-kicker">SUPPORT</span>
+          <h2 id="reportModalTitle">الإبلاغ عن مشكلة</h2>
+          <p>اشرح المشكلة بالتفصيل وسنسجل طلب الدعم.</p>
+        </div>
+        <form id="reportForm" class="auth-form" novalidate>
+          <div class="form-group"><label for="reportName">الاسم</label><div class="input-wrap"><span class="input-icon">◉</span><input id="reportName" name="name" type="text" placeholder="اكتب اسمك" maxlength="100" autocomplete="name"></div></div>
+          <div class="form-group"><label for="reportContact">وسيلة التواصل</label><div class="input-wrap"><span class="input-icon">@</span><input id="reportContact" name="contact" type="text" placeholder="رقم الهاتف أو البريد" maxlength="120"></div></div>
+          <div class="form-group"><label for="reportSubject">عنوان المشكلة</label><div class="input-wrap"><span class="input-icon">!</span><input id="reportSubject" name="subject" type="text" placeholder="مثال: مشكلة في تسجيل الدخول" maxlength="160"></div></div>
+          <div class="form-group"><label for="reportMessage">تفاصيل المشكلة</label><div class="textarea-wrap"><textarea id="reportMessage" name="message" maxlength="1000" rows="5" placeholder="اشرح المشكلة بالتفصيل..."></textarea><span id="reportCharacterCount" class="character-count">0</span></div></div>
+          <div id="reportFormMessage" class="form-message" aria-live="polite"></div>
+          <button id="reportSubmit" type="submit" class="modal-submit-button">إرسال البلاغ</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="index.js" defer></script>
+</body>
+</html>
